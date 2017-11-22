@@ -29,7 +29,7 @@
 <script src="js/toc.js"></script>
 <script src="js/customscripts.js"></script>
 
-<link rel="shortcut icon" href="images/favicon.ico">
+<!--<link rel="shortcut icon" href="images/favicon.ico">-->
 
 <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
 <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -307,17 +307,36 @@
               
               
               
-              
-              
-              
-              <li><a href="basic-thingsfeatures.html">Things and Features</a></li>
-              
-              
-              
-              
-              
-              
-              <li><a href="basic-definitions.html">Definitions</a></li>
+              <li class="subfolders">
+                  <a href="#">Model entites</a>
+                  <ul>
+                      
+                      
+                      
+                      <li><a href="basic-thing.html">Thing</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="basic-acl.html">Access Control List (ACL)</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="basic-feature.html">Feature</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="basic-policy.html">Policy</a></li>
+                      
+                      
+                      
+                  </ul>
+              </li>
               
               
               
@@ -331,20 +350,6 @@
               
               
               
-              <li><a href="basic-acl.html">Access Control List (ACL)</a></li>
-              
-              
-              
-              
-              
-              
-              <li><a href="basic-policies.html">Policies</a></li>
-              
-              
-              
-              
-              
-              
               <li><a href="basic-messages.html">Messages</a></li>
               
               
@@ -352,14 +357,54 @@
               
               
               
-              <li><a href="basic-events.html">Events</a></li>
+              <li><a href="basic-signals.html">Signals</a></li>
+              
+              
+              
+              <li class="subfolders">
+                  <a href="#">Signal types</a>
+                  <ul>
+                      
+                      
+                      
+                      <li><a href="basic-signals-command.html">Command</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="basic-signals-commandresponse.html">Command response</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="basic-signals-errorresponse.html">Error response</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="basic-signals-event.html">Event</a></li>
+                      
+                      
+                      
+                  </ul>
+              </li>
               
               
               
               
               
               
-              <li><a href="basic-whichapi.html">Which API to use?</a></li>
+              <li><a href="basic-apis.html">APIs</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="basic-changenotifications.html">Change notifications</a></li>
               
               
               
@@ -441,47 +486,77 @@
               
               
               
+              <li><a href="protocol-twinlive.html">Twin/live channel</a></li>
+              
+              
+              
+              
+              
+              
               <li><a href="protocol-specification.html">Specification</a></li>
               
               
               
+              
+              
+              
+              <li><a href="protocol-specification-topic.html">Protocol topic</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="protocol-specification-things.html">Things group</a></li>
+              
+              
+              
               <li class="subfolders">
-                  <a href="#">Things Spec</a>
+                  <a href="#">→ commands/events</a>
                   <ul>
                       
                       
                       
-                      <li><a href="protocol-specification-general.html">General</a></li>
+                      <li><a href="protocol-specification-things-create.html">Create</a></li>
                       
                       
                       
                       
                       
-                      <li><a href="protocol-specification-create.html">Create</a></li>
+                      <li><a href="protocol-specification-things-retrieve.html">Retrieve</a></li>
                       
                       
                       
                       
                       
-                      <li><a href="protocol-specification-retrieve.html">Retrieve</a></li>
+                      <li><a href="protocol-specification-things-modify.html">Modify</a></li>
                       
                       
                       
                       
                       
-                      <li><a href="protocol-specification-search.html">Search</a></li>
+                      <li><a href="protocol-specification-things-delete.html">Delete</a></li>
+                      
+                      
+                      
+                  </ul>
+              </li>
+              
+              
+              
+              <li class="subfolders">
+                  <a href="#">→ search/messages</a>
+                  <ul>
+                      
+                      
+                      
+                      <li><a href="protocol-specification-things-search.html">Search</a></li>
                       
                       
                       
                       
                       
-                      <li><a href="protocol-specification-modify.html">Modify</a></li>
-                      
-                      
-                      
-                      
-                      
-                      <li><a href="protocol-specification-delete.html">Delete</a></li>
+                      <li><a href="protocol-specification-things-messages.html">Messages</a></li>
                       
                       
                       
@@ -512,7 +587,7 @@
               
               
               <li class="subfolders">
-                  <a href="#">Things Examples</a>
+                  <a href="#">→ Things examples</a>
                   <ul>
                       
                       
@@ -737,8 +812,9 @@
         <!-- Content Column -->
         <div class="col-md-9" id="tg-sb-content">
             <span class="incubation-logo">
-    <img src="images/eclipse_incubation.png" style="position: fixed; top: 50px; right: 10px;"/>
+    <img src="images/eclipse_incubation.png" alt="Eclipse Incubation project" style="position: fixed; top: 50px; right: 10px;"/>
 </span>
+
 
 <div class="post-header">
    <h1 class="post-title-main">Basic concepts overview</h1>
@@ -783,26 +859,27 @@ $('#toc').on('click', 'a', function() {
 
   <h2 id="domain-model">Domain model</h2>
 
-<p>Eclipse Ditto does not claim to know exactly which structure “Things” in the 
+<p>Eclipse Ditto does not claim to know exactly which structure Things in the 
 <a href="#" data-toggle="tooltip" data-original-title="Internet of Things">IoT</a> have or should have.<br />
 Its idea is to be as agnostic as possible when it comes to <code class="highlighter-rouge">Thing</code> data.</p>
 
-<p>It however defines two coarse elements in order to structure <code class="highlighter-rouge">Thing</code>s (see also <a href="basic-thingsfeatures.html">Things and Features</a>):</p>
+<p>Nevertheless two coarse elements are defined in order to structure <code class="highlighter-rouge">Thing</code>s (see also <a href="basic-thing.html">Thing</a>):</p>
 <ul>
-  <li>Attributes: intended for managing static meta data of a <code class="highlighter-rouge">Thing</code> which does not change frequently as JSON object</li>
-  <li>Features: intended for managing state data (e.g. sensor data or configuration data) of a <code class="highlighter-rouge">Thing</code></li>
+  <li>Attributes: intended for managing static meta data of a <code class="highlighter-rouge">Thing</code> - as JSON object - which does not change frequently.</li>
+  <li><a href="basic-feature.html">Features</a>: intended for managing state data (e.g. sensor data or configuration data) of a <code class="highlighter-rouge">Thing</code>.</li>
 </ul>
 
 <h2 id="api-version-1">API version 1</h2>
 
-<p>In API version 1 the information which <em>subjects</em> are allowed to READ, WRITE, ADMINISTRATE Things is inlined in the Things itself.<br />
-This class diagram shows the structure Ditto requires for <strong>API version 1</strong>:</p>
+<p>In API version 1 the information which <em>subjects</em> are allowed to READ, WRITE, ADMINISTRATE Things is inlined in the
+Things itself. This class diagram shows the structure Ditto requires for <strong>API version 1</strong>:</p>
 
-<figure><img class="docimage" src="images/pages/basic/ditto-class-diagram-v1.png" alt="Ditto Class Diagram" style="max-width: 600px" /><figcaption>Class diagram of Ditto's most basic entities in <b>API version 1</b></figcaption></figure>
+<figure><img class="docimage" src="images/pages/basic/ditto-class-diagram-v1.svg" alt="Ditto Class Diagram" style="max-width: 600px" /><figcaption>Class diagram 
+of Ditto's most basic entities in <b>API version 1.</b></figcaption></figure>
 
 <h3 id="json-format">JSON Format</h3>
 
-<p>Ditto persists “Things” as JSON and all of the APIs are also JSON based.</p>
+<p>Ditto persists Things as JSON and all of the APIs are also JSON based.</p>
 
 <p>In <strong>API version 1</strong> the most minimalistic representation of a Thing is for example the following:</p>
 
@@ -818,7 +895,7 @@ This class diagram shows the structure Ditto requires for <strong>API version 1<
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
-<p>Attributes and Features are optional (as also shown in the class diagram above), so in the example JSON above they are 
+<p>Attributes and Features are optional (as shown in the class diagram above), thus in the example JSON above they are
 omitted.</p>
 
 <p>A minimalistic Thing with one attribute and one Feature could look like this:</p>
@@ -847,11 +924,12 @@ omitted.</p>
 
 <h2 id="api-version-2">API version 2</h2>
 
-<p>In API version 2 the information which <em>subjects</em> are allowed to READ, WRITE Things are managed separately via <a href="basic-policies.html">Policies</a>.<br />
+<p>In API version 2 the information which <em>subjects</em> are allowed to READ, WRITE Things are managed separately via
+<a href="basic-policy.html">Policies</a>.<br />
 The <code class="highlighter-rouge">Thing</code> only contains a <code class="highlighter-rouge">policyId</code> which links to a Policy containing the authorization information.
 This class diagram shows the structure Ditto requires for <strong>API version 2</strong>:</p>
 
-<figure><img class="docimage" src="images/pages/basic/ditto-class-diagram-v2.png" alt="Ditto Class Diagram" style="max-width: 600px" /><figcaption>Class diagram of Ditto's most basic entities in <b>API version 2</b></figcaption></figure>
+<figure><img class="docimage" src="images/pages/basic/ditto-class-diagram-v2.png" alt="Ditto Class Diagram" style="max-width: 600px" /><figcaption>Class diagram of Ditto's most basic entities in <b>API version 2.</b></figcaption></figure>
 
 <h3 id="json-format-1">JSON Format</h3>
 
@@ -909,7 +987,7 @@ omitted.</p>
                     </div>
                     <p class="notice">
                         &copy;2017 Eclipse Ditto.
-                         Site last generated: Nov 13, 2017 <br />
+                         Site last generated: Nov 22, 2017 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

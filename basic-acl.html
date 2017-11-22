@@ -29,7 +29,7 @@
 <script src="js/toc.js"></script>
 <script src="js/customscripts.js"></script>
 
-<link rel="shortcut icon" href="images/favicon.ico">
+<!--<link rel="shortcut icon" href="images/favicon.ico">-->
 
 <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
 <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -307,17 +307,36 @@
               
               
               
-              
-              
-              
-              <li><a href="basic-thingsfeatures.html">Things and Features</a></li>
-              
-              
-              
-              
-              
-              
-              <li><a href="basic-definitions.html">Definitions</a></li>
+              <li class="subfolders">
+                  <a href="#">Model entites</a>
+                  <ul>
+                      
+                      
+                      
+                      <li><a href="basic-thing.html">Thing</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li class="active"><a href="basic-acl.html">Access Control List (ACL)</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="basic-feature.html">Feature</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="basic-policy.html">Policy</a></li>
+                      
+                      
+                      
+                  </ul>
+              </li>
               
               
               
@@ -331,20 +350,6 @@
               
               
               
-              <li class="active"><a href="basic-acl.html">Access Control List (ACL)</a></li>
-              
-              
-              
-              
-              
-              
-              <li><a href="basic-policies.html">Policies</a></li>
-              
-              
-              
-              
-              
-              
               <li><a href="basic-messages.html">Messages</a></li>
               
               
@@ -352,14 +357,54 @@
               
               
               
-              <li><a href="basic-events.html">Events</a></li>
+              <li><a href="basic-signals.html">Signals</a></li>
+              
+              
+              
+              <li class="subfolders">
+                  <a href="#">Signal types</a>
+                  <ul>
+                      
+                      
+                      
+                      <li><a href="basic-signals-command.html">Command</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="basic-signals-commandresponse.html">Command response</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="basic-signals-errorresponse.html">Error response</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="basic-signals-event.html">Event</a></li>
+                      
+                      
+                      
+                  </ul>
+              </li>
               
               
               
               
               
               
-              <li><a href="basic-whichapi.html">Which API to use?</a></li>
+              <li><a href="basic-apis.html">APIs</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="basic-changenotifications.html">Change notifications</a></li>
               
               
               
@@ -441,47 +486,77 @@
               
               
               
+              <li><a href="protocol-twinlive.html">Twin/live channel</a></li>
+              
+              
+              
+              
+              
+              
               <li><a href="protocol-specification.html">Specification</a></li>
               
               
               
+              
+              
+              
+              <li><a href="protocol-specification-topic.html">Protocol topic</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="protocol-specification-things.html">Things group</a></li>
+              
+              
+              
               <li class="subfolders">
-                  <a href="#">Things Spec</a>
+                  <a href="#">→ commands/events</a>
                   <ul>
                       
                       
                       
-                      <li><a href="protocol-specification-general.html">General</a></li>
+                      <li><a href="protocol-specification-things-create.html">Create</a></li>
                       
                       
                       
                       
                       
-                      <li><a href="protocol-specification-create.html">Create</a></li>
+                      <li><a href="protocol-specification-things-retrieve.html">Retrieve</a></li>
                       
                       
                       
                       
                       
-                      <li><a href="protocol-specification-retrieve.html">Retrieve</a></li>
+                      <li><a href="protocol-specification-things-modify.html">Modify</a></li>
                       
                       
                       
                       
                       
-                      <li><a href="protocol-specification-search.html">Search</a></li>
+                      <li><a href="protocol-specification-things-delete.html">Delete</a></li>
+                      
+                      
+                      
+                  </ul>
+              </li>
+              
+              
+              
+              <li class="subfolders">
+                  <a href="#">→ search/messages</a>
+                  <ul>
+                      
+                      
+                      
+                      <li><a href="protocol-specification-things-search.html">Search</a></li>
                       
                       
                       
                       
                       
-                      <li><a href="protocol-specification-modify.html">Modify</a></li>
-                      
-                      
-                      
-                      
-                      
-                      <li><a href="protocol-specification-delete.html">Delete</a></li>
+                      <li><a href="protocol-specification-things-messages.html">Messages</a></li>
                       
                       
                       
@@ -512,7 +587,7 @@
               
               
               <li class="subfolders">
-                  <a href="#">Things Examples</a>
+                  <a href="#">→ Things examples</a>
                   <ul>
                       
                       
@@ -737,8 +812,9 @@
         <!-- Content Column -->
         <div class="col-md-9" id="tg-sb-content">
             <span class="incubation-logo">
-    <img src="images/eclipse_incubation.png" style="position: fixed; top: 50px; right: 10px;"/>
+    <img src="images/eclipse_incubation.png" alt="Eclipse Incubation project" style="position: fixed; top: 50px; right: 10px;"/>
 </span>
+
 
 <div class="post-header">
    <h1 class="post-title-main">Access control list (ACL)</h1>
@@ -781,26 +857,31 @@ $('#toc').on('click', 'a', function() {
 
     
 
-  <p>Entries in the <a href="#" data-toggle="tooltip" data-original-title="An access control list (ACL) holds the current status on who (subject) is permitted to which extent (read, write, administrate) to manage a Thing.">ACL</a> configure the permissions for subjects. A subject is identified by an arbitrary ID.</p>
+  <p>Entries in the <a href="#" data-toggle="tooltip" data-original-title="An access control list (ACL) holds the current status on who (subject) is permitted to which extent (read, write, administrate) to manage a Thing.">ACL</a> configure the
+permissions for subjects. A subject is identified by an arbitrary ID.</p>
 
 <div class="alert alert-info" role="alert"><i class="fa fa-info-circle"></i> <b>Note:</b> The ACL concept is only supported for Ditto <strong>HTTP API version 1</strong>. <br /> 
-For Ditto <strong>HTTP API version 2</strong> we have introduced the Policies concept.</div>
+  For Ditto <strong>HTTP API version 2</strong> we have introduced the <a href="basic-policy.html">Policies</a> concept.</div>
 
 <h2 id="authorization-subject">Authorization Subject</h2>
 
 <p>A <em>subject</em> can have following type of permission: read, write, administrate.</p>
 
 <ul>
-  <li>A subject that has read permission is allowed to read all data of a Thing, i.e. its Attributes and Features and ACL.</li>
-  <li>Write permission is required to be able to set data of the Thing or to send messages to a Thing or Feature.</li>
-  <li>To be able to modify the ACL itself, a subject needs administrate permission.</li>
+  <li>A subject that has <a href="basic-acl.html#read">READ</a> permission is allowed to read all data of a Thing, i.e. its Attributes,
+Features and ACL.</li>
+  <li><a href="basic-acl.html#write">WRITE</a> permission is required to be able to set data of the Thing or to send messages to a 
+Thing or Feature.</li>
+  <li>To be able to modify the ACL itself, a subject needs <a href="basic-acl.html#administrate">ADMINISTRATE</a> permission.</li>
 </ul>
 
-<p>When a Thing is initially created at least one entry of the ACL with read, write and administrate permission is mandatory 
-and must be provided. If there is no ACL provided when creating a new Thing, a default ACL will be created. 
+<p>When a Thing is initially created at least one entry of the ACL with READ, WRITE and ADMINISTRATE permission is
+mandatory and must be provided.
+If there is no ACL provided when creating a new Thing, a default ACL will be created. 
 The default ACL entry consists of a subject ID (e.g. the ID of the currently logged in user), and all 3 permissions.</p>
 
-<p>Also, there must always be at least one entry with all permissions. The last entry cannot be deleted or changed to not include all permissions.</p>
+<p>Also, there must always be at least one entry with all permissions.
+The last entry cannot be deleted or changed to not include all permissions.</p>
 
 <h2 id="read">READ</h2>
 
@@ -814,7 +895,8 @@ E.g. only entities with READ permission on the Thing will be notified about chan
 <p>Allows to write/modify a Thing.
 E.g. create/update/delete Things, Attributes, Features and their Properties, execute Feature operations.</p>
 
-<p>In order to send messages towards or from a Thing one would need WRITE permission on the specific Thing.</p>
+<p>In order to send messages towards to or receive messages from a Thing one would need WRITE permission on the specific 
+Thing.</p>
 
 <h2 id="administrate">ADMINISTRATE</h2>
 
@@ -822,10 +904,10 @@ E.g. create/update/delete Things, Attributes, Features and their Properties, exe
 
 <h2 id="example-for-an-access-control-list">Example for an Access Control List</h2>
 
-<p>The following example shows the access control list for “thingId”: “my.domain:myFirstThing”.</p>
+<p>The following example shows the ACL JSON object of a Thing.</p>
 
 <p>The first authorization subject is the ID of the default nginx user “ditto”.
-The second is the ID of another user “adam” which would have an additional <code class="highlighter-rouge">ADMINISTRATE</code> permission compared to the other user.</p>
+The second one is the ID of another user “adam” who additionally has <code class="highlighter-rouge">WRITE</code> and <code class="highlighter-rouge">ADMINISTRATE</code> permission.</p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="s2">"acl"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
   </span><span class="s2">"ditto"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
@@ -866,7 +948,7 @@ The second is the ID of another user “adam” which would have an additional <
                     </div>
                     <p class="notice">
                         &copy;2017 Eclipse Ditto.
-                         Site last generated: Nov 13, 2017 <br />
+                         Site last generated: Nov 22, 2017 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

@@ -29,7 +29,7 @@
 <script src="js/toc.js"></script>
 <script src="js/customscripts.js"></script>
 
-<link rel="shortcut icon" href="images/favicon.ico">
+<!--<link rel="shortcut icon" href="images/favicon.ico">-->
 
 <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
 <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -307,17 +307,36 @@
               
               
               
-              
-              
-              
-              <li><a href="basic-thingsfeatures.html">Things and Features</a></li>
-              
-              
-              
-              
-              
-              
-              <li><a href="basic-definitions.html">Definitions</a></li>
+              <li class="subfolders">
+                  <a href="#">Model entites</a>
+                  <ul>
+                      
+                      
+                      
+                      <li><a href="basic-thing.html">Thing</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="basic-acl.html">Access Control List (ACL)</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="basic-feature.html">Feature</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="basic-policy.html">Policy</a></li>
+                      
+                      
+                      
+                  </ul>
+              </li>
               
               
               
@@ -331,20 +350,6 @@
               
               
               
-              <li><a href="basic-acl.html">Access Control List (ACL)</a></li>
-              
-              
-              
-              
-              
-              
-              <li><a href="basic-policies.html">Policies</a></li>
-              
-              
-              
-              
-              
-              
               <li><a href="basic-messages.html">Messages</a></li>
               
               
@@ -352,14 +357,54 @@
               
               
               
-              <li><a href="basic-events.html">Events</a></li>
+              <li><a href="basic-signals.html">Signals</a></li>
+              
+              
+              
+              <li class="subfolders">
+                  <a href="#">Signal types</a>
+                  <ul>
+                      
+                      
+                      
+                      <li><a href="basic-signals-command.html">Command</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="basic-signals-commandresponse.html">Command response</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="basic-signals-errorresponse.html">Error response</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="basic-signals-event.html">Event</a></li>
+                      
+                      
+                      
+                  </ul>
+              </li>
               
               
               
               
               
               
-              <li><a href="basic-whichapi.html">Which API to use?</a></li>
+              <li><a href="basic-apis.html">APIs</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="basic-changenotifications.html">Change notifications</a></li>
               
               
               
@@ -441,47 +486,77 @@
               
               
               
+              <li><a href="protocol-twinlive.html">Twin/live channel</a></li>
+              
+              
+              
+              
+              
+              
               <li><a href="protocol-specification.html">Specification</a></li>
               
               
               
+              
+              
+              
+              <li><a href="protocol-specification-topic.html">Protocol topic</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="protocol-specification-things.html">Things group</a></li>
+              
+              
+              
               <li class="subfolders">
-                  <a href="#">Things Spec</a>
+                  <a href="#">→ commands/events</a>
                   <ul>
                       
                       
                       
-                      <li><a href="protocol-specification-general.html">General</a></li>
+                      <li><a href="protocol-specification-things-create.html">Create</a></li>
                       
                       
                       
                       
                       
-                      <li><a href="protocol-specification-create.html">Create</a></li>
+                      <li><a href="protocol-specification-things-retrieve.html">Retrieve</a></li>
                       
                       
                       
                       
                       
-                      <li><a href="protocol-specification-retrieve.html">Retrieve</a></li>
+                      <li><a href="protocol-specification-things-modify.html">Modify</a></li>
                       
                       
                       
                       
                       
-                      <li><a href="protocol-specification-search.html">Search</a></li>
+                      <li><a href="protocol-specification-things-delete.html">Delete</a></li>
+                      
+                      
+                      
+                  </ul>
+              </li>
+              
+              
+              
+              <li class="subfolders">
+                  <a href="#">→ search/messages</a>
+                  <ul>
+                      
+                      
+                      
+                      <li><a href="protocol-specification-things-search.html">Search</a></li>
                       
                       
                       
                       
                       
-                      <li><a href="protocol-specification-modify.html">Modify</a></li>
-                      
-                      
-                      
-                      
-                      
-                      <li><a href="protocol-specification-delete.html">Delete</a></li>
+                      <li><a href="protocol-specification-things-messages.html">Messages</a></li>
                       
                       
                       
@@ -512,7 +587,7 @@
               
               
               <li class="subfolders">
-                  <a href="#">Things Examples</a>
+                  <a href="#">→ Things examples</a>
                   <ul>
                       
                       
@@ -737,8 +812,9 @@
         <!-- Content Column -->
         <div class="col-md-9" id="tg-sb-content">
             <span class="incubation-logo">
-    <img src="images/eclipse_incubation.png" style="position: fixed; top: 50px; right: 10px;"/>
+    <img src="images/eclipse_incubation.png" alt="Eclipse Incubation project" style="position: fixed; top: 50px; right: 10px;"/>
 </span>
+
 
 <div class="post-header">
    <h1 class="post-title-main">Running Ditto</h1>
@@ -785,12 +861,12 @@ $('#toc').on('click', 'a', function() {
 
 <p>In order to start Ditto, you’ll need:</p>
 <ul>
-  <li>a running Docker daemon (at least version 17.06 CE)</li>
-  <li>Docker Compose installed (at least version 1.14)</li>
+  <li>a running Docker daemon (at least version 17.06 CE),</li>
+  <li>Docker Compose installed (at least version 1.14),</li>
   <li>the built Docker images of Ditto
     <ul>
-      <li>either by building them as described in <a href="installation-building.html">Building Ditto</a></li>
-      <li>or by using the pre-built <a href="https://hub.docker.com/u/eclipseditto/">Ditto images on Docker Hub</a></li>
+      <li>either by building them as described in <a href="installation-building.html">Building Ditto</a>,</li>
+      <li>or by using the pre-built <a href="https://hub.docker.com/u/eclipseditto/">Ditto images on Docker Hub</a>.</li>
     </ul>
   </li>
 </ul>
@@ -806,25 +882,25 @@ docker-compose up <span class="nt">-d</span>
 
 <p>You have now running:</p>
 <ul>
-  <li>a MongoDB as backing datastore of Ditto (not part of Ditto but started via Docker)</li>
+  <li>a MongoDB as backing datastore of Ditto (not part of Ditto but started via Docker),</li>
   <li>Ditto microservices:
     <ul>
-      <li>Policies</li>
-      <li>Things</li>
-      <li>Thing-Search</li>
-      <li>Gateway</li>
+      <li>Policies,</li>
+      <li>Things,</li>
+      <li>Thing-Search,</li>
+      <li>Gateway,</li>
     </ul>
   </li>
-  <li>an nginx acting as a reverse proxy performing a simple “basic authentication” listening on port <code class="highlighter-rouge">8080</code>
+  <li>an instance of nginx acting as a reverse proxy performing a simple “basic authentication” listening on port <code class="highlighter-rouge">8080</code>
     <ul>
-      <li>including some static HTTP + API documentation on <a href="http://localhost:8080">http://localhost:8080</a></li>
+      <li>including some static HTTP + API documentation on <a href="http://localhost:8080">http://localhost:8080</a>.</li>
     </ul>
   </li>
 </ul>
 
 <h2 id="stop-ditto">Stop Ditto</h2>
 
-<p>This commands stops the Ditto stack without removing the data in the MongoDB database.</p>
+<p>This command stops the Ditto stack without removing the data from MongoDB database.</p>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker-compose stop
 </code></pre></div></div>
@@ -870,7 +946,7 @@ docker-compose up <span class="nt">-d</span>
                     </div>
                     <p class="notice">
                         &copy;2017 Eclipse Ditto.
-                         Site last generated: Nov 13, 2017 <br />
+                         Site last generated: Nov 22, 2017 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">
