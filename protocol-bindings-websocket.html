@@ -860,14 +860,63 @@ $('#toc').on('click', 'a', function() {
   <p>The Ditto Protocol message can be sent <em>as is</em> as <a href="https://tools.ietf.org/html/rfc6455">WebSocket</a> message.
 The Ditto Protocol JSON must be sent as <code class="highlighter-rouge">UTF-8</code> encoded String payload.</p>
 
-<h2 id="ditto-websocket-endpoint">Ditto WebSocket endpoint</h2>
+<h2 id="websocket-features">WebSocket features</h2>
 
-<p>The WebSocket endpoint is accessible at this URL:</p>
+<p>The WebSocket provides an alternative to the <a href="httpapi-overview.html">HTTP API</a> in order to manage your Digital Twins.</p>
+
+<p>The benefits of the WebSocket compared to HTTP are multiple ones:</p>
+<ul>
+  <li>a single connection (socket like) is established and for commands to Digital Twins no further HTTP overhead 
+(e.g. HTTP headers, HTTP connection establishment) is produced which means you can get more commands/seconds 
+through the WebSocket compared to the HTTP endpoint</li>
+  <li>as the WebSocket is a duplex connection, <a href="basic-changenotifications.html">change notifications</a> can be sent via the
+WebSocket for changes to entities done in Ditto</li>
+  <li>additionally, <a href="basic-messages.html">messages</a> and <a href="protocol-twinlive.html">live commands/events</a> can be exchanged 
+(sending and receiving) via multiple connected WebSocket sessions</li>
+</ul>
+
+<h3 id="send-commands-and-get-responses">Send commands and get responses</h3>
+
+<p>When sending a command via WebSocket you will receive a corresponding response (the response can be related to the 
+request by the <code class="highlighter-rouge">correlation-id</code> header). <br />
+The response indicates the success or the failure of the command and, depending on the command type, contains the result
+payload.</p>
+
+<p>Please find examples of commands and their response pattern at <a href="protocol-examples.html">Protocol examples</a>.</p>
+
+<h3 id="request-receiving-eventschange-notifications">Request receiving events/change notifications</h3>
+
+<p>In addition to the response, which Ditto addresses directly to the instance which was sending the command, an event 
+is generated. <br />
+This will be delivered to all other clients with read permissions for the respective thing, feature change, etc.</p>
+
+<p>See <a href="#request-events">request events</a> for subscribing/unsubscribing for receiving change notifications.</p>
+
+<h3 id="request-receiving-messages">Request receiving messages</h3>
+
+<p><a href="basic-messages.html">Messages</a> can be sent both via the <a href="httpapi-overview.html">HTTP API</a> and the WebSocket. Receiving
+messages and answering to them however can only be done via the WebSocket.</p>
+
+<p>See <a href="#request-messages">request messages</a> for subscribing/unsubscribing for receiving messages.</p>
+
+<h3 id="request-receiving-live-commands--events">Request receiving live commands + events</h3>
+
+<p>In order to receive <a href="protocol-twinlive.html">live commands and events</a>, the WebSocket API can be used. The Ditto Protocol
+messages are the same as for the “twin” channel, only with <em>live</em> as channel in the 
+<a href="protocol-specification-topic.html">topic</a>.</p>
+
+<p>See <a href="#request-live-commands">request live commands</a> and <a href="#request-live-events">request live events</a> for 
+subscribing/unsubscribing for receiving live commands and events.</p>
+
+<h2 id="websocket-endpoint">WebSocket endpoint</h2>
+
+<p>The WebSocket endpoint is accessible at these URLs (depending on which API version to use):</p>
 
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ws://localhost:8080/ws/1
+ws://localhost:8080/ws/2
 </code></pre></div></div>
 
-<h2 id="authenticate">Authenticate</h2>
+<h3 id="authentication">Authentication</h3>
 
 <p>A user who connects to the WebSocket endpoint can be authenticated by using</p>
 
@@ -878,24 +927,140 @@ The Ditto Protocol JSON must be sent as <code class="highlighter-rouge">UTF-8</c
 
 <p>See <a href="basic-auth.html">Authenticate</a> for more details.</p>
 
-<h2 id="send-commands-and-get-responses">Send commands and get responses</h2>
+<h2 id="websocket-protocol-format">WebSocket protocol format</h2>
 
-<p>When sending a command via WebSocket you will receive a corresponding response (the response can be related to the 
-request by the <code class="highlighter-rouge">correlation-id</code> header).
-The response indicates the success or the failure of the command and, depending on the command type, contains the result
-payload.</p>
+<p>As defined in the <a href="protocol-specification.html">Protocol specification</a> a Ditto Protocol message consists of different
+information. This information is combined into a single JSON message for the WebSocket endpoint:</p>
+<ul>
+  <li><a href="protocol-specification.html#topic">topic</a>: JSON string with key <code class="highlighter-rouge">topic</code></li>
+  <li><a href="protocol-specification.html#headers">headers</a>: JSON object with key <code class="highlighter-rouge">headers</code></li>
+  <li><a href="protocol-specification.html#path">path</a>: JSON string with key <code class="highlighter-rouge">path</code></li>
+  <li><a href="protocol-specification.html#value">value</a>: JSON value (e.g. JSON object, string, array, …) with key <code class="highlighter-rouge">value</code></li>
+  <li><a href="protocol-specification.html#status">status</a> (for responses): JSON number with key <code class="highlighter-rouge">status</code></li>
+</ul>
 
-<p>Please find examples of commands and their response pattern at <a href="protocol-examples.html">Protocol examples.</a></p>
+<p>The schema for Ditto Protocol message via WebSocket:</p>
 
-<h2 id="request-eventschange-notifications">Request events/change notifications</h2>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"topic"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;the topic&gt;"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"correlation-id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;a correlation-id&gt;"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"a-header"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;header value&gt;"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="s2">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;the path&gt;"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"value"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
 
-<p>Additionally to the response, which Ditto addresses directly to the instance which was sending the command, an event 
-is generated. 
-This will be delivered to all other clients with read permissions for the respective thing, feature change, etc. 
-Thus in order to receive such events (triggered by commands of a 3rd-party) you will need to send a <code class="highlighter-rouge">START-SEND-EVENTS</code>
-WebSocket message literally.</p>
+<h2 id="websocket-binding-specific-messages">WebSocket binding specific messages</h2>
 
-<p>To close the events subscription, send a <code class="highlighter-rouge">STOP-SEND-EVENTS</code> message.</p>
+<p>The WebSocket binding defines several specific messages which are not defined in the Ditto Protocol specification.</p>
+
+<p>Those are also not defined as JSON messages, but as plain text messages. All of those declare a demand for some kind
+of information from the backend to be pushed into the WebSocket session.</p>
+
+<h3 id="request-events">Request events</h3>
+
+<p>In order to subscribe for <a href="basic-changenotifications.html">events/change notifications</a> for entities (e.g. Things), 
+following text message has to be sent to the backend:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>START-SEND-EVENTS
+</code></pre></div></div>
+
+<p>This message is acknowledged by Ditto by sending back:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>START-SEND-EVENTS:ACK
+</code></pre></div></div>
+
+<p>From then on the WebSocket session will receive all change notifications it is entitled to see.</p>
+
+<p>In order to stop receiving change notifications, the following text message has to be sent to the backend:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>STOP-SEND-EVENTS
+</code></pre></div></div>
+
+<p>This message is acknowledged by Ditto by sending back:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>STOP-SEND-EVENTS:ACK
+</code></pre></div></div>
+
+<h3 id="request-messages">Request messages</h3>
+
+<p>In order to subscribe for <a href="basic-messages.html">messages</a> which can be sent from a WebSocket session to another 
+WebSocket session or from the <a href="httpapi-overview.html">HTTP API</a> to a WebSocket session, the following text message has 
+to be sent to the backend:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>START-SEND-MESSAGES
+</code></pre></div></div>
+
+<p>This message is acknowledged by Ditto by sending back:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>START-SEND-MESSAGES:ACK
+</code></pre></div></div>
+
+<p>From then on the WebSocket session will receive all messages it is entitled to see.</p>
+
+<p>In order to stop receiving messages, the following text message has to be sent to the backend:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>STOP-SEND-MESSAGES
+</code></pre></div></div>
+
+<p>This message is acknowledged by Ditto by sending back:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>STOP-SEND-MESSAGES:ACK
+</code></pre></div></div>
+
+<h3 id="request-live-commands">Request live commands</h3>
+
+<p>In order to subscribe for <a href="protocol-twinlive.html">live commands</a> which can be sent from a WebSocket session to another 
+WebSocket session, the following text message has to be sent to the backend:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>START-SEND-LIVE-COMMANDS
+</code></pre></div></div>
+
+<p>This message is acknowledged by Ditto by sending back:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>START-SEND-LIVE-COMMANDS:ACK
+</code></pre></div></div>
+
+<p>From then on the WebSocket session will receive all live commands it is entitled to see.</p>
+
+<p>In order to stop receiving live commands, the following text message has to be sent to the backend:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>STOP-SEND-LIVE-COMMANDS
+</code></pre></div></div>
+
+<p>This message is acknowledged by Ditto by sending back:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>STOP-SEND-LIVE-COMMANDS:ACK
+</code></pre></div></div>
+
+<h3 id="request-live-events">Request live events</h3>
+
+<p>In order to subscribe for <a href="protocol-twinlive.html">live events</a> which can be sent from a WebSocket session to another 
+WebSocket session, the following text message has to be sent to the backend:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>START-SEND-LIVE-EVENTS
+</code></pre></div></div>
+
+<p>This message is acknowledged by Ditto by sending back:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>START-SEND-LIVE-EVENTS:ACK
+</code></pre></div></div>
+
+<p>From then on the WebSocket session will receive all live events it is entitled to see.</p>
+
+<p>In order to stop receiving live events, the following text message has to be sent to the backend:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>STOP-SEND-LIVE-EVENTS
+</code></pre></div></div>
+
+<p>This message is acknowledged by Ditto by sending back:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>STOP-SEND-LIVE-EVENTS:ACK
+</code></pre></div></div>
 
 
     <div class="tags">
@@ -922,7 +1087,7 @@ WebSocket message literally.</p>
                     </div>
                     <p class="notice">
                         &copy;2017 Eclipse Ditto.
-                         Site last generated: Nov 22, 2017 <br />
+                         Site last generated: Dec 5, 2017 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">
