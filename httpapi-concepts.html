@@ -276,6 +276,13 @@
               
               
               
+              
+              
+              <li><a href="release_notes_010-M2.html">0.1.0-M2 Release notes</a></li>
+              
+              
+              
+              
           </ul>
         </li>
     
@@ -297,6 +304,13 @@
               
               
               <li><a href="installation-running.html">Running Ditto</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="installation-operating.html">Operating Ditto</a></li>
               
               
               
@@ -420,6 +434,13 @@
               
               
               
+              
+              
+              <li><a href="basic-search.html">Search</a></li>
+              
+              
+              
+              
           </ul>
         </li>
     
@@ -434,6 +455,45 @@
               
               
               <li><a href="architecture-overview.html">Overview</a></li>
+              
+              
+              
+              <li class="subfolders">
+                  <a href="#">Services</a>
+                  <ul>
+                      
+                      
+                      
+                      <li><a href="architecture-services-policies.html">Policies</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="architecture-services-things.html">Things</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="architecture-services-things-search.html">Things-Search</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="architecture-services-gateway.html">Gateway</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="architecture-services-amqp-bridge.html">AMQP-Bridge</a></li>
+                      
+                      
+                      
+                  </ul>
+              </li>
               
               
               
@@ -587,6 +647,13 @@
               
               
               <li><a href="protocol-bindings-websocket.html">Websocket Binding</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="protocol-bindings-amqp10.html">AMQP 1.0 Binding</a></li>
               
               
               
@@ -868,37 +935,366 @@ $('#toc').on('click', 'a', function() {
 
     
 
-  <div class="alert alert-danger" role="alert"><i class="fa fa-exclamation-circle"></i> <b>Warning:</b> This page is still a work in progress.</div>
+  <p>Ditto’s <a href="http-api-doc.html">HTTP API</a> follows some concepts which are documented on this page.</p>
 
-<h2 id="specified-endpoints">Specified endpoints</h2>
+<p>The entry point into the HTTP API is:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http://localhost:8080/api/&lt;apiVersion&gt;
+</code></pre></div></div>
 
-<p>TODO document the static endpoints of Ditto:</p>
+<h2 id="api-versioning">API versioning</h2>
+
+<p>Ditto’s HTTP API is versioned in the URL: <code class="highlighter-rouge">/api/&lt;apiVersion&gt;</code>. Currently Ditto distinguishes between API version <code class="highlighter-rouge">1</code> and
+API version <code class="highlighter-rouge">2</code>.</p>
+
+<p>The API version is a promise that no HTTP resources (the static ones defined by Ditto itself) are modified in an 
+incompatible/breaking way. As the HTTP resources reflect the JSON structure of the <code class="highlighter-rouge">Thing</code> entity, that also applies for
+this entity. In API version 1, the JSON structure of the <code class="highlighter-rouge">Thing</code> entity won’t be changed in a breaking way 
+(e.g. by removing or renaming a JSON field).</p>
+
+<p>That is also the reason for Ditto having already 2 API versions. In API 2 the <code class="highlighter-rouge">Thing</code> structure was changed to no longer
+contain the <a href="basic-acl.html">acl</a> inline as payload of the Thing, but the authorization information in API 2 is managed 
+by <a href="basic-policy.html">Policies</a>. The <code class="highlighter-rouge">acl</code> field was removed from structure of the <code class="highlighter-rouge">Thing</code> and the <code class="highlighter-rouge">policyId</code> added - 
+that’s why Ditto had to make this change in an API version 2.</p>
+
+<h2 id="endpoints">Endpoints</h2>
+
+<p>In the HTTP API, some endpoints are static and can be seen as the “schema” of Ditto. They are in sync with the JSON 
+representation of the model classes, e.g. <a href="basic-thing.html#model-specification">Thing</a> for the layout of the <code class="highlighter-rouge">/things</code>
+endpoint and <a href="basic-policy.html">Policy</a> for the layout of the <code class="highlighter-rouge">/policies</code> endpoint.</p>
+
+<h3 id="api-version-1">API version 1</h3>
+
+<p>In API version 1, each <code class="highlighter-rouge">Thing</code> contains the information about the authorization in an inlined <a href="basic-acl.html">ACL</a>.</p>
+
+<h4 id="things-in-api-1"><code class="highlighter-rouge">/things</code> in API 1</h4>
+
+<p>The base endpoint for accessing and working with <code class="highlighter-rouge">Things</code>.<br />
+A <code class="highlighter-rouge">Thing</code> in API 1 has the following JSON structure:</p>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"thingId"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"acl"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+  
+  </span><span class="p">},</span><span class="w">
+  </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+  
+  </span><span class="p">},</span><span class="w">
+  </span><span class="s2">"features"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+  
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>This maps to the following HTTP API endpoints:</p>
 <ul>
-  <li>/things</li>
-  <li>/things/{thingId}/policyId</li>
-  <li>/things/{thingId}/acl</li>
-  <li>/things/{thingId}/attributes</li>
-  <li>/things/{thingId}/features</li>
-  <li>/things/{thingId}/features/{featureId}</li>
-  <li>/things/{thingId}/features/{featureId}/properties</li>
-  <li>…</li>
+  <li><code class="highlighter-rouge">/things/{thingId}</code>: accessing complete <code class="highlighter-rouge">Thing</code></li>
+  <li><code class="highlighter-rouge">/things/{thingId}/acl</code>: accessing the ACL of the <code class="highlighter-rouge">Thing</code></li>
+  <li><code class="highlighter-rouge">/things/{thingId}/attributes</code>: accessing the attributes of the <code class="highlighter-rouge">Thing</code></li>
+  <li><code class="highlighter-rouge">/things/{thingId}/features</code>: accessing the features of the <code class="highlighter-rouge">Thing</code></li>
 </ul>
 
-<h2 id="dynamic-endpoints">Dynamic endpoints</h2>
+<h4 id="things-in-api-1---dynamic-part"><code class="highlighter-rouge">/things</code> in API 1 - dynamic part</h4>
 
-<p>The JSON structure of a <code class="highlighter-rouge">Thing</code> defines the API.</p>
+<p>Additionally to that “static part” of the HTTP API which is defined by Ditto, the API is dynamically enhanced by the JSON 
+structure of the Thing.<br /></p>
+
+<div class="alert alert-info" role="alert"><i class="fa fa-info-circle"></i> <b>Note:</b> This automatically turns each small aspect of a <strong>Digital Twin</strong> into an API endpoint.</div>
+
+<p>For example for a <code class="highlighter-rouge">Thing</code> with following content:</p>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"thingId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{thingId}"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"acl"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"{userId}"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"READ"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"WRITE"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"ADMINISTRATE"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"manufacturer"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ACME corp"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"complex"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"some"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"serialNo"</span><span class="p">:</span><span class="w"> </span><span class="mi">4711</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="s2">"features"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"lamp"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"on"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"color"</span><span class="p">:</span><span class="w"> </span><span class="s2">"blue"</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>The following additional API endpoints are automatically available:</p>
+<ul>
+  <li><code class="highlighter-rouge">/things/{thingId}/acl/userId</code>: accessing the ACL entry for user <code class="highlighter-rouge">userId</code> of the <code class="highlighter-rouge">Thing</code></li>
+  <li><code class="highlighter-rouge">/things/{thingId}/attributes/manufacturer</code>: accessing the attribute <code class="highlighter-rouge">manufacturer</code> of the <code class="highlighter-rouge">Thing</code></li>
+  <li><code class="highlighter-rouge">/things/{thingId}/attributes/complex</code>: accessing the attribute <code class="highlighter-rouge">complex</code> of the <code class="highlighter-rouge">Thing</code></li>
+  <li><code class="highlighter-rouge">/things/{thingId}/attributes/complex/some</code>: accessing the attribute <code class="highlighter-rouge">complex/some</code> of the <code class="highlighter-rouge">Thing</code></li>
+  <li><code class="highlighter-rouge">/things/{thingId}/attributes/complex/serialNo</code>: accessing the attribute <code class="highlighter-rouge">complex/serialNo</code> of the <code class="highlighter-rouge">Thing</code></li>
+  <li><code class="highlighter-rouge">/things/{thingId}/features/lamp</code>: accessing the feature <code class="highlighter-rouge">lamp</code> of the <code class="highlighter-rouge">Thing</code></li>
+  <li><code class="highlighter-rouge">/things/{thingId}/features/lamp/properties</code>: accessing all properties of the feature <code class="highlighter-rouge">lamp</code> of the <code class="highlighter-rouge">Thing</code></li>
+  <li><code class="highlighter-rouge">/things/{thingId}/features/lamp/properties/on</code>: accessing the <code class="highlighter-rouge">on</code> property of the feature <code class="highlighter-rouge">lamp</code> of the <code class="highlighter-rouge">Thing</code></li>
+  <li><code class="highlighter-rouge">/things/{thingId}/features/lamp/properties/color</code>: accessing the <code class="highlighter-rouge">color</code> properties of the feature <code class="highlighter-rouge">lamp</code> of the <code class="highlighter-rouge">Thing</code></li>
+</ul>
+
+<h3 id="api-version-2">API version 2</h3>
+
+<p>In API version 2, a <code class="highlighter-rouge">Thing</code> does no longer contain information about the authorization in an inlined <a href="basic-acl.html">ACL</a>,
+but contains a <code class="highlighter-rouge">policyId</code> which points to a <code class="highlighter-rouge">Policy</code> managed by another entity and API endpoint located under <code class="highlighter-rouge">/policies</code>.</p>
+
+<h4 id="things-in-api-2"><code class="highlighter-rouge">/things</code> in API 2</h4>
+
+<p>The base endpoint for accessing and working with <code class="highlighter-rouge">Things</code>.<br />
+A <code class="highlighter-rouge">Thing</code> in API 2 has the following JSON structure:</p>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"thingId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{thingId}"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"policyId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{policyId}"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+  
+  </span><span class="p">},</span><span class="w">
+  </span><span class="s2">"features"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+  
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>This maps to the following HTTP API endpoints:</p>
+<ul>
+  <li><code class="highlighter-rouge">/things/{thingId}</code>: accessing complete <code class="highlighter-rouge">Thing</code></li>
+  <li><code class="highlighter-rouge">/things/{thingId}/policyId</code>: accessing the policy ID of the <code class="highlighter-rouge">Thing</code></li>
+  <li><code class="highlighter-rouge">/things/{thingId}/attributes</code>: accessing the attributes of the <code class="highlighter-rouge">Thing</code></li>
+  <li><code class="highlighter-rouge">/things/{thingId}/features</code>: accessing the features of the <code class="highlighter-rouge">Thing</code></li>
+</ul>
+
+<h4 id="things-in-api-2---dynamic-part"><code class="highlighter-rouge">/things</code> in API 2 - dynamic part</h4>
+
+<p>Additionally to that “static part” of the HTTP API which is defined by Ditto, the API is dynamically enhanced by the JSON 
+structure of the Thing.<br /></p>
+
+<div class="alert alert-info" role="alert"><i class="fa fa-info-circle"></i> <b>Note:</b> This automatically turns each small aspect of a <strong>Digital Twin</strong> into an API endpoint.</div>
+
+<p>For example for a <code class="highlighter-rouge">Thing</code> with following content:</p>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"thingId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{thingId}"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"policyId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{policyId}"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"manufacturer"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ACME corp"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"complex"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"some"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"serialNo"</span><span class="p">:</span><span class="w"> </span><span class="mi">4711</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="s2">"features"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"lamp"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"on"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"color"</span><span class="p">:</span><span class="w"> </span><span class="s2">"blue"</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>The following additional API endpoints are automatically available:</p>
+<ul>
+  <li><code class="highlighter-rouge">/things/{thingId}/attributes/manufacturer</code>: accessing the attribute <code class="highlighter-rouge">manufacturer</code> of the <code class="highlighter-rouge">Thing</code></li>
+  <li><code class="highlighter-rouge">/things/{thingId}/attributes/complex</code>: accessing the attribute <code class="highlighter-rouge">complex</code> of the <code class="highlighter-rouge">Thing</code></li>
+  <li><code class="highlighter-rouge">/things/{thingId}/attributes/complex/some</code>: accessing the attribute <code class="highlighter-rouge">complex/some</code> of the <code class="highlighter-rouge">Thing</code></li>
+  <li><code class="highlighter-rouge">/things/{thingId}/attributes/complex/serialNo</code>: accessing the attribute <code class="highlighter-rouge">complex/serialNo</code> of the <code class="highlighter-rouge">Thing</code></li>
+  <li><code class="highlighter-rouge">/things/{thingId}/features/lamp</code>: accessing the feature <code class="highlighter-rouge">lamp</code> of the <code class="highlighter-rouge">Thing</code></li>
+  <li><code class="highlighter-rouge">/things/{thingId}/features/lamp/properties</code>: accessing all properties of the feature <code class="highlighter-rouge">lamp</code> of the <code class="highlighter-rouge">Thing</code></li>
+  <li><code class="highlighter-rouge">/things/{thingId}/features/lamp/properties/on</code>: accessing the <code class="highlighter-rouge">on</code> property of the feature <code class="highlighter-rouge">lamp</code> of the <code class="highlighter-rouge">Thing</code></li>
+  <li><code class="highlighter-rouge">/things/{thingId}/features/lamp/properties/color</code>: accessing the <code class="highlighter-rouge">color</code> properties of the feature <code class="highlighter-rouge">lamp</code> of the <code class="highlighter-rouge">Thing</code></li>
+</ul>
+
+<h4 id="policies-in-api-2"><code class="highlighter-rouge">/policies</code> in API 2</h4>
+
+<p>The base endpoint for accessing and working with <code class="highlighter-rouge">Policies</code>.<br />
+A <code class="highlighter-rouge">Policy</code> in API 2 has the following JSON structure:</p>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"policyId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{policyId}"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"entries"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"{entryLabel-1}"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"subjects"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"{subjectId1}"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="s2">"resources"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"{resource1}"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">    
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>This maps to the following HTTP API endpoints:</p>
+<ul>
+  <li><code class="highlighter-rouge">/policies/{policyId}</code>: accessing complete <code class="highlighter-rouge">Policy</code></li>
+  <li><code class="highlighter-rouge">/policies/{policyId}/entries</code>: accessing the <code class="highlighter-rouge">Policy</code> entries</li>
+  <li><code class="highlighter-rouge">/policies/{policyId}/entries/{entryLabel-1}</code>: accessing a single <code class="highlighter-rouge">Policy</code> entry with the label <code class="highlighter-rouge">{entryLabel-1}</code></li>
+  <li><code class="highlighter-rouge">/policies/{policyId}/entries/{entryLabel-1}/subjects</code>: accessing the subjects of a single <code class="highlighter-rouge">Policy</code> entry with the label <code class="highlighter-rouge">{entryLabel-1}</code></li>
+  <li><code class="highlighter-rouge">/policies/{policyId}/entries/{entryLabel-1}/resources</code>: accessing the resources of a single <code class="highlighter-rouge">Policy</code> entry with the label <code class="highlighter-rouge">{entryLabel-1}</code></li>
+</ul>
 
 <h2 id="partial-updates">Partial updates</h2>
 
-<p>TODO document partial updates (changing only specific hierarchies instead of a complete <code class="highlighter-rouge">Thing</code>)</p>
+<p>As a benefit of the above mentioned mechanism that an API is automatically available based on the JSON structure, the 
+“partial update” pattern can be applied when modifying data.</p>
 
-<h2 id="partial-responses">Partial responses</h2>
+<p>The benefit of this is a reduction in payload to be transferred and that other parts of the <code class="highlighter-rouge">Thing</code> are not overwritten
+with an potentially outdated value - only the actually changed data point can be modified.</p>
 
-<p>TODO document partial responses:</p>
-<ul>
-  <li>resource based</li>
-  <li>with field selectors maintaining the JSON hierarchy</li>
-</ul>
+<p>So instead of modifying a complete <code class="highlighter-rouge">Thing</code> when only a small part (e.g. the <code class="highlighter-rouge">on</code> property of <code class="highlighter-rouge">lamp</code> should now be <code class="highlighter-rouge">true</code>) 
+of it has changed via<br />
+<code class="highlighter-rouge">PUT .../things/{thingId}</code> with payload:</p>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"thingId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{thingId}"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"policyId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{policyId}"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"manufacturer"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ACME corp"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"complex"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"some"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"serialNo"</span><span class="p">:</span><span class="w"> </span><span class="mi">4711</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="s2">"features"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"lamp"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"on"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"color"</span><span class="p">:</span><span class="w"> </span><span class="s2">"blue"</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>we can do a<br /><code class="highlighter-rouge">PUT .../things/{thingId}/features/lamp/properties/on</code> with payload:</p>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kc">true</span><span class="w">
+</span></code></pre></div></div>
+
+<h2 id="partial-requests">Partial requests</h2>
+
+<p>Similar to the partial updates from above the HTTP API can also be used to retrieve a single value instead of a complete
+<code class="highlighter-rouge">Thing</code>.</p>
+
+<p>Again the benefit is a reduction in response payload and that the caller can directly use the returned data value 
+(for example expect it to be a <code class="highlighter-rouge">boolean</code> and treat it accordingly).</p>
+
+<p>For example we can do a<br /><code class="highlighter-rouge">GET .../things/{thingId}/features/lamp/properties/on</code> and get as response:</p>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kc">true</span><span class="w">
+</span></code></pre></div></div>
+
+<h3 id="with-field-selector">With field selector</h3>
+
+<p>A second mechanism in the API for partial requests is using a so called field selector. This is useful when the JSON
+structure of the <code class="highlighter-rouge">Thing</code> or other entity should be kept in tact, but not all information is relevant.</p>
+
+<p>The field selector is passed as HTTP query parameter <code class="highlighter-rouge">fields</code> and contains a comma separated list of fields to include
+in the response.</p>
+
+<p>For example for the following Thing:</p>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"thingId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{thingId}"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"policyId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{policyId}"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"manufacturer"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ACME corp"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"complex"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"some"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"serialNo"</span><span class="p">:</span><span class="w"> </span><span class="mi">4711</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"misc"</span><span class="p">:</span><span class="w"> </span><span class="s2">"foo"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="s2">"features"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"lamp"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"on"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"color"</span><span class="p">:</span><span class="w"> </span><span class="s2">"blue"</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h4 id="field-selector-examples">Field selector examples</h4>
+
+<p>Various <code class="highlighter-rouge">GET</code> request examples with field selectors:</p>
+
+<p><code class="highlighter-rouge">GET .../things/{thingId}?fields=attributes</code>:</p>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"manufacturer"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ACME corp"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"complex"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"some"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"serialNo"</span><span class="p">:</span><span class="w"> </span><span class="mi">4711</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"misc"</span><span class="p">:</span><span class="w"> </span><span class="s2">"foo"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p><code class="highlighter-rouge">GET .../things/{thingId}?fields=attributes/manufacturer</code>:</p>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"manufacturer"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ACME corp"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p><code class="highlighter-rouge">GET .../things/{thingId}?fields=attributes/complex/serialNo</code>:</p>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"complex"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"serialNo"</span><span class="p">:</span><span class="w"> </span><span class="mi">4711</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p><code class="highlighter-rouge">GET .../things/{thingId}?fields=attributes/complex/some,attributes/complex/serialNo</code>:</p>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"complex"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"some"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"serialNo"</span><span class="p">:</span><span class="w"> </span><span class="mi">4711</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p><code class="highlighter-rouge">GET .../things/{thingId}?fields=attributes/complex(some,serialNo)</code>:</p>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"complex"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"some"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"serialNo"</span><span class="p">:</span><span class="w"> </span><span class="mi">4711</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p><code class="highlighter-rouge">GET .../things/{thingId}?fields=attributes/complex/misc,features/lamp/properties/on</code>:</p>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"complex"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"misc"</span><span class="p">:</span><span class="w"> </span><span class="s2">"foo"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="s2">"features"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"lamp"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"on"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
 
 
     <div class="tags">
@@ -924,8 +1320,8 @@ $('#toc').on('click', 'a', function() {
                         <a href="https://eclipse.org"><img src="images/eclipse_logo_colour.png" alt="Eclipse logo"/></a>
                     </div>
                     <p class="notice">
-                        &copy;2017 Eclipse Ditto.
-                         Site last generated: Dec 19, 2017 <br />
+                        &copy;2018 Eclipse Ditto.
+                         Site last generated: Jan 8, 2018 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

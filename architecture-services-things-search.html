@@ -5,8 +5,8 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="">
-<meta name="keywords" content="signal,  signal, commandresponse, response">
-<title> Command response | Eclipse Ditto</title>
+<meta name="keywords" content="architecturesearch,  architecture, service, things-search, search">
+<title> Things-Search service | Eclipse Ditto</title>
 <link rel="stylesheet" href="css/syntax.css">
 
 <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -202,7 +202,7 @@
                                 searchInput: document.getElementById('search-input'),
                                 resultsContainer: document.getElementById('results-container'),
                                 dataSource: 'search.json',
-                                searchResultTemplate: '<li><a href="{url}" title="Command response">{title}</a></li>',
+                                searchResultTemplate: '<li><a href="{url}" title="Things-Search service">{title}</a></li>',
                     noResultsText: 'No results found.',
                             limit: 10,
                             fuzzy: true,
@@ -398,7 +398,7 @@
                       
                       
                       
-                      <li class="active"><a href="basic-signals-commandresponse.html">Command response</a></li>
+                      <li><a href="basic-signals-commandresponse.html">Command response</a></li>
                       
                       
                       
@@ -476,7 +476,7 @@
                       
                       
                       
-                      <li><a href="architecture-services-things-search.html">Things-Search</a></li>
+                      <li class="active"><a href="architecture-services-things-search.html">Things-Search</a></li>
                       
                       
                       
@@ -895,7 +895,7 @@
 
 
 <div class="post-header">
-   <h1 class="post-title-main">Command response</h1>
+   <h1 class="post-title-main">Things-Search service</h1>
 </div>
 
 
@@ -935,11 +935,38 @@ $('#toc').on('click', 'a', function() {
 
     
 
-  <p>CommandResponses are the answer to <a href="basic-signals-command.html">Commands</a> and include information about whether the
-intention of changing something via a <code class="highlighter-rouge">ModifyCommand</code> has worked or if there was an <a href="basic-signals-errorresponse.html">Error</a> 
-instead.</p>
+  <p>The “things-search” service takes care of:</p>
+<ul>
+  <li>updating an optimized search index of <code class="highlighter-rouge">Things</code> based on the <a href="basic-signals-event.html">events</a> emitted by the 
+<a href="architecture-services-things.html">things</a> and <a href="architecture-services-policies.html">policies</a> services when entites
+are changed there</li>
+  <li>executing search queries against the search index in order to find out which <code class="highlighter-rouge">Things</code> match a given search</li>
+</ul>
 
-<p>The CommandResponse of QueryCommands contains the requested information.</p>
+<h2 id="model">Model</h2>
+
+<p>The things-search service has no model (entity) by its own, but uses the model of <a href="architecture-services-things.html">things</a> and 
+<a href="architecture-services-policies.html">policies</a> services.</p>
+
+<p>It however contains a model which can transform an <a href="#" data-toggle="tooltip" data-original-title="Resource Query Language">RQL</a> 
+search query into a Java domain model which is defined here:</p>
+<ul>
+  <li><a href="https://github.com/eclipse/ditto/tree/master/model/thingsearch-parser/src/main/java/org/eclipse/ditto/model/thingsearchparser/predicates/ast">rql parser ast</a></li>
+</ul>
+
+<h2 id="signals">Signals</h2>
+
+<p>Other services can communicate with the things-search service via:</p>
+
+<ul>
+  <li><a href="https://github.com/eclipse/ditto/tree/master/signals/commands/thingsearch/src/main/java/org/eclipse/ditto/signals/commands/thingsearch">commands</a>:
+containing commands and command responses which are processed by this service</li>
+</ul>
+
+<h2 id="persistence">Persistence</h2>
+
+<p>The things-search service maintains its own persistence in which it stores <code class="highlighter-rouge">Things</code> in an optimized way in order to 
+provide a full search on arbitrary <code class="highlighter-rouge">Thing</code> data.</p>
 
 
     <div class="tags">
@@ -948,7 +975,11 @@ instead.</p>
         
         
         
-        <a href="tag_signal.html" class="btn btn-default navbar-btn cursorNorm" role="button">signal</a>
+        <a href="tag_architecture.html" class="btn btn-default navbar-btn cursorNorm" role="button">architecture</a>
+        
+        
+        
+        <a href="tag_search.html" class="btn btn-default navbar-btn cursorNorm" role="button">search</a>
         
         
         

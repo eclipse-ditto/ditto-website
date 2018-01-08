@@ -5,8 +5,8 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="">
-<meta name="keywords" content="signal,  signal, commandresponse, response">
-<title> Command response | Eclipse Ditto</title>
+<meta name="keywords" content="search,  search, things-search, rql, query">
+<title> Search | Eclipse Ditto</title>
 <link rel="stylesheet" href="css/syntax.css">
 
 <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -202,7 +202,7 @@
                                 searchInput: document.getElementById('search-input'),
                                 resultsContainer: document.getElementById('results-container'),
                                 dataSource: 'search.json',
-                                searchResultTemplate: '<li><a href="{url}" title="Command response">{title}</a></li>',
+                                searchResultTemplate: '<li><a href="{url}" title="Search">{title}</a></li>',
                     noResultsText: 'No results found.',
                             limit: 10,
                             fuzzy: true,
@@ -398,7 +398,7 @@
                       
                       
                       
-                      <li class="active"><a href="basic-signals-commandresponse.html">Command response</a></li>
+                      <li><a href="basic-signals-commandresponse.html">Command response</a></li>
                       
                       
                       
@@ -436,7 +436,7 @@
               
               
               
-              <li><a href="basic-search.html">Search</a></li>
+              <li class="active"><a href="basic-search.html">Search</a></li>
               
               
               
@@ -895,7 +895,7 @@
 
 
 <div class="post-header">
-   <h1 class="post-title-main">Command response</h1>
+   <h1 class="post-title-main">Search</h1>
 </div>
 
 
@@ -935,11 +935,300 @@ $('#toc').on('click', 'a', function() {
 
     
 
-  <p>CommandResponses are the answer to <a href="basic-signals-command.html">Commands</a> and include information about whether the
-intention of changing something via a <code class="highlighter-rouge">ModifyCommand</code> has worked or if there was an <a href="basic-signals-errorresponse.html">Error</a> 
-instead.</p>
+  <p>Ditto provides a search functionality as one of the services around its managed <strong>Digital Twins</strong>.</p>
 
-<p>The CommandResponse of QueryCommands contains the requested information.</p>
+<h2 id="search-index">Search index</h2>
+
+<p>Ditto’s microservice <a href="architecture-services-things-search.html">things-search</a> automatically consumes all 
+<a href="basic-signals-event.html">events</a> which are emitted for changes to <code class="highlighter-rouge">Things</code> and <code class="highlighter-rouge">Policies</code> and updates an for search 
+optimized representation of the <code class="highlighter-rouge">Thing</code> data into its own database.</p>
+
+<p>No custom indexes have to be defined as the structure in the database is “flattened” so that all data contained in 
+<a href="basic-thing.html">Things</a> can be searched for efficiently.</p>
+
+<h2 id="search-queries">Search queries</h2>
+
+<p>Queries can be made via Ditto’s APIs (<a href="httpapi-search.html">HTTP</a> or 
+<a href="protocol-specification-things-search.html">Ditto Protocol</a> e.g. via <a href="protocol-bindings-websocket.html">WebSocket</a>).</p>
+
+<p><strong>Example:</strong> Search for all things located in “living-room”, reorder the list to start with the lowest thing ID as the first element, 
+and return the first 5 results:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Filter:     eq(attributes/location,"living-room")
+Sorting:    sort(+thingId)
+Paging:     limit(0,5)
+</code></pre></div></div>
+
+<h2 id="search-count-queries">Search count queries</h2>
+
+<p>The same syntax applies for search count queries - only the <a href="#rql-sorting">sorting</a> and <a href="#rql-paging">paging</a> makes no 
+sense here, so there are not necessary to specify.</p>
+
+<h2 id="rql">RQL</h2>
+
+<p>Ditto utilizes a subset of <a href="#" data-toggle="tooltip" data-original-title="Resource Query Language">RQL</a> 
+as language for specifying queries.</p>
+
+<p>The <a href="https://github.com/persvr/rql">RQL project page</a> says about it:</p>
+
+<blockquote>
+  <p>Resource Query Language (RQL) is a query language designed for use in URIs with object style data structures. […]<br />
+RQL can be thought as basically a set of nestable named operators which each have a set of arguments. 
+RQL is designed to have an extremely simple, but extensible grammar that can be written in a URL friendly query string.</p>
+</blockquote>
+
+<p>An example helps more than a thousand words, so that would be the example of a simple RQL query querying for <code class="highlighter-rouge">foo="ditto"</code> and <code class="highlighter-rouge">bar&lt;10</code>:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>and(eq(foo,"ditto"),lt(bar,10))
+</code></pre></div></div>
+
+<p>That query consists of one <a href="#logical-operators">logical operator </a> <a href="#and">“and”</a>,
+two <a href="#relational-operators">relational operators</a> of which each consists of a <a href="#query-property">property</a>
+and a <a href="#query-value">value</a>.</p>
+
+<p>The following sections describe what the RQL syntax is capable of.</p>
+
+<h2 id="rql-filter">RQL filter</h2>
+
+<p>The RQL filter specifies “what” to search.</p>
+
+<h3 id="query-property">Query property</h3>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;property&gt; = url-encoded-string
+</code></pre></div></div>
+
+<p>To search for nested properties, we use JSON Pointer notation (<a href="http://www.rfc-base.org/rfc-6901.html">RFC-6901</a>).</p>
+
+<p>The following example shows how to search for the sub property location of the parent property attributes with a forward slash as separator:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>eq(attributes/location,"kitchen")
+</code></pre></div></div>
+
+<h3 id="query-value">Query value</h3>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;value&gt; = &lt;number&gt;, &lt;string&gt;, true, false, null
+&lt;number&gt; = double, integer
+&lt;string&gt; = ", url-encoded-string, "
+</code></pre></div></div>
+
+<p><strong>Comparison of string values</strong></p>
+
+<div class="alert alert-info" role="alert"><i class="fa fa-info-circle"></i> <b>Note:</b> Comparison operators such as <code class="highlighter-rouge">gt</code>, <code class="highlighter-rouge">ge</code>, <code class="highlighter-rouge">lt</code> and <code class="highlighter-rouge">le</code>, do not support a special 
+    “semantics” of string comparison (e.g. regarding alphabetical or lexicographical ordering).<br />
+    However, you can rely on the alphabetical sorting of strings with the same length (e.g. “aaa” &lt; “zzz”) and that the 
+    order stays the same over multiple/different search requests.</div>
+
+<p><strong>Comparison of other data types</strong></p>
+
+<div class="alert alert-info" role="alert"><i class="fa fa-info-circle"></i> <b>Note:</b> Please note that the comparison of other data types is is supported by the API, but it 
+    only supports comparison of same data types, and does not do any conversion during comparison.</div>
+
+<h3 id="relational-operators">Relational operators</h3>
+
+<p>The following relational operators are supported.</p>
+
+<h4 id="eq">eq</h4>
+<p>Search for property values equal to <code class="highlighter-rouge">&lt;value&gt;</code>.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>eq(&lt;property&gt;,&lt;value&gt;)
+</code></pre></div></div>
+
+<p><strong>Example - search for things owned by “SID123”</strong></p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>eq(attributes/owner,"SID123")
+</code></pre></div></div>
+
+<h4 id="ne">ne</h4>
+<p>Search for property values not equal to <code class="highlighter-rouge">&lt;value&gt;</code>.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ne(&lt;property&gt;,&lt;value&gt;)
+</code></pre></div></div>
+
+<p><strong>Example - search for things with owner different than “SID123”</strong></p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ne(attributes/owner,"SID123")
+</code></pre></div></div>
+
+<p>The response will contain only things which <strong>do</strong> provide an owner attribute (in this case with value 0 or not SID123).</p>
+
+<h4 id="gt">gt</h4>
+<p>Search for property values greater than a <code class="highlighter-rouge">&lt;value&gt;</code>.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gt(&lt;property&gt;,&lt;value&gt;) 
+</code></pre></div></div>
+
+<p><strong>Example - search for things with thing ID greater than “A000”</strong></p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gt(thingId,"A000")
+</code></pre></div></div>
+
+<h4 id="ge">ge</h4>
+<p>Search for property values greater than or equal to a <code class="highlighter-rouge">&lt;value&gt;</code>.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ge(&lt;property&gt;,&lt;value&gt;) 
+</code></pre></div></div>
+
+<p><strong>Example - search for things with thing ID “A000” or greater</strong></p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ge(thingId,"A000")
+</code></pre></div></div>
+
+<h4 id="lt">lt</h4>
+<p>Search for property values less than a <code class="highlighter-rouge">&lt;value&gt;</code>.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>lt(&lt;property&gt;,&lt;value&gt;) 
+</code></pre></div></div>
+
+<p><strong>Example - search for things with thing ID lower than “A000”</strong></p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>lt(thingId,"A000")
+</code></pre></div></div>
+
+<h4 id="le">le</h4>
+<p>Search for property values less than or equal to a <code class="highlighter-rouge">&lt;value&gt;</code>.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>le(&lt;property&gt;,&lt;value&gt;) 
+</code></pre></div></div>
+
+<p><strong>Example - search for things with thing ID “A000” or lower</strong></p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>le(thingId,"A000")
+</code></pre></div></div>
+
+<h4 id="in">in</h4>
+<p>Search for property values which contains at least one of the listed <code class="highlighter-rouge">&lt;value&gt;</code>s.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>in(&lt;property&gt;,&lt;value&gt;,&lt;value&gt;, ...) 
+</code></pre></div></div>
+
+<p><strong>Example - search for things with thing ID “A000” or “AB00” or “AZ99”</strong></p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>in(thingId,"A000","AB00","AZ99")
+</code></pre></div></div>
+
+<h4 id="like">like</h4>
+<p>Search for property values which are like (similar) a <code class="highlighter-rouge">&lt;value&gt;</code>.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>like(&lt;property&gt;,&lt;value&gt;) 
+</code></pre></div></div>
+
+<p><strong>Details concerning the like-operator</strong></p>
+
+<p>The <code class="highlighter-rouge">like</code> operator provides some regular expression capabilities for pattern matching Strings.<br />
+The following expressions are supported:</p>
+<ul>
+  <li>*endswith =&gt; match at the end of a specific String.</li>
+  <li>startswith* =&gt; match at the beginning of a specific String.</li>
+  <li>*contains* =&gt; match if contains a specific String.</li>
+  <li>Th?ng =&gt; match for a wildcard character.</li>
+</ul>
+
+<p><strong>Examples</strong></p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>like(attributes/key1,"*known-chars-at-end")
+
+like(attributes/key1,"known-chars-at-start*") 
+
+like(attributes/key1,"*known-chars-in-between*") 
+
+like(attributes/key1,"just-som?-char?-unkn?wn")
+</code></pre></div></div>
+
+<h4 id="exists">exists</h4>
+<p>Search for property values which exist.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>exists(&lt;property&gt;)
+</code></pre></div></div>
+
+<p><strong>Example - search for things which have a feature with ID “feature_1”</strong></p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>exists(features/feature_1)
+</code></pre></div></div>
+
+<p><strong>Example - search for lamps which are located in the “living-room”</strong></p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>and(exists(features/lamp),eq(attributes/location,"living-room"))
+</code></pre></div></div>
+
+<h3 id="logical-operators">Logical operators</h3>
+
+<h4 id="and">and</h4>
+<p>Ensure that all given queries match.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>and(&lt;query&gt;,&lt;query&gt;, ...)
+</code></pre></div></div>
+
+<p><strong>Example - search for things which are located on the “upper floor” in the “living-room”</strong></p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>and(eq(attributes/floor,"upper floor"),eq(attributes/location,"living-room"))
+</code></pre></div></div>
+
+<p><strong>Example - search for lamps which have a on value of true</strong></p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>and(eq(features/lamp/properties/on,true))
+</code></pre></div></div>
+
+<p><strong>Example - search for lamps which have a color “blue”</strong></p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>and(eq(features/lamp/properties/color,"blue"))
+</code></pre></div></div>
+
+<h4 id="or">or</h4>
+<p>At least one of the given queries match.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>or(&lt;query&gt;,&lt;query&gt;, ...)
+</code></pre></div></div>
+
+<p><strong>Example - search for all things located on the “upper floor”, and all things with location “living-room”</strong></p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>or(eq(attributes/floor,"upper floor"),eq(attributes/location,"living-room"))
+</code></pre></div></div>
+
+<h2 id="rql-sorting">RQL sorting</h2>
+
+<p>The RQL sorting part specifies in which order the result should be returned.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sort(&lt;+|-&gt;&lt;property&gt;,&lt;+|-&gt;&lt;property&gt;,...)
+</code></pre></div></div>
+
+<ul>
+  <li>Use <strong>+</strong> for an ascending sort order (URL encoded character <strong>%2B</strong>)</li>
+  <li>Use <strong>-</strong> for a descending sort order (URL encoded character <strong>%2D</strong>)</li>
+</ul>
+
+<p><strong>Example - sort the list ascending by the thing ID</strong></p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sort(+thingId)
+</code></pre></div></div>
+
+<p><strong>Example - sort the list ascending by an attribute</strong></p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sort(+attributes/location)
+</code></pre></div></div>
+
+<p><strong>Example - multiple sort options</strong></p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sort(-attributes/location,+thingId)
+</code></pre></div></div>
+
+<p>This expression will sort the list descending by location attribute.<br />
+In case there are multiple things with the same location attribute, these are sorted ascending by their ID.</p>
+
+<h3 id="sorting-of-string-values">Sorting of string values</h3>
+
+<div class="alert alert-info" role="alert"><i class="fa fa-info-circle"></i> <b>Note:</b> Sorting does not support a special “semantics” of string comparison (e.g. regarding 
+    alphabetical or lexicographical ordering). However, you can rely on the alphabetical sorting of strings with the 
+    same length (e.g. “aaa” &lt; “zzz”) and that the order stays the same over multiple/different search requests.</div>
+
+<h3 id="sorting-of-other-values">Sorting of other values</h3>
+
+<div class="alert alert-info" role="alert"><i class="fa fa-info-circle"></i> <b>Note:</b> Sorting does not support a special “semantics” of comparison for fields with values of 
+    different data types (e.g. numbers vs. strings). However, you can rely on the fact that values of the same type are 
+    sorted respectively.</div>
+
+<h2 id="rql-paging">RQL paging</h2>
+
+<p>The RQL limiting part specifies which part (or “page”) should be returned of a large result set.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>limit(&lt;offset&gt;,&lt;count&gt;)
+</code></pre></div></div>
+
+<p>Limits the search results to <code class="highlighter-rouge">&lt;count&gt;</code> items, starting with the item at index <code class="highlighter-rouge">&lt;offset&gt;</code>.</p>
+<ul>
+  <li>if the paging option is not explicitly specified, the <strong>default</strong> value <code class="highlighter-rouge">limit(0,25)</code> is used, i.e. the first <code class="highlighter-rouge">25</code> results are returned.</li>
+  <li>the <strong>maximum</strong> allowed count is <code class="highlighter-rouge">200</code>.</li>
+</ul>
+
+<p><strong>Example - return the first ten items</strong></p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>limit(0,10)
+</code></pre></div></div>
+
+<p><strong>Example - return the items 11 to 20</strong></p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>limit(10,10)
+</code></pre></div></div>
+<p>i.e. Return the next ten items (from index 11 to 20)</p>
+
+<div class="alert alert-info" role="alert"><i class="fa fa-info-circle"></i> <b>Note:</b> We recommend <strong>not to use high offsets</strong> (e.g. higher than 10000) for paging in API 2 
+    because of potential performance degradations.</div>
+
 
 
     <div class="tags">
@@ -948,7 +1237,7 @@ instead.</p>
         
         
         
-        <a href="tag_signal.html" class="btn btn-default navbar-btn cursorNorm" role="button">signal</a>
+        <a href="tag_search.html" class="btn btn-default navbar-btn cursorNorm" role="button">search</a>
         
         
         

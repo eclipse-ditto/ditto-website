@@ -276,6 +276,13 @@
               
               
               
+              
+              
+              <li><a href="release_notes_010-M2.html">0.1.0-M2 Release notes</a></li>
+              
+              
+              
+              
           </ul>
         </li>
     
@@ -297,6 +304,13 @@
               
               
               <li><a href="installation-running.html">Running Ditto</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="installation-operating.html">Operating Ditto</a></li>
               
               
               
@@ -420,6 +434,13 @@
               
               
               
+              
+              
+              <li><a href="basic-search.html">Search</a></li>
+              
+              
+              
+              
           </ul>
         </li>
     
@@ -434,6 +455,45 @@
               
               
               <li><a href="architecture-overview.html">Overview</a></li>
+              
+              
+              
+              <li class="subfolders">
+                  <a href="#">Services</a>
+                  <ul>
+                      
+                      
+                      
+                      <li><a href="architecture-services-policies.html">Policies</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="architecture-services-things.html">Things</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="architecture-services-things-search.html">Things-Search</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="architecture-services-gateway.html">Gateway</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="architecture-services-amqp-bridge.html">AMQP-Bridge</a></li>
+                      
+                      
+                      
+                  </ul>
+              </li>
               
               
               
@@ -587,6 +647,13 @@
               
               
               <li><a href="protocol-bindings-websocket.html">Websocket Binding</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="protocol-bindings-amqp10.html">AMQP 1.0 Binding</a></li>
               
               
               
@@ -880,11 +947,59 @@ $('#toc').on('click', 'a', function() {
 
         <tr><td><a href="architecture-overview.html">Architecture overview</a></td>
             <td><span class="label label-default">Page</span></td>
-          <td>  Warning: This page is still a work in progress.
+          <td> The architecture chapter describes the overall architecture of Eclipse Ditto and in detail which sub-components fulfill which responsibilities. Top level component view This overview shows the Ditto services (components), the externally provided and consumed API endpoints, the external dependencies (MongoDB and nginx) and the relations of the services to... </td>
+        </tr>
+        
+     
+   
+    
+        
 
-Ditto services in blue and context with nginx as reverse proxy and MongoDB
+        <tr><td><a href="architecture-services-amqp-bridge.html">AMQP-Bridge service</a></td>
+            <td><span class="label label-default">Page</span></td>
+          <td> In Ditto 0.1.0-M2 the AMQP-Bridge service was added with the goal to be able to establish connections to Eclipse Hono as well as other AMQP 1.0 endpoints. Model The model of the amqp-bridge service is defined around the entity AmqpConnection:  model  Signals... </td>
+        </tr>
+        
+     
+   
+    
+        
 
- </td>
+        <tr><td><a href="architecture-services-gateway.html">Gateway service</a></td>
+            <td><span class="label label-default">Page</span></td>
+          <td> The “gateway” service is responsible for providing Ditto’s HTTP + WebSocket API and orchestrating the backing persistence services. Model The gateway service has no model by its own, but uses the model of all the services it orchestrates. Signals The gateway service has no signals by... </td>
+        </tr>
+        
+     
+   
+    
+        
+
+        <tr><td><a href="architecture-services-policies.html">Policies service</a></td>
+            <td><span class="label label-default">Page</span></td>
+          <td> The “policies” service takes care of persisting Policies. Model The model of the policies service is defined around the entity Policy:  model  Signals Other services can communicate with the policies service via:  commands: containing commands and command responses which are processed... </td>
+        </tr>
+        
+     
+   
+    
+        
+
+        <tr><td><a href="architecture-services-things-search.html">Things-Search service</a></td>
+            <td><span class="label label-default">Page</span></td>
+          <td> The “things-search” service takes care of:  updating an optimized search index of Things based on the events emitted by the things and policies services when entites are changed there executing search queries against the search index in order to find out which Things match... </td>
+        </tr>
+        
+     
+        
+     
+   
+    
+        
+
+        <tr><td><a href="architecture-services-things.html">Things service</a></td>
+            <td><span class="label label-default">Page</span></td>
+          <td> The “things” service takes care of persisting Things and Features. Model The model of the things service is defined around the entities Thing and Feature:  model  Signals Other services can communicate with the things service via:  commands: containing commands... </td>
         </tr>
         
      
@@ -946,6 +1061,10 @@ Ditto services in blue and context with nginx as reverse proxy and MongoDB
      
    
     
+        
+     
+   
+    
    
     
    
@@ -974,18 +1093,14 @@ Ditto services in blue and context with nginx as reverse proxy and MongoDB
     
         
      
+        
+     
    
     
         
      
    
     
-   
-    
-        
-     
-        
-     
    
     
         
@@ -1000,78 +1115,12 @@ Ditto services in blue and context with nginx as reverse proxy and MongoDB
     
         
      
-   
-    
         
      
    
     
         
      
-   
-    
-        
-     
-   
-    
-   
-    
-   
-    
-   
-    
-   
-    
-   
-    
-   
-    
-   
-    
-   
-    
-   
-    
-   
-    
-   
-    
-   
-    
-   
-    
-   
-    
-   
-    
-   
-    
-   
-    
-   
-    
-   
-    
-   
-    
-   
-    
-   
-    
-   
-    
-   
-    
-   
-    
-   
-    
-   
-    
-   
-    
-   
-    
    
     
         
@@ -1092,6 +1141,66 @@ Ditto services in blue and context with nginx as reverse proxy and MongoDB
     
         
      
+   
+    
+   
+    
+   
+    
+   
+    
+   
+    
+   
+    
+   
+    
+   
+    
+   
+    
+   
+    
+   
+    
+   
+    
+   
+    
+   
+    
+   
+    
+   
+    
+   
+    
+   
+    
+   
+    
+   
+    
+   
+    
+   
+    
+   
+    
+   
+    
+   
+    
+   
+    
+   
+    
+   
+    
+   
+    
+   
+    
    
     
         
@@ -1124,6 +1233,34 @@ Ditto services in blue and context with nginx as reverse proxy and MongoDB
     
         
      
+        
+     
+   
+    
+        
+     
+   
+    
+        
+     
+   
+    
+        
+     
+   
+    
+        
+     
+   
+    
+        
+     
+   
+    
+        
+     
+   
+    
    
     
    
@@ -1185,8 +1322,8 @@ Ditto services in blue and context with nginx as reverse proxy and MongoDB
                         <a href="https://eclipse.org"><img src="images/eclipse_logo_colour.png" alt="Eclipse logo"/></a>
                     </div>
                     <p class="notice">
-                        &copy;2017 Eclipse Ditto.
-                         Site last generated: Dec 19, 2017 <br />
+                        &copy;2018 Eclipse Ditto.
+                         Site last generated: Jan 8, 2018 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

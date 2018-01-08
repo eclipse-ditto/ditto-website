@@ -4,7 +4,7 @@
     <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="HTML5 SSEs may be used in order to get notified when the state of Digital Twins change.">
+<meta name="description" content="">
 <meta name="keywords" content="http,  http, api, sse, EventSource">
 <title> HTTP API server sent events (SSE) | Eclipse Ditto</title>
 <link rel="stylesheet" href="css/syntax.css">
@@ -276,6 +276,13 @@
               
               
               
+              
+              
+              <li><a href="release_notes_010-M2.html">0.1.0-M2 Release notes</a></li>
+              
+              
+              
+              
           </ul>
         </li>
     
@@ -297,6 +304,13 @@
               
               
               <li><a href="installation-running.html">Running Ditto</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="installation-operating.html">Operating Ditto</a></li>
               
               
               
@@ -420,6 +434,13 @@
               
               
               
+              
+              
+              <li><a href="basic-search.html">Search</a></li>
+              
+              
+              
+              
           </ul>
         </li>
     
@@ -434,6 +455,45 @@
               
               
               <li><a href="architecture-overview.html">Overview</a></li>
+              
+              
+              
+              <li class="subfolders">
+                  <a href="#">Services</a>
+                  <ul>
+                      
+                      
+                      
+                      <li><a href="architecture-services-policies.html">Policies</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="architecture-services-things.html">Things</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="architecture-services-things-search.html">Things-Search</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="architecture-services-gateway.html">Gateway</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="architecture-services-amqp-bridge.html">AMQP-Bridge</a></li>
+                      
+                      
+                      
+                  </ul>
+              </li>
               
               
               
@@ -587,6 +647,13 @@
               
               
               <li><a href="protocol-bindings-websocket.html">Websocket Binding</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="protocol-bindings-amqp10.html">AMQP 1.0 Binding</a></li>
               
               
               
@@ -836,8 +903,6 @@
 <div class="post-content">
 
    
-    <div class="summary">HTML5 SSEs may be used in order to get notified when the state of Digital Twins change.</div>
-   
 
     
     
@@ -870,11 +935,121 @@ $('#toc').on('click', 'a', function() {
 
     
 
-  <div class="alert alert-danger" role="alert"><i class="fa fa-exclamation-circle"></i> <b>Warning:</b> This page is still a work in progress.</div>
+  <p>HTML5 <a href="#" data-toggle="tooltip" data-original-title="Server Sent Events - one way messaging/push from a HTTP server to a consuming client (e.g. a browser).">SSEs</a> may be used in order 
+to get notified when the state of <strong>Digital Twins</strong> change.</p>
 
-<h2 id="sse">SSE</h2>
+<p>This is the second mechanism of Ditto in order to get <a href="basic-changenotifications.html">change notifications</a>.
+The benefit of this mechanism in contrary to the <a href="protocol-bindings-websocket.html">WebSocket</a> channel is that it is
+even easier to open a SSE connection from the client than a WebSocket and that in Ditto’s interpretation of SSEs the
+events sent back from the backend have the same JSON structure as the HTTP API on which they are invoked.</p>
 
-<p>TODO document</p>
+<h2 id="server-sent-events">Server-Sent Events</h2>
+
+<p>Different as WebSockets, Server-Sent Events are unidirectional originating from the back-end towards the client. Via SSEs
+the client can only be notified, it cannot send data back (it can use plain HTTP therefore).</p>
+
+<p>For a detailed introduction into SSEs, please visit 
+the <a href="https://html.spec.whatwg.org/multipage/server-sent-events.html">HTML5 specification</a>.</p>
+
+<div class="alert alert-danger" role="alert"><i class="fa fa-exclamation-circle"></i> <b>Warning:</b> Although SSEs are a HTML5 standard, they still cannot be used in every browser: 
+    see <a href="https://caniuse.com/#search=Server-sent%20events">caniuse.com</a> - Microsoft IE11 and Edge browser still doesn’t support them.</div>
+
+<h3 id="sses-in-javascript">SSEs in JavaScript</h3>
+
+<p>Using the <code class="highlighter-rouge">EventSource</code> object in JavaScript is also well covered in the <a href="https://html.spec.whatwg.org/multipage/server-sent-events.html#server-sent-events-intro">HTML5 specification</a>.</p>
+
+<h2 id="sse-api-things">SSE API <code class="highlighter-rouge">/things</code></h2>
+
+<p>Currently the only supported HTTP API for receiving <a href="#" data-toggle="tooltip" data-original-title="Server Sent Events - one way messaging/push from a HTTP server to a consuming client (e.g. a browser).">SSEs</a>
+is the <code class="highlighter-rouge">/things</code> endpoint:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http://localhost:8080/api/&lt;1|2&gt;/things
+</code></pre></div></div>
+
+<p>When the endpoint is invoked with an HTTP header <code class="highlighter-rouge">Accept</code> with value <code class="highlighter-rouge">text/event-stream</code>, an Server-Sent Event stream of
+<a href="basic-changenotifications.html">change notifications</a> is created by Ditto and for each notification for which the caller
+has READ permissions (see <a href="basic-auth.html#authorization">authorization</a>), a message is sent to the client.</p>
+
+<p>The format of the message at the <code class="highlighter-rouge">/things</code> endpoint is always in the form of a <a href="basic-thing.html#model-specification">Thing JSON</a>
+(in API 1 format or API 2 format depending on which edpoint the SSE was created).</p>
+
+<p>For partial updates to a <code class="highlighter-rouge">Thing</code> however, only the changed part is sent back via the SSE, not the complete <code class="highlighter-rouge">Thing</code>.</p>
+
+<h3 id="only-get-notified-about-changes-of-specific-things">Only get notified about changes of specific Things</h3>
+
+<p>When the <code class="highlighter-rouge">/things</code> endpoint is used for connecting to the SSE stream, all for the authenticated user visible <code class="highlighter-rouge">Things</code> are
+included in the stream. If only specific <code class="highlighter-rouge">Things</code> should be watched, the query parameter <code class="highlighter-rouge">ids</code> can be added:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http://localhost:8080/api/&lt;1|2&gt;/things?ids=&lt;thingId1&gt;,&lt;thingId2&gt;
+</code></pre></div></div>
+
+<h3 id="only-get-notified-about-certain-changes">Only get notified about certain changes</h3>
+
+<p>Additionally using the <code class="highlighter-rouge">fields</code> paramter of the <a href="httpapi-concepts.html#partial-requests">partial request</a> feature, only
+specific parts can be watched for changes:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http://localhost:8080/api/&lt;1|2&gt;/things?fields=thingId,attributes
+</code></pre></div></div>
+
+<div class="alert alert-success" role="alert"><i class="fa fa-check-square-o"></i> <b>Tip:</b> The <code class="highlighter-rouge">thingId</code> should always be included in the <code class="highlighter-rouge">fields</code> query, otherwise it is no longer
+    reproducible, for which Thing the change was made.</div>
+
+<h3 id="example-for-sse-on-things">Example for SSE on Things</h3>
+
+<p>Assuming we have a Thing (in API version 1) with the following JSON content:</p>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"thingId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"org.eclipse.ditto:fancy-thing"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"acl"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"{userId}"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"READ"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"WRITE"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"ADMINISTRATE"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"manufacturer"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ACME corp"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"complex"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"some"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"serialNo"</span><span class="p">:</span><span class="w"> </span><span class="mi">4711</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="s2">"features"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"lamp"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"on"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"color"</span><span class="p">:</span><span class="w"> </span><span class="s2">"blue"</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>From within JavaScript we can now create an <code class="highlighter-rouge">EventSource</code> in order to open up a SSE stream in Ditto and simply print each
+event to the console. This one tracks only changes to the Thing with ID <code class="highlighter-rouge">org.eclipse.ditto:fancy-thing</code> and only watches
+for changes on the feature <code class="highlighter-rouge">lamp</code>:</p>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// the javascript must be served from the same domain as Ditto is running in order to avoid CORS problems</span>
+<span class="kd">let</span> <span class="nx">source</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">EventSource</span><span class="p">(</span><span class="s1">'/api/1/things?ids=org.eclipse.ditto:fancy-thing&amp;fields=thingId,features/lamp'</span><span class="p">);</span>
+<span class="nx">source</span><span class="p">.</span><span class="nx">onmessage</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">event</span><span class="p">.</span><span class="nx">data</span><span class="p">);</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<p>This would print for each <code class="highlighter-rouge">Thing</code> the authenticated user is allowed to <code class="highlighter-rouge">READ</code> (see <a href="basic-acl.html">acl</a>) the changed content of the Thing.</p>
+
+<p>So when the <code class="highlighter-rouge">on</code> property of the <code class="highlighter-rouge">lamp</code> feature is changed to <code class="highlighter-rouge">true</code> via such an HTTP API call:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>PUT /api/1/things/org.eclipse.ditto:fancy-thing/features/lamp/properties/on
+payload: true
+</code></pre></div></div>
+
+<p>The JavaScript snippet would log to console:</p>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"thingId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"org.eclipse.ditto:fancy-thing"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"features"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"lamp"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"on"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
 
 
     <div class="tags">
@@ -900,8 +1075,8 @@ $('#toc').on('click', 'a', function() {
                         <a href="https://eclipse.org"><img src="images/eclipse_logo_colour.png" alt="Eclipse logo"/></a>
                     </div>
                     <p class="notice">
-                        &copy;2017 Eclipse Ditto.
-                         Site last generated: Dec 19, 2017 <br />
+                        &copy;2018 Eclipse Ditto.
+                         Site last generated: Jan 8, 2018 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

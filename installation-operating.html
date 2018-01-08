@@ -5,8 +5,8 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="">
-<meta name="keywords" content="signal,  signal, commandresponse, response">
-<title> Command response | Eclipse Ditto</title>
+<meta name="keywords" content="installation,  operating, docker, docker-compose, devops, logging, logstash, elk, monitoring, graphite, grafana">
+<title> Operating Ditto | Eclipse Ditto</title>
 <link rel="stylesheet" href="css/syntax.css">
 
 <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -202,7 +202,7 @@
                                 searchInput: document.getElementById('search-input'),
                                 resultsContainer: document.getElementById('results-container'),
                                 dataSource: 'search.json',
-                                searchResultTemplate: '<li><a href="{url}" title="Command response">{title}</a></li>',
+                                searchResultTemplate: '<li><a href="{url}" title="Operating Ditto">{title}</a></li>',
                     noResultsText: 'No results found.',
                             limit: 10,
                             fuzzy: true,
@@ -310,7 +310,7 @@
               
               
               
-              <li><a href="installation-operating.html">Operating Ditto</a></li>
+              <li class="active"><a href="installation-operating.html">Operating Ditto</a></li>
               
               
               
@@ -398,7 +398,7 @@
                       
                       
                       
-                      <li class="active"><a href="basic-signals-commandresponse.html">Command response</a></li>
+                      <li><a href="basic-signals-commandresponse.html">Command response</a></li>
                       
                       
                       
@@ -895,7 +895,7 @@
 
 
 <div class="post-header">
-   <h1 class="post-title-main">Command response</h1>
+   <h1 class="post-title-main">Operating Ditto</h1>
 </div>
 
 
@@ -935,11 +935,223 @@ $('#toc').on('click', 'a', function() {
 
     
 
-  <p>CommandResponses are the answer to <a href="basic-signals-command.html">Commands</a> and include information about whether the
-intention of changing something via a <code class="highlighter-rouge">ModifyCommand</code> has worked or if there was an <a href="basic-signals-errorresponse.html">Error</a> 
-instead.</p>
+  <p>After Ditto was once successfully started, the next step is to set it up for continuously operating it.</p>
 
-<p>The CommandResponse of QueryCommands contains the requested information.</p>
+<p>This page shows the basics for operating Ditto.</p>
+
+<h2 id="logging">Logging</h2>
+
+<p>Gathering logs for a running Ditto installation can be achieved via two different ways:</p>
+
+<ol>
+  <li>grep log output from STDOUT/STDERR via Docker’s <a href="https://docs.docker.com/engine/admin/logging/overview/">logging drivers</a>
+    <ul>
+      <li>Benefits: simple, works with all Docker logging drivers (e.g. “awslogs”, “splunk”, …)</li>
+    </ul>
+  </li>
+  <li>configure a <a href="https://www.elastic.co/products/logstash">Logstash</a> endpoint for Ditto’s Docker containers where
+the logs should be published to
+    <ul>
+      <li>Benefits: stack traces are preserved, metadata from logback.xml is enhanced (e.g. “instance-index”)</li>
+    </ul>
+  </li>
+</ol>
+
+<p>Option 2 uses the <a href="https://www.elastic.co/elk-stack">ELK stack</a> for logging, option 1 may also use an ELK stack with the right 
+Docker logging driver.</p>
+
+<h3 id="configuring-logstash-endpoint">Configuring Logstash endpoint</h3>
+
+<p>The Logstash endpoint to use can simply be configured by setting the following environment variable for the Docker containers:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>LOGSTASH_SERVER=localhost:4560
+</code></pre></div></div>
+
+<p>Once that variable is configured, Ditto will automatically publish all logs via the <code class="highlighter-rouge">LogstashTcpSocketAppender</code> to that
+endpoint from where Logstash can forward it to an Elasticsearch from where Kibana can access the logs.</p>
+
+<h2 id="monitoring">Monitoring</h2>
+
+<p>Additionally to the obligatory logging monitoring is included in the Ditto images. That means that certain metrics are 
+automatically gathered and published via <a href="https://github.com/etsy/statsd">StatsD</a> to a 
+<a href="https://graphite.readthedocs.io">Graphite</a> backend from where the metrics can be accessed to display in dashboards 
+(e.g. with <a href="https://grafana.com">Grafana</a>).</p>
+
+<h3 id="gathered-metrics">Gathered metrics</h3>
+
+<ul>
+  <li>JVM metrics: <code class="highlighter-rouge">stats.timers.$Application.$Host.system-metric.*</code>
+    <ul>
+      <li>amount of garbage collections + GC times</li>
+      <li>memory consumption (heap + non-heap)</li>
+      <li>amount of threads + loaded classes</li>
+    </ul>
+  </li>
+  <li>HTTP metrics: <code class="highlighter-rouge">stats.timers.Gateway.$Host.trace.roundtrip_http_*.elapsed-time.mean</code>
+    <ul>
+      <li>roundtrip times from request to response</li>
+      <li>amount of HTTP calls</li>
+      <li>status code of HTTP responses</li>
+    </ul>
+  </li>
+  <li>MongoDB metrics: <code class="highlighter-rouge">stats.gauges.$Application.$Host.akka-persistence-mongo.journal.casbah.*</code>
+    <ul>
+      <li>inserts, updates, reads per second</li>
+      <li>roundtrip times</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="configuring-the-statsd-endpoint">Configuring the StatsD endpoint</h3>
+
+<p>The StatsD endpoint to use can simply be configured by setting the following environment variables for the Docker containers:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>STATSD_PORT_8125_UDP_ADDR=localhost
+STATSD_PORT_8125_UDP_PORT=8125
+</code></pre></div></div>
+
+<p>Once that variable is configured, Ditto will automatically publish gathered metrics via UDP to the StatsD server.</p>
+
+<p>Grafana can then be configured to use Graphite (which StatsD sends the data to) as its data source and can display 
+the metrics based on the keys mentioned in section <a href="#gathered-metrics">“Gathered metrics”</a>.</p>
+
+<h2 id="devops-commands">DevOps commands</h2>
+
+<p>Starting with Ditto Milestone 0.1.0-M2, an HTTP API for so called “DevOps commands” was added.<br />
+This API is intended for making operating Ditto easier by reducing the need to restart Ditto services for configuration
+changes.</p>
+
+<p>Following DevOps commands are supported:</p>
+<ul>
+  <li>dynamically retrieve and change log levels</li>
+  <li>create new AMQP Bridge connections during runtime</li>
+</ul>
+
+<h3 id="dynamically-adjust-log-levels">Dynamically adjust log levels</h3>
+
+<p>Dynamically changing the log levels is a very useful tool when debugging a problem occurring only in production without
+the need to restart the server and thereby fixing the bug.</p>
+
+<h4 id="retrieve-all-log-levels">Retrieve all log levels</h4>
+
+<p>Example response for retrieving all currently configured log levels:<br />
+<code class="highlighter-rouge">GET /devops/logging</code></p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"gateway"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"1"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"devops.responses:retrieveLoggerConfig"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="mi">200</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"serviceName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"gateway"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"instance"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"loggerConfigs"</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="w">
+                </span><span class="s2">"level"</span><span class="p">:</span><span class="w"> </span><span class="s2">"info"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"logger"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ROOT"</span><span class="w">
+            </span><span class="p">},</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="s2">"level"</span><span class="p">:</span><span class="w"> </span><span class="s2">"info"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"logger"</span><span class="p">:</span><span class="w"> </span><span class="s2">"org.eclipse.ditto"</span><span class="w">
+            </span><span class="p">},</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="s2">"level"</span><span class="p">:</span><span class="w"> </span><span class="s2">"warn"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"logger"</span><span class="p">:</span><span class="w"> </span><span class="s2">"org.mongodb.driver"</span><span class="w">
+            </span><span class="p">}]</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="s2">"things-search"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="err">...</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="s2">"policies"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="err">...</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="s2">"things"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="err">...</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="s2">"amqp-bridge"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="err">...</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h4 id="change-a-specific-log-level-for-all-services">Change a specific log level for all services</h4>
+
+<p>Example request payload to change the log level of logger <code class="highlighter-rouge">org.eclipse.ditto</code> in all services to <code class="highlighter-rouge">DEBUG</code>:<br />
+<code class="highlighter-rouge">PUT /devops/logging</code></p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"logger"</span><span class="p">:</span><span class="w"> </span><span class="s2">"org.eclipse.ditto"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"level"</span><span class="p">:</span><span class="w"> </span><span class="s2">"debug"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h4 id="retrieve-log-levels-of-a-service">Retrieve log levels of a service</h4>
+
+<p>Example response for retrieving all currently configured log levels of gateways services:<br />
+<code class="highlighter-rouge">GET /devops/logging/gateway</code></p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"1"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"devops.responses:retrieveLoggerConfig"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="mi">200</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"serviceName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"gateway"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"instance"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"loggerConfigs"</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="w">
+            </span><span class="s2">"level"</span><span class="p">:</span><span class="w"> </span><span class="s2">"info"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"logger"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ROOT"</span><span class="w">
+        </span><span class="p">},</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"level"</span><span class="p">:</span><span class="w"> </span><span class="s2">"info"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"logger"</span><span class="p">:</span><span class="w"> </span><span class="s2">"org.eclipse.ditto"</span><span class="w">
+        </span><span class="p">},</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"level"</span><span class="p">:</span><span class="w"> </span><span class="s2">"warn"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"logger"</span><span class="p">:</span><span class="w"> </span><span class="s2">"org.mongodb.driver"</span><span class="w">
+        </span><span class="p">}]</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h4 id="change-a-specific-log-level-for-one-services">Change a specific log level for one services</h4>
+
+<p>Example request payload to change the log level of logger <code class="highlighter-rouge">org.eclipse.ditto</code> in all gateway services to <code class="highlighter-rouge">DEBUG</code>:<br />
+<code class="highlighter-rouge">PUT /devops/logging/gateway</code></p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"logger"</span><span class="p">:</span><span class="w"> </span><span class="s2">"org.eclipse.ditto"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"level"</span><span class="p">:</span><span class="w"> </span><span class="s2">"debug"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h3 id="create-a-new-amqp-bridge-connection">Create a new AMQP-Bridge connection</h3>
+
+<p>Example request payload to create a new AMQP 1.0 connection:<br />
+<code class="highlighter-rouge">POST /devops/piggyback/amqp-bridge</code></p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"targetActorSelection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/system/sharding/amqp-connection"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
+    </span><span class="s2">"piggybackCommand"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"amqp.bridge.commands:createConnection"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"connection"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"hono-example-connection-123"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"authorizationSubject"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;&lt;&lt;my-subject-id-included-in-policy-or-acl&gt;&gt;&gt;"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"failoverEnabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"uri"</span><span class="p">:</span><span class="w"> </span><span class="s2">"amqps://user:password@hono.eclipse.org:5671"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"sources"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+              </span><span class="s2">"telemetry/DEFAULT_TENANT"</span><span class="w">
+            </span><span class="p">]</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>The <code class="highlighter-rouge">id</code> of the connection may be any string.</p>
+
+<p>The <code class="highlighter-rouge">authorizationSubject</code> is the subject (e.g. user-id) to use for <a href="basic-auth.html#authorization">authorization</a> of 
+all messages originating from the created connection. This subject is required to have WRITE permission on a <code class="highlighter-rouge">Thing</code> 
+to change it partially or completely and needs to have READ permission to read the <code class="highlighter-rouge">Thing</code> or any parts of it.</p>
+
+<p>The <code class="highlighter-rouge">failoverEnabled</code> property defines whether failover is enabled or not.</p>
+
+<p>The <code class="highlighter-rouge">uri</code> defines the endpoint including username and password to connect to.</p>
+
+<p>The <code class="highlighter-rouge">sources</code> defines a string array of sources (e.g. hono’s <a href="https://www.eclipse.org/hono/api/telemetry-api">Telemetry API</a>) to consume messages from.</p>
 
 
     <div class="tags">
@@ -948,7 +1160,7 @@ instead.</p>
         
         
         
-        <a href="tag_signal.html" class="btn btn-default navbar-btn cursorNorm" role="button">signal</a>
+        <a href="tag_installation.html" class="btn btn-default navbar-btn cursorNorm" role="button">installation</a>
         
         
         

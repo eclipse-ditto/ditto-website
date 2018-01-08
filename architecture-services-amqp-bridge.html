@@ -5,8 +5,8 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="">
-<meta name="keywords" content="signal,  signal, commandresponse, response">
-<title> Command response | Eclipse Ditto</title>
+<meta name="keywords" content="architecture,  architecture, service, amqp-bridge, amqp, hono">
+<title> AMQP-Bridge service | Eclipse Ditto</title>
 <link rel="stylesheet" href="css/syntax.css">
 
 <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -202,7 +202,7 @@
                                 searchInput: document.getElementById('search-input'),
                                 resultsContainer: document.getElementById('results-container'),
                                 dataSource: 'search.json',
-                                searchResultTemplate: '<li><a href="{url}" title="Command response">{title}</a></li>',
+                                searchResultTemplate: '<li><a href="{url}" title="AMQP-Bridge service">{title}</a></li>',
                     noResultsText: 'No results found.',
                             limit: 10,
                             fuzzy: true,
@@ -398,7 +398,7 @@
                       
                       
                       
-                      <li class="active"><a href="basic-signals-commandresponse.html">Command response</a></li>
+                      <li><a href="basic-signals-commandresponse.html">Command response</a></li>
                       
                       
                       
@@ -488,7 +488,7 @@
                       
                       
                       
-                      <li><a href="architecture-services-amqp-bridge.html">AMQP-Bridge</a></li>
+                      <li class="active"><a href="architecture-services-amqp-bridge.html">AMQP-Bridge</a></li>
                       
                       
                       
@@ -895,7 +895,7 @@
 
 
 <div class="post-header">
-   <h1 class="post-title-main">Command response</h1>
+   <h1 class="post-title-main">AMQP-Bridge service</h1>
 </div>
 
 
@@ -935,11 +935,42 @@ $('#toc').on('click', 'a', function() {
 
     
 
-  <p>CommandResponses are the answer to <a href="basic-signals-command.html">Commands</a> and include information about whether the
-intention of changing something via a <code class="highlighter-rouge">ModifyCommand</code> has worked or if there was an <a href="basic-signals-errorresponse.html">Error</a> 
-instead.</p>
+  <p>In Ditto 0.1.0-M2 the AMQP-Bridge service was added with the goal to be able to establish connections to 
+<a href="https://eclipse.org/hono/">Eclipse Hono</a> as well as other <a href="protocol-bindings-amqp10.html">AMQP 1.0</a> endpoints.</p>
 
-<p>The CommandResponse of QueryCommands contains the requested information.</p>
+<h2 id="model">Model</h2>
+
+<p>The model of the amqp-bridge service is defined around the entity <code class="highlighter-rouge">AmqpConnection</code>:</p>
+<ul>
+  <li><a href="https://github.com/eclipse/ditto/tree/master/model/amqp-bridge/src/main/java/org/eclipse/ditto/model/amqpbridge">model</a></li>
+</ul>
+
+<h2 id="signals">Signals</h2>
+
+<p>Other services can communicate with the amqp-bridge service via:</p>
+
+<ul>
+  <li><a href="https://github.com/eclipse/ditto/tree/master/signals/commands/amqp-bridge/src/main/java/org/eclipse/ditto/signals/commands/amqpbridge">commands</a>:
+containing commands and command responses which are processed by this service</li>
+  <li><a href="https://github.com/eclipse/ditto/tree/master/signals/events/amqp-bridge/src/main/java/org/eclipse/ditto/signals/events/amqpbridge">events</a>:
+containing events which are emitted when entities managed by this service were modified</li>
+</ul>
+
+<h2 id="persistence">Persistence</h2>
+
+<p>The amqp-bridge service uses <a href="https://doc.akka.io/docs/akka/current/persistence.html?language=java">Akka persistence</a> and 
+with that <a href="http://localhost:4000/basic-signals.html#architectural-style">Event sourcing</a> in order to persist changes 
+and restore persisted entities.</p>
+
+<h2 id="tasks">Tasks</h2>
+
+<ul>
+  <li>create/remove connections (by persisting them)</li>
+  <li>connect/disconnect to endpoints</li>
+  <li>restore existing connections upon restart/failover</li>
+  <li>translate incoming <a href="protocol-overview.html">Ditto Protocol</a> messages to <a href="basic-signals-command.html">commands</a>
+and translate <a href="basic-signals-commandresponse.html">command responses</a> back to <a href="protocol-overview.html">Ditto Protocol</a> response messages</li>
+</ul>
 
 
     <div class="tags">
@@ -948,7 +979,7 @@ instead.</p>
         
         
         
-        <a href="tag_signal.html" class="btn btn-default navbar-btn cursorNorm" role="button">signal</a>
+        <a href="tag_architecture.html" class="btn btn-default navbar-btn cursorNorm" role="button">architecture</a>
         
         
         

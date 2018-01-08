@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="">
-<meta name="keywords" content="architecture,  architecture, overview">
+<meta name="keywords" content="architecture,  architecture, overview, component, services">
 <title> Architecture overview | Eclipse Ditto</title>
 <link rel="stylesheet" href="css/syntax.css">
 
@@ -276,6 +276,13 @@
               
               
               
+              
+              
+              <li><a href="release_notes_010-M2.html">0.1.0-M2 Release notes</a></li>
+              
+              
+              
+              
           </ul>
         </li>
     
@@ -297,6 +304,13 @@
               
               
               <li><a href="installation-running.html">Running Ditto</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="installation-operating.html">Operating Ditto</a></li>
               
               
               
@@ -420,6 +434,13 @@
               
               
               
+              
+              
+              <li><a href="basic-search.html">Search</a></li>
+              
+              
+              
+              
           </ul>
         </li>
     
@@ -434,6 +455,45 @@
               
               
               <li class="active"><a href="architecture-overview.html">Overview</a></li>
+              
+              
+              
+              <li class="subfolders">
+                  <a href="#">Services</a>
+                  <ul>
+                      
+                      
+                      
+                      <li><a href="architecture-services-policies.html">Policies</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="architecture-services-things.html">Things</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="architecture-services-things-search.html">Things-Search</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="architecture-services-gateway.html">Gateway</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="architecture-services-amqp-bridge.html">AMQP-Bridge</a></li>
+                      
+                      
+                      
+                  </ul>
+              </li>
               
               
               
@@ -587,6 +647,13 @@
               
               
               <li><a href="protocol-bindings-websocket.html">Websocket Binding</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="protocol-bindings-amqp10.html">AMQP 1.0 Binding</a></li>
               
               
               
@@ -868,10 +935,49 @@ $('#toc').on('click', 'a', function() {
 
     
 
-  <div class="alert alert-danger" role="alert"><i class="fa fa-exclamation-circle"></i> <b>Warning:</b> This page is still a work in progress.</div>
+  <p>The architecture chapter describes the overall architecture of Eclipse Ditto and in detail which sub-components fulfill
+which responsibilities.</p>
+
+<h2 id="top-level-component-view">Top level component view</h2>
+
+<p>This overview shows the Ditto services (components), the externally provided and consumed API endpoints, 
+the external dependencies (MongoDB and nginx) and the relations of the services to each other.</p>
 
 <figure><img class="docimage" src="images/pages/architecture/context-overview.png" alt="Ditto services and context" style="max-width: 800px" /><figcaption>Ditto services in blue and context with nginx as reverse proxy and MongoDB</figcaption></figure>
 
+<p>The components have the following tasks:</p>
+<ul>
+  <li><a href="architecture-services-policies.html">Policies</a>: persistence of <a href="basic-policy.html">Policies</a></li>
+  <li><a href="architecture-services-things.html">Things</a>: persistence of <a href="basic-thing.html">Things</a> and <a href="basic-feature.html">Features</a></li>
+  <li><a href="architecture-services-things-search.html">Things-Search</a>: tracking changes to <code class="highlighter-rouge">Things</code>, <code class="highlighter-rouge">Features</code>, <code class="highlighter-rouge">Policies</code> and 
+updating an optimized search index + executes queries on this search index</li>
+  <li><a href="architecture-services-gateway.html">Gateway</a>: provides HTTP and WebSocket API and orchestrates the backing persistence services</li>
+  <li><a href="architecture-services-amqp-bridge.html">AMQP-Bridge</a>: connects to an AMQP 1.0 endpoint (e.g. <a href="https://eclipse.org/hono/">Eclipse Hono</a>) 
+and consumes messages in <a href="protocol-overview.html">Ditto Protocol</a> from it</li>
+</ul>
+
+<h2 id="components">Components</h2>
+
+<p>Ditto consists of multiple “microservices” as shown in the above component view.</p>
+
+<p>A “microservice” in Ditto is defined as:</p>
+<ul>
+  <li>has its own data store which only this microservice may access and write to</li>
+  <li>has an API in form of <a href="basic-signals.html">signals</a> (commands, command responses, events)</li>
+  <li>can be accessed by other services only via the defined <a href="basic-signals.html">signals</a></li>
+</ul>
+
+<h2 id="communication">Communication</h2>
+
+<p>All microservices can communicate asynchronously in a Ditto cluster. Communication is done via 
+<a href="https://doc.akka.io/docs/akka/current/general/remoting.html">Akka remoting</a> which means that each service acts as server, 
+providing a TCP endpoint, as well as client sending data to other services.</p>
+
+<p>Therefore it is required that all Ditto microservices can reach each others TCP port <code class="highlighter-rouge">2551</code>.</p>
+
+<p>Another consequence is that all messages which are send between Ditto microservices are in a way serializable and deserializable.
+All Ditto <a href="basic-signals.html">signals</a> can be serialized from Java objects to JSON representation and deserialized back 
+from JSON to Java objects.</p>
 
 
     <div class="tags">
@@ -897,8 +1003,8 @@ $('#toc').on('click', 'a', function() {
                         <a href="https://eclipse.org"><img src="images/eclipse_logo_colour.png" alt="Eclipse logo"/></a>
                     </div>
                     <p class="notice">
-                        &copy;2017 Eclipse Ditto.
-                         Site last generated: Dec 19, 2017 <br />
+                        &copy;2018 Eclipse Ditto.
+                         Site last generated: Jan 8, 2018 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">
