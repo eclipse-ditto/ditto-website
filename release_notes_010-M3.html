@@ -4,9 +4,9 @@
     <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="">
-<meta name="keywords" content="release_notes,  release notes, announcements, changelog">
-<title> Release notes 0.1.0-M2 | Eclipse Ditto</title>
+<meta name="description" content="Version 0.1.0-M3 of Eclipse Ditto, released on 12.01.2018">
+<meta name="keywords" content="release_notessearch,  release notes, announcements, changelog">
+<title> Release notes 0.1.0-M3 | Eclipse Ditto</title>
 <link rel="stylesheet" href="css/syntax.css">
 
 <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -202,7 +202,7 @@
                                 searchInput: document.getElementById('search-input'),
                                 resultsContainer: document.getElementById('results-container'),
                                 dataSource: 'search.json',
-                                searchResultTemplate: '<li><a href="{url}" title="Release notes 0.1.0-M2">{title}</a></li>',
+                                searchResultTemplate: '<li><a href="{url}" title="Release notes 0.1.0-M3">{title}</a></li>',
                     noResultsText: 'No results found.',
                             limit: 10,
                             fuzzy: true,
@@ -278,7 +278,7 @@
               
               
               
-              <li class="active"><a href="release_notes_010-M2.html">0.1.0-M2 Release notes</a></li>
+              <li class="active"><a href="release_notes_010-M3.html">0.1.0-M3 Release notes</a></li>
               
               
               
@@ -895,13 +895,15 @@
 
 
 <div class="post-header">
-   <h1 class="post-title-main">Release notes 0.1.0-M2</h1>
+   <h1 class="post-title-main">Release notes 0.1.0-M3</h1>
 </div>
 
 
 
 <div class="post-content">
 
+   
+    <div class="summary">Version 0.1.0-M3 of Eclipse Ditto, released on 12.01.2018</div>
    
 
     
@@ -935,7 +937,61 @@ $('#toc').on('click', 'a', function() {
 
     
 
-  <div class="alert alert-danger" role="alert"><i class="fa fa-exclamation-circle"></i> <b>Warning:</b> Eclipse Ditto milestone 0.1.0-M2 is currently being worked on. Stay tuned.</div>
+  <p>Since the first milestone of Eclipse Ditto <a href="release_notes_010-M1.html">0.1.0-M1</a>, the following new features and
+bugfixes were added.</p>
+
+<div class="alert alert-info" role="alert"><i class="fa fa-info-circle"></i> <b>Note:</b> In milestone 0.1.0-M2 we had identified a problem right after building it, 
+    that’s why M3 follows M1.</div>
+
+<h2 id="new-features">New features</h2>
+
+<h3 id="amqp-bridge"><a href="https://github.com/eclipse/ditto/pull/65">AMQP Bridge</a></h3>
+
+<p>A new service “ditto-amqp-bridge” was added in order to be able establish a connection to AMQP 1.0
+endpoints like for example <a href="https://eclipse.org/hono/">Eclipse Hono</a>.</p>
+
+<p>That way messages in <a href="protocol-overview.html">Ditto Protocol</a> coming from Eclipse Hono can be processed. 
+For more details, please have a look at the <a href="protocol-bindings-amqp10.html">AMQP 1.0 binding</a> and the 
+<a href="architecture-services-amqp-bridge.html">AMQP-Bridge architecture</a>.</p>
+
+<h3 id="devops-commands-http-endpoint"><a href="https://github.com/eclipse/ditto/pull/55">DevOps commands HTTP endpoint</a></h3>
+
+<p>In order to dynamically make changes to a running Ditto cluster without restarting, Ditto added an implementation
+of so called “DevOps commands”. Those can be triggered via a HTTP API for all services at once or specifically targeted
+at single instances.</p>
+
+<p>For the start the following commands are supported:</p>
+<ul>
+  <li>dynamically retrieve and change log levels</li>
+  <li>create new AMQP Bridge connections during runtime</li>
+</ul>
+
+<p>Further information can be found in the <a href="installation-operating.html#devops-commands">operating chapter</a></p>
+
+<h2 id="bugfixes">Bugfixes</h2>
+
+<h3 id="stabilization-of-eventually-consistent-search-index"><a href="https://github.com/eclipse/ditto/pull/83">Stabilization of eventually consistent search index</a></h3>
+
+<p>In various conditions the search index which is updated by the <a href="basic-search.html">search</a> of Ditto was not updated in case
+events were missed or there were timing issues.</p>
+
+<p>Those issues were resolved by improving the approach for keeping track of the already processed events.</p>
+
+<h3 id="various-smaller-bugfixes">Various smaller bugfixes</h3>
+
+<p>This is a complete list of the <a href="https://github.com/eclipse/ditto/pulls?q=is%3Apr+milestone%3A0.1.0-M3+">merged pull requests</a>.</p>
+
+<h2 id="documentation">Documentation</h2>
+
+<p>Enhanced the documentation at various places:</p>
+<ul>
+  <li><a href="protocol-overview.html">Ditto Protocol</a> and various subpages</li>
+  <li>documentation of Ditto’s <a href="basic-search.html">search</a> feature</li>
+  <li><a href="architecture-overview.html">architecture overview</a> including involved microservices</li>
+  <li>notes on how to <a href="installation-operating.html">operate Ditto</a></li>
+  <li>…</li>
+</ul>
+
 
 
     <div class="tags">
@@ -945,6 +1001,10 @@ $('#toc').on('click', 'a', function() {
         
         
         <a href="tag_release_notes.html" class="btn btn-default navbar-btn cursorNorm" role="button">release_notes</a>
+        
+        
+        
+        <a href="tag_search.html" class="btn btn-default navbar-btn cursorNorm" role="button">search</a>
         
         
         
@@ -962,7 +1022,7 @@ $('#toc').on('click', 'a', function() {
                     </div>
                     <p class="notice">
                         &copy;2018 Eclipse Ditto.
-                         Site last generated: Jan 8, 2018 <br />
+                         Site last generated: Jan 12, 2018 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">
