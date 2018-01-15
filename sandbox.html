@@ -5,8 +5,8 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="">
-<meta name="keywords" content=" examples, modify thing">
-<title> Modify a Thing | Eclipse Ditto</title>
+<meta name="keywords" content=" sandbox, demo, trial">
+<title> Sandbox | Eclipse Ditto</title>
 <link rel="stylesheet" href="css/syntax.css">
 
 <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -206,7 +206,7 @@
                                 searchInput: document.getElementById('search-input'),
                                 resultsContainer: document.getElementById('results-container'),
                                 dataSource: 'search.json',
-                                searchResultTemplate: '<li><a href="{url}" title="Modify a Thing">{title}</a></li>',
+                                searchResultTemplate: '<li><a href="{url}" title="Sandbox">{title}</a></li>',
                     noResultsText: 'No results found.',
                             limit: 10,
                             fuzzy: true,
@@ -686,7 +686,7 @@
                       
                       
                       
-                      <li class="active"><a href="protocol-examples-modifything.html">Modify a Thing</a></li>
+                      <li><a href="protocol-examples-modifything.html">Modify a Thing</a></li>
                       
                       
                       
@@ -865,7 +865,7 @@
   
   
     
-    <li><a href="sandbox.html">Sandbox</a></li>
+    <li class="active"><a href="sandbox.html">Sandbox</a></li>
     
   
   
@@ -905,7 +905,7 @@
 
 
 <div class="post-header">
-   <h1 class="post-title-main">Modify a Thing</h1>
+   <h1 class="post-title-main">Sandbox</h1>
 </div>
 
 
@@ -945,86 +945,64 @@ $('#toc').on('click', 'a', function() {
 
     
 
-  
-<h2 id="modifything">ModifyThing</h2>
+  <p>Starting with Eclipse Ditto milestone 0.1.0-M3 the Ditto team provides a <a href="https://ditto.eclipse.org">sandbox</a> which may be used
+by everyone wanting to try out Ditto without starting it locally.</p>
+
+<h2 id="instructions">Instructions</h2>
+
+<p>As Ditto makes use of OAuth2.0 in order to authenticate users the sandbox contains a “sign in with Google” 
+functionality. Ditto accepts the <code class="highlighter-rouge">id_token</code> which is issued by Google as <code class="highlighter-rouge">Bearer</code> token on authentication.</p>
+
+<h3 id="http-api-documentation">HTTP API documentation</h3>
+
+<p>The online <a href="https://ditto.eclipse.org/apidoc/">HTTP API documentation</a> of the sandbox implements the OAuth2.0 “authorization code”
+flow.<br />
+Simply click the green <code class="highlighter-rouge">Authorize</code> button, check the checkbox <code class="highlighter-rouge">openid</code> and click the <code class="highlighter-rouge">Authorize</code> button. Your browser will
+ask you if the Ditto sandbox may access your Google identity which you should acknowledge.<br />
+Afterwards you should be authenticated with your Google user (and therefore your Google ID).</p>
+
+<p>You can try out the API now. For example, expand the <a href="https://ditto.eclipse.org/apidoc/#!/Things/put_things_thingId">PUT /things/{thingId}</a>
+item in order to create a new <code class="highlighter-rouge">Thing</code>, a <strong>Digital Twin</strong> so to say.<br />
+Scroll down to the parameters and enter the required ones (in this case the <code class="highlighter-rouge">thingId</code>), for example:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>org.eclipse.ditto.tjaeckle:my-first-thing
+</code></pre></div></div>
+
+<p>The ID must contain a namespace (in Java package notation) followed by a <code class="highlighter-rouge">:</code> and an arbitrary string afterwards.</p>
+
+<p>The body must be a JSON object, at least an empty one <code class="highlighter-rouge">{}</code>.<br />
+Or it can be filled with arbitrary <a href="basic-thing.html#attributes">attributes</a> and/or <a href="basic-thing.html#features">features</a>, e.g.:</p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"topic"</span><span class="p">:</span><span class="w"> </span><span class="s2">"com.acme/xdk_53/things/twin/commands/modify"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    
+  </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"someAttr"</span><span class="p">:</span><span class="w"> </span><span class="mi">32</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"manufacturer"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ACME corp"</span><span class="w">
   </span><span class="p">},</span><span class="w">
-  </span><span class="s2">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"value"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"__schemaVersion"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"__lifecycle"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ACTIVE"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"_revision"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"_namespace"</span><span class="p">:</span><span class="w"> </span><span class="s2">"com.acme"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"thingId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"com.acme:xdk_53"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"policyId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"com.acme:the_policy_id"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"location"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"latitude"</span><span class="p">:</span><span class="w"> </span><span class="mf">44.673856</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"longitude"</span><span class="p">:</span><span class="w"> </span><span class="mf">8.261719</span><span class="w">
+  </span><span class="s2">"features"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"heating-no1"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="s2">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+              </span><span class="s2">"connected"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+              </span><span class="s2">"complexProperty"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                  </span><span class="s2">"street"</span><span class="p">:</span><span class="w"> </span><span class="s2">"my street"</span><span class="p">,</span><span class="w">
+                  </span><span class="s2">"house no"</span><span class="p">:</span><span class="w"> </span><span class="mi">42</span><span class="w">
+              </span><span class="p">}</span><span class="w">
+          </span><span class="p">}</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="s2">"switchable"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="s2">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+              </span><span class="s2">"on"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+              </span><span class="s2">"lastToggled"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2017-11-15T18:21Z"</span><span class="w">
+          </span><span class="p">}</span><span class="w">
       </span><span class="p">}</span><span class="w">
-    </span><span class="p">},</span><span class="w">
-    </span><span class="s2">"features"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"accelerometer"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-          </span><span class="s2">"x"</span><span class="p">:</span><span class="w"> </span><span class="mf">3.141</span><span class="p">,</span><span class="w">
-          </span><span class="s2">"y"</span><span class="p">:</span><span class="w"> </span><span class="mf">2.718</span><span class="p">,</span><span class="w">
-          </span><span class="s2">"z"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
-          </span><span class="s2">"unit"</span><span class="p">:</span><span class="w"> </span><span class="s2">"g"</span><span class="w">
-        </span><span class="p">}</span><span class="w">
-      </span><span class="p">}</span><span class="w">
-    </span><span class="p">}</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
-<h2 id="modifythingresponse">ModifyThingResponse</h2>
+<h3 id="programatically-access-the-http-api">Programatically access the HTTP API</h3>
 
-<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"topic"</span><span class="p">:</span><span class="w"> </span><span class="s2">"com.acme/xdk_53/things/twin/commands/modify"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    
-  </span><span class="p">},</span><span class="w">
-  </span><span class="s2">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="mi">204</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre></div></div>
-
-<h2 id="thingmodified">ThingModified</h2>
-
-<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"topic"</span><span class="p">:</span><span class="w"> </span><span class="s2">"com.acme/xdk_53/things/twin/events/modified"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    
-  </span><span class="p">},</span><span class="w">
-  </span><span class="s2">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"value"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"thingId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"com.acme:xdk_53"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"policyId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"com.acme:the_policy_id"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"location"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"latitude"</span><span class="p">:</span><span class="w"> </span><span class="mf">44.673856</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"longitude"</span><span class="p">:</span><span class="w"> </span><span class="mf">8.261719</span><span class="w">
-      </span><span class="p">}</span><span class="w">
-    </span><span class="p">},</span><span class="w">
-    </span><span class="s2">"features"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"accelerometer"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-          </span><span class="s2">"x"</span><span class="p">:</span><span class="w"> </span><span class="mf">3.141</span><span class="p">,</span><span class="w">
-          </span><span class="s2">"y"</span><span class="p">:</span><span class="w"> </span><span class="mf">2.718</span><span class="p">,</span><span class="w">
-          </span><span class="s2">"z"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
-          </span><span class="s2">"unit"</span><span class="p">:</span><span class="w"> </span><span class="s2">"g"</span><span class="w">
-        </span><span class="p">}</span><span class="w">
-      </span><span class="p">}</span><span class="w">
-    </span><span class="p">}</span><span class="w">
-  </span><span class="p">},</span><span class="w">
-  </span><span class="s2">"revision"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre></div></div>
-
+<p>If you want to programatically (e.g. in a script running on a RaspberryPi) access the sandbox, we currently have to disappoint
+you. As there is no possibility to obtain a Google JWT with plain username/password and we currently have no other authentication
+provider configured in the sandbox, we have no possibility to authenticate a script.</p>
 
 
     <div class="tags">
