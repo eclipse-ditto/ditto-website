@@ -536,6 +536,13 @@
               
               
               
+              <li><a href="httpapi-messages.html">Messages</a></li>
+              
+              
+              
+              
+              
+              
               <li><a href="httpapi-sse.html">Server sent events</a></li>
               
               
@@ -900,7 +907,8 @@
         <!-- Content Column -->
         <div class="col-md-9" id="tg-sb-content">
             <span class="incubation-logo">
-    <img src="images/eclipse_incubation.png" alt="This is an Eclipse incubation project" style="position: fixed; top: 50px; right: 10px;"/>
+    <img src="images/eclipse_incubation.png" alt="This is an Eclipse incubation project" style="position: fixed;
+    bottom: 10px; right: 10px;"/>
 </span>
 
 
@@ -1148,6 +1156,21 @@ WebSocket session, the following text message has to be sent to the backend:</p>
 <p>This message is acknowledged by Ditto by sending back:</p>
 
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>STOP-SEND-LIVE-EVENTS:ACK
+</code></pre></div></div>
+
+<h3 id="heartbeat-messages">Heartbeat messages</h3>
+
+<p>In order to keep the WebSocket connection alive, you need to send data on a
+regular basis. Since there might be times where no data is available before
+the connection would time out, we advise you to send Ping messages <strong>every 
+60 seconds</strong>.</p>
+
+<p>Ditto detects any empty binary message as a Heartbeat message and will keep
+the connection alive. If your framework does not support sending Ping messages,
+you can implement them on your own. E.g. when working with JavaScript, you 
+could do this by sending an empty Buffer:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">websocket</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span><span class="k">new</span> <span class="nb">ArrayBuffer</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
 </code></pre></div></div>
 
 

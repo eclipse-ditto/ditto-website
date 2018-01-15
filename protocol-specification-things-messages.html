@@ -536,6 +536,13 @@
               
               
               
+              <li><a href="httpapi-messages.html">Messages</a></li>
+              
+              
+              
+              
+              
+              
               <li><a href="httpapi-sse.html">Server sent events</a></li>
               
               
@@ -900,7 +907,8 @@
         <!-- Content Column -->
         <div class="col-md-9" id="tg-sb-content">
             <span class="incubation-logo">
-    <img src="images/eclipse_incubation.png" alt="This is an Eclipse incubation project" style="position: fixed; top: 50px; right: 10px;"/>
+    <img src="images/eclipse_incubation.png" alt="This is an Eclipse incubation project" style="position: fixed;
+    bottom: 10px; right: 10px;"/>
 </span>
 
 
@@ -945,7 +953,306 @@ $('#toc').on('click', 'a', function() {
 
     
 
-  <div class="alert alert-danger" role="alert"><i class="fa fa-exclamation-circle"></i> <b>Warning:</b> Messages commands are not yet mapped in the Ditto protocol.<br />Stay tuned!</div>
+  <p>Messages within the Ditto Protocol allow sending, receiving and responding to 
+Messages. They contain an arbitrary <em>payload</em>, so you can choose what content 
+fits your solution best. If you want to learn more about the basic concepts of the Messages 
+functionality, please have a look at the <a href="basic-messages.html">Messages page</a>.</p>
+
+<div class="alert alert-success" role="alert"><i class="fa fa-check-square-o"></i> <b>Tip:</b> If you only need to send Messages, but don’t need to receive
+ or respond, you could also use the <a href="httpapi-messages.html">HTTP Messages API</a></div>
+
+<h2 id="messages-protocol">Messages protocol</h2>
+
+<p>The Messages protocol is part of the <a href="protocol-specification.html">Ditto Protocol</a> and therefore 
+conforms to its specification. This section describes how the protocol envelope can be filled
+for sending Messages. If you want to jump right into using the API, head over to the
+next section that describes how to <a href="#using-the-messages-api">use the messages API</a>.</p>
+
+<p>There are three protocol parameters that have special meaning for Messages:</p>
+<ul>
+  <li><code class="highlighter-rouge">topic</code> : <em>{namespace}</em>/<em>{thingId}</em>/things/live/messages/<em>{messageSubject}</em></li>
+  <li><code class="highlighter-rouge">path</code> : <em>{addressedPartOfThing}</em>/<em>{mailbox}</em>/messages/<em>{messageSubject}</em></li>
+  <li><code class="highlighter-rouge">headers</code> : The headers for Messages require several arguments: <em>thing-id</em>, <em>direction</em>, <em>content-type</em> and <em>subject</em></li>
+</ul>
+
+<p><br /></p>
+
+<p>The <code class="highlighter-rouge">topic</code> definition for Messages needs the <em>namespace</em> and <em>thingId</em>
+of the Thing you’re sending Messages to. The <em>messageSubject</em> describes the Message
+and must conform to the <em>path</em> as described in <a href="https://tools.ietf.org/html/rfc2396">RFC-2396</a>.
+Examples for valid topics are:</p>
+<ul>
+  <li><code class="highlighter-rouge">org.eclipse.ditto/smartcoffee/things/live/messages/ask/question</code></li>
+  <li><code class="highlighter-rouge">com.example/smarthome/things/live/messages/turnoff</code></li>
+</ul>
+
+<p><br /></p>
+
+<p>The <code class="highlighter-rouge">path</code> also contains the <em>messageSubject</em> that describes the Message.
+<em>mailbox</em> can be <em>inbox</em> (Message is sent to a Thing) or <em>outbox</em> (Message is
+sent from a Thing). The <em>addressedPartOfThing</em> tells which part of the Thing
+is addressed. <code class="highlighter-rouge">/features/water-tank</code> would address the water-tank Feature of 
+the Thing, while `` would address the whole Thing. Valid paths are e.g.:</p>
+<ul>
+  <li><code class="highlighter-rouge">/inbox/messages/ask/question</code></li>
+  <li><code class="highlighter-rouge">/features/lights/inbox/messages/turnoff</code></li>
+  <li><code class="highlighter-rouge">/features/smokedetector/outbox/messages/smokedetected</code></li>
+</ul>
+
+<p><br /></p>
+
+<p>In the <code class="highlighter-rouge">headers</code> of the envelope the Messages API requires several fields:</p>
+<ul>
+  <li><code class="highlighter-rouge">thing-id</code> : The id of the Thing as a string in the form <em>{namespace}:{thingId}</em></li>
+  <li><code class="highlighter-rouge">direction</code> : It is a string and can be either <em>TO</em> or <em>FROM</em>, which states if the Message is sent to or from a Thing</li>
+  <li><code class="highlighter-rouge">content-type</code> : The type of the payload you are sending, e.g. <em>text/plain</em></li>
+  <li><code class="highlighter-rouge">subject</code> : The <em>messageSubject</em> of your Message.</li>
+</ul>
+
+<h2 id="using-the-messages-api">Using the Messages API</h2>
+
+<p>The following parts contain examples that will show you how to leverage the Messages API. 
+In the examples we will use some kind of smart coffee machine with the id <em>smartcoffee</em>.</p>
+
+<div class="alert alert-info" role="alert"><i class="fa fa-info-circle"></i> <b>Note:</b> We encourage you to play around with the examples. You can use
+the WebSocket binding to do so. Make sure the Thing you are sending Messages to is existing and has
+ the correct access rights.</div>
+
+<h3 id="sending-a-message-to-a-thing">Sending a Message to a Thing</h3>
+
+<p>When sending a Message to a Thing, we send it to the inbox of the receiving entity.<br />
+What follows is a simple example Message that asks our Thing <em>smartcoffee</em> how it is feeling today:</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"topic"</span><span class="p">:</span><span class="w"> </span><span class="s2">"org.eclipse.ditto/smartcoffee/things/live/messages/ask"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"thing-id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"org.eclipse.ditto:smartcoffee"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"content-type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"text/plain"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"subject"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ask"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"direction"</span><span class="p">:</span><span class="w"> </span><span class="s2">"TO"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"correlation-id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"a-unique-string-for-this-message"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="s2">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/inbox/messages/ask"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Hey, how are you?"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>In this case, we need to specify, that we want to use the live channel
+(which is the only channel capable of sending Messages anyway). The header
+<code class="highlighter-rouge">direction</code> shows that the Message is sent <em>TO</em> the inbox (<code class="highlighter-rouge">path</code>) of our Thing.
+Notice that our <code class="highlighter-rouge">topic</code> adheres to the <a href="protocol-specification-topic.html">Ditto Protocol topic definition</a>
+with <em>messages</em> as the criterion and the message-subject as <em>action</em>.</p>
+
+<p>We encourage you to always send a <code class="highlighter-rouge">correlation-id</code> with your Messages.
+This is especially important, since the WebSocket Ditto Protocol binding
+sends messages in a fire-and-forget manner. Ditto wouldn’t know who to 
+respond to if there was no <code class="highlighter-rouge">correlation-id</code> set in the Message.</p>
+
+<div class="alert alert-success" role="alert"><i class="fa fa-check-square-o"></i> <b>Tip:</b> If you want to receive the response to 
+a Message, make sure to always send a <code class="highlighter-rouge">correlation-id</code> with it.</div>
+
+<p>The response we would get from our coffee machine could look something like this:</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"topic"</span><span class="p">:</span><span class="w"> </span><span class="s2">"org.eclipse.ditto/smartcoffee/things/live/messages/ask"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"thing-id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"org.eclipse.ditto:smartcoffee"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"read-subjects"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"ditto"</span><span class="p">],</span><span class="w">
+        </span><span class="s2">"subject"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ask"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"correlation-id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"a-unique-string-for-this-message"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"auth-subjects"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"ditto"</span><span class="p">,</span><span class="w"> </span><span class="s2">"nginx:ditto"</span><span class="p">],</span><span class="w">
+        </span><span class="s2">"channel"</span><span class="p">:</span><span class="w"> </span><span class="s2">"live"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"content-type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"text/plain"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"version"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"direction"</span><span class="p">:</span><span class="w"> </span><span class="s2">"FROM"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"418"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="s2">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/outbox/messages/ask"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"I do not know, since i am only a coffee machine."</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="mi">418</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>The answer of the coffee machine has the same <code class="highlighter-rouge">topic</code>, <code class="highlighter-rouge">subject</code> and <code class="highlighter-rouge">correlation-id</code>
+as the original message. As we can see, the response does not only contain a
+<code class="highlighter-rouge">value</code> but also the <code class="highlighter-rouge">status</code> of the response
+which is based on the <a href="protocol-specification.html#status">HTTP status codes</a>. 
+Notice, that the <code class="highlighter-rouge">path</code> of the Message has changed from <em>inbox</em> to <em>outbox</em>, 
+which means the Message was sent <em>from</em> the Thing.
+Ditto automatically added some headers that we can ignore for now.</p>
+
+<h3 id="receiving-a-message">Receiving a message</h3>
+
+<p>To be able to show how to receive Messages, we need to use one of the provided Ditto Protocol
+bindings. We will use the WebSocket binding for now. With it, it is amazingly easy to
+receive Messages sent <em>to</em> or <em>from</em> Things. You only need to fulfill these <em>three</em> simple requirements:</p>
+
+<ol>
+  <li>Having an open connection to the Ditto WebSocket</li>
+  <li>Having sent the <a href="protocol-bindings-websocket.html#request-events">WebSocket binding specific message</a> 
+<code class="highlighter-rouge">START-SEND-MESSAGES</code> to the WebSocket to be able to retrieve Messages</li>
+  <li>You are allowed (<a href="basic-auth.html">authorized</a>) to receive Messages</li>
+</ol>
+
+<p>If we have a user <em>ditto</em> that has <code class="highlighter-rouge">READ</code> permission on <em>smartcoffee</em>, we could receive Messages
+for it using a local Ditto instance using simple JavaScript:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// connect to the WebSocket</span>
+<span class="kd">var</span> <span class="nx">websocket</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">WebSocket</span><span class="p">(</span><span class="s1">'ws://ditto:ditto@localhost:8080/ws/1'</span><span class="p">);</span>
+<span class="nx">websocket</span><span class="p">.</span><span class="nx">onmessage</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">message</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'received message data: '</span> <span class="o">+</span>  <span class="nx">message</span><span class="p">.</span><span class="nx">data</span><span class="p">);</span>
+<span class="p">});</span>
+<span class="nx">websocket</span><span class="p">.</span><span class="nx">onopen</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">ws</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// register for receiving messages</span>
+    <span class="nx">ws</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span><span class="s1">'START-SEND-MESSAGES'</span><span class="p">);</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<p>If we would send the Message described in <a href="#sending-a-message-to-a-thing">Sending a Message to a Thing</a>
+to the WebSocket, our JavaScript receiver would receive the following data:</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"topic"</span><span class="p">:</span><span class="w"> </span><span class="s2">"org.eclipse.ditto/smartcoffee/things/live/messages/ask"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"thing-id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"org.eclipse.ditto:smartcoffee"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"read-subjects"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"ditto"</span><span class="p">],</span><span class="w">
+        </span><span class="s2">"subject"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ask"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"correlation-id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"demo-6qaal9l"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"auth-subjects"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"ditto"</span><span class="p">,</span><span class="w"> </span><span class="s2">"nginx:ditto"</span><span class="p">],</span><span class="w">
+        </span><span class="s2">"channel"</span><span class="p">:</span><span class="w"> </span><span class="s2">"live"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"content-type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"text/plain"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"version"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"direction"</span><span class="p">:</span><span class="w"> </span><span class="s2">"TO"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="s2">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/inbox/messages/ask"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Hey, how are you?"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>The content is almost the same, except for automatically added headers that we can ignore.
+In the next part you can learn how to respond to this Message.</p>
+
+<h3 id="responding-to-a-message">Responding to a Message</h3>
+
+<p>After <a href="#sending-a-message-to-a-thing">sending a Message to a Thing</a> and 
+<a href="#receiving-a-message">receiving the Message</a>, we are able to respond to the
+Message we received. To do this, we can re-use the relevant Message contents 
+and change the type from incoming to outgoing. Here is a simple JavaScript
+function that shows how you could respond to a given Message. It takes
+the original Message, the response payload and status code and returns the
+response Message you can send using a Ditto Protocol binding.</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">createTextResponse</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">originalMessage</span><span class="p">,</span> <span class="nx">payload</span><span class="p">,</span> <span class="nx">statusCode</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">topic</span> <span class="o">=</span> <span class="nx">originalMessage</span><span class="p">.</span><span class="nx">topic</span><span class="p">;</span>
+    <span class="kd">var</span> <span class="nx">thingId</span> <span class="o">=</span> <span class="nx">originalMessage</span><span class="p">.</span><span class="nx">headers</span><span class="p">[</span><span class="s2">"thing-id"</span><span class="p">];</span>
+    <span class="kd">var</span> <span class="nx">subject</span> <span class="o">=</span> <span class="nx">originalMessage</span><span class="p">.</span><span class="nx">headers</span><span class="p">[</span><span class="s2">"subject"</span><span class="p">];</span>
+    <span class="kd">var</span> <span class="nx">correlationId</span> <span class="o">=</span> <span class="nx">originalMessage</span><span class="p">.</span><span class="nx">headers</span><span class="p">[</span><span class="s2">"correlation-id"</span><span class="p">];</span>
+    <span class="kd">var</span> <span class="nx">outboxPath</span> <span class="o">=</span> <span class="nx">originalMessage</span><span class="p">.</span><span class="nx">path</span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="s2">"inbox"</span><span class="p">,</span> <span class="s2">"outbox"</span><span class="p">);</span>
+    
+    <span class="k">return</span> <span class="p">{</span>
+      <span class="s2">"topic"</span><span class="p">:</span> <span class="nx">topic</span><span class="p">,</span>
+      <span class="s2">"headers"</span><span class="p">:</span> <span class="p">{</span>
+          <span class="s2">"thing-id"</span><span class="p">:</span> <span class="nx">thingId</span><span class="p">,</span>
+          <span class="s2">"subject"</span><span class="p">:</span> <span class="nx">subject</span><span class="p">,</span>
+          <span class="s2">"correlation-id"</span><span class="p">:</span> <span class="nx">correlationId</span><span class="p">,</span>
+          <span class="s2">"content-type"</span><span class="p">:</span> <span class="s2">"text/plain"</span><span class="p">,</span>
+          <span class="s2">"direction"</span><span class="p">:</span> <span class="s2">"FROM"</span>
+      <span class="p">},</span>
+      <span class="s2">"path"</span><span class="p">:</span> <span class="nx">outboxPath</span><span class="p">,</span>
+      <span class="s2">"status"</span><span class="p">:</span> <span class="nx">statusCode</span><span class="p">,</span>
+      <span class="s2">"value"</span><span class="p">:</span> <span class="nx">payload</span>
+    <span class="p">};</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<p>With this method you could create a simple text response, and send it
+using e.g. the WebSocket binding. Since the original Message and the response
+Message have the same <code class="highlighter-rouge">correlation-id</code>, the issuer would receive your response:</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"topic"</span><span class="p">:</span><span class="w"> </span><span class="s2">"org.eclipse.ditto/smartcoffee/things/live/messages/ask"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"thing-id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"org.eclipse.ditto:smartcoffee"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"read-subjects"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"ditto"</span><span class="p">],</span><span class="w">
+        </span><span class="s2">"subject"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ask"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"correlation-id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"demo-6qaal9l"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"auth-subjects"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"ditto"</span><span class="p">,</span><span class="w"> </span><span class="s2">"nginx:ditto"</span><span class="p">],</span><span class="w">
+        </span><span class="s2">"channel"</span><span class="p">:</span><span class="w"> </span><span class="s2">"live"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"content-type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"text/plain"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"version"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"direction"</span><span class="p">:</span><span class="w"> </span><span class="s2">"FROM"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="s2">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/outbox/messages/ask"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="mi">418</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"I don't know since i am only a coffee machine"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h3 id="talking-to-features">Talking to Features</h3>
+
+<p>When sending Messages to or from Features, almost everything stays the same as with
+Things. The <code class="highlighter-rouge">path</code> in the JSON and an additional <code class="highlighter-rouge">feature-id</code> header are the only parts to change. 
+A Message to a Feature could therefore have the following JSON:</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"topic"</span><span class="p">:</span><span class="w"> </span><span class="s2">"org.eclipse.ditto/smartcoffee/things/live/messages/heatUp"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"thing-id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"org.eclipse.ditto:smartcoffee"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"feature-id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"water-tank"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"content-type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"text/plain"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"subject"</span><span class="p">:</span><span class="w"> </span><span class="s2">"heatUp"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"direction"</span><span class="p">:</span><span class="w"> </span><span class="s2">"TO"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"correlation-id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"a-unique-string-for-this-message"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="s2">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/features/water-tank/inbox/messages/heatUp"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"47"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h3 id="sending-and-handling-claim-messages">Sending and handling Claim Messages</h3>
+
+<p>Claim Messages are handled like standard Messages with the difference that the message subject is <em>claim</em> and they 
+can only be sent to a Thing. As the purpose of claiming is to gain access to a Thing, you do not require <code class="highlighter-rouge">WRITE</code> 
+permission to send a Claim Message to a Thing. This however means for a receiver that incoming Claim Messages have to be 
+carefully verified before granting access to a Thing.</p>
+
+<p>A Claim Message to gain access to our smart coffee machine might look like this:</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"topic"</span><span class="p">:</span><span class="w"> </span><span class="s2">"org.eclipse.ditto/smartcoffee/things/live/messages/claim"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"thing-id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"org.eclipse.ditto:smartcoffee"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"feature-id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"water-tank"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"content-type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"text/plain"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"subject"</span><span class="p">:</span><span class="w"> </span><span class="s2">"claim"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"direction"</span><span class="p">:</span><span class="w"> </span><span class="s2">"TO"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"correlation-id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"a-unique-string-for-this-claim-message"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="s2">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/inbox/messages/claim"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"some-claiming-secret"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>After verifying the Message, in particular the correctness of the payload, the smart coffee machine could grant access 
+to the issuer by setting an additional permission and respond with a <em>status</em> of <code class="highlighter-rouge">200</code> or <code class="highlighter-rouge">204</code> (as you can see the 
+<code class="highlighter-rouge">path</code> changed to <em>outbox</em> and the <code class="highlighter-rouge">direction</code> is now <em>from</em>, same as above for the Thing Message):</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"topic"</span><span class="p">:</span><span class="w"> </span><span class="s2">"org.eclipse.ditto/smartcoffee/things/live/messages/claim"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"thing-id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"org.eclipse.ditto:smartcoffee"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"content-type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"text/plain"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"subject"</span><span class="p">:</span><span class="w"> </span><span class="s2">"claim"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"direction"</span><span class="p">:</span><span class="w"> </span><span class="s2">"FROM"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"correlation-id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"a-unique-string-for-this-claim-message"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="s2">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/outbox/messages/claim"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="mi">204</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>In case the Claim Message does not contain the required information the smart coffee machine can reject the 
+claim request by <em>NOT</em> granting access and responding with a status different from <code class="highlighter-rouge">200</code> or <code class="highlighter-rouge">204</code>.</p>
 
 
     <div class="tags">
