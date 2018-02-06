@@ -548,6 +548,13 @@
               
               
               
+              
+              
+              <li><a href="httpapi-postman.html">Run in Postman</a></li>
+              
+              
+              
+              
           </ul>
         </li>
     
@@ -807,25 +814,49 @@
                       
                       
                       
-                      <li><a href="protocol-examples-createproperties.html">Create Properties</a></li>
+                      <li><a href="protocol-examples-createdefinition.html">Create Feature Definition</a></li>
                       
                       
                       
                       
                       
-                      <li><a href="protocol-examples-deleteproperties.html">Delete Properties</a></li>
+                      <li><a href="protocol-examples-deletedefinition.html">Delete Feature Definition</a></li>
                       
                       
                       
                       
                       
-                      <li><a href="protocol-examples-modifyproperties.html">Modify Properties</a></li>
+                      <li><a href="protocol-examples-modifydefinition.html">Modify Feature Definition</a></li>
                       
                       
                       
                       
                       
-                      <li><a href="protocol-examples-retrieveproperties.html">Retrieve Properties</a></li>
+                      <li><a href="protocol-examples-retrievedefinition.html">Retrieve Feature Definition</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-createproperties.html">Create Feature Properties</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-deleteproperties.html">Delete Feature Properties</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-modifyproperties.html">Modify Feature Properties</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-retrieveproperties.html">Retrieve Feature Properties</a></li>
                       
                       
                       
@@ -968,13 +999,20 @@ to the search endpoint:</p>
 <p>If the <code class="highlighter-rouge">filter</code> parameter is omitted, the result contains all <code class="highlighter-rouge">Things</code> the authenticated user is 
 <a href="basic-auth.html">allowed to read</a>.</p>
 
+<p>Optionally a <code class="highlighter-rouge">namespaces</code> parameter can be added to search only in the given namespaces.</p>
+
 <h2 id="query-parameters">Query parameters</h2>
 
 <p>In order to define for which <code class="highlighter-rouge">Things</code> to search, the <code class="highlighter-rouge">filter</code> query parameter has to be added.<br />
 In order to change the sorting and limit the result (also to do paging), the <code class="highlighter-rouge">options</code> parameter has to be added.</p>
 
 <p>Complex example:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET .../search/things?filter=eq(attributes/location,"living-room")&amp;option=sort(+thingId),limit(0,5)
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET .../search/things?filter=eq(attributes/location,"living-room")&amp;option=sort(+thingId),limit(0,5)&amp;namespaces=org
+.eclipse.ditto,foo.bar
+</code></pre></div></div>
+
+<p>Another Complex example with the <code class="highlighter-rouge">namespaces</code> parameter:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET .../search/things?filter=eq(attributes/location,"living-room")&amp;namespaces=org.eclipse.ditto,foo.bar
 </code></pre></div></div>
 
 <p>The HTTP search API can also profit from the <a href="httpapi-concepts.html#partial-requests">partial request</a> concept of the API:<br />
@@ -983,6 +1021,12 @@ set to retrieve.</p>
 
 <p>Example which only returns <code class="highlighter-rouge">thingId</code> and the <code class="highlighter-rouge">manufacturer</code> attribute of the found Things:</p>
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET .../search/things?filter=eq(attributes/location,"living-room")&amp;fields=thingId,attributes/manufacturer
+</code></pre></div></div>
+
+<p>With the <code class="highlighter-rouge">namespaces</code> parameter, the result can be limited to the given namespaces.</p>
+
+<p>Example which only returns Things with the given namespaces prefix:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET .../search/things?namespaces=org.eclipse.ditto,foo.bar
 </code></pre></div></div>
 
 <h2 id="search-count">Search count</h2>
@@ -1024,7 +1068,7 @@ set to retrieve.</p>
                     </div>
                     <p class="notice">
                         &copy;2018 Eclipse Ditto.
-                         Site last generated: Jan 15, 2018 <br />
+                         Site last generated: Feb 6, 2018 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

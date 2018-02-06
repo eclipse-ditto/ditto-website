@@ -548,6 +548,13 @@
               
               
               
+              
+              
+              <li><a href="httpapi-postman.html">Run in Postman</a></li>
+              
+              
+              
+              
           </ul>
         </li>
     
@@ -807,25 +814,49 @@
                       
                       
                       
-                      <li><a href="protocol-examples-createproperties.html">Create Properties</a></li>
+                      <li><a href="protocol-examples-createdefinition.html">Create Feature Definition</a></li>
                       
                       
                       
                       
                       
-                      <li><a href="protocol-examples-deleteproperties.html">Delete Properties</a></li>
+                      <li><a href="protocol-examples-deletedefinition.html">Delete Feature Definition</a></li>
                       
                       
                       
                       
                       
-                      <li><a href="protocol-examples-modifyproperties.html">Modify Properties</a></li>
+                      <li><a href="protocol-examples-modifydefinition.html">Modify Feature Definition</a></li>
                       
                       
                       
                       
                       
-                      <li><a href="protocol-examples-retrieveproperties.html">Retrieve Properties</a></li>
+                      <li><a href="protocol-examples-retrievedefinition.html">Retrieve Feature Definition</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-createproperties.html">Create Feature Properties</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-deleteproperties.html">Delete Feature Properties</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-modifyproperties.html">Modify Feature Properties</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-retrieveproperties.html">Retrieve Feature Properties</a></li>
                       
                       
                       
@@ -1142,7 +1173,7 @@ The attributes will be set to the JSON in the value.</p>
     <tr>
       <td> </td>
       <td><code class="highlighter-rouge">404</code></td>
-      <td>Not Found - Attributes not found or requester had insufficient permissions.</td>
+      <td>Not Found - Thing not found or requester had insufficient permissions.</td>
     </tr>
     <tr>
       <td> </td>
@@ -1256,7 +1287,7 @@ The attribute (JSON) can be referenced hierarchically by applying <a href="https
     <tr>
       <td> </td>
       <td><code class="highlighter-rouge">404</code></td>
-      <td>Not Found - Attribute not found or requester had insufficient permissions.</td>
+      <td>Not Found - Thing not found or requester had insufficient permissions.</td>
     </tr>
     <tr>
       <td> </td>
@@ -1369,7 +1400,7 @@ The list of Features will be replaced by the JSON in the value.</p>
     <tr>
       <td> </td>
       <td><code class="highlighter-rouge">404</code></td>
-      <td>Not Found - the Features were not found or requester had insufficient permissions.</td>
+      <td>Not Found - the Thing was not found or requester had insufficient permissions.</td>
     </tr>
     <tr>
       <td> </td>
@@ -1482,7 +1513,7 @@ the <code class="highlighter-rouge">&lt;thingId&gt;</code> in the topic).</p>
     <tr>
       <td> </td>
       <td><code class="highlighter-rouge">404</code></td>
-      <td>Not Found - the Feature was not found or requester had insufficient permissions.</td>
+      <td>Not Found - the Thing or Feature was not found or requester had insufficient permissions.</td>
     </tr>
     <tr>
       <td> </td>
@@ -1522,12 +1553,125 @@ the <code class="highlighter-rouge">&lt;thingId&gt;</code> in the topic).</p>
 <p><strong>Example:</strong> 
 <a href="protocol-examples-createfeature.html">Create a single Feature</a></p>
 
+<h2 id="create-definition-of-a-feature">Create Definition of a Feature</h2>
+
+<p>Create the Definition of a Feature (identified by the Feature ID in the path) of the Thing (identified by the
+<code class="highlighter-rouge">&lt;namespace&gt;</code> and the <code class="highlighter-rouge">&lt;thingId&gt;</code> in the topic).</p>
+
+<h3 id="command-5">Command</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Field</th>
+      <th>Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>topic</strong></td>
+      <td><code class="highlighter-rouge">&lt;namespace&gt;/&lt;thingId&gt;/things/&lt;channel&gt;/commands/modify</code></td>
+    </tr>
+    <tr>
+      <td><strong>path</strong></td>
+      <td><code class="highlighter-rouge">/features/&lt;featureId&gt;/definition</code></td>
+    </tr>
+    <tr>
+      <td><strong>value</strong></td>
+      <td>The Definition of the Feature as JSON array, see property <code class="highlighter-rouge">definition</code> of Things JSON schema at <a href="protocol-specification.html#dittoProtocolPayload">Ditto protocol payload (JSON).</a></td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="response-5">Response</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Field</th>
+      <th> </th>
+      <th>Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>topic</strong></td>
+      <td> </td>
+      <td><code class="highlighter-rouge">&lt;namespace&gt;/&lt;thingId&gt;/things/&lt;channel&gt;/commands/modify</code></td>
+    </tr>
+    <tr>
+      <td><strong>path</strong></td>
+      <td> </td>
+      <td><code class="highlighter-rouge">/features/&lt;featureId&gt;/definition</code></td>
+    </tr>
+    <tr>
+      <td><strong>value</strong></td>
+      <td> </td>
+      <td>The created Definition of the Feature as JSON array, see property <code class="highlighter-rouge">definition</code> of Things JSON schema at <a href="protocol-specification.html#dittoProtocolPayload">Ditto protocol payload (JSON).</a></td>
+    </tr>
+    <tr>
+      <td><strong>status</strong></td>
+      <td><em>code</em></td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td><code class="highlighter-rouge">201</code></td>
+      <td>Success - the Definition was created successfully.</td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td><code class="highlighter-rouge">403</code></td>
+      <td>Not Modifiable - the Definition could not be modified.</td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td><code class="highlighter-rouge">404</code></td>
+      <td>Not Found - the Thing or Feature was not found or requester had insufficient permissions.</td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td> </td>
+      <td>See <a href="protocol-examples-errorresponses.html">Thing Error Responses</a> for examples of other error responses.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="event-5">Event</h3>
+
+<p>The event emitted by Ditto after the Feature Definition of a Thing was created.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Field</th>
+      <th>Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>topic</strong></td>
+      <td><code class="highlighter-rouge">&lt;namespace&gt;/&lt;thingId&gt;/things/&lt;channel&gt;/events/created</code></td>
+    </tr>
+    <tr>
+      <td><strong>path</strong></td>
+      <td><code class="highlighter-rouge">/features/&lt;featureId&gt;/definition</code></td>
+    </tr>
+    <tr>
+      <td><strong>value</strong></td>
+      <td>The created Definition of the Feature as JSON array, see property <code class="highlighter-rouge">definition</code> of the Things JSON schema at <a href="protocol-specification.html#dittoProtocolPayload">Ditto protocol payload (JSON).</a></td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>Example:</strong> <a href="protocol-examples-createdefinition.html">Create Feature Definition.</a></p>
+
 <h2 id="create-all-properties-of-a-feature">Create all Properties of a Feature</h2>
 
 <p>Create the Properties of a Feature (identified by the Feature ID in the path) of the Thing (identified by the
 <code class="highlighter-rouge">&lt;namespace&gt;</code> and the <code class="highlighter-rouge">&lt;thingId&gt;</code> in the topic).</p>
 
-<h3 id="command-5">Command</h3>
+<h3 id="command-6">Command</h3>
 
 <table>
   <thead>
@@ -1552,7 +1696,7 @@ the <code class="highlighter-rouge">&lt;thingId&gt;</code> in the topic).</p>
   </tbody>
 </table>
 
-<h3 id="response-5">Response</h3>
+<h3 id="response-6">Response</h3>
 
 <table>
   <thead>
@@ -1596,7 +1740,7 @@ the <code class="highlighter-rouge">&lt;thingId&gt;</code> in the topic).</p>
     <tr>
       <td> </td>
       <td><code class="highlighter-rouge">404</code></td>
-      <td>Not Found - the Properties were not found or requester had insufficient permissions.</td>
+      <td>Not Found - the Thing or Feature was not found or requester had insufficient permissions.</td>
     </tr>
     <tr>
       <td> </td>
@@ -1606,7 +1750,7 @@ the <code class="highlighter-rouge">&lt;thingId&gt;</code> in the topic).</p>
   </tbody>
 </table>
 
-<h3 id="event-5">Event</h3>
+<h3 id="event-6">Event</h3>
 
 <p>The event emitted by Ditto after the Feature Properties of a Thing were created.</p>
 
@@ -1641,7 +1785,7 @@ the <code class="highlighter-rouge">&lt;thingId&gt;</code> in the topic).</p>
 The Property will be created if it doesn’t exist or else updated.
 The Property (JSON) can be referenced hierarchically by applying <a href="https://tools.ietf.org/html/rfc6901">JSON Pointer notation (RFC-6901)</a>.</p>
 
-<h3 id="command-6">Command</h3>
+<h3 id="command-7">Command</h3>
 
 <table>
   <thead>
@@ -1666,7 +1810,7 @@ The Property (JSON) can be referenced hierarchically by applying <a href="https:
   </tbody>
 </table>
 
-<h3 id="response-6">Response</h3>
+<h3 id="response-7">Response</h3>
 
 <table>
   <thead>
@@ -1720,7 +1864,7 @@ The Property (JSON) can be referenced hierarchically by applying <a href="https:
   </tbody>
 </table>
 
-<h3 id="event-6">Event</h3>
+<h3 id="event-7">Event</h3>
 
 <p>The event emitted by Ditto after a Feature Property of a Thing was created.</p>
 
@@ -1774,7 +1918,7 @@ The Property (JSON) can be referenced hierarchically by applying <a href="https:
                     </div>
                     <p class="notice">
                         &copy;2018 Eclipse Ditto.
-                         Site last generated: Jan 15, 2018 <br />
+                         Site last generated: Feb 6, 2018 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

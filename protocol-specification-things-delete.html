@@ -548,6 +548,13 @@
               
               
               
+              
+              
+              <li><a href="httpapi-postman.html">Run in Postman</a></li>
+              
+              
+              
+              
           </ul>
         </li>
     
@@ -807,25 +814,49 @@
                       
                       
                       
-                      <li><a href="protocol-examples-createproperties.html">Create Properties</a></li>
+                      <li><a href="protocol-examples-createdefinition.html">Create Feature Definition</a></li>
                       
                       
                       
                       
                       
-                      <li><a href="protocol-examples-deleteproperties.html">Delete Properties</a></li>
+                      <li><a href="protocol-examples-deletedefinition.html">Delete Feature Definition</a></li>
                       
                       
                       
                       
                       
-                      <li><a href="protocol-examples-modifyproperties.html">Modify Properties</a></li>
+                      <li><a href="protocol-examples-modifydefinition.html">Modify Feature Definition</a></li>
                       
                       
                       
                       
                       
-                      <li><a href="protocol-examples-retrieveproperties.html">Retrieve Properties</a></li>
+                      <li><a href="protocol-examples-retrievedefinition.html">Retrieve Feature Definition</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-createproperties.html">Create Feature Properties</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-deleteproperties.html">Delete Feature Properties</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-modifyproperties.html">Modify Feature Properties</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-retrieveproperties.html">Retrieve Feature Properties</a></li>
                       
                       
                       
@@ -1456,12 +1487,113 @@ For the meaning of those two channels see <a href="protocol-specification.html">
 <p><strong>Example:</strong> 
 <a href="protocol-examples-deletefeature.html">Delete a single Feature</a></p>
 
+<h2 id="delete-definition-of-a-feature">Delete Definition of a Feature</h2>
+
+<p>Delete the Definition of a Feature (identified by the <code class="highlighter-rouge">&lt;featureId&gt;</code> in the <code class="highlighter-rouge">path</code>) of the Thing 
+(identified by the <code class="highlighter-rouge">&lt;namespace&gt;</code> and the <code class="highlighter-rouge">&lt;thingId&gt;</code> in the <code class="highlighter-rouge">topic</code>).</p>
+
+<h3 id="command-5">Command</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Field</th>
+      <th>Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>topic</strong></td>
+      <td><code class="highlighter-rouge">&lt;namespace&gt;/&lt;thingId&gt;/things/&lt;channel&gt;/commands/delete</code></td>
+    </tr>
+    <tr>
+      <td><strong>path</strong></td>
+      <td><code class="highlighter-rouge">/features/&lt;featureId&gt;/definition</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="response-5">Response</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Field</th>
+      <th> </th>
+      <th>Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>topic</strong></td>
+      <td> </td>
+      <td><code class="highlighter-rouge">&lt;namespace&gt;/&lt;thingId&gt;/things/&lt;channel&gt;/commands/delete</code></td>
+    </tr>
+    <tr>
+      <td><strong>path</strong></td>
+      <td> </td>
+      <td><code class="highlighter-rouge">/features/&lt;featureId&gt;/definition</code></td>
+    </tr>
+    <tr>
+      <td><strong>status</strong></td>
+      <td><em>code</em></td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td><code class="highlighter-rouge">204</code></td>
+      <td>Success - the Definition was deleted successfully.</td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td><code class="highlighter-rouge">403</code></td>
+      <td>Not Modifiable - The Definition could not be deleted as the requester had insufficient permissions (‘WRITE’ is required).</td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td><code class="highlighter-rouge">404</code></td>
+      <td>Not Found - The Thing, Feature or Definition was not found or requester had insufficient permissions.</td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td> </td>
+      <td>See <a href="protocol-examples-errorresponses.html">Thing Error Responses</a> for examples of other error responses.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="event-5">Event</h3>
+
+<p>The event emitted by Ditto after the Feature Definition of a Thing was deleted.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Field</th>
+      <th>Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>topic</strong></td>
+      <td><code class="highlighter-rouge">&lt;namespace&gt;/&lt;thingId&gt;/things/&lt;channel&gt;/events/deleted</code></td>
+    </tr>
+    <tr>
+      <td><strong>path</strong></td>
+      <td><code class="highlighter-rouge">/features/&lt;featureId&gt;/definition</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>Example:</strong> 
+<a href="protocol-examples-deletedefinition.html">Delete Feature Definition</a></p>
+
 <h2 id="delete-all-properties-of-a-feature">Delete all Properties of a Feature</h2>
 
 <p>Delete all Properties of a Feature (identified by the <code class="highlighter-rouge">&lt;featureId&gt;</code> in the <code class="highlighter-rouge">path</code>) of the Thing 
 (identified by the <code class="highlighter-rouge">&lt;namespace&gt;</code> and the <code class="highlighter-rouge">&lt;thingId&gt;</code> in the <code class="highlighter-rouge">topic</code>).</p>
 
-<h3 id="command-5">Command</h3>
+<h3 id="command-6">Command</h3>
 
 <table>
   <thead>
@@ -1482,7 +1614,7 @@ For the meaning of those two channels see <a href="protocol-specification.html">
   </tbody>
 </table>
 
-<h3 id="response-5">Response</h3>
+<h3 id="response-6">Response</h3>
 
 <table>
   <thead>
@@ -1531,7 +1663,7 @@ For the meaning of those two channels see <a href="protocol-specification.html">
   </tbody>
 </table>
 
-<h3 id="event-5">Event</h3>
+<h3 id="event-6">Event</h3>
 
 <p>The event emitted by Ditto after the Feature Properties of a Thing were deleted.</p>
 
@@ -1561,7 +1693,7 @@ For the meaning of those two channels see <a href="protocol-specification.html">
 
 <p>Delete a specific Property (identified by <code class="highlighter-rouge">&lt;propertyPath&gt;</code>) of a Feature (identified by the <code class="highlighter-rouge">&lt;featureId&gt;</code> in the <code class="highlighter-rouge">path</code>).</p>
 
-<h3 id="command-6">Command</h3>
+<h3 id="command-7">Command</h3>
 
 <table>
   <thead>
@@ -1582,7 +1714,7 @@ For the meaning of those two channels see <a href="protocol-specification.html">
   </tbody>
 </table>
 
-<h3 id="response-6">Response</h3>
+<h3 id="response-7">Response</h3>
 
 <table>
   <thead>
@@ -1631,7 +1763,7 @@ For the meaning of those two channels see <a href="protocol-specification.html">
   </tbody>
 </table>
 
-<h3 id="event-6">Event</h3>
+<h3 id="event-7">Event</h3>
 
 <p>The event emitted by Ditto after a Feature Property of a Thing was deleted.</p>
 
@@ -1682,7 +1814,7 @@ For the meaning of those two channels see <a href="protocol-specification.html">
                     </div>
                     <p class="notice">
                         &copy;2018 Eclipse Ditto.
-                         Site last generated: Jan 15, 2018 <br />
+                         Site last generated: Feb 6, 2018 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">
