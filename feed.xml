@@ -5,9 +5,102 @@
         <description>Eclipse Ditto Blog</description>
         <link>https://www.eclipse.org/ditto/</link>
         <atom:link href="https://www.eclipse.org/ditto/feed.xml" rel="self" type="application/rss+xml"/>
-        <pubDate>Thu, 08 Feb 2018 02:33:47 -0500</pubDate>
-        <lastBuildDate>Thu, 08 Feb 2018 02:33:47 -0500</lastBuildDate>
+        <pubDate>Wed, 25 Apr 2018 13:03:51 -0400</pubDate>
+        <lastBuildDate>Wed, 25 Apr 2018 13:03:51 -0400</lastBuildDate>
         <generator>Jekyll v3.6.2</generator>
+        
+        <item>
+            <title>Ditto's connectivity capabilities are pimped up</title>
+            <description>&lt;p&gt;It has been quite lately on our website and on GitHub as the Ditto team currently prepares its new &lt;code class=&quot;highlighter-rouge&quot;&gt;connectivity&lt;/code&gt; 
+microservice. Until now Ditto’s &lt;code class=&quot;highlighter-rouge&quot;&gt;amqp-bridge&lt;/code&gt; service could connect to AMQP1.0 endpoints 
+(e.g. &lt;a href=&quot;https://www.eclipse.org/hono/&quot;&gt;Eclipse Hono&lt;/a&gt;).&lt;/p&gt;
+
+&lt;p&gt;That worked quite well, but still had some issues:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;failover/reconnection was not always done properly&lt;/li&gt;
+  &lt;li&gt;the current connection state could not yet be retrieved&lt;/li&gt;
+  &lt;li&gt;AMQP 1.0 is a great protocol including &lt;a href=&quot;https://www.reactivemanifesto.org&quot;&gt;reactive principles&lt;/a&gt; but it still is not very “mainstream”&lt;/li&gt;
+  &lt;li&gt;the AMQP 1.0 messages consumed by Ditto already had to be in &lt;a href=&quot;protocol-overview.html&quot;&gt;Ditto Protocol&lt;/a&gt;, otherwise Ditto
+could not understand them&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Our current implementation focus lies on two GitHub issues resolving those problems:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/eclipse/ditto/issues/129&quot;&gt;Enhance existing AMQP-bridge with AMQP 0.9.1 connectivity&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/eclipse/ditto/issues/130&quot;&gt;Support mapping arbitrary message payloads in AMQP-bridge&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;changes-and-enhancements&quot;&gt;Changes and Enhancements&lt;/h2&gt;
+
+&lt;h3 id=&quot;renaming&quot;&gt;Renaming&lt;/h3&gt;
+
+&lt;p&gt;With the new responsibilities of the former amqp-bridge we have renamed the &lt;code class=&quot;highlighter-rouge&quot;&gt;amqp-bridge-service&lt;/code&gt; to &lt;code class=&quot;highlighter-rouge&quot;&gt;connectivity-service&lt;/code&gt;. &lt;br /&gt;
+The Docker image and the Maven artifacts are affected by this change.&lt;/p&gt;
+
+&lt;h3 id=&quot;enhanced-connectivity&quot;&gt;Enhanced connectivity&lt;/h3&gt;
+
+&lt;p&gt;The new &lt;a href=&quot;architecture-services-connectivity.html&quot;&gt;connectivity&lt;/a&gt; microservice can now manage and handle both AMQP 1.0 and 
+AMQP 0.9.1 connections at the same time. &lt;br /&gt;
+That means that Ditto from now on supports connecting to running AMQP 1.0 endpoints or to AMQP 0.9.1 brokers (e.g. RabbitMQ).
+The architecture of the &lt;code class=&quot;highlighter-rouge&quot;&gt;connectivity&lt;/code&gt; microservice is designed to also support connecting via other protocols in the future.&lt;/p&gt;
+
+&lt;p&gt;Need to connect to a Kafka in order to process digital twin &lt;a href=&quot;basic-signals-command.html&quot;&gt;commands&lt;/a&gt; from there or publish 
+&lt;a href=&quot;basic-changenotifications.html&quot;&gt;change notifications&lt;/a&gt;? &lt;br /&gt;
+Or want to send all state changes happening to twins to a time series database?&lt;/p&gt;
+
+&lt;p&gt;The &lt;code class=&quot;highlighter-rouge&quot;&gt;connectivity&lt;/code&gt; service is the new place to integrate your managed digital twins with other systems.&lt;/p&gt;
+
+&lt;h3 id=&quot;json-format-of-connections&quot;&gt;JSON format of connections&lt;/h3&gt;
+
+&lt;p&gt;As Ditto now supports more than AMQP 1.0, we had to adjust the JSON format for creating new connections. 
+The new one is documented here: &lt;a href=&quot;connectivity-manage-connections.html&quot;&gt;Manage connections in connectivity&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h3 id=&quot;payload-mapping-of-external-messages&quot;&gt;Payload mapping of external messages&lt;/h3&gt;
+
+&lt;p&gt;Eclipse Ditto is about providing access to IoT devices via the &lt;a href=&quot;intro-digitaltwins.html&quot;&gt;digital twin&lt;/a&gt; pattern. In order to
+provide structured APIs for different heterogeneous devices Ditto defines a lightweight JSON based &lt;a href=&quot;basic-overview.html&quot;&gt;model&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Devices in the IoT, may they be brownfield devices or newly produced devices, will probably not send their data to the
+cloud in the structure and &lt;a href=&quot;protocol-overview.html&quot;&gt;protocol&lt;/a&gt; Ditto requires. They should not need to be aware of something
+like Ditto running in the cloud mirroring them as digital twins.&lt;/p&gt;
+
+&lt;p&gt;That’s why we added a JavaScript based payload mapping to the &lt;code class=&quot;highlighter-rouge&quot;&gt;connectivity&lt;/code&gt; service which is responsible for:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;transforming text- or byte-payload from messages consumed via a &lt;code class=&quot;highlighter-rouge&quot;&gt;source&lt;/code&gt; of a created connection to 
+&lt;a href=&quot;protocol-overview.html&quot;&gt;Ditto Protocol&lt;/a&gt; &lt;a href=&quot;basic-signals-command.html&quot;&gt;commands&lt;/a&gt; and &lt;a href=&quot;basic-messages.html&quot;&gt;messages&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;transforming back &lt;a href=&quot;basic-signals-commandresponse.html&quot;&gt;responses&lt;/a&gt; issued by commands and &lt;a href=&quot;basic-signals-event.html&quot;&gt;events&lt;/a&gt;
+from Ditto Protocol to some text- or byte-payload before sending the message back via the configured &lt;code class=&quot;highlighter-rouge&quot;&gt;target&lt;/code&gt; channel&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The &lt;code class=&quot;highlighter-rouge&quot;&gt;incoming&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;outgoing&lt;/code&gt; scripts must be configured when creating a new connection 
+&lt;a href=&quot;connectivity-manage-connections.html&quot;&gt;via DevOps commands&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h2 id=&quot;example&quot;&gt;Example&lt;/h2&gt;
+&lt;p&gt;Please find more information and examples at:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;connectivity-overview.html&quot;&gt;Connectivity overview&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;connectivity-mapping.html&quot;&gt;Payload mapping in connectivity&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;br /&gt;
+&lt;br /&gt;&lt;/p&gt;
+&lt;figure&gt;&lt;img class=&quot;docimage&quot; src=&quot;images/ditto.svg&quot; alt=&quot;Ditto&quot; style=&quot;max-width: 500px&quot; /&gt;&lt;/figure&gt;
+
+&lt;p&gt;–&lt;br /&gt;
+The Eclipse Ditto team&lt;/p&gt;
+</description>
+            <pubDate>Wed, 25 Apr 2018 00:00:00 -0400</pubDate>
+            <link>https://www.eclipse.org/ditto/2018-04-25-connectivity-service.html</link>
+            <guid isPermaLink="true">https://www.eclipse.org/ditto/2018-04-25-connectivity-service.html</guid>
+            
+            <category>blog</category>
+            
+            
+        </item>
         
         <item>
             <title>Introducing Feature Definition</title>
@@ -118,7 +211,7 @@ as well as &lt;a href=&quot;https://repo1.maven.org/maven2/org/eclipse/ditto/&qu
   &lt;li&gt;&lt;a href=&quot;https://hub.docker.com/r/eclipse/ditto-things/&quot;&gt;eclipse/ditto-things&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;https://hub.docker.com/r/eclipse/ditto-things-search/&quot;&gt;eclipse/ditto-things-search&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;https://hub.docker.com/r/eclipse/ditto-gateway/&quot;&gt;eclipse/ditto-gateway&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://hub.docker.com/r/eclipse/ditto-amqp-bridge/&quot;&gt;eclipse/ditto-amqp-bridge&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://hub.docker.com/r/eclipse/ditto-connectivity/&quot;&gt;eclipse/ditto-connectivity&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;h2 id=&quot;virtual-iot-meetup&quot;&gt;Virtual IoT Meetup&lt;/h2&gt;
@@ -208,7 +301,7 @@ and interpret those, given that these are compatible to our &lt;a href=&quot;pro
 
 &lt;p&gt;Try it out and share your experience.&lt;/p&gt;
 
-&lt;p&gt;The sandbox does not yet start the new AMQP-bridge in order to connect to Hono; we will work on that soon.&lt;/p&gt;
+&lt;p&gt;The sandbox does not yet start the new Connectivity in order to connect to Hono; we will work on that soon.&lt;/p&gt;
 
 &lt;h2 id=&quot;artifacts&quot;&gt;Artifacts&lt;/h2&gt;
 
@@ -221,7 +314,7 @@ as well as &lt;a href=&quot;https://repo1.maven.org/maven2/org/eclipse/ditto/&qu
   &lt;li&gt;&lt;a href=&quot;https://hub.docker.com/r/eclipse/ditto-things/&quot;&gt;eclipse/ditto-things&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;https://hub.docker.com/r/eclipse/ditto-things-search/&quot;&gt;eclipse/ditto-things-search&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;https://hub.docker.com/r/eclipse/ditto-gateway/&quot;&gt;eclipse/ditto-gateway&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://hub.docker.com/r/eclipse/ditto-amqp-bridge/&quot;&gt;eclipse/ditto-amqp-bridge&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://hub.docker.com/r/eclipse/ditto-connectivity/&quot;&gt;eclipse/ditto-connectivity&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;figure&gt;&lt;img class=&quot;docimage&quot; src=&quot;images/ditto.svg&quot; alt=&quot;Ditto&quot; style=&quot;max-width: 500px&quot; /&gt;&lt;/figure&gt;

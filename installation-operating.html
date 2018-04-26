@@ -440,6 +440,13 @@
               
               
               
+              <li><a href="basic-connections.html">Connections</a></li>
+              
+              
+              
+              
+              
+              
               <li><a href="basic-changenotifications.html">Change notifications</a></li>
               
               
@@ -499,7 +506,7 @@
                       
                       
                       
-                      <li><a href="architecture-services-amqp-bridge.html">AMQP-Bridge</a></li>
+                      <li><a href="architecture-services-connectivity.html">Connectivity</a></li>
                       
                       
                       
@@ -550,6 +557,13 @@
               
               
               
+              <li><a href="httpapi-protocol-bindings-websocket.html">WebSocket protocol binding</a></li>
+              
+              
+              
+              
+              
+              
               <li><a href="httpapi-sse.html">Server sent events</a></li>
               
               
@@ -558,6 +572,52 @@
               
               
               <li><a href="httpapi-postman.html">Run in Postman</a></li>
+              
+              
+              
+              
+          </ul>
+        </li>
+    
+  
+  
+  
+    
+        <li>
+          <a href="#">Connectivity API</a>
+          <ul>
+              
+              
+              
+              <li><a href="connectivity-overview.html">Overview</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="connectivity-manage-connections.html">Manage connections</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="connectivity-protocol-bindings-amqp091.html">AMQP 0.9.1 protocol binding</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="connectivity-protocol-bindings-amqp10.html">AMQP 1.0 protocol binding</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="connectivity-mapping.html">Payload mapping</a></li>
               
               
               
@@ -665,20 +725,6 @@
               
               
               <li><a href="protocol-bindings.html">Bindings</a></li>
-              
-              
-              
-              
-              
-              
-              <li><a href="protocol-bindings-websocket.html">Websocket Binding</a></li>
-              
-              
-              
-              
-              
-              
-              <li><a href="protocol-bindings-amqp10.html">AMQP 1.0 Binding</a></li>
               
               
               
@@ -1084,9 +1130,10 @@ This API is intended for making operating Ditto easier by reducing the need to r
 changes.</p>
 
 <p>Following DevOps commands are supported:</p>
+
 <ul>
-  <li>dynamically retrieve and change log levels</li>
-  <li>create new AMQP Bridge connections during runtime</li>
+  <li>Dynamically retrieve and change log levels</li>
+  <li>Piggyback commands</li>
 </ul>
 
 <h3 id="dynamically-adjust-log-levels">Dynamically adjust log levels</h3>
@@ -1127,7 +1174,7 @@ the need to restart the server and thereby fixing the bug.</p>
     </span><span class="s2">"things"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
         </span><span class="err">...</span><span class="w">
     </span><span class="p">},</span><span class="w">
-    </span><span class="s2">"amqp-bridge"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"connectivity"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
         </span><span class="err">...</span><span class="w">
     </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
@@ -1180,40 +1227,30 @@ the need to restart the server and thereby fixing the bug.</p>
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
-<h3 id="create-a-new-amqp-bridge-connection">Create a new AMQP-Bridge connection</h3>
+<h3 id="piggyback-commands">Piggyback commands</h3>
 
-<p>Example request payload to create a new AMQP 1.0 connection:<br />
-<code class="highlighter-rouge">POST /devops/piggyback/amqp-bridge</code></p>
+<p>You can use a DevOps command to send a command to another actor in the cluster. Those special commands are named
+piggyback commands. A piggyback command must conform to the following schema:</p>
+
+<script src="docson/widget.js" data-schema="../jsonschema/piggyback-command.json"></script>
+
+<p>Example:</p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-    </span><span class="s2">"targetActorSelection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/system/sharding/amqp-connection"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
+    </span><span class="s2">"targetActorSelection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/system/sharding/connection"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"aggregate"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+    </span><span class="p">},</span><span class="w">
     </span><span class="s2">"piggybackCommand"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"amqp.bridge.commands:createConnection"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"connection"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-            </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"hono-example-connection-123"</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"authorizationSubject"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;&lt;&lt;my-subject-id-included-in-policy-or-acl&gt;&gt;&gt;"</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"failoverEnabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"uri"</span><span class="p">:</span><span class="w"> </span><span class="s2">"amqps://user:password@hono.eclipse.org:5671"</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"sources"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-              </span><span class="s2">"telemetry/DEFAULT_TENANT"</span><span class="w">
-            </span><span class="p">]</span><span class="w">
-        </span><span class="p">}</span><span class="w">
+        </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"connectivity.commands:createConnection"</span><span class="p">,</span><span class="w">
+        </span><span class="err">...</span><span class="w">
     </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
-<p>The <code class="highlighter-rouge">id</code> of the connection may be any string.</p>
+<p>Currently piggybacks are only used to configure Dittos connectivity service. More information on this can be found in
+the <a href="connectivity-manage-connections.html">Manage Connections</a> section.</p>
 
-<p>The <code class="highlighter-rouge">authorizationSubject</code> is the subject (e.g. user-id) to use for <a href="basic-auth.html#authorization">authorization</a> of 
-all messages originating from the created connection. This subject is required to have WRITE permission on a <code class="highlighter-rouge">Thing</code> 
-to change it partially or completely and needs to have READ permission to read the <code class="highlighter-rouge">Thing</code> or any parts of it.</p>
-
-<p>The <code class="highlighter-rouge">failoverEnabled</code> property defines whether failover is enabled or not.</p>
-
-<p>The <code class="highlighter-rouge">uri</code> defines the endpoint including username and password to connect to.</p>
-
-<p>The <code class="highlighter-rouge">sources</code> defines a string array of sources (e.g. hono’s <a href="https://www.eclipse.org/hono/api/telemetry-api">Telemetry API</a>) to consume messages from.</p>
 
 
     <div class="tags">
@@ -1240,7 +1277,7 @@ to change it partially or completely and needs to have READ permission to read t
                     </div>
                     <p class="notice">
                         &copy;2018 Eclipse Ditto.
-                         Site last generated: Feb 8, 2018 <br />
+                         Site last generated: Apr 25, 2018 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

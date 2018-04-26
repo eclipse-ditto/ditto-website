@@ -5,8 +5,8 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="">
-<meta name="keywords" content="protocol,  binding, protocol, amqp, amqp10">
-<title> AMQP 1.0 protocol binding | Eclipse Ditto</title>
+<meta name="keywords" content="connectivity,  ">
+<title> Connectivity API overview | Eclipse Ditto</title>
 <link rel="stylesheet" href="css/syntax.css">
 
 <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -206,7 +206,7 @@
                                 searchInput: document.getElementById('search-input'),
                                 resultsContainer: document.getElementById('results-container'),
                                 dataSource: 'search.json',
-                                searchResultTemplate: '<li><a href="{url}" title="AMQP 1.0 protocol binding">{title}</a></li>',
+                                searchResultTemplate: '<li><a href="{url}" title="Connectivity API overview">{title}</a></li>',
                     noResultsText: 'No results found.',
                             limit: 10,
                             fuzzy: true,
@@ -440,6 +440,13 @@
               
               
               
+              <li><a href="basic-connections.html">Connections</a></li>
+              
+              
+              
+              
+              
+              
               <li><a href="basic-changenotifications.html">Change notifications</a></li>
               
               
@@ -499,7 +506,7 @@
                       
                       
                       
-                      <li><a href="architecture-services-amqp-bridge.html">AMQP-Bridge</a></li>
+                      <li><a href="architecture-services-connectivity.html">Connectivity</a></li>
                       
                       
                       
@@ -550,6 +557,13 @@
               
               
               
+              <li><a href="httpapi-protocol-bindings-websocket.html">WebSocket protocol binding</a></li>
+              
+              
+              
+              
+              
+              
               <li><a href="httpapi-sse.html">Server sent events</a></li>
               
               
@@ -558,6 +572,52 @@
               
               
               <li><a href="httpapi-postman.html">Run in Postman</a></li>
+              
+              
+              
+              
+          </ul>
+        </li>
+    
+  
+  
+  
+    
+        <li>
+          <a href="#">Connectivity API</a>
+          <ul>
+              
+              
+              
+              <li class="active"><a href="connectivity-overview.html">Overview</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="connectivity-manage-connections.html">Manage connections</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="connectivity-protocol-bindings-amqp091.html">AMQP 0.9.1 protocol binding</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="connectivity-protocol-bindings-amqp10.html">AMQP 1.0 protocol binding</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="connectivity-mapping.html">Payload mapping</a></li>
               
               
               
@@ -665,20 +725,6 @@
               
               
               <li><a href="protocol-bindings.html">Bindings</a></li>
-              
-              
-              
-              
-              
-              
-              <li><a href="protocol-bindings-websocket.html">Websocket Binding</a></li>
-              
-              
-              
-              
-              
-              
-              <li class="active"><a href="protocol-bindings-amqp10.html">AMQP 1.0 Binding</a></li>
               
               
               
@@ -957,7 +1003,7 @@
 
 
 <div class="post-header">
-   <h1 class="post-title-main">AMQP 1.0 protocol binding</h1>
+   <h1 class="post-title-main">Connectivity API overview</h1>
 </div>
 
 
@@ -997,36 +1043,22 @@ $('#toc').on('click', 'a', function() {
 
     
 
-  <p>The Ditto Protocol message can be sent <em>as is</em> as <strong>AMQP 1.0</strong> message.
-The Ditto Protocol JSON must be sent as <code class="highlighter-rouge">UTF-8</code> encoded String payload.</p>
+  <p>The Connectivity API is a bare management API for Ditto’s <a href="architecture-services-connectivity.html">Connectivity Service</a>. 
+It completely depends on <a href="installation-operating.html#devops-commands">DevOps Commands</a> for 
+<a href="basic-connections.html">connection</a> management.</p>
 
-<p>The <code class="highlighter-rouge">content-type</code> of AMQP 1.0 messages must be set to:</p>
+<p>Use it to manage client connections to remote systems and to exchange 
+<a href="protocol-specification.html">Ditto Protocol</a> messages with those. 
+If a remote system is unable to send messages in the necessary format, there is the option
+to configure custom <a href="connectivity-mapping.html">payload mapping logic</a> to adapt to almost any message format and 
+encoding.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>application/vnd.eclipse.ditto+json
-</code></pre></div></div>
+<p>The following connection types are supported:</p>
 
-<h2 id="amqp-10-properties">AMQP 1.0 properties</h2>
-
-<p>Supported AMQP 1.0 properties which are interpreted in a specific way are:</p>
 <ul>
-  <li><code class="highlighter-rouge">content-type</code>: for defining the Ditto Protocol content-type</li>
-  <li><code class="highlighter-rouge">correlation-id</code>: for correlating request messages to responses</li>
+  <li><a href="connectivity-protocol-bindings-amqp091.html">AMQP 0.9.1</a></li>
+  <li><a href="connectivity-protocol-bindings-amqp10.html">AMQP 1.0</a></li>
 </ul>
-
-<h2 id="establishing-connecting-to-an-amqp-10-endpoint">Establishing connecting to an AMQP 1.0 endpoint</h2>
-
-<p>Ditto’s <a href="architecture-services-amqp-bridge.html">AMQP-Bridge</a> is responsible for creating new and managing 
-existing connections.</p>
-
-<p>This can be done dynamically at runtime without the need to restart any microservice using a
-<a href="installation-operating.html#create-a-new-amqp-bridge-connection">Ditto operations command</a>.</p>
-
-<h2 id="messages">Messages</h2>
-
-<p>Messages consumed via the AMQP 1.0 binding are treated similar to the <a href="protocol-bindings-websocket.html">WebSocket binding</a>
-meaning that the messages are expected to be <a href="protocol-overview.html">Ditto Protocol</a> messages serialized as JSON (as 
-shown for example in the <a href="protocol-examples.html">protocol examples</a>).</p>
-
 
 
     <div class="tags">
@@ -1035,7 +1067,7 @@ shown for example in the <a href="protocol-examples.html">protocol examples</a>)
         
         
         
-        <a href="tag_protocol.html" class="btn btn-default navbar-btn cursorNorm" role="button">protocol</a>
+        <a href="tag_connectivity.html" class="btn btn-default navbar-btn cursorNorm" role="button">connectivity</a>
         
         
         
@@ -1053,7 +1085,7 @@ shown for example in the <a href="protocol-examples.html">protocol examples</a>)
                     </div>
                     <p class="notice">
                         &copy;2018 Eclipse Ditto.
-                         Site last generated: Feb 8, 2018 <br />
+                         Site last generated: Apr 25, 2018 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

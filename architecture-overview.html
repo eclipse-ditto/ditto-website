@@ -440,6 +440,13 @@
               
               
               
+              <li><a href="basic-connections.html">Connections</a></li>
+              
+              
+              
+              
+              
+              
               <li><a href="basic-changenotifications.html">Change notifications</a></li>
               
               
@@ -499,7 +506,7 @@
                       
                       
                       
-                      <li><a href="architecture-services-amqp-bridge.html">AMQP-Bridge</a></li>
+                      <li><a href="architecture-services-connectivity.html">Connectivity</a></li>
                       
                       
                       
@@ -550,6 +557,13 @@
               
               
               
+              <li><a href="httpapi-protocol-bindings-websocket.html">WebSocket protocol binding</a></li>
+              
+              
+              
+              
+              
+              
               <li><a href="httpapi-sse.html">Server sent events</a></li>
               
               
@@ -558,6 +572,52 @@
               
               
               <li><a href="httpapi-postman.html">Run in Postman</a></li>
+              
+              
+              
+              
+          </ul>
+        </li>
+    
+  
+  
+  
+    
+        <li>
+          <a href="#">Connectivity API</a>
+          <ul>
+              
+              
+              
+              <li><a href="connectivity-overview.html">Overview</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="connectivity-manage-connections.html">Manage connections</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="connectivity-protocol-bindings-amqp091.html">AMQP 0.9.1 protocol binding</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="connectivity-protocol-bindings-amqp10.html">AMQP 1.0 protocol binding</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="connectivity-mapping.html">Payload mapping</a></li>
               
               
               
@@ -665,20 +725,6 @@
               
               
               <li><a href="protocol-bindings.html">Bindings</a></li>
-              
-              
-              
-              
-              
-              
-              <li><a href="protocol-bindings-websocket.html">Websocket Binding</a></li>
-              
-              
-              
-              
-              
-              
-              <li><a href="protocol-bindings-amqp10.html">AMQP 1.0 Binding</a></li>
               
               
               
@@ -1008,14 +1054,16 @@ the external dependencies (MongoDB and nginx) and the relations of the services 
 <figure><img class="docimage" src="images/pages/architecture/context-overview.png" alt="Ditto services and context" style="max-width: 800px" /><figcaption>Ditto services in blue and context with nginx as reverse proxy and MongoDB</figcaption></figure>
 
 <p>The components have the following tasks:</p>
+
 <ul>
   <li><a href="architecture-services-policies.html">Policies</a>: persistence of <a href="basic-policy.html">Policies</a></li>
   <li><a href="architecture-services-things.html">Things</a>: persistence of <a href="basic-thing.html">Things</a> and <a href="basic-feature.html">Features</a></li>
   <li><a href="architecture-services-things-search.html">Things-Search</a>: tracking changes to <code class="highlighter-rouge">Things</code>, <code class="highlighter-rouge">Features</code>, <code class="highlighter-rouge">Policies</code> and 
 updating an optimized search index + executes queries on this search index</li>
   <li><a href="architecture-services-gateway.html">Gateway</a>: provides HTTP and WebSocket API and orchestrates the backing persistence services</li>
-  <li><a href="architecture-services-amqp-bridge.html">AMQP-Bridge</a>: connects to an AMQP 1.0 endpoint (e.g. <a href="https://eclipse.org/hono/">Eclipse Hono</a>) 
-and consumes messages in <a href="protocol-overview.html">Ditto Protocol</a> from it</li>
+  <li><a href="architecture-services-connectivity.html">Connectivity</a>: connects to AMQP 1.0 endpoints (e.g. <a href="https://eclipse.org/hono/">Eclipse Hono</a>)
+or AMQP 0.9.1 endpoints (e.g. RabbitMQ) and consumes messages in <a href="protocol-overview.html">Ditto Protocol</a> from it or transforms
+messages into Ditto Protocol</li>
 </ul>
 
 <h2 id="components">Components</h2>
@@ -1023,6 +1071,7 @@ and consumes messages in <a href="protocol-overview.html">Ditto Protocol</a> fro
 <p>Ditto consists of multiple “microservices” as shown in the above component view.</p>
 
 <p>A “microservice” in Ditto is defined as:</p>
+
 <ul>
   <li>has its own data store which only this microservice may access and write to</li>
   <li>has an API in form of <a href="basic-signals.html">signals</a> (commands, command responses, events)</li>
@@ -1066,7 +1115,7 @@ from JSON to Java objects.</p>
                     </div>
                     <p class="notice">
                         &copy;2018 Eclipse Ditto.
-                         Site last generated: Feb 8, 2018 <br />
+                         Site last generated: Apr 25, 2018 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

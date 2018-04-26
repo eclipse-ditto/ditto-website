@@ -5,8 +5,8 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="">
-<meta name="keywords" content="protocol,  binding, protocol, websocket">
-<title> WebSocket protocol binding | Eclipse Ditto</title>
+<meta name="keywords" content="protocolconnectivity,  binding, protocol, amqp, amqp10">
+<title> AMQP 1.0 protocol binding | Eclipse Ditto</title>
 <link rel="stylesheet" href="css/syntax.css">
 
 <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -206,7 +206,7 @@
                                 searchInput: document.getElementById('search-input'),
                                 resultsContainer: document.getElementById('results-container'),
                                 dataSource: 'search.json',
-                                searchResultTemplate: '<li><a href="{url}" title="WebSocket protocol binding">{title}</a></li>',
+                                searchResultTemplate: '<li><a href="{url}" title="AMQP 1.0 protocol binding">{title}</a></li>',
                     noResultsText: 'No results found.',
                             limit: 10,
                             fuzzy: true,
@@ -440,6 +440,13 @@
               
               
               
+              <li><a href="basic-connections.html">Connections</a></li>
+              
+              
+              
+              
+              
+              
               <li><a href="basic-changenotifications.html">Change notifications</a></li>
               
               
@@ -499,7 +506,7 @@
                       
                       
                       
-                      <li><a href="architecture-services-amqp-bridge.html">AMQP-Bridge</a></li>
+                      <li><a href="architecture-services-connectivity.html">Connectivity</a></li>
                       
                       
                       
@@ -550,6 +557,13 @@
               
               
               
+              <li><a href="httpapi-protocol-bindings-websocket.html">WebSocket protocol binding</a></li>
+              
+              
+              
+              
+              
+              
               <li><a href="httpapi-sse.html">Server sent events</a></li>
               
               
@@ -558,6 +572,52 @@
               
               
               <li><a href="httpapi-postman.html">Run in Postman</a></li>
+              
+              
+              
+              
+          </ul>
+        </li>
+    
+  
+  
+  
+    
+        <li>
+          <a href="#">Connectivity API</a>
+          <ul>
+              
+              
+              
+              <li><a href="connectivity-overview.html">Overview</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="connectivity-manage-connections.html">Manage connections</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="connectivity-protocol-bindings-amqp091.html">AMQP 0.9.1 protocol binding</a></li>
+              
+              
+              
+              
+              
+              
+              <li class="active"><a href="connectivity-protocol-bindings-amqp10.html">AMQP 1.0 protocol binding</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="connectivity-mapping.html">Payload mapping</a></li>
               
               
               
@@ -665,20 +725,6 @@
               
               
               <li><a href="protocol-bindings.html">Bindings</a></li>
-              
-              
-              
-              
-              
-              
-              <li class="active"><a href="protocol-bindings-websocket.html">Websocket Binding</a></li>
-              
-              
-              
-              
-              
-              
-              <li><a href="protocol-bindings-amqp10.html">AMQP 1.0 Binding</a></li>
               
               
               
@@ -957,7 +1003,7 @@
 
 
 <div class="post-header">
-   <h1 class="post-title-main">WebSocket protocol binding</h1>
+   <h1 class="post-title-main">AMQP 1.0 protocol binding</h1>
 </div>
 
 
@@ -997,225 +1043,101 @@ $('#toc').on('click', 'a', function() {
 
     
 
-  <p>The Ditto Protocol message can be sent <em>as is</em> as <a href="https://tools.ietf.org/html/rfc6455">WebSocket</a> message.
-The Ditto Protocol JSON must be sent as <code class="highlighter-rouge">UTF-8</code> encoded String payload.</p>
+  <p>When messages are sent in <a href="protocol-overview.html">Ditto Protocol</a> (as <code class="highlighter-rouge">UTF-8</code> encoded String payload), 
+the <code class="highlighter-rouge">content-type</code> of AMQP 1.0 messages must be set to:</p>
 
-<h2 id="websocket-features">WebSocket features</h2>
-
-<p>The WebSocket provides an alternative to the <a href="httpapi-overview.html">HTTP API</a> in order to manage your Digital Twins.</p>
-
-<p>The benefits of the WebSocket compared to HTTP are multiple ones:</p>
-<ul>
-  <li>a single connection (socket like) is established and for commands to Digital Twins no further HTTP overhead 
-(e.g. HTTP headers, HTTP connection establishment) is produced which means you can get more commands/seconds 
-through the WebSocket compared to the HTTP endpoint</li>
-  <li>as the WebSocket is a duplex connection, <a href="basic-changenotifications.html">change notifications</a> can be sent via the
-WebSocket for changes to entities done in Ditto</li>
-  <li>additionally, <a href="basic-messages.html">messages</a> and <a href="protocol-twinlive.html">live commands/events</a> can be exchanged 
-(sending and receiving) via multiple connected WebSocket sessions</li>
-</ul>
-
-<h3 id="send-commands-and-get-responses">Send commands and get responses</h3>
-
-<p>When sending a command via WebSocket you will receive a corresponding response (the response can be related to the 
-request by the <code class="highlighter-rouge">correlation-id</code> header). <br />
-The response indicates the success or the failure of the command and, depending on the command type, contains the result
-payload.</p>
-
-<p>Please find examples of commands and their response pattern at <a href="protocol-examples.html">Protocol examples</a>.</p>
-
-<h3 id="request-receiving-eventschange-notifications">Request receiving events/change notifications</h3>
-
-<p>In addition to the response, which Ditto addresses directly to the instance which was sending the command, an event 
-is generated. <br />
-This will be delivered to all other clients with read permissions for the respective thing, feature change, etc.</p>
-
-<p>See <a href="#request-events">request events</a> for subscribing/unsubscribing for receiving change notifications.</p>
-
-<h3 id="request-receiving-messages">Request receiving messages</h3>
-
-<p><a href="basic-messages.html">Messages</a> can be sent both via the <a href="httpapi-overview.html">HTTP API</a> and the WebSocket. Receiving
-messages and answering to them however can only be done via the WebSocket.</p>
-
-<p>See <a href="#request-messages">request messages</a> for subscribing/unsubscribing for receiving messages.</p>
-
-<h3 id="request-receiving-live-commands--events">Request receiving live commands + events</h3>
-
-<p>In order to receive <a href="protocol-twinlive.html">live commands and events</a>, the WebSocket API can be used. The Ditto Protocol
-messages are the same as for the “twin” channel, only with <em>live</em> as channel in the 
-<a href="protocol-specification-topic.html">topic</a>.</p>
-
-<p>See <a href="#request-live-commands">request live commands</a> and <a href="#request-live-events">request live events</a> for 
-subscribing/unsubscribing for receiving live commands and events.</p>
-
-<h2 id="websocket-endpoint">WebSocket endpoint</h2>
-
-<p>The WebSocket endpoint is accessible at these URLs (depending on which API version to use):</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ws://localhost:8080/ws/1
-ws://localhost:8080/ws/2
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>application/vnd.eclipse.ditto+json
 </code></pre></div></div>
 
-<h3 id="authentication">Authentication</h3>
+<p>If messages which are not in Ditto Protocol should be processed, a <a href="connectivity-mapping.html">payload mapping</a> must
+be configured for the AMQP 1.0 connection in order to transform the messages.</p>
 
-<p>A user who connects to the WebSocket endpoint can be authenticated by using</p>
+<h2 id="amqp-10-properties">AMQP 1.0 properties</h2>
+
+<p>Supported AMQP 1.0 properties which are interpreted in a specific way are:</p>
 
 <ul>
-  <li>HTTP BASIC Authentication by providing a username and the password of a user managed within nginx or</li>
-  <li>a JSON Web Token (JWT) issued by an OpenID connect provider.</li>
+  <li><code class="highlighter-rouge">content-type</code>: for defining the Ditto Protocol content-type</li>
+  <li><code class="highlighter-rouge">correlation-id</code>: for correlating request messages to responses</li>
 </ul>
 
-<p>See <a href="basic-auth.html">Authenticate</a> for more details.</p>
+<h2 id="specific-connection-configuration">Specific connection configuration</h2>
 
-<h2 id="websocket-protocol-format">WebSocket protocol format</h2>
+<h3 id="source-format">Source format</h3>
 
-<p>As defined in the <a href="protocol-specification.html">Protocol specification</a> a Ditto Protocol message consists of different
-information. This information is combined into a single JSON message for the WebSocket endpoint:</p>
-<ul>
-  <li><a href="protocol-specification.html#topic">topic</a>: JSON string with key <code class="highlighter-rouge">topic</code></li>
-  <li><a href="protocol-specification.html#headers">headers</a>: JSON object with key <code class="highlighter-rouge">headers</code></li>
-  <li><a href="protocol-specification.html#path">path</a>: JSON string with key <code class="highlighter-rouge">path</code></li>
-  <li><a href="protocol-specification.html#value">value</a>: JSON value (e.g. JSON object, string, array, …) with key <code class="highlighter-rouge">value</code></li>
-  <li><a href="protocol-specification.html#status">status</a> (for responses): JSON number with key <code class="highlighter-rouge">status</code></li>
-</ul>
-
-<p>The schema for Ditto Protocol message via WebSocket:</p>
+<p>Any <code class="highlighter-rouge">source</code> item defines an <code class="highlighter-rouge">addresses</code> array of source identifiers (e.g. Eclipse Hono’s 
+<a href="https://www.eclipse.org/hono/api/telemetry-api">Telemetry API</a>) to consume messages from.</p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"topic"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;the topic&gt;"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"correlation-id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;a correlation-id&gt;"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"a-header"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;header value&gt;"</span><span class="w">
-  </span><span class="p">},</span><span class="w">
-  </span><span class="s2">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;the path&gt;"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"value"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    
-  </span><span class="p">}</span><span class="w">
+  </span><span class="s2">"addresses"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="s2">"&lt;source&gt;"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"..."</span><span class="w">
+  </span><span class="p">]</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
-<h2 id="websocket-binding-specific-messages">WebSocket binding specific messages</h2>
+<h3 id="target-format">Target format</h3>
 
-<p>The WebSocket binding defines several specific messages which are not defined in the Ditto Protocol specification.</p>
+<p>An AMQP 1.0 connection requires the protocol configuration target object to have an <code class="highlighter-rouge">address</code> property with a source
+identifier. It is continued with a list of topic strings, each representing a subscription of a Ditto
+<a href="protocol-specification-topic.html">protocol topic</a>.</p>
 
-<p>Those are also not defined as JSON messages, but as plain text messages. All of those declare a demand for some kind
-of information from the backend to be pushed into the WebSocket session.</p>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;target&gt;"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"topics"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="s2">"_/_/things/twin/events"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"_/_/things/live/messages"</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
 
-<h3 id="request-events">Request events</h3>
+<h3 id="specific-configuration-properties">Specific configuration properties</h3>
 
-<p>In order to subscribe for <a href="basic-changenotifications.html">events/change notifications</a> for entities (e.g. Things), 
-following text message has to be sent to the backend:</p>
+<p>The specific configuration properties are interpreted as 
+<a href="https://qpid.apache.org/releases/qpid-jms-0.30.0/docs/index.html#jms-configuration-options">JMS Configuration options</a>. 
+Use these to customize and tweak your connection as needed.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>START-SEND-EVENTS
-</code></pre></div></div>
+<h2 id="establishing-connecting-to-an-amqp-10-endpoint">Establishing connecting to an AMQP 1.0 endpoint</h2>
 
-<p>This message is acknowledged by Ditto by sending back:</p>
+<p>Ditto’s <a href="architecture-services-connectivity.html">Connectivity service</a> is responsible for creating new and managing 
+existing connections.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>START-SEND-EVENTS:ACK
-</code></pre></div></div>
+<p>This can be done dynamically at runtime without the need to restart any microservice using a
+<a href="installation-operating.html#devops-commands">Ditto DevOps command</a>.</p>
 
-<p>From then on the WebSocket session will receive all change notifications it is entitled to see.</p>
+<p>Example connection configuration to create a new AMQP 1.0 connection:</p>
 
-<p>In order to stop receiving change notifications, the following text message has to be sent to the backend:</p>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"hono-example-connection-123"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"connectionType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"amqp-10"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"connectionStatus"</span><span class="p">:</span><span class="w"> </span><span class="s2">"open"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"authorizationSubject"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;&lt;&lt;my-subject-id-included-in-policy-or-acl&gt;&gt;&gt;"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"failoverEnabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"uri"</span><span class="p">:</span><span class="w"> </span><span class="s2">"amqps://user:password@hono.eclipse.org:5671"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"sources"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"addresses"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"telemetry/FOO"</span><span class="w">
+      </span><span class="p">]</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">],</span><span class="w">
+  </span><span class="s2">"targets"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"events/twin"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"topics"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"_/_/things/twin/events"</span><span class="w">
+      </span><span class="p">]</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>STOP-SEND-EVENTS
-</code></pre></div></div>
+<h2 id="messages">Messages</h2>
 
-<p>This message is acknowledged by Ditto by sending back:</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>STOP-SEND-EVENTS:ACK
-</code></pre></div></div>
-
-<h3 id="request-messages">Request messages</h3>
-
-<p>In order to subscribe for <a href="basic-messages.html">messages</a> which can be sent from a WebSocket session to another 
-WebSocket session or from the <a href="httpapi-overview.html">HTTP API</a> to a WebSocket session, the following text message has 
-to be sent to the backend:</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>START-SEND-MESSAGES
-</code></pre></div></div>
-
-<p>This message is acknowledged by Ditto by sending back:</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>START-SEND-MESSAGES:ACK
-</code></pre></div></div>
-
-<p>From then on the WebSocket session will receive all messages it is entitled to see.</p>
-
-<p>In order to stop receiving messages, the following text message has to be sent to the backend:</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>STOP-SEND-MESSAGES
-</code></pre></div></div>
-
-<p>This message is acknowledged by Ditto by sending back:</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>STOP-SEND-MESSAGES:ACK
-</code></pre></div></div>
-
-<h3 id="request-live-commands">Request live commands</h3>
-
-<p>In order to subscribe for <a href="protocol-twinlive.html">live commands</a> which can be sent from a WebSocket session to another 
-WebSocket session, the following text message has to be sent to the backend:</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>START-SEND-LIVE-COMMANDS
-</code></pre></div></div>
-
-<p>This message is acknowledged by Ditto by sending back:</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>START-SEND-LIVE-COMMANDS:ACK
-</code></pre></div></div>
-
-<p>From then on the WebSocket session will receive all live commands it is entitled to see.</p>
-
-<p>In order to stop receiving live commands, the following text message has to be sent to the backend:</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>STOP-SEND-LIVE-COMMANDS
-</code></pre></div></div>
-
-<p>This message is acknowledged by Ditto by sending back:</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>STOP-SEND-LIVE-COMMANDS:ACK
-</code></pre></div></div>
-
-<h3 id="request-live-events">Request live events</h3>
-
-<p>In order to subscribe for <a href="protocol-twinlive.html">live events</a> which can be sent from a WebSocket session to another 
-WebSocket session, the following text message has to be sent to the backend:</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>START-SEND-LIVE-EVENTS
-</code></pre></div></div>
-
-<p>This message is acknowledged by Ditto by sending back:</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>START-SEND-LIVE-EVENTS:ACK
-</code></pre></div></div>
-
-<p>From then on the WebSocket session will receive all live events it is entitled to see.</p>
-
-<p>In order to stop receiving live events, the following text message has to be sent to the backend:</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>STOP-SEND-LIVE-EVENTS
-</code></pre></div></div>
-
-<p>This message is acknowledged by Ditto by sending back:</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>STOP-SEND-LIVE-EVENTS:ACK
-</code></pre></div></div>
-
-<h3 id="heartbeat-messages">Heartbeat messages</h3>
-
-<p>In order to keep the WebSocket connection alive, you need to send data on a
-regular basis. Since there might be times where no data is available before
-the connection would time out, we advise you to send Ping messages <strong>every 
-60 seconds</strong>.</p>
-
-<p>Ditto detects any empty binary message as a Heartbeat message and will keep
-the connection alive. If your framework does not support sending Ping messages,
-you can implement them on your own. E.g. when working with JavaScript, you 
-could do this by sending an empty Buffer:</p>
-
-<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">websocket</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span><span class="k">new</span> <span class="nb">ArrayBuffer</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
-</code></pre></div></div>
+<p>Messages consumed via the AMQP 1.0 binding are treated similar to the <a href="httpapi-protocol-bindings-websocket.html">WebSocket binding</a>
+meaning that the messages are expected to be <a href="protocol-overview.html">Ditto Protocol</a> messages serialized as JSON (as 
+shown for example in the <a href="protocol-examples.html">protocol examples</a>). If your payload is not conform to the <a href="protocol-overview.html">Ditto
+Protocol</a>, you can configure a custom <a href="connectivity-mapping.html">payload mapping</a>.</p>
 
 
     <div class="tags">
@@ -1225,6 +1147,10 @@ could do this by sending an empty Buffer:</p>
         
         
         <a href="tag_protocol.html" class="btn btn-default navbar-btn cursorNorm" role="button">protocol</a>
+        
+        
+        
+        <a href="tag_connectivity.html" class="btn btn-default navbar-btn cursorNorm" role="button">connectivity</a>
         
         
         
@@ -1242,7 +1168,7 @@ could do this by sending an empty Buffer:</p>
                     </div>
                     <p class="notice">
                         &copy;2018 Eclipse Ditto.
-                         Site last generated: Feb 8, 2018 <br />
+                         Site last generated: Apr 25, 2018 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">
