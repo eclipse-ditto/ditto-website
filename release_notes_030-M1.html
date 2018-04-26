@@ -4,9 +4,9 @@
     <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="">
-<meta name="keywords" content="http,  api, http, overview, REST">
-<title> HTTP API overview | Eclipse Ditto</title>
+<meta name="description" content="Version 0.3.0-M1 of Eclipse Ditto, released on 26.04.2018">
+<meta name="keywords" content="release_notesconnectivity,  release notes, announcements, changelog">
+<title> Release notes 0.3.0-M1 | Eclipse Ditto</title>
 <link rel="stylesheet" href="css/syntax.css">
 
 <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -206,7 +206,7 @@
                                 searchInput: document.getElementById('search-input'),
                                 resultsContainer: document.getElementById('results-container'),
                                 dataSource: 'search.json',
-                                searchResultTemplate: '<li><a href="{url}" title="HTTP API overview">{title}</a></li>',
+                                searchResultTemplate: '<li><a href="{url}" title="Release notes 0.3.0-M1">{title}</a></li>',
                     noResultsText: 'No results found.',
                             limit: 10,
                             fuzzy: true,
@@ -296,7 +296,7 @@
               
               
               
-              <li><a href="release_notes_030-M1.html">0.3.0-M1 Release notes</a></li>
+              <li class="active"><a href="release_notes_030-M1.html">0.3.0-M1 Release notes</a></li>
               
               
               
@@ -536,7 +536,7 @@
               
               
               
-              <li class="active"><a href="httpapi-overview.html">Overview</a></li>
+              <li><a href="httpapi-overview.html">Overview</a></li>
               
               
               
@@ -1010,13 +1010,15 @@
 
 
 <div class="post-header">
-   <h1 class="post-title-main">HTTP API overview</h1>
+   <h1 class="post-title-main">Release notes 0.3.0-M1</h1>
 </div>
 
 
 
 <div class="post-content">
 
+   
+    <div class="summary">Version 0.3.0-M1 of Eclipse Ditto, released on 26.04.2018</div>
    
 
     
@@ -1050,22 +1052,57 @@ $('#toc').on('click', 'a', function() {
 
     
 
-  <p>Ditto’s HTTP API is documented separately in the <a href="http-api-doc.html">HTTP API Doc</a>.</p>
+  <p>Since the last milestone of Eclipse Ditto <a href="release_notes_020-M1.html">0.2.0-M1</a>, the following changes, new features and
+bugfixes were added.</p>
 
-<p>There you can explore the two different API versions (the difference is described in the
-<a href="basic-overview.html">Basic Overview</a>).</p>
+<h2 id="changes">Changes</h2>
 
-<p>Ditto does not provide a fully compliant RESTful API in the
-<a href="https://www.ics.uci.edu/~fielding/pubs/dissertation/rest_arch_style.htm">academic sense</a> as it does not include
-hyperlinks in the HTTP responses.
-It however tries to follow the other best practices.</p>
+<h3 id="openj9-based-docker-images"><a href="https://github.com/eclipse/ditto/pull/133">OpenJ9 based Docker images</a></h3>
 
-<p>If you have any feedback on how to improve at that point, Ditto’s developer team is <a href="feedback.html">eager to learn</a>.</p>
+<p>The official Eclipse Ditto Docker images are now based on the <a href="https://www.eclipse.org/openj9/">Eclipse OpenJ9</a> JVM.
+With this JVM (cheers to the OpenJ9 developers for this awesome JVM) Ditto’s containers need a lot less memory having
+similar if not better throughput.</p>
 
-<h2 id="content-type">Content Type</h2>
+<p>This especially comes in handy for the <a href="https://ditto.eclipse.org">Ditto sandbox</a> which only has 4GB RAM and 1 CPU core ;-)</p>
 
-<p>Currently only content-type <code class="highlighter-rouge">application/json</code> is supported.</p>
+<h3 id="amqp-bridge-renaming">AMQP bridge renaming</h3>
 
+<p>Ditto’s former AMQP bridge service was renamed to <code class="highlighter-rouge">connectivity</code> as it no longer only manages AMQP 1.0 connections, see
+the <a href="#new-features">new features</a>.</p>
+
+<h2 id="new-features">New features</h2>
+
+<h3 id="amqp-091-connectivity"><a href="https://github.com/eclipse/ditto/issues/129">AMQP 0.9.1 connectivity</a></h3>
+
+<p>The new <code class="highlighter-rouge">connectivity</code> service can now, additionally to AMQP 1.0, manage and open connections to AMQP 0.9.1 endpoints 
+(e.g. provided by a <a href="https://www.rabbitmq.com">RabbitMQ</a> broker).</p>
+
+<h3 id="payload-mapping-tofrom-ditto-protocol"><a href="https://github.com/eclipse/ditto/issues/130">Payload mapping to/from Ditto Protocol</a></h3>
+
+<p>The new <code class="highlighter-rouge">connectivity</code> service can now also map message arbitrary text or byte payload from incoming AMQP 1.0 / 0.9.1 
+connections which are not yet in <a href="protocol-overview.html">Ditto Protocol</a> messages in such and can also map outgoing 
+Ditto Protocol messages (e.g. responses or events) back to some arbitrary text or byte payload.</p>
+
+<h2 id="bugfixes">Bugfixes</h2>
+
+<h3 id="failover-and-stability-fixes-in-connectivity-service">Failover and stability fixes in connectivity service</h3>
+
+<p>The former AMQP bridge did loose the connection to AMQP 1.0 endpoints. This is now much more stable from which also the 
+new AMQP 0.9.1 connections benefit.</p>
+
+<h3 id="docker-compose-config-was-wrong"><a href="https://github.com/eclipse/ditto/issues/140">Docker compose config was wrong</a></h3>
+
+<p>The entrypoint/command was pointing to a wrong <code class="highlighter-rouge">starter.jar</code>.</p>
+
+<h3 id="various-smaller-bugfixes">Various smaller bugfixes</h3>
+
+<p>This is a complete list of the 
+<a href="https://github.com/eclipse/ditto/pulls?q=is%3Apr+milestone%3A0.3.0-M1+">merged pull requests</a>.</p>
+
+<h2 id="documentation">Documentation</h2>
+
+<p>The documentation for the new/renamed <code class="highlighter-rouge">connectivity</code> service now has its own new section: 
+<a href="connectivity-overview.html">Connectivity API</a>.</p>
 
 
     <div class="tags">
@@ -1074,7 +1111,11 @@ It however tries to follow the other best practices.</p>
         
         
         
-        <a href="tag_http.html" class="btn btn-default navbar-btn cursorNorm" role="button">http</a>
+        <a href="tag_release_notes.html" class="btn btn-default navbar-btn cursorNorm" role="button">release_notes</a>
+        
+        
+        
+        <a href="tag_connectivity.html" class="btn btn-default navbar-btn cursorNorm" role="button">connectivity</a>
         
         
         

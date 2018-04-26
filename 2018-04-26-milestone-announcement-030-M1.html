@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="">
 <meta name="keywords" content="blog,  ">
-<title> Announcing Ditto Milestone 0.1.0-M3 | Eclipse Ditto</title>
+<title> Announcing Ditto Milestone 0.3.0-M1 | Eclipse Ditto</title>
 <link rel="stylesheet" href="css/syntax.css">
 
 <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -206,7 +206,7 @@
                                 searchInput: document.getElementById('search-input'),
                                 resultsContainer: document.getElementById('results-container'),
                                 dataSource: 'search.json',
-                                searchResultTemplate: '<li><a href="{url}" title="Announcing Ditto Milestone 0.1.0-M3">{title}</a></li>',
+                                searchResultTemplate: '<li><a href="{url}" title="Announcing Ditto Milestone 0.3.0-M1">{title}</a></li>',
                     noResultsText: 'No results found.',
                             limit: 10,
                             fuzzy: true,
@@ -248,8 +248,8 @@
 <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
 
     <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">Announcing Ditto Milestone 0.1.0-M3</h1>
-        <p class="post-meta">Published by <img src="https://www.gravatar.com/avatar/90a82dc2af1620df1f955e211ecc4dee?s=135" alt="A photo of Thomas Jäckle" style="width:50px;border-radius:50%;display:inline-block;margin-right:5px;" /><span itemprop="author" itemscope itemtype="http://schema.org/Person"><span itemprop="name"><a href="http://twitter.com/thjaeckle" target="_blank">Thomas Jäckle</a> </span></span> on <time datetime="2018-01-12T00:00:00-05:00" itemprop="datePublished">Jan 12, 2018</time> - Tags:
+        <h1 class="post-title" itemprop="name headline">Announcing Ditto Milestone 0.3.0-M1</h1>
+        <p class="post-meta">Published by <img src="https://www.gravatar.com/avatar/90a82dc2af1620df1f955e211ecc4dee?s=135" alt="A photo of Thomas Jäckle" style="width:50px;border-radius:50%;display:inline-block;margin-right:5px;" /><span itemprop="author" itemscope itemtype="http://schema.org/Person"><span itemprop="name"><a href="http://twitter.com/thjaeckle" target="_blank">Thomas Jäckle</a> </span></span> on <time datetime="2018-04-26T00:00:00-04:00" itemprop="datePublished">Apr 26, 2018</time> - Tags:
             
             
             
@@ -267,27 +267,22 @@
 
         
 
-        <p>We wish you all a happy new year<br />
-and an hope you are curious about our new Eclipse Ditto milestone.</p>
+        <p>After some time of silence of Ditto milestone releases we are very proud to present our next one to the public.</p>
 
-<h2 id="milestone-3">Milestone 3</h2>
+<p>Have a look at the Milestone <a href="release_notes_030-M1.html">0.3.0-M1 release notes</a>.</p>
 
-<p>Our new milestone, namely <a href="release_notes_010-M3.html">0.1.0-M3</a>, adds an AMQP 1.0 bridge. The bridge enables to connect 
-to a running instance of <a href="https://eclipse.org/hono/">Eclipse Hono</a>. Ditto can consume telemetry and event messages from Hono<br />
-and interpret those, given that these are compatible to our <a href="protocol-overview.html">Ditto Protocol</a>.</p>
+<p>The main changes are</p>
 
-<p>Find more information about the milestone in the <a href="release_notes_010-M3.html">0.1.0-M3 release notes</a>.</p>
-
-<h2 id="sandbox">Sandbox</h2>
-
-<p>Together with this milestone release we have set up a sandbox at <a href="https://ditto.eclipse.org">https://ditto.eclipse.org</a>.</p>
-
-<p>There, everyone with a Google account can try out the HTTP API by using the interactive 
-<a href="https://ditto.eclipse.org/apidoc/">HTTP API documentation</a> (powered by <a href="https://swagger.io">Swagger</a>).</p>
-
-<p>Try it out and share your experience.</p>
-
-<p>The sandbox does not yet start the new Connectivity in order to connect to Hono; we will work on that soon.</p>
+<ul>
+  <li>switch to <a href="https://www.eclipse.org/openj9/">Eclipse OpenJ9</a> JVM in Ditto’s Docker images</li>
+  <li>renaming of Ditto’s “AMQP bridge” service to “Connectivity” due to more responsibilities for that service:
+    <ul>
+      <li>managing + connecting to AMQP 0.9.1 endpoints as well as to AMQP 1.0 endpoints</li>
+      <li>transforming/mapping message payloads to/from <a href="protocol-overview.html">Ditto Protocol</a></li>
+      <li>for further details, have a look at our <a href="2018-04-25-connectivity-service.html">blogpost about that</a></li>
+    </ul>
+  </li>
+</ul>
 
 <h2 id="artifacts">Artifacts</h2>
 
@@ -300,9 +295,11 @@ as well as <a href="https://repo1.maven.org/maven2/org/eclipse/ditto/">Maven cen
   <li><a href="https://hub.docker.com/r/eclipse/ditto-things/">eclipse/ditto-things</a></li>
   <li><a href="https://hub.docker.com/r/eclipse/ditto-things-search/">eclipse/ditto-things-search</a></li>
   <li><a href="https://hub.docker.com/r/eclipse/ditto-gateway/">eclipse/ditto-gateway</a></li>
-  <li><a href="https://hub.docker.com/r/eclipse/ditto-amqp-bridge/">eclipse/ditto-amqp-bridge</a></li>
+  <li><a href="https://hub.docker.com/r/eclipse/ditto-connectivity/">eclipse/ditto-connectivity</a></li>
 </ul>
 
+<p><br />
+<br /></p>
 <figure><img class="docimage" src="images/ditto.svg" alt="Ditto" style="max-width: 500px" /></figure>
 
 <p>–<br />
