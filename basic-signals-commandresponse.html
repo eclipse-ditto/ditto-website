@@ -7,25 +7,21 @@
 <meta name="description" content="">
 <meta name="keywords" content="signal,  signal, commandresponse, response">
 <title> Command response | Eclipse Ditto</title>
-<link rel="stylesheet" href="css/syntax.css">
 
-<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="css/syntax.css">
+<link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" crossorigin="anonymous">
 <link rel="stylesheet" href="css/modern-business.css">
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" crossorigin="anonymous">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.6/cookieconsent.min.css" crossorigin="anonymous">
 <link rel="stylesheet" href="css/customstyles.css">
 <link rel="stylesheet" href="css/boxshadowproperties.css">
 <link rel="stylesheet" href="css/theme-ditto.css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,700|Source+Code+Pro:300,600|Titillium+Web:400,600,700">
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
-<script src="js/jquery.navgoco.min.js"></script>
-
-
-<!-- Latest compiled and minified JavaScript -->
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-<!-- Anchor.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/2.0.0/anchor.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js" crossorigin="anonymous"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" crossorigin="anonymous"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/anchor-js/2.0.0/anchor.min.js" crossorigin="anonymous"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.6/cookieconsent.min.js" crossorigin="anonymous"></script>
 <script src="js/toc.js"></script>
 <script src="js/customscripts.js"></script>
 
@@ -42,52 +38,29 @@
 <link rel="icon" type="image/png" href="images/favicon-32x32.png" sizes="32x32">
 <link rel="icon" type="image/png" href="images/favicon-96x96.png" sizes="96x96">
 
-<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-<!--[if lt IE 9]>
-<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-<![endif]-->
-
 <link rel="alternate" type="application/rss+xml" title="Eclipse Ditto Blog" href="https://www.eclipse.org/ditto/feed.xml">
 
-    <script>
-        $(document).ready(function() {
-            // Initialize navgoco with default options
-            $("#mysidebar").navgoco({
-                caretHtml: '',
-                accordion: false,
-                openClass: 'open', // open
-                save: true, // leave false or nav highlighting doesn't work right
+<script>
+    window.addEventListener("load", function(){
+        window.cookieconsent.initialise({
+                container: document.getElementsByClassName("topnavlinks")[0],
                 cookie: {
-                    name: 'navgoco',
-                    expires: false,
-                    path: '/'
+                    name: "eclipse_ditto_cookieconsent_status"
                 },
-                slide: {
-                    duration: 400,
-                    easing: 'swing'
+                palette: {
+                    popup: {background: "#f5f5f5", text: "#5c7291"},
+                    button: {background: "#3a8c9a"},
+                },
+                theme: "edgeless",
+                position: "top",
+                type: "opt-out",
+                content: {
+                    href: "https://www.eclipse.org/legal/privacy.php"
                 }
             });
+    });
+</script>
 
-            $("#collapseAll").click(function(e) {
-                e.preventDefault();
-                $("#mysidebar").navgoco('toggle', false);
-            });
-
-            $("#expandAll").click(function(e) {
-                e.preventDefault();
-                $("#mysidebar").navgoco('toggle', true);
-            });
-
-        });
-
-    </script>
-    <script>
-        $(function () {
-            $('[data-toggle="tooltip"]').tooltip()
-        })
-    </script>
     <script>
         $(document).ready(function() {
             $("#tg-sb-link").click(function() {
@@ -99,15 +72,40 @@
             });
         });
     </script>
-    
-
 </head>
 
-<!-- the google_analytics_id gets auto inserted from the config file -->
 
+<script>
+    function readCookie(name) {
+        var nameEQ = name + "=";
+        var ca = document.cookie.split(';');
+        for (var i = 0; i < ca.length; i++) {
+            var c = ca[i];
+            while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+            if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
+        }
+        return null;
+    }
 
+    if (readCookie("eclipse_ditto_cookieconsent_status") === "dismiss") {
 
-<script async src="https://www.googletagmanager.com/gtag/js?id=UA-109486227-1"></script> <script> window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', 'UA-109486227-1'); </script>
+        var head = document.getElementsByTagName("head")[0];
+        var newscript = document.createElement("script");
+        newscript.async = true;
+        newscript.type = "text/javascript";
+        newscript.src = "https://www.googletagmanager.com/gtag/js?id=UA-109486227-1";
+        head.appendChild(newscript);
+
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){
+            dataLayer.push(arguments);
+        }
+        gtag('js', new Date());
+        gtag('config', 'UA-109486227-1');
+    } else {
+        // Cookies are disabled - no google analytics!
+    }
+</script>
 
 
 
@@ -200,16 +198,16 @@
                         <input type="text" id="search-input" placeholder="search...">
                         <ul id="results-container"></ul>
                     </div>
-                    <script src="js/jekyll-search.js" type="text/javascript"></script>
+                    <script src="//cdnjs.cloudflare.com/ajax/libs/simple-jekyll-search/0.0.9/jekyll-search.js" type="text/javascript"></script>
                     <script type="text/javascript">
                             SimpleJekyllSearch.init({
                                 searchInput: document.getElementById('search-input'),
                                 resultsContainer: document.getElementById('results-container'),
                                 dataSource: 'search.json',
                                 searchResultTemplate: '<li><a href="{url}" title="Command response">{title}</a></li>',
-                    noResultsText: 'No results found.',
-                            limit: 10,
-                            fuzzy: true,
+                                noResultsText: 'No results found.',
+                                limit: 10,
+                                fuzzy: true,
                     })
                     </script>
                     <!--end search-->
@@ -237,8 +235,8 @@
   
   
     
-        <li>
-          <a href="#">Introduction</a>
+        <li class="subfolders">
+          <a href="#"><span></span>Introduction</a>
           <ul>
               
               
@@ -269,8 +267,8 @@
   
   
     
-        <li>
-          <a href="#">Release Notes</a>
+        <li class="subfolders">
+          <a href="#"><span></span>Release Notes</a>
           <ul>
               
               
@@ -308,8 +306,8 @@
   
   
     
-        <li>
-          <a href="#">Installation</a>
+        <li class="subfolders">
+          <a href="#"><span></span>Installation</a>
           <ul>
               
               
@@ -340,8 +338,8 @@
   
   
     
-        <li>
-          <a href="#">Basic concepts</a>
+        <li class="subfolders">
+          <a href="#"><span></span>Basic concepts</a>
           <ul>
               
               
@@ -351,7 +349,7 @@
               
               
               <li class="subfolders">
-                  <a href="#">Model entites</a>
+                  <a href="#"><span></span>Model entites</a>
                   <ul>
                       
                       
@@ -405,7 +403,7 @@
               
               
               <li class="subfolders">
-                  <a href="#">Signal types</a>
+                  <a href="#"><span></span>Signal types</a>
                   <ul>
                       
                       
@@ -473,8 +471,8 @@
   
   
     
-        <li>
-          <a href="#">Architecture</a>
+        <li class="subfolders">
+          <a href="#"><span></span>Architecture</a>
           <ul>
               
               
@@ -484,7 +482,7 @@
               
               
               <li class="subfolders">
-                  <a href="#">Services</a>
+                  <a href="#"><span></span>Services</a>
                   <ul>
                       
                       
@@ -530,8 +528,8 @@
   
   
     
-        <li>
-          <a href="#">HTTP API</a>
+        <li class="subfolders">
+          <a href="#"><span></span>HTTP API</a>
           <ul>
               
               
@@ -590,8 +588,8 @@
   
   
     
-        <li>
-          <a href="#">Connectivity API</a>
+        <li class="subfolders">
+          <a href="#"><span></span>Connectivity API</a>
           <ul>
               
               
@@ -636,8 +634,8 @@
   
   
     
-        <li>
-          <a href="#">Ditto Protocol</a>
+        <li class="subfolders">
+          <a href="#"><span></span>Ditto Protocol</a>
           <ul>
               
               
@@ -675,7 +673,7 @@
               
               
               <li class="subfolders">
-                  <a href="#">→ commands/events</a>
+                  <a href="#"><span></span>→ commands/events</a>
                   <ul>
                       
                       
@@ -708,7 +706,7 @@
               
               
               <li class="subfolders">
-                  <a href="#">→ search/messages</a>
+                  <a href="#"><span></span>→ search/messages</a>
                   <ul>
                       
                       
@@ -743,7 +741,7 @@
               
               
               <li class="subfolders">
-                  <a href="#">→ Things examples</a>
+                  <a href="#"><span></span>→ Things examples</a>
                   <ul>
                       
                       
@@ -987,14 +985,13 @@
   
   
     
-      <!-- if you aren't using the accordion, uncomment this block: -->
          <p class="external">
              <a href="#" id="collapseAll">Collapse All</a> | <a href="#" id="expandAll">Expand All</a>
          </p>
     
 </ul>
 
-<!-- this highlights the active parent class in the navgoco sidebar. this is critical so that the parent expands when you're viewing a page. This must appear below the sidebar code above. Otherwise, if placed inside customscripts.js, the script runs before the sidebar code runs and the class never gets inserted.-->
+<!-- this highlights the active parent class in the sidebar. this is critical so that the parent expands when you're viewing a page. This must appear below the sidebar code above. Otherwise, if placed inside customscripts.js, the script runs before the sidebar code runs and the class never gets inserted.-->
 <script>$("li.active").parents('li').toggleClass("active");</script>
 
             </div>
@@ -1077,11 +1074,11 @@ instead.</p>
             <div class="row">
                 <div class="col-lg-12 footer">
                     <div class="logo">
-                        <a href="https://eclipse.org"><img src="images/eclipse_logo_colour.png" alt="Eclipse logo"/></a>
+                        <a href="https://eclipse.org"><img src="images/eclipse_foundation_logo.svg" alt="Eclipse logo"/></a>
                     </div>
                     <p class="notice">
                         &copy;2018 Eclipse Ditto.
-                         Site last generated: May 3, 2018 <br />
+                         Site last generated: May 7, 2018 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">
