@@ -262,6 +262,13 @@
               
               
               
+              
+              
+              <li><a href="release_notes_030-M2.html">0.3.0-M2 Release notes</a></li>
+              
+              
+              
+              
           </ul>
         </li>
     
@@ -468,13 +475,19 @@
                       
                       
                       
-                      <li><a href="architecture-services-gateway.html">Gateway</a></li>
-                      
-                      
-                      
-                      
-                      
                       <li><a href="architecture-services-connectivity.html">Connectivity</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="architecture-services-concierge.html">Concierge</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="architecture-services-gateway.html">Gateway</a></li>
                       
                       
                       
@@ -641,19 +654,13 @@
                       
                       
                       
-                      <li><a href="protocol-specification-things-create.html">Create</a></li>
+                      <li><a href="protocol-specification-things-create-or-modify.html">Create/Modify</a></li>
                       
                       
                       
                       
                       
                       <li><a href="protocol-specification-things-retrieve.html">Retrieve</a></li>
-                      
-                      
-                      
-                      
-                      
-                      <li><a href="protocol-specification-things-modify.html">Modify</a></li>
                       
                       
                       
@@ -1016,34 +1023,17 @@ $('#toc').on('click', 'a', function() {
 
 <h2 id="logging">Logging</h2>
 
-<p>Gathering logs for a running Ditto installation can be achieved via two different ways:</p>
+<p>Gathering logs for a running Ditto installation can be achieved by:</p>
 
-<ol>
-  <li>grep log output from STDOUT/STDERR via Docker’s <a href="https://docs.docker.com/engine/admin/logging/overview/">logging drivers</a>
+<ul>
+  <li>grepping log output from STDOUT/STDERR via Docker’s <a href="https://docs.docker.com/engine/admin/logging/overview/">logging drivers</a>
     <ul>
       <li>Benefits: simple, works with all Docker logging drivers (e.g. “awslogs”, “splunk”, …)</li>
     </ul>
   </li>
-  <li>configure a <a href="https://www.elastic.co/products/logstash">Logstash</a> endpoint for Ditto’s Docker containers where
-the logs should be published to
-    <ul>
-      <li>Benefits: stack traces are preserved, metadata from logback.xml is enhanced (e.g. “instance-index”)</li>
-    </ul>
-  </li>
-</ol>
+</ul>
 
-<p>Option 2 uses the <a href="https://www.elastic.co/elk-stack">ELK stack</a> for logging, option 1 may also use an ELK stack with the right 
-Docker logging driver.</p>
-
-<h3 id="configuring-logstash-endpoint">Configuring Logstash endpoint</h3>
-
-<p>The Logstash endpoint to use can simply be configured by setting the following environment variable for the Docker containers:</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>LOGSTASH_SERVER=localhost:4560
-</code></pre></div></div>
-
-<p>Once that variable is configured, Ditto will automatically publish all logs via the <code class="highlighter-rouge">LogstashTcpSocketAppender</code> to that
-endpoint from where Logstash can forward it to an Elasticsearch from where Kibana can access the logs.</p>
+<p>This option may also use an ELK stack with the right Docker logging driver.</p>
 
 <h2 id="monitoring">Monitoring</h2>
 
@@ -1244,7 +1234,7 @@ the <a href="connectivity-manage-connections.html">Manage Connections</a> sectio
                     </div>
                     <p class="notice">
                         &copy;2018 Eclipse Ditto.
-                         Site last generated: May 23, 2018 <br />
+                         Site last generated: Jun 15, 2018 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

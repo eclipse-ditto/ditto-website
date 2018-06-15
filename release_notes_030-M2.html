@@ -4,9 +4,9 @@
     <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="">
-<meta name="keywords" content="protocol,  command, create, event, protocol, response, specification, thing">
-<title> Things - Create protocol specification | Eclipse Ditto</title>
+<meta name="description" content="Version 0.3.0-M2 of Eclipse Ditto, released on 15.06.2018">
+<meta name="keywords" content="release_notes,  release notes, announcements, changelog">
+<title> Release notes 0.3.0-M2 | Eclipse Ditto</title>
 
 <link rel="stylesheet" href="css/syntax.css">
 <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" crossorigin="anonymous">
@@ -167,7 +167,7 @@
                                 searchInput: document.getElementById('search-input'),
                                 resultsContainer: document.getElementById('results-container'),
                                 dataSource: 'search.json',
-                                searchResultTemplate: '<li><a href="{url}" title="Things - Create protocol specification">{title}</a></li>',
+                                searchResultTemplate: '<li><a href="{url}" title="Release notes 0.3.0-M2">{title}</a></li>',
                                 noResultsText: 'No results found.',
                                 limit: 10,
                                 fuzzy: true,
@@ -258,6 +258,13 @@
               
               
               <li><a href="release_notes_030-M1.html">0.3.0-M1 Release notes</a></li>
+              
+              
+              
+              
+              
+              
+              <li class="active"><a href="release_notes_030-M2.html">0.3.0-M2 Release notes</a></li>
               
               
               
@@ -468,13 +475,19 @@
                       
                       
                       
-                      <li><a href="architecture-services-gateway.html">Gateway</a></li>
-                      
-                      
-                      
-                      
-                      
                       <li><a href="architecture-services-connectivity.html">Connectivity</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="architecture-services-concierge.html">Concierge</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="architecture-services-gateway.html">Gateway</a></li>
                       
                       
                       
@@ -641,19 +654,13 @@
                       
                       
                       
-                      <li class="active"><a href="protocol-specification-things-create.html">Create</a></li>
+                      <li><a href="protocol-specification-things-create-or-modify.html">Create/Modify</a></li>
                       
                       
                       
                       
                       
                       <li><a href="protocol-specification-things-retrieve.html">Retrieve</a></li>
-                      
-                      
-                      
-                      
-                      
-                      <li><a href="protocol-specification-things-modify.html">Modify</a></li>
                       
                       
                       
@@ -970,13 +977,15 @@
 
 
 <div class="post-header">
-   <h1 class="post-title-main">Things - Create protocol specification</h1>
+   <h1 class="post-title-main">Release notes 0.3.0-M2</h1>
 </div>
 
 
 
 <div class="post-content">
 
+   
+    <div class="summary">Version 0.3.0-M2 of Eclipse Ditto, released on 15.06.2018</div>
    
 
     
@@ -1010,914 +1019,58 @@ $('#toc').on('click', 'a', function() {
 
     
 
-  <p>All topics contain the <code class="highlighter-rouge">&lt;channel&gt;</code> which may be either <code class="highlighter-rouge">twin</code> or <code class="highlighter-rouge">live</code>.
-For the meaning of those two channels please see <a href="protocol-specification.html">Protocol specification</a>.</p>
+  <p>Since the last milestone of Eclipse Ditto <a href="release_notes_030-M1.html">0.3.0-M1</a>, the following changes, new features and
+bugfixes were added.</p>
 
-<h2 id="create-a-thing">Create a Thing</h2>
+<h2 id="changes">Changes</h2>
 
-<p>This command creates the thing specified by the <code class="highlighter-rouge">&lt;namespace&gt;</code> and <code class="highlighter-rouge">&lt;thingId&gt;</code> in the topic defined by the JSON in the
-value.
-The <a href="#" data-toggle="tooltip" data-original-title="An access control list (ACL) holds the current status on who (subject) is permitted to which extent (read, write, administrate) to manage a Thing.">ACL</a> of the created Thing
-must include at least one subject authorized to READ, WRITE and ADMINISTRATE permissions.
-If no ACL is provided within the command, a default ACL with an entry for the authorized subject with all permissions
-set to true will be created.</p>
+<h3 id="reduce-network-load-for-cache-sync"><a href="https://github.com/eclipse/ditto/issues/126">Reduce network load for cache-sync</a></h3>
 
-<h3 id="command">Command</h3>
+<p>With 0.3.0-M1 Ditto had a performance issue when managing more than ~100.000 Things in its memory as Ditto used a 
+distributed cluster cache which was not intended to be used in that way. Over time, as cache entries could not be deleted
+from this cache, a Ditto cluster got slower and slower.</p>
 
-<table>
-  <thead>
-    <tr>
-      <th>Field</th>
-      <th>Value</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><strong>topic</strong></td>
-      <td><code class="highlighter-rouge">&lt;namespace&gt;/&lt;thingId&gt;/things/&lt;channel&gt;/commands/create</code></td>
-    </tr>
-    <tr>
-      <td><strong>path</strong></td>
-      <td><code class="highlighter-rouge">/</code></td>
-    </tr>
-    <tr>
-      <td><strong>value</strong></td>
-      <td>The complete thing as JSON object, see <a href="protocol-specification.html#dittoProtocolPayload">Ditto protocol payload (JSON).</a></td>
-    </tr>
-  </tbody>
-</table>
+<p>This is fixed now in 0.3.0-M2 by introducing a new Ditto service: <a href="architecture-services-concierge.html">ditto-concierge</a>
+which is also shown in the <a href="architecture-overview.html">architecture overview</a>.</p>
 
-<h3 id="response">Response</h3>
+<p>This is the biggest change in this milestone and required a lot of refactoring effort. Kudos to our two
+committers Daniel and Yufei who did an amazing job: the roundtrip times in a Ditto cluster are now at a constant and
+very good rate.</p>
 
-<table>
-  <thead>
-    <tr>
-      <th>Field</th>
-      <th> </th>
-      <th>Value</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><strong>topic</strong></td>
-      <td> </td>
-      <td><code class="highlighter-rouge">&lt;namespace&gt;/&lt;thingId&gt;/things/&lt;channel&gt;/commands/create</code></td>
-    </tr>
-    <tr>
-      <td><strong>path</strong></td>
-      <td> </td>
-      <td><code class="highlighter-rouge">/</code></td>
-    </tr>
-    <tr>
-      <td><strong>value</strong></td>
-      <td> </td>
-      <td>The created Thing as JSON object, see <a href="protocol-specification.html#dittoProtocolPayload">Ditto protocol payload (JSON).</a></td>
-    </tr>
-    <tr>
-      <td><strong>status</strong></td>
-      <td><em>code</em></td>
-      <td> </td>
-    </tr>
-    <tr>
-      <td> </td>
-      <td><code class="highlighter-rouge">201</code></td>
-      <td>Success - the thing was created successfully.</td>
-    </tr>
-    <tr>
-      <td> </td>
-      <td><code class="highlighter-rouge">409</code></td>
-      <td>Conflict - a thing with the given ID already exists.</td>
-    </tr>
-    <tr>
-      <td> </td>
-      <td> </td>
-      <td>See <a href="protocol-examples-errorresponses.html">Thing Error Responses</a> for examples of other error responses.</td>
-    </tr>
-  </tbody>
-</table>
+<h3 id="cluster-bootstrapping-improved"><a href="https://github.com/eclipse/ditto/issues/167">Cluster bootstrapping improved</a></h3>
 
-<h3 id="event">Event</h3>
+<p>Ditto now uses the <a href="https://developer.lightbend.com/docs/akka-management/current/index.html">akka-management</a> library
+in order to bootstrap a new cluster. By default Ditto now uses a DNS-based approach to find its other cluster-nodes and
+bootstrap a not yet formed cluster. This works very well for Docker (and Docker swarm) based clusters.</p>
 
-<p>The event emitted by Ditto after a thing was created.</p>
+<p>The benefit is also that the containers no longer need to be started in a specific order and with delay.</p>
 
-<table>
-  <thead>
-    <tr>
-      <th>Field</th>
-      <th>Value</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><strong>topic</strong></td>
-      <td><code class="highlighter-rouge">&lt;namespace&gt;/&lt;thingId&gt;/things/&lt;channel&gt;/events/created</code></td>
-    </tr>
-    <tr>
-      <td><strong>path</strong></td>
-      <td><code class="highlighter-rouge">/</code></td>
-    </tr>
-    <tr>
-      <td><strong>value</strong></td>
-      <td>The created thing as JSON object, see <a href="protocol-specification.html#dittoProtocolPayload">Ditto protocol payload (JSON)</a></td>
-    </tr>
-  </tbody>
-</table>
+<p>Future versions could also benefit from the other bootstrapping mechanisms for <code class="highlighter-rouge">kubenertes</code>, <code class="highlighter-rouge">mesos</code> or <code class="highlighter-rouge">ec2</code> (AWS) 
+environment.</p>
 
-<p><strong>Example:</strong> <a href="protocol-examples-creatething.html">Create a Thing.</a></p>
+<h2 id="new-features">New features</h2>
 
-<h2 id="create-all-attributes-of-a-thing">Create all Attributes of a Thing</h2>
+<p>No new features for this milestone.</p>
 
-<p>This command creates the attributes of the thing identified by the <code class="highlighter-rouge">&lt;namespace&gt;</code> and <code class="highlighter-rouge">&lt;thingId&gt;</code> in the topic.
-The attributes will be set to the JSON in the value.</p>
+<h2 id="bugfixes">Bugfixes</h2>
 
-<h3 id="command-1">Command</h3>
+<h3 id="search-index-fixes">Search index fixes</h3>
 
-<table>
-  <thead>
-    <tr>
-      <th>Field</th>
-      <th>Value</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><strong>topic</strong></td>
-      <td><code class="highlighter-rouge">&lt;namespace&gt;/&lt;thingId&gt;/things/&lt;channel&gt;/commands/modify</code></td>
-    </tr>
-    <tr>
-      <td><strong>path</strong></td>
-      <td><code class="highlighter-rouge">/attributes</code></td>
-    </tr>
-    <tr>
-      <td><strong>value</strong></td>
-      <td>The attributes of the thing as JSON object, see property <code class="highlighter-rouge">attributes</code> of Things JSON schema at <a href="protocol-specification.html#dittoProtocolPayload">Ditto protocol payload (JSON).</a></td>
-    </tr>
-  </tbody>
-</table>
+<p>The search-index of the <a href="basic-search.html">Ditto search</a> had several issues which lead to a poor query performance
+when searching for Things.</p>
 
-<h3 id="response-1">Response</h3>
+<p>These issues were adressed in several fixes:</p>
+<ul>
+  <li><a href="https://github.com/eclipse/ditto/pull/159">#159</a></li>
+  <li><a href="https://github.com/eclipse/ditto/pull/169">#169</a></li>
+  <li><a href="https://github.com/eclipse/ditto/pull/175">#175</a></li>
+</ul>
 
-<table>
-  <thead>
-    <tr>
-      <th>Field</th>
-      <th> </th>
-      <th>Value</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><strong>topic</strong></td>
-      <td> </td>
-      <td><code class="highlighter-rouge">&lt;namespace&gt;/&lt;thingId&gt;/things/&lt;channel&gt;/commands/modify</code></td>
-    </tr>
-    <tr>
-      <td><strong>path</strong></td>
-      <td> </td>
-      <td><code class="highlighter-rouge">/attributes</code></td>
-    </tr>
-    <tr>
-      <td><strong>value</strong></td>
-      <td> </td>
-      <td>The created attributes as JSON, see property <code class="highlighter-rouge">attributes</code> of Things JSON schema at <a href="protocol-specification.html#dittoProtocolPayload">Ditto protocol payload (JSON).</a></td>
-    </tr>
-    <tr>
-      <td><strong>status</strong></td>
-      <td><em>code</em></td>
-      <td> </td>
-    </tr>
-    <tr>
-      <td> </td>
-      <td><code class="highlighter-rouge">201</code></td>
-      <td>Success - Attributes were created successfully.</td>
-    </tr>
-    <tr>
-      <td> </td>
-      <td><code class="highlighter-rouge">403</code></td>
-      <td>Not Modifiable - Attributes could not be modified.</td>
-    </tr>
-    <tr>
-      <td> </td>
-      <td><code class="highlighter-rouge">404</code></td>
-      <td>Not Found - Thing not found or requester had insufficient permissions.</td>
-    </tr>
-    <tr>
-      <td> </td>
-      <td> </td>
-      <td>See <a href="protocol-examples-errorresponses.html">Thing Error Responses</a> for examples of other error responses.</td>
-    </tr>
-  </tbody>
-</table>
+<h3 id="various-smaller-bugfixes">Various smaller bugfixes</h3>
 
-<h3 id="event-1">Event</h3>
+<p>This is a complete list of the 
+<a href="https://github.com/eclipse/ditto/pulls?q=is%3Apr+milestone%3A0.3.0-M2+">merged pull requests</a>.</p>
 
-<p>The event emitted by Ditto after the Attributes of a Thing were created.</p>
-
-<table>
-  <thead>
-    <tr>
-      <th>Field</th>
-      <th>Value</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><strong>topic</strong></td>
-      <td><code class="highlighter-rouge">&lt;namespace&gt;/&lt;thingId&gt;/things/&lt;channel&gt;/events/created</code></td>
-    </tr>
-    <tr>
-      <td><strong>path</strong></td>
-      <td><code class="highlighter-rouge">/attributes</code></td>
-    </tr>
-    <tr>
-      <td><strong>value</strong></td>
-      <td>The created Attributes of the Thing as JSON, see property <code class="highlighter-rouge">attributes</code> of the Things JSON schema at <a href="protocol-specification.html#dittoProtocolPayload">Ditto protocol payload (JSON).</a></td>
-    </tr>
-  </tbody>
-</table>
-
-<p><strong>Example:</strong> <a href="protocol-examples-createattributes.html">Create Attributes.</a></p>
-
-<h2 id="create-a-single-attribute-of-a-thing">Create a single Attribute of a Thing</h2>
-
-<p>Create a specific attribute identified by the <code class="highlighter-rouge">&lt;attributePath&gt;</code> of the Thing.
-The attribute will be created in case it doesn’t exist yet, otherwise the Thing attribute is updated.
-The attribute (JSON) can be referenced hierarchically by applying <a href="https://tools.ietf.org/html/rfc6901">JSON Pointer notation (RFC-6901)</a>.</p>
-
-<h3 id="command-2">Command</h3>
-
-<table>
-  <thead>
-    <tr>
-      <th>Field</th>
-      <th>Value</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><strong>topic</strong></td>
-      <td><code class="highlighter-rouge">&lt;namespace&gt;/&lt;thingId&gt;/things/&lt;channel&gt;/commands/modify</code></td>
-    </tr>
-    <tr>
-      <td><strong>path</strong></td>
-      <td><code class="highlighter-rouge">/attributes/&lt;attributePath&gt;</code></td>
-    </tr>
-    <tr>
-      <td><strong>value</strong></td>
-      <td>The specific attribute of the Thing as JSON.</td>
-    </tr>
-  </tbody>
-</table>
-
-<h3 id="response-2">Response</h3>
-
-<table>
-  <thead>
-    <tr>
-      <th>Field</th>
-      <th> </th>
-      <th>Value</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><strong>topic</strong></td>
-      <td> </td>
-      <td><code class="highlighter-rouge">&lt;namespace&gt;/&lt;thingId&gt;/things/&lt;channel&gt;/commands/modify</code></td>
-    </tr>
-    <tr>
-      <td><strong>path</strong></td>
-      <td> </td>
-      <td><code class="highlighter-rouge">/attributes/&lt;attributePath&gt;</code></td>
-    </tr>
-    <tr>
-      <td><strong>value</strong></td>
-      <td> </td>
-      <td>The created attribute as JSON.</td>
-    </tr>
-    <tr>
-      <td><strong>status</strong></td>
-      <td><em>code</em></td>
-      <td> </td>
-    </tr>
-    <tr>
-      <td> </td>
-      <td><code class="highlighter-rouge">201</code></td>
-      <td>Success - Attribute was created successfully.</td>
-    </tr>
-    <tr>
-      <td> </td>
-      <td><code class="highlighter-rouge">403</code></td>
-      <td>Not Modifiable - Attribute could not be modified.</td>
-    </tr>
-    <tr>
-      <td> </td>
-      <td><code class="highlighter-rouge">404</code></td>
-      <td>Not Found - Thing not found or requester had insufficient permissions.</td>
-    </tr>
-    <tr>
-      <td> </td>
-      <td> </td>
-      <td>See <a href="protocol-examples-errorresponses.html">Thing Error Responses</a> for examples of other error responses.</td>
-    </tr>
-  </tbody>
-</table>
-
-<h3 id="event-2">Event</h3>
-
-<p>The event emitted by Ditto after the Attribute of a thing was created.</p>
-
-<table>
-  <thead>
-    <tr>
-      <th>Field</th>
-      <th>Value</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><strong>topic</strong></td>
-      <td><code class="highlighter-rouge">&lt;namespace&gt;/&lt;thingId&gt;/things/&lt;channel&gt;/events/created</code></td>
-    </tr>
-    <tr>
-      <td><strong>path</strong></td>
-      <td><code class="highlighter-rouge">/attributes/&lt;attributePath&gt;</code></td>
-    </tr>
-    <tr>
-      <td><strong>value</strong></td>
-      <td>The created Attribute of the Thing as JSON value.</td>
-    </tr>
-  </tbody>
-</table>
-
-<p><strong>Example:</strong> <a href="protocol-examples-createattribute.html">Create a single Attribute.</a></p>
-
-<h2 id="create-all-features-of-a-thing">Create all Features of a Thing</h2>
-
-<p>Create the Features of a Thing identified by identified by the <code class="highlighter-rouge">&lt;namespace&gt;</code> and the <code class="highlighter-rouge">&lt;thingId&gt;</code> in the topic.
-The list of Features will be replaced by the JSON in the value.</p>
-
-<h3 id="command-3">Command</h3>
-
-<table>
-  <thead>
-    <tr>
-      <th>Field</th>
-      <th>Value</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><strong>topic</strong></td>
-      <td><code class="highlighter-rouge">&lt;namespace&gt;/&lt;thingId&gt;/things/&lt;channel&gt;/commands/modify</code></td>
-    </tr>
-    <tr>
-      <td><strong>path</strong></td>
-      <td><code class="highlighter-rouge">/features</code></td>
-    </tr>
-    <tr>
-      <td><strong>value</strong></td>
-      <td>All Features of the Thing as JSON object, see property <code class="highlighter-rouge">features</code> of Things JSON schema at <a href="protocol-specification.html#dittoProtocolPayload">Ditto protocol payload (JSON).</a></td>
-    </tr>
-  </tbody>
-</table>
-
-<h3 id="response-3">Response</h3>
-
-<table>
-  <thead>
-    <tr>
-      <th>Field</th>
-      <th> </th>
-      <th>Value</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><strong>topic</strong></td>
-      <td> </td>
-      <td><code class="highlighter-rouge">&lt;namespace&gt;/&lt;thingId&gt;/things/&lt;channel&gt;/commands/modify</code></td>
-    </tr>
-    <tr>
-      <td><strong>path</strong></td>
-      <td> </td>
-      <td><code class="highlighter-rouge">/features</code></td>
-    </tr>
-    <tr>
-      <td><strong>value</strong></td>
-      <td> </td>
-      <td>The created Features as JSON, see property <code class="highlighter-rouge">features</code> of Things JSON schema at <a href="protocol-specification.html#dittoProtocolPayload">Ditto protocol payload (JSON).</a></td>
-    </tr>
-    <tr>
-      <td><strong>status</strong></td>
-      <td><em>code</em></td>
-      <td> </td>
-    </tr>
-    <tr>
-      <td> </td>
-      <td><code class="highlighter-rouge">201</code></td>
-      <td>Success - the Features were created successfully.</td>
-    </tr>
-    <tr>
-      <td> </td>
-      <td><code class="highlighter-rouge">403</code></td>
-      <td>Not Modifiable - the Features could not be modified.</td>
-    </tr>
-    <tr>
-      <td> </td>
-      <td><code class="highlighter-rouge">404</code></td>
-      <td>Not Found - the Thing was not found or requester had insufficient permissions.</td>
-    </tr>
-    <tr>
-      <td> </td>
-      <td> </td>
-      <td>See <a href="protocol-examples-errorresponses.html">Thing Error Responses</a> for examples of other error responses.</td>
-    </tr>
-  </tbody>
-</table>
-
-<h3 id="event-3">Event</h3>
-
-<p>The event emitted by Ditto after the Features of a Thing were created.</p>
-
-<table>
-  <thead>
-    <tr>
-      <th>Field</th>
-      <th>Value</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><strong>topic</strong></td>
-      <td><code class="highlighter-rouge">&lt;namespace&gt;/&lt;thingId&gt;/things/&lt;channel&gt;/events/created</code></td>
-    </tr>
-    <tr>
-      <td><strong>path</strong></td>
-      <td><code class="highlighter-rouge">/features</code></td>
-    </tr>
-    <tr>
-      <td><strong>value</strong></td>
-      <td>All Features of the Thing as JSON, see property <code class="highlighter-rouge">features</code> of the Things JSON schema at <a href="protocol-specification.html#dittoProtocolPayload">Ditto protocol payload (JSON).</a></td>
-    </tr>
-  </tbody>
-</table>
-
-<p><strong>Example:</strong> <a href="protocol-examples-createfeatures.html">Create Features.</a></p>
-
-<h2 id="create-single-feature-of-a-thing">Create single Feature of a Thing</h2>
-
-<p>Create a specific Feature (identified by the Feature ID in the path) of the Thing (identified by the <code class="highlighter-rouge">&lt;namespace&gt;</code> and
-the <code class="highlighter-rouge">&lt;thingId&gt;</code> in the topic).</p>
-
-<h3 id="command-4">Command</h3>
-
-<table>
-  <thead>
-    <tr>
-      <th>Field</th>
-      <th>Value</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><strong>topic</strong></td>
-      <td><code class="highlighter-rouge">&lt;namespace&gt;/&lt;thingId&gt;/things/&lt;channel&gt;/commands/modify</code></td>
-    </tr>
-    <tr>
-      <td><strong>path</strong></td>
-      <td><code class="highlighter-rouge">/features/&lt;featureId&gt;</code></td>
-    </tr>
-    <tr>
-      <td><strong>value</strong></td>
-      <td>The specific Feature of the Thing as JSON. See <a href="protocol-specification.html#dittoProtocolPayload">Ditto protocol payload (JSON).</a></td>
-    </tr>
-  </tbody>
-</table>
-
-<h3 id="response-4">Response</h3>
-
-<table>
-  <thead>
-    <tr>
-      <th>Field</th>
-      <th> </th>
-      <th>Value</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><strong>topic</strong></td>
-      <td> </td>
-      <td><code class="highlighter-rouge">&lt;namespace&gt;/&lt;thingId&gt;/things/&lt;channel&gt;/commands/modify</code></td>
-    </tr>
-    <tr>
-      <td><strong>path</strong></td>
-      <td> </td>
-      <td><code class="highlighter-rouge">/features/&lt;featureId&gt;</code></td>
-    </tr>
-    <tr>
-      <td><strong>value</strong></td>
-      <td> </td>
-      <td>The created Feature as JSON. See <a href="protocol-specification.html#dittoProtocolPayload">Ditto protocol payload (JSON).</a></td>
-    </tr>
-    <tr>
-      <td><strong>status</strong></td>
-      <td><em>code</em></td>
-      <td> </td>
-    </tr>
-    <tr>
-      <td> </td>
-      <td><code class="highlighter-rouge">201</code></td>
-      <td>Success - the Feature was created successfully.</td>
-    </tr>
-    <tr>
-      <td> </td>
-      <td><code class="highlighter-rouge">403</code></td>
-      <td>Not Modifiable - the Feature could not be modified.</td>
-    </tr>
-    <tr>
-      <td> </td>
-      <td><code class="highlighter-rouge">404</code></td>
-      <td>Not Found - the Thing or Feature was not found or requester had insufficient permissions.</td>
-    </tr>
-    <tr>
-      <td> </td>
-      <td> </td>
-      <td>See <a href="protocol-examples-errorresponses.html">Thing Error Responses</a> for examples of other error responses.</td>
-    </tr>
-  </tbody>
-</table>
-
-<h3 id="event-4">Event</h3>
-
-<p>The event emitted by Ditto after a Feature of a Thing was created.</p>
-
-<table>
-  <thead>
-    <tr>
-      <th>Field</th>
-      <th>Value</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><strong>topic</strong></td>
-      <td><code class="highlighter-rouge">&lt;namespace&gt;/&lt;thingId&gt;/things/&lt;channel&gt;/events/created</code></td>
-    </tr>
-    <tr>
-      <td><strong>path</strong></td>
-      <td><code class="highlighter-rouge">/features/&lt;featureId&gt;</code></td>
-    </tr>
-    <tr>
-      <td><strong>value</strong></td>
-      <td>The created Feature of the Thing as JSON.<br />see <a href="protocol-specification.html#dittoProtocolPayload">Ditto protocol payload (JSON)</a></td>
-    </tr>
-  </tbody>
-</table>
-
-<p><strong>Example:</strong> 
-<a href="protocol-examples-createfeature.html">Create a single Feature</a></p>
-
-<h2 id="create-definition-of-a-feature">Create Definition of a Feature</h2>
-
-<p>Create the Definition of a Feature (identified by the Feature ID in the path) of the Thing (identified by the
-<code class="highlighter-rouge">&lt;namespace&gt;</code> and the <code class="highlighter-rouge">&lt;thingId&gt;</code> in the topic).</p>
-
-<h3 id="command-5">Command</h3>
-
-<table>
-  <thead>
-    <tr>
-      <th>Field</th>
-      <th>Value</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><strong>topic</strong></td>
-      <td><code class="highlighter-rouge">&lt;namespace&gt;/&lt;thingId&gt;/things/&lt;channel&gt;/commands/modify</code></td>
-    </tr>
-    <tr>
-      <td><strong>path</strong></td>
-      <td><code class="highlighter-rouge">/features/&lt;featureId&gt;/definition</code></td>
-    </tr>
-    <tr>
-      <td><strong>value</strong></td>
-      <td>The Definition of the Feature as JSON array, see property <code class="highlighter-rouge">definition</code> of Things JSON schema at <a href="protocol-specification.html#dittoProtocolPayload">Ditto protocol payload (JSON).</a></td>
-    </tr>
-  </tbody>
-</table>
-
-<h3 id="response-5">Response</h3>
-
-<table>
-  <thead>
-    <tr>
-      <th>Field</th>
-      <th> </th>
-      <th>Value</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><strong>topic</strong></td>
-      <td> </td>
-      <td><code class="highlighter-rouge">&lt;namespace&gt;/&lt;thingId&gt;/things/&lt;channel&gt;/commands/modify</code></td>
-    </tr>
-    <tr>
-      <td><strong>path</strong></td>
-      <td> </td>
-      <td><code class="highlighter-rouge">/features/&lt;featureId&gt;/definition</code></td>
-    </tr>
-    <tr>
-      <td><strong>value</strong></td>
-      <td> </td>
-      <td>The created Definition of the Feature as JSON array, see property <code class="highlighter-rouge">definition</code> of Things JSON schema at <a href="protocol-specification.html#dittoProtocolPayload">Ditto protocol payload (JSON).</a></td>
-    </tr>
-    <tr>
-      <td><strong>status</strong></td>
-      <td><em>code</em></td>
-      <td> </td>
-    </tr>
-    <tr>
-      <td> </td>
-      <td><code class="highlighter-rouge">201</code></td>
-      <td>Success - the Definition was created successfully.</td>
-    </tr>
-    <tr>
-      <td> </td>
-      <td><code class="highlighter-rouge">403</code></td>
-      <td>Not Modifiable - the Definition could not be modified.</td>
-    </tr>
-    <tr>
-      <td> </td>
-      <td><code class="highlighter-rouge">404</code></td>
-      <td>Not Found - the Thing or Feature was not found or requester had insufficient permissions.</td>
-    </tr>
-    <tr>
-      <td> </td>
-      <td> </td>
-      <td>See <a href="protocol-examples-errorresponses.html">Thing Error Responses</a> for examples of other error responses.</td>
-    </tr>
-  </tbody>
-</table>
-
-<h3 id="event-5">Event</h3>
-
-<p>The event emitted by Ditto after the Feature Definition of a Thing was created.</p>
-
-<table>
-  <thead>
-    <tr>
-      <th>Field</th>
-      <th>Value</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><strong>topic</strong></td>
-      <td><code class="highlighter-rouge">&lt;namespace&gt;/&lt;thingId&gt;/things/&lt;channel&gt;/events/created</code></td>
-    </tr>
-    <tr>
-      <td><strong>path</strong></td>
-      <td><code class="highlighter-rouge">/features/&lt;featureId&gt;/definition</code></td>
-    </tr>
-    <tr>
-      <td><strong>value</strong></td>
-      <td>The created Definition of the Feature as JSON array, see property <code class="highlighter-rouge">definition</code> of the Things JSON schema at <a href="protocol-specification.html#dittoProtocolPayload">Ditto protocol payload (JSON).</a></td>
-    </tr>
-  </tbody>
-</table>
-
-<p><strong>Example:</strong> <a href="protocol-examples-createdefinition.html">Create Feature Definition.</a></p>
-
-<h2 id="create-all-properties-of-a-feature">Create all Properties of a Feature</h2>
-
-<p>Create the Properties of a Feature (identified by the Feature ID in the path) of the Thing (identified by the
-<code class="highlighter-rouge">&lt;namespace&gt;</code> and the <code class="highlighter-rouge">&lt;thingId&gt;</code> in the topic).</p>
-
-<h3 id="command-6">Command</h3>
-
-<table>
-  <thead>
-    <tr>
-      <th>Field</th>
-      <th>Value</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><strong>topic</strong></td>
-      <td><code class="highlighter-rouge">&lt;namespace&gt;/&lt;thingId&gt;/things/&lt;channel&gt;/commands/modify</code></td>
-    </tr>
-    <tr>
-      <td><strong>path</strong></td>
-      <td><code class="highlighter-rouge">/features/&lt;featureId&gt;/properties</code></td>
-    </tr>
-    <tr>
-      <td><strong>value</strong></td>
-      <td>The Properties of the Feature as JSON, see property <code class="highlighter-rouge">properties</code> of Things JSON schema at <a href="protocol-specification.html#dittoProtocolPayload">Ditto protocol payload (JSON).</a></td>
-    </tr>
-  </tbody>
-</table>
-
-<h3 id="response-6">Response</h3>
-
-<table>
-  <thead>
-    <tr>
-      <th>Field</th>
-      <th> </th>
-      <th>Value</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><strong>topic</strong></td>
-      <td> </td>
-      <td><code class="highlighter-rouge">&lt;namespace&gt;/&lt;thingId&gt;/things/&lt;channel&gt;/commands/modify</code></td>
-    </tr>
-    <tr>
-      <td><strong>path</strong></td>
-      <td> </td>
-      <td><code class="highlighter-rouge">/features/&lt;featureId&gt;/properties</code></td>
-    </tr>
-    <tr>
-      <td><strong>value</strong></td>
-      <td> </td>
-      <td>The created Properties of the Feature as JSON object, see property <code class="highlighter-rouge">properties</code> of Things JSON schema at <a href="protocol-specification.html#dittoProtocolPayload">Ditto protocol payload (JSON).</a></td>
-    </tr>
-    <tr>
-      <td><strong>status</strong></td>
-      <td><em>code</em></td>
-      <td> </td>
-    </tr>
-    <tr>
-      <td> </td>
-      <td><code class="highlighter-rouge">201</code></td>
-      <td>Success - the Properties were created successfully.</td>
-    </tr>
-    <tr>
-      <td> </td>
-      <td><code class="highlighter-rouge">403</code></td>
-      <td>Not Modifiable - the Properties could not be modified.</td>
-    </tr>
-    <tr>
-      <td> </td>
-      <td><code class="highlighter-rouge">404</code></td>
-      <td>Not Found - the Thing or Feature was not found or requester had insufficient permissions.</td>
-    </tr>
-    <tr>
-      <td> </td>
-      <td> </td>
-      <td>See <a href="protocol-examples-errorresponses.html">Thing Error Responses</a> for examples of other error responses.</td>
-    </tr>
-  </tbody>
-</table>
-
-<h3 id="event-6">Event</h3>
-
-<p>The event emitted by Ditto after the Feature Properties of a Thing were created.</p>
-
-<table>
-  <thead>
-    <tr>
-      <th>Field</th>
-      <th>Value</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><strong>topic</strong></td>
-      <td><code class="highlighter-rouge">&lt;namespace&gt;/&lt;thingId&gt;/things/&lt;channel&gt;/events/created</code></td>
-    </tr>
-    <tr>
-      <td><strong>path</strong></td>
-      <td><code class="highlighter-rouge">/features/&lt;featureId&gt;/properties</code></td>
-    </tr>
-    <tr>
-      <td><strong>value</strong></td>
-      <td>The created Properties of the Feature as JSON object, see property <code class="highlighter-rouge">properties</code> of the Things JSON schema at <a href="protocol-specification.html#dittoProtocolPayload">Ditto protocol payload (JSON).</a></td>
-    </tr>
-  </tbody>
-</table>
-
-<p><strong>Example:</strong> <a href="protocol-examples-createproperties.html">Create Feature Properties.</a></p>
-
-<h2 id="create-a-single-property-of-a-feature">Create a single Property of a Feature</h2>
-
-<p>Create a specific Property (identified by <code class="highlighter-rouge">&lt;propertyPath&gt;</code>) of a Feature (identified by the <code class="highlighter-rouge">&lt;featureId&gt;</code> in the path). 
-The Property will be created if it doesn’t exist or else updated.
-The Property (JSON) can be referenced hierarchically by applying <a href="https://tools.ietf.org/html/rfc6901">JSON Pointer notation (RFC-6901)</a>.</p>
-
-<h3 id="command-7">Command</h3>
-
-<table>
-  <thead>
-    <tr>
-      <th>Field</th>
-      <th>Value</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><strong>topic</strong></td>
-      <td><code class="highlighter-rouge">&lt;namespace&gt;/&lt;thingId&gt;/things/&lt;channel&gt;/commands/modify</code></td>
-    </tr>
-    <tr>
-      <td><strong>path</strong></td>
-      <td><code class="highlighter-rouge">/features/&lt;featureId&gt;/properties/&lt;propertyPath&gt;</code></td>
-    </tr>
-    <tr>
-      <td><strong>value</strong></td>
-      <td>The specific Property of the Feature as JSON.</td>
-    </tr>
-  </tbody>
-</table>
-
-<h3 id="response-7">Response</h3>
-
-<table>
-  <thead>
-    <tr>
-      <th>Field</th>
-      <th> </th>
-      <th>Value</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><strong>topic</strong></td>
-      <td> </td>
-      <td><code class="highlighter-rouge">&lt;namespace&gt;/&lt;thingId&gt;/things/&lt;channel&gt;/commands/modify</code></td>
-    </tr>
-    <tr>
-      <td><strong>path</strong></td>
-      <td> </td>
-      <td><code class="highlighter-rouge">/features/&lt;featureId&gt;/properties/&lt;propertyPath&gt;</code></td>
-    </tr>
-    <tr>
-      <td><strong>value</strong></td>
-      <td> </td>
-      <td>The created Property of the Feature as JSON.</td>
-    </tr>
-    <tr>
-      <td><strong>status</strong></td>
-      <td><em>code</em></td>
-      <td> </td>
-    </tr>
-    <tr>
-      <td> </td>
-      <td><code class="highlighter-rouge">201</code></td>
-      <td>Success - the Property was created successfully.</td>
-    </tr>
-    <tr>
-      <td> </td>
-      <td><code class="highlighter-rouge">403</code></td>
-      <td>Not Modifiable - the Property could not be modified.</td>
-    </tr>
-    <tr>
-      <td> </td>
-      <td><code class="highlighter-rouge">404</code></td>
-      <td>Not Found - the Property was not found or requester had insufficient permissions.</td>
-    </tr>
-    <tr>
-      <td> </td>
-      <td> </td>
-      <td>See <a href="protocol-examples-errorresponses.html">Thing Error Responses</a> for examples of other error responses.</td>
-    </tr>
-  </tbody>
-</table>
-
-<h3 id="event-7">Event</h3>
-
-<p>The event emitted by Ditto after a Feature Property of a Thing was created.</p>
-
-<table>
-  <thead>
-    <tr>
-      <th>Field</th>
-      <th>Value</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><strong>topic</strong></td>
-      <td><code class="highlighter-rouge">&lt;namespace&gt;/&lt;thingId&gt;/things/&lt;channel&gt;/events/created</code></td>
-    </tr>
-    <tr>
-      <td><strong>path</strong></td>
-      <td><code class="highlighter-rouge">/features/&lt;featureId&gt;/properties/&lt;propertyPath&gt;</code></td>
-    </tr>
-    <tr>
-      <td><strong>value</strong></td>
-      <td>The created Property of the Thing as JSON.</td>
-    </tr>
-  </tbody>
-</table>
-
-<p><strong>Example:</strong> <a href="protocol-examples-createproperty.html">Create a single Feature Property.</a></p>
 
 
     <div class="tags">
@@ -1926,7 +1079,7 @@ The Property (JSON) can be referenced hierarchically by applying <a href="https:
         
         
         
-        <a href="tag_protocol.html" class="btn btn-default navbar-btn cursorNorm" role="button">protocol</a>
+        <a href="tag_release_notes.html" class="btn btn-default navbar-btn cursorNorm" role="button">release_notes</a>
         
         
         
@@ -1944,7 +1097,7 @@ The Property (JSON) can be referenced hierarchically by applying <a href="https:
                     </div>
                     <p class="notice">
                         &copy;2018 Eclipse Ditto.
-                         Site last generated: May 23, 2018 <br />
+                         Site last generated: Jun 15, 2018 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

@@ -5,8 +5,8 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="">
-<meta name="keywords" content=" ">
-<title> Page Not Found | Eclipse Ditto</title>
+<meta name="keywords" content="architecture,  architecture, service, concierge">
+<title> Concierge service | Eclipse Ditto</title>
 
 <link rel="stylesheet" href="css/syntax.css">
 <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" crossorigin="anonymous">
@@ -167,7 +167,7 @@
                                 searchInput: document.getElementById('search-input'),
                                 resultsContainer: document.getElementById('results-container'),
                                 dataSource: 'search.json',
-                                searchResultTemplate: '<li><a href="{url}" title="Page Not Found">{title}</a></li>',
+                                searchResultTemplate: '<li><a href="{url}" title="Concierge service">{title}</a></li>',
                                 noResultsText: 'No results found.',
                                 limit: 10,
                                 fuzzy: true,
@@ -481,7 +481,7 @@
                       
                       
                       
-                      <li><a href="architecture-services-concierge.html">Concierge</a></li>
+                      <li class="active"><a href="architecture-services-concierge.html">Concierge</a></li>
                       
                       
                       
@@ -977,7 +977,7 @@
 
 
 <div class="post-header">
-   <h1 class="post-title-main">Page Not Found</h1>
+   <h1 class="post-title-main">Concierge service</h1>
 </div>
 
 
@@ -1017,12 +1017,51 @@ $('#toc').on('click', 'a', function() {
 
     
 
-  <p>Sorry, but the page you were trying to view does not exist.</p>
+  <p>The “concierge” service is responsible for <strong>orchestrating</strong> the backing persistence services and for performing
+<strong>authorization</strong> of <a href="basic-signals-command.html">commands</a> and <a href="basic-signals-commandresponse.html">command responses</a>.</p>
 
-<p>Try searching for it or looking at the URL to see if it looks correct.</p>
+<p>It acts as a gatekeeper and entry point for other services providing APIs:</p>
+<ul>
+  <li><a href="architecture-services-gateway.html">gateway</a></li>
+  <li><a href="architecture-services-connectivity.html">connectivity</a></li>
+</ul>
+
+<p>Those services do not need to be aware of authorization and routing of messages in the cluster.</p>
+
+<h2 id="model">Model</h2>
+
+<p>The concierge service has no model by its own, but uses the model of all the services it orchestrates.</p>
+
+<h2 id="signals">Signals</h2>
+
+<p>The concierge service has no signals by its own, but uses the signals of all the services it orchestrates.</p>
+
+<h2 id="persistence">Persistence</h2>
+
+<p>The concierge service uses <a href="https://doc.akka.io/docs/akka/current/persistence.html?language=java">Akka persistence</a> and 
+with that <a href="basic-signals.html#architectural-style">Event sourcing</a> in order to persist changes to 
+and restore persisted batch commands.</p>
+
+<h2 id="tasks">Tasks</h2>
+
+<ul>
+  <li>accept any <a href="basic-signals-command.html">commands</a>, <a href="basic-signals-commandresponse.html">command responses</a>
+and <a href="basic-signals-event.html">events</a> of all orchestrated services</li>
+  <li>apply <a href="basic-auth.html">authorization</a> to those, reply with authorization failures if the caller had no permission
+to execute a command</li>
+  <li>delegate authorized commands/responses/events to the orchestrated services where they are processed</li>
+</ul>
 
 
     <div class="tags">
+        
+        <b>Tags: </b>
+        
+        
+        
+        <a href="tag_architecture.html" class="btn btn-default navbar-btn cursorNorm" role="button">architecture</a>
+        
+        
         
     </div>
 
