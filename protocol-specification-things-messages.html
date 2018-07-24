@@ -1036,7 +1036,7 @@ next section that describes how to <a href="#using-the-messages-api">use the mes
 <ul>
   <li><code class="highlighter-rouge">topic</code> : <em>{namespace}</em>/<em>{thingId}</em>/things/live/messages/<em>{messageSubject}</em></li>
   <li><code class="highlighter-rouge">path</code> : <em>{addressedPartOfThing}</em>/<em>{mailbox}</em>/messages/<em>{messageSubject}</em></li>
-  <li><code class="highlighter-rouge">headers</code> : The headers for Messages require several arguments: <em>thing-id</em>, <em>direction</em>, <em>content-type</em> and <em>subject</em></li>
+  <li><code class="highlighter-rouge">headers</code> : The headers for Messages must include <em>content-type</em></li>
 </ul>
 
 <p><br /></p>
@@ -1065,12 +1065,9 @@ the Thing, while `` would address the whole Thing. Valid paths are e.g.:</p>
 
 <p><br /></p>
 
-<p>In the <code class="highlighter-rouge">headers</code> of the envelope the Messages API requires several fields:</p>
+<p>In the <code class="highlighter-rouge">headers</code> of the envelope the Messages API requires:</p>
 <ul>
-  <li><code class="highlighter-rouge">thing-id</code> : The id of the Thing as a string in the form <em>{namespace}:{thingId}</em></li>
-  <li><code class="highlighter-rouge">direction</code> : It is a string and can be either <em>TO</em> or <em>FROM</em>, which states if the Message is sent to or from a Thing</li>
   <li><code class="highlighter-rouge">content-type</code> : The type of the payload you are sending, e.g. <em>text/plain</em></li>
-  <li><code class="highlighter-rouge">subject</code> : The <em>messageSubject</em> of your Message.</li>
 </ul>
 
 <h2 id="using-the-messages-api">Using the Messages API</h2>
@@ -1090,10 +1087,7 @@ What follows is a simple example Message that asks our Thing <em>smartcoffee</em
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
     </span><span class="s2">"topic"</span><span class="p">:</span><span class="w"> </span><span class="s2">"org.eclipse.ditto/smartcoffee/things/live/messages/ask"</span><span class="p">,</span><span class="w">
     </span><span class="s2">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"thing-id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"org.eclipse.ditto:smartcoffee"</span><span class="p">,</span><span class="w">
         </span><span class="s2">"content-type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"text/plain"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"subject"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ask"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"direction"</span><span class="p">:</span><span class="w"> </span><span class="s2">"TO"</span><span class="p">,</span><span class="w">
         </span><span class="s2">"correlation-id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"a-unique-string-for-this-message"</span><span class="w">
     </span><span class="p">},</span><span class="w">
     </span><span class="s2">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/inbox/messages/ask"</span><span class="p">,</span><span class="w">
@@ -1101,11 +1095,8 @@ What follows is a simple example Message that asks our Thing <em>smartcoffee</em
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
-<p>In this case, we need to specify, that we want to use the live channel
-(which is the only channel capable of sending Messages anyway). The header
-<code class="highlighter-rouge">direction</code> shows that the Message is sent <em>TO</em> the inbox (<code class="highlighter-rouge">path</code>) of our Thing.
-Notice that our <code class="highlighter-rouge">topic</code> adheres to the <a href="protocol-specification-topic.html">Ditto Protocol topic definition</a>
-with <em>messages</em> as the criterion and the message-subject as <em>action</em>.</p>
+<p>Notice that our <code class="highlighter-rouge">topic</code> adheres to the <a href="protocol-specification-topic.html">Ditto Protocol topic definition</a>
+with <em>messages</em> as the criterion, <em>live</em> as channel, and the message-subject as action.</p>
 
 <p>We encourage you to always send a <code class="highlighter-rouge">correlation-id</code> with your Messages.
 This is especially important, since the WebSocket Ditto Protocol binding
@@ -1120,16 +1111,10 @@ a Message, make sure to always send a <code class="highlighter-rouge">correlatio
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
     </span><span class="s2">"topic"</span><span class="p">:</span><span class="w"> </span><span class="s2">"org.eclipse.ditto/smartcoffee/things/live/messages/ask"</span><span class="p">,</span><span class="w">
     </span><span class="s2">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"thing-id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"org.eclipse.ditto:smartcoffee"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"read-subjects"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"ditto"</span><span class="p">],</span><span class="w">
-        </span><span class="s2">"subject"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ask"</span><span class="p">,</span><span class="w">
         </span><span class="s2">"correlation-id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"a-unique-string-for-this-message"</span><span class="p">,</span><span class="w">
         </span><span class="s2">"auth-subjects"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"ditto"</span><span class="p">,</span><span class="w"> </span><span class="s2">"nginx:ditto"</span><span class="p">],</span><span class="w">
-        </span><span class="s2">"channel"</span><span class="p">:</span><span class="w"> </span><span class="s2">"live"</span><span class="p">,</span><span class="w">
         </span><span class="s2">"content-type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"text/plain"</span><span class="p">,</span><span class="w">
         </span><span class="s2">"version"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"direction"</span><span class="p">:</span><span class="w"> </span><span class="s2">"FROM"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"418"</span><span class="w">
     </span><span class="p">},</span><span class="w">
     </span><span class="s2">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/outbox/messages/ask"</span><span class="p">,</span><span class="w">
     </span><span class="s2">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"I do not know, since i am only a coffee machine."</span><span class="p">,</span><span class="w">
@@ -1137,7 +1122,7 @@ a Message, make sure to always send a <code class="highlighter-rouge">correlatio
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
-<p>The answer of the coffee machine has the same <code class="highlighter-rouge">topic</code>, <code class="highlighter-rouge">subject</code> and <code class="highlighter-rouge">correlation-id</code>
+<p>The answer of the coffee machine has the same <code class="highlighter-rouge">topic</code> and <code class="highlighter-rouge">correlation-id</code>
 as the original message. As we can see, the response does not only contain a
 <code class="highlighter-rouge">value</code> but also the <code class="highlighter-rouge">status</code> of the response
 which is based on the <a href="protocol-specification.html#status">HTTP status codes</a>. 
@@ -1178,15 +1163,10 @@ to the WebSocket, our JavaScript receiver would receive the following data:</p>
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
     </span><span class="s2">"topic"</span><span class="p">:</span><span class="w"> </span><span class="s2">"org.eclipse.ditto/smartcoffee/things/live/messages/ask"</span><span class="p">,</span><span class="w">
     </span><span class="s2">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"thing-id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"org.eclipse.ditto:smartcoffee"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"read-subjects"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"ditto"</span><span class="p">],</span><span class="w">
-        </span><span class="s2">"subject"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ask"</span><span class="p">,</span><span class="w">
         </span><span class="s2">"correlation-id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"demo-6qaal9l"</span><span class="p">,</span><span class="w">
         </span><span class="s2">"auth-subjects"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"ditto"</span><span class="p">,</span><span class="w"> </span><span class="s2">"nginx:ditto"</span><span class="p">],</span><span class="w">
-        </span><span class="s2">"channel"</span><span class="p">:</span><span class="w"> </span><span class="s2">"live"</span><span class="p">,</span><span class="w">
         </span><span class="s2">"content-type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"text/plain"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"version"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"direction"</span><span class="p">:</span><span class="w"> </span><span class="s2">"TO"</span><span class="w">
+        </span><span class="s2">"version"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w">
     </span><span class="p">},</span><span class="w">
     </span><span class="s2">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/inbox/messages/ask"</span><span class="p">,</span><span class="w">
     </span><span class="s2">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Hey, how are you?"</span><span class="w">
@@ -1208,19 +1188,14 @@ response Message you can send using a Ditto Protocol binding.</p>
 
 <div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">createTextResponse</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">originalMessage</span><span class="p">,</span> <span class="nx">payload</span><span class="p">,</span> <span class="nx">statusCode</span><span class="p">)</span> <span class="p">{</span>
     <span class="kd">var</span> <span class="nx">topic</span> <span class="o">=</span> <span class="nx">originalMessage</span><span class="p">.</span><span class="nx">topic</span><span class="p">;</span>
-    <span class="kd">var</span> <span class="nx">thingId</span> <span class="o">=</span> <span class="nx">originalMessage</span><span class="p">.</span><span class="nx">headers</span><span class="p">[</span><span class="s2">"thing-id"</span><span class="p">];</span>
-    <span class="kd">var</span> <span class="nx">subject</span> <span class="o">=</span> <span class="nx">originalMessage</span><span class="p">.</span><span class="nx">headers</span><span class="p">[</span><span class="s2">"subject"</span><span class="p">];</span>
     <span class="kd">var</span> <span class="nx">correlationId</span> <span class="o">=</span> <span class="nx">originalMessage</span><span class="p">.</span><span class="nx">headers</span><span class="p">[</span><span class="s2">"correlation-id"</span><span class="p">];</span>
     <span class="kd">var</span> <span class="nx">outboxPath</span> <span class="o">=</span> <span class="nx">originalMessage</span><span class="p">.</span><span class="nx">path</span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="s2">"inbox"</span><span class="p">,</span> <span class="s2">"outbox"</span><span class="p">);</span>
     
     <span class="k">return</span> <span class="p">{</span>
       <span class="s2">"topic"</span><span class="p">:</span> <span class="nx">topic</span><span class="p">,</span>
       <span class="s2">"headers"</span><span class="p">:</span> <span class="p">{</span>
-          <span class="s2">"thing-id"</span><span class="p">:</span> <span class="nx">thingId</span><span class="p">,</span>
-          <span class="s2">"subject"</span><span class="p">:</span> <span class="nx">subject</span><span class="p">,</span>
           <span class="s2">"correlation-id"</span><span class="p">:</span> <span class="nx">correlationId</span><span class="p">,</span>
-          <span class="s2">"content-type"</span><span class="p">:</span> <span class="s2">"text/plain"</span><span class="p">,</span>
-          <span class="s2">"direction"</span><span class="p">:</span> <span class="s2">"FROM"</span>
+          <span class="s2">"content-type"</span><span class="p">:</span> <span class="s2">"text/plain"</span>
       <span class="p">},</span>
       <span class="s2">"path"</span><span class="p">:</span> <span class="nx">outboxPath</span><span class="p">,</span>
       <span class="s2">"status"</span><span class="p">:</span> <span class="nx">statusCode</span><span class="p">,</span>
@@ -1236,15 +1211,10 @@ Message have the same <code class="highlighter-rouge">correlation-id</code>, the
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
     </span><span class="s2">"topic"</span><span class="p">:</span><span class="w"> </span><span class="s2">"org.eclipse.ditto/smartcoffee/things/live/messages/ask"</span><span class="p">,</span><span class="w">
     </span><span class="s2">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"thing-id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"org.eclipse.ditto:smartcoffee"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"read-subjects"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"ditto"</span><span class="p">],</span><span class="w">
-        </span><span class="s2">"subject"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ask"</span><span class="p">,</span><span class="w">
         </span><span class="s2">"correlation-id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"demo-6qaal9l"</span><span class="p">,</span><span class="w">
         </span><span class="s2">"auth-subjects"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"ditto"</span><span class="p">,</span><span class="w"> </span><span class="s2">"nginx:ditto"</span><span class="p">],</span><span class="w">
-        </span><span class="s2">"channel"</span><span class="p">:</span><span class="w"> </span><span class="s2">"live"</span><span class="p">,</span><span class="w">
         </span><span class="s2">"content-type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"text/plain"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"version"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"direction"</span><span class="p">:</span><span class="w"> </span><span class="s2">"FROM"</span><span class="w">
+        </span><span class="s2">"version"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w">
     </span><span class="p">},</span><span class="w">
     </span><span class="s2">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/outbox/messages/ask"</span><span class="p">,</span><span class="w">
     </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="mi">418</span><span class="p">,</span><span class="w">
@@ -1261,11 +1231,7 @@ A Message to a Feature could therefore have the following JSON:</p>
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
     </span><span class="s2">"topic"</span><span class="p">:</span><span class="w"> </span><span class="s2">"org.eclipse.ditto/smartcoffee/things/live/messages/heatUp"</span><span class="p">,</span><span class="w">
     </span><span class="s2">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"thing-id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"org.eclipse.ditto:smartcoffee"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"feature-id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"water-tank"</span><span class="p">,</span><span class="w">
         </span><span class="s2">"content-type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"text/plain"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"subject"</span><span class="p">:</span><span class="w"> </span><span class="s2">"heatUp"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"direction"</span><span class="p">:</span><span class="w"> </span><span class="s2">"TO"</span><span class="p">,</span><span class="w">
         </span><span class="s2">"correlation-id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"a-unique-string-for-this-message"</span><span class="w">
     </span><span class="p">},</span><span class="w">
     </span><span class="s2">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/features/water-tank/inbox/messages/heatUp"</span><span class="p">,</span><span class="w">
@@ -1285,11 +1251,7 @@ carefully verified before granting access to a Thing.</p>
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
     </span><span class="s2">"topic"</span><span class="p">:</span><span class="w"> </span><span class="s2">"org.eclipse.ditto/smartcoffee/things/live/messages/claim"</span><span class="p">,</span><span class="w">
     </span><span class="s2">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"thing-id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"org.eclipse.ditto:smartcoffee"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"feature-id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"water-tank"</span><span class="p">,</span><span class="w">
         </span><span class="s2">"content-type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"text/plain"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"subject"</span><span class="p">:</span><span class="w"> </span><span class="s2">"claim"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"direction"</span><span class="p">:</span><span class="w"> </span><span class="s2">"TO"</span><span class="p">,</span><span class="w">
         </span><span class="s2">"correlation-id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"a-unique-string-for-this-claim-message"</span><span class="w">
     </span><span class="p">},</span><span class="w">
     </span><span class="s2">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/inbox/messages/claim"</span><span class="p">,</span><span class="w">
@@ -1304,10 +1266,7 @@ to the issuer by setting an additional permission and respond with a <em>status<
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
     </span><span class="s2">"topic"</span><span class="p">:</span><span class="w"> </span><span class="s2">"org.eclipse.ditto/smartcoffee/things/live/messages/claim"</span><span class="p">,</span><span class="w">
     </span><span class="s2">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"thing-id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"org.eclipse.ditto:smartcoffee"</span><span class="p">,</span><span class="w">
         </span><span class="s2">"content-type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"text/plain"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"subject"</span><span class="p">:</span><span class="w"> </span><span class="s2">"claim"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"direction"</span><span class="p">:</span><span class="w"> </span><span class="s2">"FROM"</span><span class="p">,</span><span class="w">
         </span><span class="s2">"correlation-id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"a-unique-string-for-this-claim-message"</span><span class="w">
     </span><span class="p">},</span><span class="w">
     </span><span class="s2">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/outbox/messages/claim"</span><span class="p">,</span><span class="w">
@@ -1343,7 +1302,7 @@ claim request by <em>NOT</em> granting access and responding with a status diffe
                     </div>
                     <p class="notice">
                         &copy;2018 Eclipse Ditto.
-                         Site last generated: Jun 15, 2018 <br />
+                         Site last generated: Jul 24, 2018 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

@@ -1103,6 +1103,23 @@ There are some pre-defined headers which have a special meaning for Ditto:</p>
   </tbody>
 </table>
 
+<p>Custom headers of messages through the <a href="protocol-twinlive.html">live channel</a> are delivered verbatim. When naming 
+custom headers, it is best to attach a prefix specific to your application that does not conflict with Ditto or
+HTTP protocol, for example the prefix <code class="highlighter-rouge">ditto-*</code>.</p>
+<ul>
+  <li><a href="https://www.iana.org/assignments/message-headers/message-headers.xml">Permanent HTTP headers</a> are to be avoided.</li>
+  <li>Ditto uses the following headers internally. If these headers are set in a Protocol message, they will be ignored 
+and will not be delivered.
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>channel
+raw-request-url
+read-subjects
+source
+subject
+timeout-access
+</code></pre></div>    </div>
+  </li>
+</ul>
+
 <h2 id="path">Path</h2>
 
 <p>Contains a JSON pointer of where to apply the <a href="#value">value</a> of the Protocol message.
@@ -1142,7 +1159,7 @@ May also be <code class="highlighter-rouge">/</code> when the value contains a r
                     </div>
                     <p class="notice">
                         &copy;2018 Eclipse Ditto.
-                         Site last generated: Jun 15, 2018 <br />
+                         Site last generated: Jul 24, 2018 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">
