@@ -269,6 +269,13 @@
               
               
               
+              
+              
+              <li><a href="release_notes_080-M1.html">0.8.0-M1 Release notes</a></li>
+              
+              
+              
+              
           </ul>
         </li>
     
@@ -1040,35 +1047,44 @@ be configured for the AMQP 1.0 connection in order to transform the messages.</p
 <h3 id="source-format">Source format</h3>
 
 <p>Any <code class="highlighter-rouge">source</code> item defines an <code class="highlighter-rouge">addresses</code> array of source identifiers (e.g. Eclipse Hono’s 
-<a href="https://www.eclipse.org/hono/api/telemetry-api">Telemetry API</a>) to consume messages from.</p>
+<a href="https://www.eclipse.org/hono/api/telemetry-api">Telemetry API</a>) to consume messages from
+and <code class="highlighter-rouge">authorizationContext</code> array that contains the authorization subjects in whose context
+inbound messages are processed. These subjects may contain placeholders, see 
+<a href="basic-connections.html#placeholder-for-source-authorization-subjects">placeholders</a> section for more information.</p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
   </span><span class="s2">"addresses"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
     </span><span class="s2">"&lt;source&gt;"</span><span class="p">,</span><span class="w">
     </span><span class="s2">"..."</span><span class="w">
-  </span><span class="p">]</span><span class="w">
+  </span><span class="p">],</span><span class="w">
+  </span><span class="s2">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"ditto:inbound-auth-subject"</span><span class="p">,</span><span class="w"> </span><span class="s2">"..."</span><span class="p">]</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
 <h3 id="target-format">Target format</h3>
 
 <p>An AMQP 1.0 connection requires the protocol configuration target object to have an <code class="highlighter-rouge">address</code> property with a source
-identifier. It is continued with a list of topic strings, each representing a subscription of a Ditto
-<a href="protocol-specification-topic.html">protocol topic</a>.</p>
+identifier. The target address may contain placeholders, see 
+<a href="basic-connections.html#placeholder-for-target-addresses">placeholders</a> section for more 
+information. It is continued with a list of topic strings, each representing a subscription of a Ditto
+<a href="protocol-specification-topic.html">protocol topic</a> and an array of authorization subjects. Outbound messages 
+are published to the configured target address if one of these subjects have READ permission on the Thing that is 
+associated with a message.</p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
   </span><span class="s2">"address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;target&gt;"</span><span class="p">,</span><span class="w">
   </span><span class="s2">"topics"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
     </span><span class="s2">"_/_/things/twin/events"</span><span class="p">,</span><span class="w">
     </span><span class="s2">"_/_/things/live/messages"</span><span class="w">
-  </span><span class="p">]</span><span class="w">
+  </span><span class="p">],</span><span class="w">
+  </span><span class="s2">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"ditto:outbound-auth-subject"</span><span class="p">,</span><span class="w"> </span><span class="s2">"..."</span><span class="p">]</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
 <h3 id="specific-configuration-properties">Specific configuration properties</h3>
 
 <p>The specific configuration properties are interpreted as 
-<a href="https://qpid.apache.org/releases/qpid-jms-0.30.0/docs/index.html#jms-configuration-options">JMS Configuration options</a>. 
+<a href="https://qpid.apache.org/releases/qpid-jms-0.34.0/docs/index.html#jms-configuration-options">JMS Configuration options</a>. 
 Use these to customize and tweak your connection as needed.</p>
 
 <h2 id="establishing-connecting-to-an-amqp-10-endpoint">Establishing connecting to an AMQP 1.0 endpoint</h2>
@@ -1085,14 +1101,14 @@ existing connections.</p>
   </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"hono-example-connection-123"</span><span class="p">,</span><span class="w">
   </span><span class="s2">"connectionType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"amqp-10"</span><span class="p">,</span><span class="w">
   </span><span class="s2">"connectionStatus"</span><span class="p">:</span><span class="w"> </span><span class="s2">"open"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"authorizationSubject"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;&lt;&lt;my-subject-id-included-in-policy-or-acl&gt;&gt;&gt;"</span><span class="p">,</span><span class="w">
   </span><span class="s2">"failoverEnabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
   </span><span class="s2">"uri"</span><span class="p">:</span><span class="w"> </span><span class="s2">"amqps://user:password@hono.eclipse.org:5671"</span><span class="p">,</span><span class="w">
   </span><span class="s2">"sources"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
     </span><span class="p">{</span><span class="w">
       </span><span class="s2">"addresses"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
         </span><span class="s2">"telemetry/FOO"</span><span class="w">
-      </span><span class="p">]</span><span class="w">
+      </span><span class="p">],</span><span class="w">
+      </span><span class="s2">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"ditto:inbound-auth-subject"</span><span class="p">]</span><span class="w">
     </span><span class="p">}</span><span class="w">
   </span><span class="p">],</span><span class="w">
   </span><span class="s2">"targets"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
@@ -1100,7 +1116,8 @@ existing connections.</p>
       </span><span class="s2">"address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"events/twin"</span><span class="p">,</span><span class="w">
       </span><span class="s2">"topics"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
         </span><span class="s2">"_/_/things/twin/events"</span><span class="w">
-      </span><span class="p">]</span><span class="w">
+      </span><span class="p">],</span><span class="w">
+      </span><span class="s2">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"ditto:outbound-auth-subject"</span><span class="p">]</span><span class="w">
     </span><span class="p">}</span><span class="w">
   </span><span class="p">]</span><span class="w">
 </span><span class="p">}</span><span class="w">
@@ -1142,7 +1159,7 @@ Protocol</a>, you can configure a custom <a href="connectivity-mapping.html">pay
                     </div>
                     <p class="notice">
                         &copy;2018 Eclipse Ditto.
-                         Site last generated: Jul 24, 2018 <br />
+                         Site last generated: Aug 14, 2018 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

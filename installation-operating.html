@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="">
-<meta name="keywords" content="installation,  operating, docker, docker-compose, devops, logging, logstash, elk, monitoring, graphite, grafana">
+<meta name="keywords" content="installation,  operating, docker, docker-compose, devops, logging, logstash, elk, monitoring, prometheus, grafana">
 <title> Operating Ditto | Eclipse Ditto</title>
 
 <link rel="stylesheet" href="css/syntax.css">
@@ -265,6 +265,13 @@
               
               
               <li><a href="release_notes_030-M2.html">0.3.0-M2 Release notes</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="release_notes_080-M1.html">0.8.0-M1 Release notes</a></li>
               
               
               
@@ -1038,12 +1045,12 @@ $('#toc').on('click', 'a', function() {
 <h2 id="monitoring">Monitoring</h2>
 
 <p>Additionally to the obligatory logging monitoring is included in the Ditto images. That means that certain metrics are 
-automatically gathered and published via <a href="https://github.com/etsy/statsd">StatsD</a> to a 
-<a href="https://graphite.readthedocs.io">Graphite</a> backend from where the metrics can be accessed to display in dashboards 
-(e.g. with <a href="https://grafana.com">Grafana</a>).</p>
+automatically gathered and published on a HTTP port where it can be scraped from a <a href="https://prometheus.io">Prometheus</a> 
+backend from where the metrics can be accessed to display in dashboards (e.g. with <a href="https://grafana.com">Grafana</a>).</p>
 
 <h3 id="gathered-metrics">Gathered metrics</h3>
 
+<p>// TODO TJ adjust keys</p>
 <ul>
   <li>JVM metrics: <code class="highlighter-rouge">stats.timers.$Application.$Host.system-metric.*</code>
     <ul>
@@ -1067,17 +1074,15 @@ automatically gathered and published via <a href="https://github.com/etsy/statsd
   </li>
 </ul>
 
-<h3 id="configuring-the-statsd-endpoint">Configuring the StatsD endpoint</h3>
+<h3 id="configuring">Configuring</h3>
 
-<p>The StatsD endpoint to use can simply be configured by setting the following environment variables for the Docker containers:</p>
+<p>In the default configuration each Ditto service opens a HTTP endpoint where it provides the Prometheus metrics on port
+<code class="highlighter-rouge">9095</code>. This can be changed via the environment variable <code class="highlighter-rouge">PROMETHEUS_PORT</code>.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>STATSD_PORT_8125_UDP_ADDR=localhost
-STATSD_PORT_8125_UDP_PORT=8125
-</code></pre></div></div>
+<p>Ditto will automatically publish gathered metrics at the endpoint <code class="highlighter-rouge">http://&lt;container-host-or-ip&gt;:9095/</code>.</p>
 
-<p>Once that variable is configured, Ditto will automatically publish gathered metrics via UDP to the StatsD server.</p>
-
-<p>Grafana can then be configured to use Graphite (which StatsD sends the data to) as its data source and can display 
+<p>Prometheus can then be configured to poll on all Ditto service endpoints in order to persist the historical metrics.
+Grafana can add a Prometheus server as its data source and can display 
 the metrics based on the keys mentioned in section <a href="#gathered-metrics">“Gathered metrics”</a>.</p>
 
 <h2 id="devops-commands">DevOps commands</h2>
@@ -1234,7 +1239,7 @@ the <a href="connectivity-manage-connections.html">Manage Connections</a> sectio
                     </div>
                     <p class="notice">
                         &copy;2018 Eclipse Ditto.
-                         Site last generated: Jul 24, 2018 <br />
+                         Site last generated: Aug 14, 2018 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

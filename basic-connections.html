@@ -269,6 +269,13 @@
               
               
               
+              
+              
+              <li><a href="release_notes_080-M1.html">0.8.0-M1 Release notes</a></li>
+              
+              
+              
+              
           </ul>
         </li>
     
@@ -1017,15 +1024,18 @@ $('#toc').on('click', 'a', function() {
 
     
 
-  <div class="alert alert-success" role="alert"><i class="fa fa-check-square-o"></i> <b>Tip:</b> To get started with connections right away, consult the <a href="connectivity-manage-connections.html">Manage connections</a> 
-                               page. </div>
+  <h2 id="connection-model">Connection model</h2>
+
+<div class="alert alert-info" role="alert"><i class="fa fa-info-circle"></i> <b>Note:</b> To get started with connections right away, consult the [Manage connections]
+    (connectivity-manage-connections.html) page. </div>
 
 <p>You can integrate your Ditto instance with external messaging services such as 
 <a href="https://eclipse.org/hono/">Eclipse Hono</a> or a <a href="https://www.rabbitmq.com/">RabbitMQ</a> broker via custom “connections”.</p>
 
 <p>A connection represents a communication channel for the exchange of messages between any service and Ditto. It 
 requires a transport protocol, which is used to transmit <a href="protocol-overview.html">Ditto Protocol</a> messages. Ditto supports one-way and two-way
- communication over connections. This enables consumer/producer scenarios as well as fully-fledged command and response use cases. Nevertheless, those options might be limited by the used transport protocol and/or the other endpoint’s 
+ communication over connections. This enables consumer/producer scenarios as well as fully-fledged command and response
+ use cases. Nevertheless, those options might be limited by the transport protocol or the other endpoint’s
  capabilities.</p>
 
 <p>All connections are configured and supervised via Ditto’s 
@@ -1045,14 +1055,97 @@ for custom payload formats. Currently the following connection types are support
 <p>The <code class="highlighter-rouge">sources</code> and <code class="highlighter-rouge">targets</code> identifier format depends on the <code class="highlighter-rouge">connectionType</code> and has therefore <code class="highlighter-rouge">connectionType</code> 
 specific limitations. Those are documented with the corresponding protocol bindings.</p>
 
-<p>A connection is initiated by the connectivity service. This obsoletes the need for client authorization, because 
+<p>A connection is initiated by the connectivity service. This obviates the need for client authorization, because
 Ditto becomes the client in this case. Nevertheless, to access resources within Ditto, the connection must know on 
-which instance’s behalf it is acting. This is controlled via the configured <code class="highlighter-rouge">authorizationContext</code>, which holds a list of 
-self-assigned authorization subjects. Before a connection can access a Ditto resource, one of its 
-<code class="highlighter-rouge">authorizationSubject</code>s must be referenced in the used authorization mechanism, having the needed access rights. You 
-can achieve this via <a href="basic-acl.html">ACLs</a> or <a href="basic-policy.html">Policies</a>.</p>
+whose behalf it is acting. This is controlled via the configured <code class="highlighter-rouge">authorisationContext</code>, which holds a list of
+self-assigned authorization subjects. Before a connection can access a Ditto resource, one of its
+<code class="highlighter-rouge">authorizationSubject</code>s must be granted the access rights by an authorization mechanism such as
+<a href="basic-acl.html">ACLs</a> or <a href="basic-policy.html">Policies</a>.</p>
 
 <p>For more information on the <code class="highlighter-rouge">mappingContext</code> see the corresponding <a href="connectivity-mapping.html">Payload Mapping Documentation</a></p>
+
+<h2 id="placeholders">Placeholders</h2>
+
+<p>The configuration of a connection allows to use placeholders at certain places. This allows more fine grained control 
+over how messages are consumed or where they are published to. The general syntax of a placeholder is 
+<code class="highlighter-rouge">{{ placeholder }}</code>. A missing placeholder results in an error which is passed back to the sender (if a <em>reply-to</em>
+ header was provided). Which placeholder values are available depends on the context where the placeholder is used.</p>
+
+<h3 id="placeholder-for-source-authorization-subjects">Placeholder for source authorization subjects</h3>
+<p>Processing the messages received via a source using the <em>same fixed authorization subject</em> may not be 
+suitable for every scenario. For example you want to declare fine-grained write permissions per device which would not 
+be possible with a fixed global subject. For this use case we introduced placeholder substitution for authorization subjects of 
+source addresses that are resolved when processing messages from a source. Of course this requires the sender of the 
+message to provide necessary information about the original issuer of the message.</p>
+
+<div class="alert alert-warning" role="alert"><i class="fa fa-warning"></i> <b>Important:</b> Only use this kind of placeholder if you trust the source of the message. The value from the header is used as the <strong>authorized subject</strong>.</div>
+
+<p>You can access any header value of the incoming message by using a placeholder like <code class="highlighter-rouge">{{ header:name }}</code>.</p>
+
+<p>Example:
+Assuming the messages received from the source <em>telemetry</em> contain a <code class="highlighter-rouge">device_id</code> header (e.g. <em>sensor-123</em>), 
+you may configure your source’s authorization subject as follows:</p>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="w">   </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"auth-subject-placeholder-example"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"sources"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+          </span><span class="s2">"addresses"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="s2">"telemetry"</span><span class="w"> </span><span class="p">],</span><span class="w">
+          </span><span class="s2">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"device:{{ header:device_id }}"</span><span class="p">]</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">]</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+<p>The placeholder is then replaced by the value from the message headers and the message is forwarded and processed under the 
+subject <em>device:sensor-123</em>.
+In case the header cannot be resolved or the header contains unexpected characters an exception is thrown which is sent 
+back to the sender as an error message, if a valid <em>reply-to</em> header was provided, otherwise the message is dropped.</p>
+
+<h3 id="placeholder-for-target-addresses">Placeholder for target addresses</h3>
+<p>Another use case for placeholders may be to publish thing events or live commands and events to a target address 
+containing Thing-specific information e.g. you can distribute Things from different namespaces to different target addresses.
+You can use the placeholders <code class="highlighter-rouge">{{ thing:id }}</code>, <code class="highlighter-rouge">{{ thing:namespace }}</code> and <code class="highlighter-rouge">{{ thing:name }}</code> in the target address for this purpose.
+For a Thing with the ID <em>org.eclipse.ditto:device-123</em> these placeholders are resolved as follows:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Placeholder</th>
+      <th>Description</th>
+      <th>Resolved value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="highlighter-rouge">thing:id</code></td>
+      <td>Full ID composed of <em>namespace</em> + <em>:</em> as a separator + <em>name</em></td>
+      <td>org.eclipse.ditto:device-123</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">thing:namespace</code></td>
+      <td>Namespace (i.e. first part of an ID)</td>
+      <td>org.eclipse.ditto</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">thing:name</code></td>
+      <td>Name (i.e. second part of an ID )</td>
+      <td>device-123</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Example:
+Sending live commands and events to a target address that contains the Things’ namespace.</p>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="w">   </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"target-placeholder-example"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"targets"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+          </span><span class="s2">"addresses"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="s2">"live/{{ thing:namespace }}"</span><span class="w"> </span><span class="p">],</span><span class="w">
+          </span><span class="s2">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"ditto:auth-subject"</span><span class="p">],</span><span class="w">
+          </span><span class="s2">"topics"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="s2">"_/_/things/live/events"</span><span class="p">,</span><span class="w"> </span><span class="s2">"_/_/things/live/commands"</span><span class="w"> </span><span class="p">]</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">]</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
 
 
 
@@ -1080,7 +1173,7 @@ can achieve this via <a href="basic-acl.html">ACLs</a> or <a href="basic-policy.
                     </div>
                     <p class="notice">
                         &copy;2018 Eclipse Ditto.
-                         Site last generated: Jul 24, 2018 <br />
+                         Site last generated: Aug 14, 2018 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

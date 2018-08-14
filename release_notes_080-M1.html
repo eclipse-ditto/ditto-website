@@ -4,9 +4,9 @@
     <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="">
-<meta name="keywords" content="architecture,  architecture, service, things">
-<title> Things service | Eclipse Ditto</title>
+<meta name="description" content="Version 0.8.0-M1 of Eclipse Ditto, released on 14.08.2018">
+<meta name="keywords" content="release_notes,  release notes, announcements, changelog">
+<title> Release notes 0.8.0-M1 | Eclipse Ditto</title>
 
 <link rel="stylesheet" href="css/syntax.css">
 <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" crossorigin="anonymous">
@@ -167,7 +167,7 @@
                                 searchInput: document.getElementById('search-input'),
                                 resultsContainer: document.getElementById('results-container'),
                                 dataSource: 'search.json',
-                                searchResultTemplate: '<li><a href="{url}" title="Things service">{title}</a></li>',
+                                searchResultTemplate: '<li><a href="{url}" title="Release notes 0.8.0-M1">{title}</a></li>',
                                 noResultsText: 'No results found.',
                                 limit: 10,
                                 fuzzy: true,
@@ -271,7 +271,7 @@
               
               
               
-              <li><a href="release_notes_080-M1.html">0.8.0-M1 Release notes</a></li>
+              <li class="active"><a href="release_notes_080-M1.html">0.8.0-M1 Release notes</a></li>
               
               
               
@@ -470,7 +470,7 @@
                       
                       
                       
-                      <li class="active"><a href="architecture-services-things.html">Things</a></li>
+                      <li><a href="architecture-services-things.html">Things</a></li>
                       
                       
                       
@@ -984,13 +984,15 @@
 
 
 <div class="post-header">
-   <h1 class="post-title-main">Things service</h1>
+   <h1 class="post-title-main">Release notes 0.8.0-M1</h1>
 </div>
 
 
 
 <div class="post-content">
 
+   
+    <div class="summary">Version 0.8.0-M1 of Eclipse Ditto, released on 14.08.2018</div>
    
 
     
@@ -1024,32 +1026,79 @@ $('#toc').on('click', 'a', function() {
 
     
 
-  <p>The “things” service takes care of persisting <a href="basic-thing.html">Things</a> and <a href="basic-feature.html">Features</a>.</p>
-
-<h2 id="model">Model</h2>
-
-<p>The model of the things service is defined around the entities <code class="highlighter-rouge">Thing</code> and <code class="highlighter-rouge">Feature</code>:</p>
-
+  <p>Ditto is doing a version jump from the last milestone version 0.3.0-M2 to 0.8.0-M1. The reasons for this are:</p>
 <ul>
-  <li><a href="https://github.com/eclipse/ditto/tree/master/model/things/src/main/java/org/eclipse/ditto/model/things">model</a></li>
+  <li>Ditto wants to provide a first non-milestone release in the next months</li>
+  <li>the Ditto codebase is a very mature one, with most of the Java APIs being stable since the very first milestone, 
+a 0.3.0 version would be an understatement</li>
+  <li>the Ditto main APIs (things, policies, search) are stable and backwards compatible to all previously released milestones</li>
 </ul>
 
-<h2 id="signals">Signals</h2>
+<p>Therefore Ditto’s first release deserves to be a “mature 0.x” version, we think 0.8.0 reflects this quite well. What
+is missing for a 1.0.0 are more features towards desired/reported state handling which will be on the agenda for after
+0.8.0.</p>
 
-<p>Other services can communicate with the things service via:</p>
+<p>Since the last milestone of Eclipse Ditto <a href="release_notes_030-M2.html">0.3.0-M2</a>, the following changes, new features and
+bugfixes were added.</p>
+
+<h2 id="changes">Changes</h2>
+
+<h3 id="marked-some-dittoheaders-as-internal"><a href="https://github.com/eclipse/ditto/pull/195">Marked some DittoHeaders as internal</a></h3>
+
+<p>In order to prevent that a user of Ditto’s API (e.g. WebSocket or AMQP) sets arbitrary security relevant headers, 
+those <code class="highlighter-rouge">DittoHeaders</code> are no marked as “not readable from external”. Other headers which should not be propagated to 
+the outside of Ditto are marked as “not to be written to external”.</p>
+
+<h3 id="update-to-kamon-10-and-report-metrics-to-prometheus"><a href="https://github.com/eclipse/ditto/issues/105">Update to Kamon 1.0 and report metrics to Prometheus</a></h3>
+
+<p>Previously, Ditto was using Kamon 0.6.x and reported metrics/traces to a <a href="https://graphiteapp.org">Graphite</a> back-end. 
+Together with the update to Kamon 1.0 the Ditto services now provide HTTP endpoints which can be scraped by 
+<a href="https://prometheus.io">Prometheus</a> in order to get insights about the services.</p>
+
+<p>For more information, please read the <a href="installation-operating.html#monitoring">monitoring section</a> in the operating 
+guide.</p>
+
+<h2 id="new-features">New features</h2>
+
+<h3 id="kubernetes-cluster-bootstrapping"><a href="https://github.com/eclipse/ditto/pull/201">Kubernetes cluster bootstrapping</a></h3>
+
+<p>Ditto now discovers its cluster nodes automatically also when running in Kubernetes. It uses the 
+kubernetes-api in order to discover the other cluster nodes.</p>
+
+<p>An example on how to run Ditto with Kubernetes is provided in the /kubernetes git directory.</p>
+
+<h3 id="allow-placeholders-inside-connection-config"><a href="https://github.com/eclipse/ditto/issues/178">Allow placeholders inside connection config</a></h3>
+
+<p>In many cases configuration values of a <a href="connectivity-manage-connections.html">Connection</a> can be dependent on the 
+message’s headers. This feature allows Ditto connections to access header fields and use it in the connection’s 
+<code class="highlighter-rouge">authorizationContext</code>.</p>
+
+<p>For connecting to a <a href="connectivity-protocol-bindings-amqp10.html">Eclipse Hono</a> instance, it is e.g. possible to access the
+from Hono authenticated <code class="highlighter-rouge">device-id</code> via the placeholder ``.</p>
+
+<h2 id="bugfixes">Bugfixes</h2>
+
+<h3 id="fixed-excessive-memory-consumption-of-things-service"><a href="https://github.com/eclipse/ditto/pull/194">Fixed excessive memory consumption of things-service</a></h3>
+
+<p>In previous versions, Ditto’s <code class="highlighter-rouge">things-service</code> created a lot of instances for each Thing which was loaded into memory.
+This is now optimized so that the service does no longer need so much memory.</p>
+
+<h3 id="stabilization-of-amqp-10-and-091-connections">Stabilization of AMQP 1.0 and 0.9.1 connections</h3>
+
+<p>The relatively new connectivity feature which Ditto added in previous versions had still some bugs and stability issues.
+In this milestone we put a lot of effort in further stabilizing AMQP 1.0 and 0.9.1 connections</p>
+
+<p>These issues were addressed in several fixes:</p>
 
 <ul>
-  <li><a href="https://github.com/eclipse/ditto/tree/master/signals/commands/things/src/main/java/org/eclipse/ditto/signals/commands/things">commands</a>:
-containing commands and command responses which are processed by this service</li>
-  <li><a href="https://github.com/eclipse/ditto/tree/master/signals/events/things/src/main/java/org/eclipse/ditto/signals/events/things">events</a>:
-containing events which are emitted when entities managed by this service were modified</li>
+  <li><a href="https://github.com/eclipse/ditto/pull/189">#189</a></li>
+  <li><a href="https://github.com/eclipse/ditto/issues/178">#178</a></li>
 </ul>
 
-<h2 id="persistence">Persistence</h2>
+<h3 id="various-smaller-bugfixes">Various smaller bugfixes</h3>
 
-<p>The things service uses <a href="https://doc.akka.io/docs/akka/current/persistence.html?language=java">Akka persistence</a> and 
-with that <a href="basic-signals.html#architectural-style">Event sourcing</a> in order to persist changes to 
-and restore persisted <a href="basic-thing.html">things</a>.</p>
+<p>This is a complete list of the 
+<a href="https://github.com/eclipse/ditto/pulls?q=is%3Apr+milestone%3A0.8.0-M1+">merged pull requests</a>.</p>
 
 
 
@@ -1059,7 +1108,7 @@ and restore persisted <a href="basic-thing.html">things</a>.</p>
         
         
         
-        <a href="tag_architecture.html" class="btn btn-default navbar-btn cursorNorm" role="button">architecture</a>
+        <a href="tag_release_notes.html" class="btn btn-default navbar-btn cursorNorm" role="button">release_notes</a>
         
         
         

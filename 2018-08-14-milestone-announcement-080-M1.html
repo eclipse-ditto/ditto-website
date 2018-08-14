@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="">
 <meta name="keywords" content="blog,  ">
-<title> Introducing Feature Definition | Eclipse Ditto</title>
+<title> Announcing Ditto Milestone 0.8.0-M1 | Eclipse Ditto</title>
 
 <link rel="stylesheet" href="css/syntax.css">
 <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" crossorigin="anonymous">
@@ -167,7 +167,7 @@
                                 searchInput: document.getElementById('search-input'),
                                 resultsContainer: document.getElementById('results-container'),
                                 dataSource: 'search.json',
-                                searchResultTemplate: '<li><a href="{url}" title="Introducing Feature Definition">{title}</a></li>',
+                                searchResultTemplate: '<li><a href="{url}" title="Announcing Ditto Milestone 0.8.0-M1">{title}</a></li>',
                                 noResultsText: 'No results found.',
                                 limit: 10,
                                 fuzzy: true,
@@ -199,18 +199,18 @@
 <!---->
 <!--<span>-->
     <!--&lt;!&ndash; Mugshot. &ndash;&gt;-->
-    <!--<img src="https://www.gravatar.com/avatar/63474b61e2a3d5e3316c825d6dc2294a?s=135" alt="A photo of Jürgen Fickel" />-->
+    <!--<img src="https://www.gravatar.com/avatar/90a82dc2af1620df1f955e211ecc4dee?s=135" alt="A photo of Thomas Jäckle" />-->
 
 <!--&lt;!&ndash; Personal Info. &ndash;&gt;-->
-    <!--Written by <a href="https://github.com/jufickel-b" target="_blank">Jürgen Fickel</a>-->
+    <!--Written by <a href="http://twitter.com/thjaeckle" target="_blank">Thomas Jäckle</a>-->
 <!--</span>-->
 <!---->
 
 <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
 
     <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">Introducing Feature Definition</h1>
-        <p class="post-meta">Published by <img src="https://www.gravatar.com/avatar/63474b61e2a3d5e3316c825d6dc2294a?s=135" alt="A photo of Jürgen Fickel" style="width:50px;border-radius:50%;display:inline-block;margin-right:5px;" /><span itemprop="author" itemscope itemtype="http://schema.org/Person"><span itemprop="name"><a href="https://github.com/jufickel-b" target="_blank">Jürgen Fickel</a> </span></span> on <time datetime="2018-02-08T00:00:00-05:00" itemprop="datePublished">Feb 8, 2018</time> - Tags:
+        <h1 class="post-title" itemprop="name headline">Announcing Ditto Milestone 0.8.0-M1</h1>
+        <p class="post-meta">Published by <img src="https://www.gravatar.com/avatar/90a82dc2af1620df1f955e211ecc4dee?s=135" alt="A photo of Thomas Jäckle" style="width:50px;border-radius:50%;display:inline-block;margin-right:5px;" /><span itemprop="author" itemscope itemtype="http://schema.org/Person"><span itemprop="name"><a href="http://twitter.com/thjaeckle" target="_blank">Thomas Jäckle</a> </span></span> on <time datetime="2018-08-14T00:00:00-04:00" itemprop="datePublished">Aug 14, 2018</time> - Tags:
             
             
             
@@ -230,70 +230,36 @@
 
         
 
-        <p>Brace yourselves, <a href="https://eclipse.org/vorto">Eclipse Vorto</a> is going to be integrated with Ditto.</p>
+        <p>Even during the summer break the Ditto team worked hard in order to provide the next milestone release. Here it is: 
+Milestone 0.8.0-M1.</p>
 
-<h2 id="rationale">Rationale</h2>
-<p>By now you most probably represented your devices as <em>things</em> with <em>features</em>. 
-This is indeed the proper way to do it.
-This approach is flexible and easy so far.</p>
+<p>Have a look at the Milestone <a href="release_notes_080-M1.html">0.8.0-M1 release notes</a> for what changed in detail and why
+there was a version bump from 0.3.0-M2 to 0.8.0-M1.</p>
 
-<p>But wouldn’t it be nice to have the possibility of providing an explicit schema for the digital twins of your devices?</p>
+<p>The main changes and new features are</p>
 
-<p>This is where Eclipse Vorto enters the game.
-Vorto enables you to define <em>information models</em> and <em>function blocks</em> which would be mapped to <em>things</em> and <em>features</em> 
-in Ditto.</p>
+<ul>
+  <li>security enhancement by making some of Ditto’s headers not settable from the outside</li>
+  <li>report application metrics to Prometheus</li>
+  <li>automatically form a cluster when running in Kubernetes</li>
+  <li>improvement of Ditto’s <code class="highlighter-rouge">things-service</code> memory consumption</li>
+  <li>stabilization of the connectivity to AMQP 1.0 and 0.9.1</li>
+</ul>
 
-<p>To make a feature aware of a schema we have extended feature by a <em>definition</em>.
-A feature definition is a means of describing the type of a feature, thus enabling the validation the integrity of 
-a feature’s properties.</p>
+<h2 id="artifacts">Artifacts</h2>
 
-<figure><img class="docimage" src="images/pages/basic/ditto-thing-feature-definition-model.png" alt="Feature Definition Model" style="max-width: 250px" /><figcaption>One Thing can have many features. A feature may conform to a *definition*</figcaption></figure>
+<p>The new Java artifacts have been published at the <a href="https://repo.eclipse.org/content/repositories/ditto/">Eclipse Maven repository</a>
+as well as <a href="https://repo1.maven.org/maven2/org/eclipse/ditto/">Maven central</a>.</p>
 
-<p>Technically, a definition is an array of identifier strings each of which having the form
- <code class="highlighter-rouge">&lt;namespace&gt;:&lt;name&gt;:&lt;version&gt;</code>.</p>
-
-<p>A fully-fledged JSON representation of a feature with a definition is shown below:</p>
-
-<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-    </span><span class="s2">"lamp"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"definition"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="s2">"com.mycompany.fb:Lamp:1.0.0"</span><span class="w"> </span><span class="p">],</span><span class="w">
-        </span><span class="s2">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-            </span><span class="s2">"configuration"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                </span><span class="s2">"on"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-                </span><span class="s2">"location"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                    </span><span class="s2">"longitude"</span><span class="p">:</span><span class="w"> </span><span class="mf">34.052235</span><span class="p">,</span><span class="w">
-                    </span><span class="s2">"latitude"</span><span class="p">:</span><span class="w"> </span><span class="mf">-118.243683</span><span class="w">
-                </span><span class="p">}</span><span class="w">
-            </span><span class="p">},</span><span class="w">
-            </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                </span><span class="s2">"on"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
-                </span><span class="s2">"color"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                    </span><span class="s2">"red"</span><span class="p">:</span><span class="w"> </span><span class="mi">128</span><span class="p">,</span><span class="w">
-                    </span><span class="s2">"green"</span><span class="p">:</span><span class="w"> </span><span class="mi">255</span><span class="p">,</span><span class="w">
-                    </span><span class="s2">"blue"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w">
-                </span><span class="p">}</span><span class="w">
-            </span><span class="p">}</span><span class="w">
-        </span><span class="p">}</span><span class="w">
-    </span><span class="p">}</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre></div></div>
-
-<p>For diving deeper into feature definitions, please have a look at <a href="basic-feature.html#feature-definition">Basic concept - Feature Definition</a>.</p>
-
-<h2 id="validation">Validation</h2>
-<div class="alert alert-danger" role="alert"><i class="fa fa-exclamation-circle"></i> <b>Warning:</b> Yet Ditto does not use definition to validate features by itself.</div>
-
-<p>However, nothing can stop you from enforcing types by yourself:</p>
-
-<ol>
-  <li>Use the <a href="http://vorto.eclipse.org/#/generators">Ditto generator</a> to generate JSON schema files from your Vorto
-model(s).</li>
-  <li>Identify the schema files to be used by the Feature definition identifiers.</li>
-  <li>Validate the JSON representation of your feature using the JSON schema before sending it over the wire.</li>
-</ol>
-
-<h2 id="example">Example</h2>
-<p>Please find more information and an example at <a href="basic-feature.html#feature-definition">Basic concept - Feature Definition</a>.</p>
+<p>The Docker images have been pushed to Docker Hub:</p>
+<ul>
+  <li><a href="https://hub.docker.com/r/eclipse/ditto-policies/">eclipse/ditto-policies</a></li>
+  <li><a href="https://hub.docker.com/r/eclipse/ditto-things/">eclipse/ditto-things</a></li>
+  <li><a href="https://hub.docker.com/r/eclipse/ditto-things-search/">eclipse/ditto-things-search</a></li>
+  <li><a href="https://hub.docker.com/r/eclipse/ditto-gateway/">eclipse/ditto-gateway</a></li>
+  <li><a href="https://hub.docker.com/r/eclipse/ditto-connectivity/">eclipse/ditto-connectivity</a></li>
+  <li><a href="https://hub.docker.com/r/eclipse/ditto-concierge/">eclipse/ditto-concierge</a></li>
+</ul>
 
 <p><br />
 <br /></p>
