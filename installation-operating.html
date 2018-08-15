@@ -1048,32 +1048,6 @@ $('#toc').on('click', 'a', function() {
 automatically gathered and published on a HTTP port where it can be scraped from a <a href="https://prometheus.io">Prometheus</a> 
 backend from where the metrics can be accessed to display in dashboards (e.g. with <a href="https://grafana.com">Grafana</a>).</p>
 
-<h3 id="gathered-metrics">Gathered metrics</h3>
-
-<p>// TODO TJ adjust keys</p>
-<ul>
-  <li>JVM metrics: <code class="highlighter-rouge">stats.timers.$Application.$Host.system-metric.*</code>
-    <ul>
-      <li>amount of garbage collections + GC times</li>
-      <li>memory consumption (heap + non-heap)</li>
-      <li>amount of threads + loaded classes</li>
-    </ul>
-  </li>
-  <li>HTTP metrics: <code class="highlighter-rouge">stats.timers.Gateway.$Host.trace.roundtrip_http_*.elapsed-time.mean</code>
-    <ul>
-      <li>roundtrip times from request to response</li>
-      <li>amount of HTTP calls</li>
-      <li>status code of HTTP responses</li>
-    </ul>
-  </li>
-  <li>MongoDB metrics: <code class="highlighter-rouge">stats.gauges.$Application.$Host.akka-persistence-mongo.journal.casbah.*</code>
-    <ul>
-      <li>inserts, updates, reads per second</li>
-      <li>roundtrip times</li>
-    </ul>
-  </li>
-</ul>
-
 <h3 id="configuring">Configuring</h3>
 
 <p>In the default configuration each Ditto service opens a HTTP endpoint where it provides the Prometheus metrics on port
@@ -1084,6 +1058,69 @@ backend from where the metrics can be accessed to display in dashboards (e.g. wi
 <p>Prometheus can then be configured to poll on all Ditto service endpoints in order to persist the historical metrics.
 Grafana can add a Prometheus server as its data source and can display 
 the metrics based on the keys mentioned in section <a href="#gathered-metrics">“Gathered metrics”</a>.</p>
+
+<h3 id="gathered-metrics">Gathered metrics</h3>
+
+<p>In order to inspect which metrics are exported to Prometheus, just visit the Prometheus HTTP endpoint of a Ditto service:
+<code class="highlighter-rouge">http://&lt;container-host-or-ip&gt;:9095/</code>, e.g. for the <a href="architecture-services-gateway.html">gateway-service</a> an excerpt:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#Kamon Metrics
+# TYPE jvm_threads gauge
+jvm_threads{component="system-metrics",measure="total"} 72.0
+# TYPE jvm_memory_buffer_pool_count gauge
+jvm_memory_buffer_pool_count{component="system-metrics",pool="direct"} 14.0
+# TYPE jvm_class_loading gauge
+jvm_class_loading{component="system-metrics",mode="loaded"} 10491.0
+# TYPE jvm_memory_buffer_pool_usage gauge
+jvm_memory_buffer_pool_usage{component="system-metrics",pool="direct",measure="used"} 396336.0
+# TYPE roundtrip_http_seconds histogram
+roundtrip_http_seconds_bucket{le="0.05",ditto_request_path="/api/1/things/x",ditto_request_method="PUT",ditto_statusCode="201",segment="overall"} 1.0
+roundtrip_http_seconds_sum{ditto_request_path="/api/1/things/x",ditto_statusCode="201",ditto_request_method="PUT",segment="overall"} 0.038273024
+roundtrip_http_seconds_bucket{le="0.001",ditto_request_path="/api/1/things/x",ditto_request_method="PUT",ditto_statusCode="204",segment="overall"} 0.0
+roundtrip_http_seconds_bucket{le="0.1",ditto_request_path="/api/1/things/x",ditto_request_method="PUT",ditto_statusCode="204",segment="overall"} 7.0
+roundtrip_http_seconds_sum{ditto_request_path="/api/1/things/x",ditto_statusCode="204",ditto_request_method="PUT",segment="overall"} 0.828899328
+# TYPE jvm_gc_promotion histogram
+jvm_gc_promotion_sum{space="old"} 7315456.0
+# TYPE jvm_gc_seconds histogram
+jvm_gc_seconds_count{component="system-metrics",collector="scavenge"} 9.0
+jvm_gc_seconds_sum{component="system-metrics",collector="scavenge"} 0.063
+# TYPE jvm_memory_bytes histogram
+jvm_memory_bytes_count{component="system-metrics",measure="used",segment="miscellaneous-non-heap-storage"} 54.0
+jvm_memory_bytes_sum{component="system-metrics",measure="used",segment="miscellaneous-non-heap-storage"} 786350080.0
+</code></pre></div></div>
+
+<p>So what Ditto reports in a nutshell:</p>
+
+<ul>
+  <li>JVM metrics for all services
+    <ul>
+      <li>amount of garbage collections + GC times</li>
+      <li>memory consumption (heap + non-heap)</li>
+      <li>amount of threads + loaded classes</li>
+    </ul>
+  </li>
+  <li>HTTP metrics for <a href="architecture-services-gateway.html">gateway-service</a>
+    <ul>
+      <li>roundtrip times from request to response</li>
+      <li>amount of HTTP calls</li>
+      <li>status code of HTTP responses</li>
+    </ul>
+  </li>
+  <li>MongoDB metrics for <a href="architecture-services-things.html">things-service</a>, 
+<a href="architecture-services-policies.html">policies-service</a>, <a href="architecture-services-things-search.html">things-search-service</a>
+    <ul>
+      <li>inserts, updates, reads per second</li>
+      <li>roundtrip times</li>
+    </ul>
+  </li>
+  <li>cache metrics for <a href="architecture-services-concierge.html">concierge-service</a></li>
+  <li>connection metrics for <a href="architecture-services-connectivity.html">connectivity-service</a>
+    <ul>
+      <li>processed messages</li>
+      <li>mapping times</li>
+    </ul>
+  </li>
+</ul>
 
 <h2 id="devops-commands">DevOps commands</h2>
 
@@ -1239,7 +1276,7 @@ the <a href="connectivity-manage-connections.html">Manage Connections</a> sectio
                     </div>
                     <p class="notice">
                         &copy;2018 Eclipse Ditto.
-                         Site last generated: Aug 14, 2018 <br />
+                         Site last generated: Aug 15, 2018 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">
