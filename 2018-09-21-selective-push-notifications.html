@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="">
+<meta name="keywords" content="blogconnectivityrql,  ">
+<title> Selective push notifications available | Eclipse Ditto</title>
+
+<link rel="stylesheet" href="css/syntax.css">
+<link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" crossorigin="anonymous">
+<link rel="stylesheet" href="css/modern-business.css">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" crossorigin="anonymous">
+<link rel="stylesheet" href="css/customstyles.css">
+<link rel="stylesheet" href="css/boxshadowproperties.css">
+<link rel="stylesheet" href="css/theme-ditto.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,700|Source+Code+Pro:300,600|Titillium+Web:400,600,700">
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js" crossorigin="anonymous"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" crossorigin="anonymous"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/anchor-js/2.0.0/anchor.min.js" crossorigin="anonymous"></script>
+<script src="js/toc.js"></script>
+<script src="js/customscripts.js"></script>
+
+<script type="application/ld+json">
+{
+  "@context": "http://schema.org",
+  "@type": "Organization",
+  "url": "https://eclipse.org/ditto/",
+  "logo": "https://eclipse.org/ditto/images/ditto.svg"
+}
+</script>
+
+<link rel="icon" type="image/png" href="images/favicon-16x16.png" sizes="16x16">
+<link rel="icon" type="image/png" href="images/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="images/favicon-96x96.png" sizes="96x96">
+
+<link rel="alternate" type="application/rss+xml" title="Eclipse Ditto Blog" href="https://www.eclipse.org/ditto/feed.xml">
+
+<!-- Eclipse Foundation cookie consent: -->
+<link rel="stylesheet" type="text/css" href="//www.eclipse.org/eclipse.org-common/themes/solstice/public/stylesheets/vendor/cookieconsent/cookieconsent.min.css" />
+<script src="//www.eclipse.org/eclipse.org-common/themes/solstice/public/javascript/vendor/cookieconsent/default.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            $("#tg-sb-link").click(function() {
+                $("#tg-sb-sidebar").toggle();
+                $("#tg-sb-content").toggleClass('col-md-9');
+                $("#tg-sb-content").toggleClass('col-md-12');
+                $("#tg-sb-icon").toggleClass('fa-toggle-on');
+                $("#tg-sb-icon").toggleClass('fa-toggle-off');
+            });
+        });
+    </script>
+</head>
+
+
+<script>
+    (function(w,d,s,l,i){
+        w[l]=w[l]||[];
+        w[l].push({'gtm.start':
+            new Date().getTime(),event:'gtm.js'});
+        var f=d.getElementsByTagName(s)[0],
+            j=d.createElement(s),
+            dl=l!='dataLayer'?'&l='+l:'';
+        j.async=true;
+        j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;
+        f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-5WLCZXC');
+</script>
+
+
+
+<body>
+<!-- Navigation -->
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container topnavlinks">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-ditto-home" href="index.html">&nbsp;<img src="images/ditto_allwhite_symbolonly.svg" class="ditto-navbar-symbol" alt="Home"> <img src="images/ditto_allwhite_textonly.svg" class="ditto-navbar-symbol-text" alt="Ditto"></a>
+        </div>
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <!-- toggle sidebar button -->
+                <!--<li><a id="tg-sb-link" href="#"><i id="tg-sb-icon" class="fa fa-toggle-on"></i> Nav</a></li>-->
+                <!-- entries without drop-downs appear here -->
+
+
+
+
+                
+                
+                
+                <li><a href="blog.html">Blog</a></li>
+                
+                
+                
+                <li><a href="intro-overview.html">Documentation</a></li>
+                
+                
+                
+                <li><a href="http-api-doc.html">HTTP API</a></li>
+                
+                
+                
+                <li><a href="https://ditto.eclipse.org" target="_blank">Sandbox</a></li>
+                
+                
+                
+                <li><a href="https://github.com/eclipse/ditto" target="_blank">GitHub</a></li>
+                
+                
+                
+                <li><a href="https://github.com/eclipse/ditto-examples" target="_blank">GitHub examples</a></li>
+                
+                
+                
+                <!-- entries with drop-downs appear here -->
+                <!-- conditional logic to control which topnav appears for the audience defined in the configuration file.-->
+                
+                
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Links<b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        
+                        
+                        <li><a href="https://projects.eclipse.org/projects/iot.ditto" target="_blank">Eclipse Ditto Project</a></li>
+                        
+                        
+                        
+                        <li><a href="https://www.eclipse.org/forums/index.php/f/364/" target="_blank">Forum</a></li>
+                        
+                        
+                        
+                        <li><a href="https://ci.eclipse.org/ditto/" target="_blank">Jenkins</a></li>
+                        
+                        
+                        
+                        <li><a href="https://dev.eclipse.org/mhonarc/lists/ditto-dev/" target="_blank">Mailing list archives</a></li>
+                        
+                        
+                        
+                        <li><a href="https://gitter.im/eclipse/ditto" target="_blank">Gitter.im chat</a></li>
+                        
+                        
+                    </ul>
+                </li>
+                
+                
+                
+                <!--comment out this block if you want to hide search-->
+                <li>
+                    <!--start search-->
+                    <div id="search-demo-container">
+                        <input type="text" id="search-input" placeholder="search...">
+                        <ul id="results-container"></ul>
+                    </div>
+                    <script src="//cdnjs.cloudflare.com/ajax/libs/simple-jekyll-search/0.0.9/jekyll-search.js" type="text/javascript"></script>
+                    <script type="text/javascript">
+                            SimpleJekyllSearch.init({
+                                searchInput: document.getElementById('search-input'),
+                                resultsContainer: document.getElementById('results-container'),
+                                dataSource: 'search.json',
+                                searchResultTemplate: '<li><a href="{url}" title="Selective push notifications available">{title}</a></li>',
+                                noResultsText: 'No results found.',
+                                limit: 10,
+                                fuzzy: true,
+                    })
+                    </script>
+                    <!--end search-->
+                </li>
+            </ul>
+        </div>
+    </div>
+    <!-- /.container -->
+</nav>
+
+<!-- Page Content -->
+<div class="container">
+  <div id="main">
+    <!-- Content Row -->
+    <div class="row">
+        
+        
+
+        <!-- Content Column -->
+        <div class="col-md-12" id="tg-sb-content">
+            <!-- Look the author details up from the site config. -->
+
+
+<!-- Output author details if some exist. -->
+<!-- Output author details if some exist. -->
+<!---->
+<!--<span>-->
+    <!--&lt;!&ndash; Mugshot. &ndash;&gt;-->
+    <!--<img src="https://www.gravatar.com/avatar/28c28e9af0485368b044ba2aa2852773?s=135" alt="A photo of Philipp Michalski" />-->
+
+<!--&lt;!&ndash; Personal Info. &ndash;&gt;-->
+    <!--Written by <a href="https://github.com/phalski" target="_blank">Philipp Michalski</a>-->
+<!--</span>-->
+<!---->
+
+<article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+    <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">Selective push notifications available</h1>
+        <p class="post-meta">Published by <img src="https://www.gravatar.com/avatar/28c28e9af0485368b044ba2aa2852773?s=135" alt="A photo of Philipp Michalski" style="width:50px;border-radius:50%;display:inline-block;margin-right:5px;" /><span itemprop="author" itemscope itemtype="http://schema.org/Person"><span itemprop="name"><a href="https://github.com/phalski" target="_blank">Philipp Michalski</a> </span></span> on <time datetime="2018-09-21T00:00:00-04:00" itemprop="datePublished">Sep 21, 2018</time> - Tags:
+            
+            
+            
+            <a href="tag_blog.html">blog</a>, 
+            
+            
+            
+            <a href="tag_connectivity.html">connectivity</a>, 
+            
+            
+            
+            <a href="tag_rql.html">rql</a>
+            
+            
+            
+
+        </p>
+
+
+    </header>
+
+    <div class="post-content" itemprop="articleBody">
+
+        
+
+        
+        
+<!-- this handles the automatic toc. use ## for subheads to auto-generate the on-page minitoc. if you use html tags, you must supply an ID for the heading element in order for it to appear in the minitoc. -->
+<script>
+$( document ).ready(function() {
+  // Handler for .ready() called.
+
+$('#toc').toc({ minimumHeaders: 0, listType: 'ul', showSpeed: 0, headers: 'h2,h3,h4' });
+
+/* this offset helps account for the space taken up by the floating toolbar. */
+$('#toc').on('click', 'a', function() {
+  var target = $(this.getAttribute('href'))
+    , scroll_target = target.offset().top
+
+  $(window).scrollTop(scroll_target - 10);
+  return false
+})
+  
+});
+</script>
+
+<div id="toc"></div>
+
+        
+
+        <p>The <a href="architecture-services-connectivity.html">connectivity service</a> supercharged Ditto’s flexibility in integrating with other services.
+It’s such a great feature to let the other connected services know about thing updates and property changes.
+Even the direct exchange with real-world assets became more flexible through the multi-protocol support.
+But with a steady increase in connected devices, those messages easily sum up to a huge number.</p>
+
+<div class="alert alert-info" role="alert"><i class="fa fa-info-circle"></i> <b>Note:</b> In order to simplify a little, we here use the term <code class="highlighter-rouge">message</code> as synonym for both Ditto 
+        <a href="basic-signals.html">signals</a> and <a href="basic-messages.html">messages</a>.</div>
+
+<p>Also, not every consuming application needs to know everything that’s going on.
+In fact, the only use case that requires processing of every message is logging.
+Therefore most of the times an application waits for a specific message to trigger a specific action.
+So all other messages are discarded unused.
+This adds a lot of unnecessary overhead both to the message transport capabilities and the processing of messages at the receiving end.</p>
+
+<p>But what if you could avoid receiving those messages at all.<br />
+Well, you can!<br />
+This is exactly what selective push notifications do: 
+Configurable message filters that are applied to Ditto’s publishing connection before anything goes on the line. 
+They can help you with a lot of problems in a bunch of scenarios:</p>
+
+<ul>
+  <li>Bandwidth limitations: The amount of occurring events is too large and/or frequent to be delivered via the available channels. With selective message filters, you can mute the noise in your event stream.</li>
+  <li>Information hiding: Let consuming services only know what they need to know. Message filters allow you to control all published content in great detail.</li>
+  <li>Specialized notifications: A specific event filter can be used to set a value thresholds or a status-change trigger. This removes the burden of implementing filter logic on the application side.</li>
+  <li>Event routing: Create multiple connections with Ditto’s connectivity service and route your events through those aligned with your requirements. All by specifying appropriate filters for your connection targets.</li>
+</ul>
+
+<p>The following diagram visualizes this context:</p>
+
+<p><img src="images/blog/2018-09-21-selective-push-notifications-visual-comparison.png" alt="visual comparison" /></p>
+
+<p>With the upcoming Ditto release <code class="highlighter-rouge">0.8.0-M2</code>, those filters are available for the following endpoints:</p>
+
+<ul>
+  <li>WebSocket</li>
+  <li>Server-Sent Events (SSE)</li>
+  <li>All supported connectivity protocols (AMQP 0.9.1, AMQP 1.0 / <a href="https://eclipse.org/hono/">Eclipse Hono</a>, MQTT)</li>
+</ul>
+
+<p>You can use a basic namespace filter on the following topics:</p>
+
+<ul>
+  <li>Twin events</li>
+  <li>Live events</li>
+  <li>Live messages</li>
+  <li>Live commands</li>
+</ul>
+
+<p>This filter is a comma-separated list of selected namespaces. It only allows messages related to one of the given namespaces.</p>
+
+<p>Furthermore, there is an additional <a href="basic-rql.html">RQL filter</a> for an advanced description of twin and live events.
+Powered by the mighty syntax of Ditto’s search API it allows configuring the selected events in the same manner as you search for things.</p>
+
+<p>Check out the <a href="basic-changenotifications.html#filtering">documentation</a> for more information on options and configuration.</p>
+
+<h2 id="a-simple-example">A simple example</h2>
+
+<p>Imagine you have a flat with multiple environmental sensors: Some measure temperature, some humidity and some both.
+This information can be useful for different applications.
+In our case, a smart thermostat uses the sensor data to control the indoor climate and there is also a fire alarm installed that detects fires by abnormal high measured temperatures</p>
+
+<p>The following figure displays this setting:</p>
+
+<p><img src="images/blog/2018-09-21-selective-push-notifications-example-setup.png" alt="example setup" /></p>
+
+<p>So let’s start with the prerequisites. You need:</p>
+
+<ul>
+  <li>A running Ditto instance with a valid user (You can follow our <a href="intro-hello-world.html">Hello World example</a> to create one). This example uses dittos default user on a locally running instance.</li>
+  <li>A tool for executing HTTP requests (e.g. Ditto’s Swagger API, cURL, Postman). We use this to create our twins and simulate the sensors.</li>
+  <li>A modern browser supporting WebSockets. This example uses <a href="https://websocket.org/echo.html">websocket.org</a> as a websocket client. The site will tell you if your browser supports the WebSocket protocol. We will mock our applications this way.</li>
+</ul>
+
+<h3 id="the-digital-twins">The digital twins</h3>
+
+<p>First we configure our sensors digital twins:</p>
+
+<p>A temperature sensor</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">-X</span> PUT <span class="nt">-u</span> <span class="s1">'ditto:ditto'</span> <span class="nt">--header</span> <span class="s1">'Content-Type: application/json'</span> <span class="nt">-d</span> <span class="se">\</span>
+    <span class="s1">'{
+       "features": {
+         "environmentSensor": {
+           "properties": { 
+             "temperature": 0.0
+           }
+         }
+       }
+     }'</span> <span class="se">\</span>
+    <span class="s1">'http://localhost:8080/api/2/things/org.eclipse.ditto%3ATemperatureSensor'</span>
+</code></pre></div></div>
+
+<p>A humidity sensor</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">-X</span> PUT <span class="nt">-u</span> <span class="s1">'ditto:ditto'</span> <span class="nt">--header</span> <span class="s1">'Content-Type: application/json'</span> <span class="nt">-d</span> <span class="se">\</span>
+    <span class="s1">'{
+       "features": {
+         "environmentSensor": {
+           "properties": { 
+             "humidity": 0
+           }
+         }
+       }
+     }'</span> <span class="se">\</span>
+    <span class="s1">'http://localhost:8080/api/2/things/org.eclipse.ditto%3AHumiditySensor'</span>
+</code></pre></div></div>
+
+<p>A combined temperature and humidity sensor</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">-X</span> PUT <span class="nt">-u</span> <span class="s1">'ditto:ditto'</span> <span class="nt">--header</span> <span class="s1">'Content-Type: application/json'</span> <span class="nt">-d</span> <span class="se">\</span>
+    <span class="s1">'{
+       "features": {
+         "environmentSensor": {
+           "properties": {
+             "temperature": 0.0,
+             "humidity": 0
+           }
+         }
+       }
+     }'</span> <span class="se">\</span>
+    <span class="s1">'http://localhost:8080/api/2/things/org.eclipse.ditto%3ATemperatureAndHumiditySensor'</span>
+</code></pre></div></div>
+
+<p>And finally, a teapot</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">-X</span> PUT <span class="nt">-u</span> <span class="s1">'ditto:ditto'</span> <span class="nt">--header</span> <span class="s1">'Content-Type: application/json'</span> <span class="nt">-d</span> <span class="se">\</span>
+    <span class="s1">'{}'</span> <span class="se">\</span>
+    <span class="s1">'http://localhost:8080/api/2/things/org.eclipse.ditto%3ATeapot'</span>
+</code></pre></div></div>
+
+<h3 id="mocking-the-consuming-applications">Mocking the consuming applications</h3>
+
+<p>Open your browser on https://websocket.org/echo.html. 
+This site allows you to connect with any WebSocket endpoint and supports simple sending and receiving of messages. The interface is shown below:</p>
+
+<p><img src="images/blog/2018-09-21-selective-push-notifications-websocket_org.png" alt="websocket.org site" /></p>
+
+<p>Enter Ditto’s WebSocket endpoint with user credentials <code class="highlighter-rouge">ws://ditto:ditto@localhost:8080/ws/2</code> and hit the <em>Connect</em> button.
+The log output should confirm the action by printing a simple <code class="highlighter-rouge">CONNECTED</code>.</p>
+
+<p>This means the socket is open and you’re able to receive messages from Ditto.
+But first, you should let Ditto know in what kind of messages you’re interested.
+This interest differs for both of the example applications:</p>
+
+<p>The thermostat app only needs to know every humidity and temperature report so you can define a filter for change events on twins having those properties:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>START-SEND-EVENTS?filter=or(exists(features/environmentSensor/properties/temperature),exists(features/environmentSensor/properties/humidity))
+</code></pre></div></div>
+
+<p>Paste it into the <em>Message</em> input and use the <em>Send</em> button to post it. Ditto should acknowledge with a <code class="highlighter-rouge">START-SEND-EVENTS:ACK</code>.</p>
+
+<p>That’s it for our thermostat app, let’s proceed to the fire alarm.
+Open https://websocket.org/echo.html again in a separate tab and repeat the connection process.
+But instead of consuming all temperature and humidity reports, we only want to be notified when a specific temperature threshold is exceeded.
+90°C seems to be a solid value for this:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>START-SEND-EVENTS?filter=gt(features/environmentSensor/properties/temperature,90)
+</code></pre></div></div>
+
+<p>After receiving Ditto’s acknowledgment, you’re done with the configuration.</p>
+
+<h3 id="report-mocked-sensor-values-to-ditto">Report mocked sensor values to Ditto</h3>
+
+<p>Use Ditto’s HTTP API to send mocked data on behalf of our sensors. First report a new humidity value for the humidity sensor:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">-X</span> PUT <span class="nt">-u</span> <span class="s1">'ditto:ditto'</span> <span class="nt">--header</span> <span class="s1">'Content-Type: application/json'</span> <span class="nt">-d</span> <span class="se">\</span>
+    <span class="s1">'55'</span> <span class="se">\</span>
+    <span class="s1">'http://localhost:8080/api/2/things/org.eclipse.ditto%3AHumiditySensor/features/environmentSensor/properties/humidity'</span>
+</code></pre></div></div>
+
+<p>Now check both websocket.org tabs. The thermostat tab should have received an event with the reported value while nothing happened in the alarm tab.</p>
+
+<p>Continue with some temperature data from another sensor:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">-X</span> PUT <span class="nt">-u</span> <span class="s1">'ditto:ditto'</span> <span class="nt">--header</span> <span class="s1">'Content-Type: application/json'</span> <span class="nt">-d</span> <span class="se">\</span>
+    <span class="s1">'23'</span> <span class="se">\</span>
+    <span class="s1">'http://localhost:8080/api/2/things/org.eclipse.ditto%3ATemperatureAndHumiditySensor/features/environmentSensor/properties/temperature'</span>
+</code></pre></div></div>
+<p>The value change should be reported to the thermostat, but still no events for the alarm tab.</p>
+
+<p>Finally it’s time to start a fire. Report a very high temperature for the third sensor:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">-X</span> PUT <span class="nt">-u</span> <span class="s1">'ditto:ditto'</span> <span class="nt">--header</span> <span class="s1">'Content-Type: application/json'</span> <span class="nt">-d</span> <span class="se">\</span>
+    <span class="s1">'120'</span> <span class="se">\</span>
+    <span class="s1">'http://localhost:8080/api/2/things/org.eclipse.ditto%3ATemperatureSensor/features/environmentSensor/properties/temperature'</span>
+</code></pre></div></div>
+
+<p>Now both applications should have received the reported data, and the fire alarm can use this event to (virtually) trigger its bell.</p>
+
+<p>But what about the teapot? Let him declare his identity by setting a personal message:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">-X</span> PUT <span class="nt">-u</span> <span class="s1">'ditto:ditto'</span> <span class="nt">--header</span> <span class="s1">'Content-Type: application/json'</span> <span class="nt">-d</span> <span class="se">\</span>
+    <span class="s1">'{
+       "properties": {
+         "message": "I'</span><span class="se">\'</span><span class="s1">'m a teapot"
+       }
+     }'</span> <span class="se">\</span>
+    <span class="s1">'http://localhost:8080/api/2/things/org.eclipse.ditto%3ATeapot/features/status'</span>
+</code></pre></div></div>
+
+<p>Unfortunately, no one cares and this no one is notified about that change.</p>
+
+<p><br />
+We do hope that <strong>you</strong> care about this feature, we think it’s really awesome.
+<br /></p>
+<figure><img class="docimage" src="images/ditto.svg" alt="Ditto" style="max-width: 500px" /></figure>
+
+<p>–<br />
+The Eclipse Ditto team</p>
+
+
+    </div>
+
+
+
+</article>
+
+<hr class="shaded"/>
+
+<footer>
+            <div class="row">
+                <div class="col-lg-12 footer">
+                    <div class="logo">
+                        <a href="https://eclipse.org"><img src="images/eclipse_foundation_logo.svg" alt="Eclipse logo"/></a>
+                    </div>
+                    <p class="notice">
+                        &copy;2018 Eclipse Ditto.
+                         Site last generated: Sep 21, 2018 <br />
+                    </p>
+                    <div class="quickLinks">
+                        <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">
+                            &gt; Privacy Policy
+                        </a>
+                        <a href="https://www.eclipse.org/legal/termsofuse.php" target="_blank">
+                            &gt; Terms of Use
+                        </a>
+                        <a href="https://www.eclipse.org/legal/copyright.php" target="_blank">
+                            &gt; Copyright Agent
+                        </a>
+                        <a href="https://www.eclipse.org/legal" target="_blank">
+                            &gt; Legal
+                        </a>
+                        <a href="https://www.eclipse.org/legal/epl-2.0/" target="_blank">
+                            &gt; License
+                        </a>
+                        <a href="https://eclipse.org/security" target="_blank">
+                            &gt; Report a Vulnerability
+                        </a>
+                    </div>
+                </div>
+            </div>
+</footer>
+
+
+        </div>
+    <!-- /.row -->
+</div>
+<!-- /.container -->
+</div>
+<!-- /#main -->
+    </div>
+
+</body>
+</html>

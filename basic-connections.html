@@ -326,7 +326,7 @@
               
               
               <li class="subfolders">
-                  <a href="#"><span></span>Model entites</a>
+                  <a href="#"><span></span>Model entities</a>
                   <ul>
                       
                       
@@ -430,6 +430,13 @@
               
               
               <li><a href="basic-changenotifications.html">Change notifications</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="basic-rql.html">RQL expressions</a></li>
               
               
               
@@ -605,7 +612,21 @@
               
               
               
+              <li><a href="connectivity-protocol-bindings-mqtt.html">MQTT 3.1.1 protocol binding</a></li>
+              
+              
+              
+              
+              
+              
               <li><a href="connectivity-mapping.html">Payload mapping</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="connectivity-tls-certificates.html">TLS certificates</a></li>
               
               
               
@@ -1026,8 +1047,9 @@ $('#toc').on('click', 'a', function() {
 
   <h2 id="connection-model">Connection model</h2>
 
-<div class="alert alert-info" role="alert"><i class="fa fa-info-circle"></i> <b>Note:</b> To get started with connections right away, consult the [Manage connections]
-    (connectivity-manage-connections.html) page. </div>
+<div class="alert alert-info" role="alert"><i class="fa fa-info-circle"></i> <b>Note:</b> To get started with connections right away, consult the
+    <a href="connectivity-manage-connections.html">Manage connections</a>
+    page. </div>
 
 <p>You can integrate your Ditto instance with external messaging services such as 
 <a href="https://eclipse.org/hono/">Eclipse Hono</a> or a <a href="https://www.rabbitmq.com/">RabbitMQ</a> broker via custom “connections”.</p>
@@ -1050,6 +1072,7 @@ for custom payload formats. Currently the following connection types are support
 <ul>
   <li><a href="connectivity-protocol-bindings-amqp091.html">AMQP 0.9.1</a></li>
   <li><a href="connectivity-protocol-bindings-amqp10.html">AMQP 1.0</a></li>
+  <li><a href="connectivity-protocol-bindings-mqtt.html">MQTT 3.1.1</a></li>
 </ul>
 
 <p>The <code class="highlighter-rouge">sources</code> and <code class="highlighter-rouge">targets</code> identifier format depends on the <code class="highlighter-rouge">connectionType</code> and has therefore <code class="highlighter-rouge">connectionType</code> 
@@ -1057,8 +1080,8 @@ specific limitations. Those are documented with the corresponding protocol bindi
 
 <p>A connection is initiated by the connectivity service. This obviates the need for client authorization, because
 Ditto becomes the client in this case. Nevertheless, to access resources within Ditto, the connection must know on 
-whose behalf it is acting. This is controlled via the configured <code class="highlighter-rouge">authorisationContext</code>, which holds a list of
-self-assigned authorization subjects. Before a connection can access a Ditto resource, one of its
+whose behalf it is acting. This is controlled via the configured <code class="highlighter-rouge">authorizationContext</code>, which holds a list of
+self-assigned authorization subjects. Before a connection can access a Ditto resource, one of its 
 <code class="highlighter-rouge">authorizationSubject</code>s must be granted the access rights by an authorization mechanism such as
 <a href="basic-acl.html">ACLs</a> or <a href="basic-policy.html">Policies</a>.</p>
 
@@ -1073,17 +1096,18 @@ over how messages are consumed or where they are published to. The general synta
 
 <h3 id="placeholder-for-source-authorization-subjects">Placeholder for source authorization subjects</h3>
 <p>Processing the messages received via a source using the <em>same fixed authorization subject</em> may not be 
-suitable for every scenario. For example you want to declare fine-grained write permissions per device which would not 
-be possible with a fixed global subject. For this use case we introduced placeholder substitution for authorization subjects of 
-source addresses that are resolved when processing messages from a source. Of course this requires the sender of the 
+suitable for every scenario. For example, if you want to declare fine-grained write permissions per device, this would not 
+be possible with a fixed global subject. For this use case we have introduced placeholder substitution for authorization subjects of 
+source addresses that are resolved when processing messages from a source. Of course, this requires the sender of the 
 message to provide necessary information about the original issuer of the message.</p>
 
 <div class="alert alert-warning" role="alert"><i class="fa fa-warning"></i> <b>Important:</b> Only use this kind of placeholder if you trust the source of the message. The value from the header is used as the <strong>authorized subject</strong>.</div>
 
 <p>You can access any header value of the incoming message by using a placeholder like <code class="highlighter-rouge">{{ header:name }}</code>.</p>
 
-<p>Example:
-Assuming the messages received from the source <em>telemetry</em> contain a <code class="highlighter-rouge">device_id</code> header (e.g. <em>sensor-123</em>), 
+<p>Example:</p>
+
+<p>Assuming the messages received from the source <em>telemetry</em> contain a <code class="highlighter-rouge">device_id</code> header (e.g. <em>sensor-123</em>), 
 you may configure your source’s authorization subject as follows:</p>
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="w">   </span><span class="p">{</span><span class="w">
       </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"auth-subject-placeholder-example"</span><span class="p">,</span><span class="w">
@@ -1101,7 +1125,7 @@ In case the header cannot be resolved or the header contains unexpected characte
 back to the sender as an error message, if a valid <em>reply-to</em> header was provided, otherwise the message is dropped.</p>
 
 <h3 id="placeholder-for-target-addresses">Placeholder for target addresses</h3>
-<p>Another use case for placeholders may be to publish thing events or live commands and events to a target address 
+<p>Another use case for placeholders may be to publish Thing events or live commands and events to a target address 
 containing Thing-specific information e.g. you can distribute Things from different namespaces to different target addresses.
 You can use the placeholders <code class="highlighter-rouge">{{ thing:id }}</code>, <code class="highlighter-rouge">{{ thing:namespace }}</code> and <code class="highlighter-rouge">{{ thing:name }}</code> in the target address for this purpose.
 For a Thing with the ID <em>org.eclipse.ditto:device-123</em> these placeholders are resolved as follows:</p>
@@ -1117,7 +1141,7 @@ For a Thing with the ID <em>org.eclipse.ditto:device-123</em> these placeholders
   <tbody>
     <tr>
       <td><code class="highlighter-rouge">thing:id</code></td>
-      <td>Full ID composed of <em>namespace</em> + <em>:</em> as a separator + <em>name</em></td>
+      <td>Full ID composed of <em>namespace</em>  <code class="highlighter-rouge">:</code> (as a separator), and <em>name</em></td>
       <td>org.eclipse.ditto:device-123</td>
     </tr>
     <tr>
@@ -1133,8 +1157,9 @@ For a Thing with the ID <em>org.eclipse.ditto:device-123</em> these placeholders
   </tbody>
 </table>
 
-<p>Example:
-Sending live commands and events to a target address that contains the Things’ namespace.</p>
+<p>Example:</p>
+
+<p>Sending live commands and events to a target address that contains the Things’ namespace.</p>
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="w">   </span><span class="p">{</span><span class="w">
       </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"target-placeholder-example"</span><span class="p">,</span><span class="w">
       </span><span class="s2">"targets"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
@@ -1173,7 +1198,7 @@ Sending live commands and events to a target address that contains the Things’
                     </div>
                     <p class="notice">
                         &copy;2018 Eclipse Ditto.
-                         Site last generated: Aug 22, 2018 <br />
+                         Site last generated: Sep 21, 2018 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

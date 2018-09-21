@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="">
-<meta name="keywords" content="http,  http, api, sse, EventSource">
+<meta name="keywords" content="httprql,  http, api, sse, EventSource">
 <title> HTTP API server sent events (SSE) | Eclipse Ditto</title>
 
 <link rel="stylesheet" href="css/syntax.css">
@@ -326,7 +326,7 @@
               
               
               <li class="subfolders">
-                  <a href="#"><span></span>Model entites</a>
+                  <a href="#"><span></span>Model entities</a>
                   <ul>
                       
                       
@@ -430,6 +430,13 @@
               
               
               <li><a href="basic-changenotifications.html">Change notifications</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="basic-rql.html">RQL expressions</a></li>
               
               
               
@@ -605,7 +612,21 @@
               
               
               
+              <li><a href="connectivity-protocol-bindings-mqtt.html">MQTT 3.1.1 protocol binding</a></li>
+              
+              
+              
+              
+              
+              
               <li><a href="connectivity-mapping.html">Payload mapping</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="connectivity-tls-certificates.html">TLS certificates</a></li>
               
               
               
@@ -1063,22 +1084,49 @@ has READ permissions (see <a href="basic-auth.html#authorization">authorization<
 
 <p>For partial updates to a <code class="highlighter-rouge">Thing</code> however, only the changed part is sent back via the SSE, not the complete <code class="highlighter-rouge">Thing</code>.</p>
 
-<h3 id="only-get-notified-about-changes-of-specific-things">Only get notified about changes of specific Things</h3>
+<h3 id="only-get-notified-about-certain-changes">Only get notified about certain changes</h3>
+
+<p>In order to apply a server side filtering of which Server-Sent Events should be emitted to a consumer, Ditto provides
+several possibilities listed in the sections below.</p>
+
+<p>All of the query parameters below can be combined, so that you can for example formulate that only events from a certain
+namespace with a specific RQL expression should be emitted which could look like:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http://localhost:8080/api/&lt;1|2&gt;/things?namespaces=org.eclipse.ditto.one,org.eclipse.test&amp;filter=gt
+(attributes/counter,42)
+</code></pre></div></div>
+
+<h4 id="specify-the-thing-ids">Specify the Thing IDs</h4>
 
 <p>When the <code class="highlighter-rouge">/things</code> endpoint is used for connecting to the SSE stream, all for the authenticated user visible <code class="highlighter-rouge">Things</code> are
 included in the stream. If only specific <code class="highlighter-rouge">Things</code> should be watched, the query parameter <code class="highlighter-rouge">ids</code> can be added:</p>
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http://localhost:8080/api/&lt;1|2&gt;/things?ids=&lt;thingId1&gt;,&lt;thingId2&gt;
 </code></pre></div></div>
 
-<h3 id="only-get-notified-about-certain-changes">Only get notified about certain changes</h3>
+<h4 id="fields-projection">Fields projection</h4>
 
-<p>Additionally using the <code class="highlighter-rouge">fields</code> paramter of the <a href="httpapi-concepts.html#partial-requests">partial request</a> feature, only
-specific parts can be watched for changes:</p>
+<p>Additionally using the <code class="highlighter-rouge">fields</code> parameter of the <a href="httpapi-concepts.html#partial-requests">partial request</a> feature, only
+specific parts can be watched for changes, e.g.:</p>
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http://localhost:8080/api/&lt;1|2&gt;/things?fields=thingId,attributes
 </code></pre></div></div>
 
 <div class="alert alert-success" role="alert"><i class="fa fa-check-square-o"></i> <b>Tip:</b> The <code class="highlighter-rouge">thingId</code> should always be included in the <code class="highlighter-rouge">fields</code> query, otherwise it is no longer
     reproducible, for which Thing the change was made.</div>
+
+<h4 id="filtering-by-namespaces">Filtering by namespaces</h4>
+
+<p>As described in <a href="basic-changenotifications.html#by-namespaces">change notifications</a>, it is possible to only subscribe
+for changes done in certain namespaces. At the SSE API, simply specify the <code class="highlighter-rouge">namespaces</code> parameter and provide a comma
+separated list of which namespaces to select, e.g.:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http://localhost:8080/api/&lt;1|2&gt;/things?namespaces=org.eclipse.ditto.one,org.eclipse.test
+</code></pre></div></div>
+
+<h4 id="filtering-by-rql-expression">Filtering by RQL expression</h4>
+
+<p>As also described in <a href="basic-changenotifications.html#by-rql-expression">change notifications</a>, it is additionally possible
+to specify an RQL expression expressing on which occasions to emit an event via the SSE API. Simply specify the <code class="highlighter-rouge">filter</code>
+parameter with an <a href="basic-rql.html">RQL expression</a>, e.g.:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http://localhost:8080/api/&lt;1|2&gt;/things?filter=gt(attributes/counter,42)
+</code></pre></div></div>
 
 <h3 id="example-for-sse-on-things">Example for SSE on Things</h3>
 
@@ -1151,6 +1199,10 @@ payload: true
         
         
         
+        <a href="tag_rql.html" class="btn btn-default navbar-btn cursorNorm" role="button">rql</a>
+        
+        
+        
     </div>
 
 </div>
@@ -1165,7 +1217,7 @@ payload: true
                     </div>
                     <p class="notice">
                         &copy;2018 Eclipse Ditto.
-                         Site last generated: Aug 22, 2018 <br />
+                         Site last generated: Sep 21, 2018 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

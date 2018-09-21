@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="">
-<meta name="keywords" content="search,  search, things-search, rql, query">
+<meta name="keywords" content="searchrql,  search, things-search, rql, query">
 <title> Search | Eclipse Ditto</title>
 
 <link rel="stylesheet" href="css/syntax.css">
@@ -326,7 +326,7 @@
               
               
               <li class="subfolders">
-                  <a href="#"><span></span>Model entites</a>
+                  <a href="#"><span></span>Model entities</a>
                   <ul>
                       
                       
@@ -430,6 +430,13 @@
               
               
               <li><a href="basic-changenotifications.html">Change notifications</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="basic-rql.html">RQL expressions</a></li>
               
               
               
@@ -605,7 +612,21 @@
               
               
               
+              <li><a href="connectivity-protocol-bindings-mqtt.html">MQTT 3.1.1 protocol binding</a></li>
+              
+              
+              
+              
+              
+              
               <li><a href="connectivity-mapping.html">Payload mapping</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="connectivity-tls-certificates.html">TLS certificates</a></li>
               
               
               
@@ -1049,253 +1070,22 @@ Paging:     limit(0,5)
 
 <h2 id="search-count-queries">Search count queries</h2>
 
-<p>The same syntax applies for search count queries - only the <a href="#rql-sorting">sorting</a> and <a href="#rql-paging">paging</a> makes no 
+<p>The same syntax applies for search count queries - only the <a href="basic-rql.html#rql-sorting">sorting</a> and <a href="#rql-paging">paging</a> makes no 
 sense here, so there are not necessary to specify.</p>
+
+<h2 id="namespaces">Namespaces</h2>
+
+<p>The Search supports specifying in which <code class="highlighter-rouge">namespaces</code> it should be searched. This may significantly improve the search 
+performance when many Things of different namespaces are managed in Ditto’s search index.</p>
 
 <h2 id="rql">RQL</h2>
 
-<p>Ditto utilizes a subset of <a href="#" data-toggle="tooltip" data-original-title="Resource Query Language">RQL</a> 
-as language for specifying queries.</p>
-
-<p>The <a href="https://github.com/persvr/rql">RQL project page</a> says about it:</p>
-
-<blockquote>
-  <p>Resource Query Language (RQL) is a query language designed for use in URIs with object style data structures. […]<br />
-RQL can be thought as basically a set of nestable named operators which each have a set of arguments. 
-RQL is designed to have an extremely simple, but extensible grammar that can be written in a URL friendly query string.</p>
-</blockquote>
-
-<p>An example helps more than a thousand words, so that would be the example of a simple RQL query querying for <code class="highlighter-rouge">foo="ditto"</code> and <code class="highlighter-rouge">bar&lt;10</code>:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>and(eq(foo,"ditto"),lt(bar,10))
-</code></pre></div></div>
-
-<p>That query consists of one <a href="#logical-operators">logical operator </a> <a href="#and">“and”</a>,
-two <a href="#relational-operators">relational operators</a> of which each consists of a <a href="#query-property">property</a>
-and a <a href="#query-value">value</a>.</p>
-
-<p>The following sections describe what the RQL syntax is capable of.</p>
-
-<h2 id="rql-filter">RQL filter</h2>
-
-<p>The RQL filter specifies “what” to search.</p>
-
-<h3 id="query-property">Query property</h3>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;property&gt; = url-encoded-string
-</code></pre></div></div>
-
-<p>To search for nested properties, we use JSON Pointer notation (<a href="http://www.rfc-base.org/rfc-6901.html">RFC-6901</a>).</p>
-
-<p>The following example shows how to search for the sub property location of the parent property attributes with a forward slash as separator:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>eq(attributes/location,"kitchen")
-</code></pre></div></div>
-
-<h3 id="query-value">Query value</h3>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;value&gt; = &lt;number&gt;, &lt;string&gt;, true, false, null
-&lt;number&gt; = double, integer
-&lt;string&gt; = ", url-encoded-string, "
-</code></pre></div></div>
-
-<p><strong>Comparison of string values</strong></p>
-
-<div class="alert alert-info" role="alert"><i class="fa fa-info-circle"></i> <b>Note:</b> Comparison operators such as <code class="highlighter-rouge">gt</code>, <code class="highlighter-rouge">ge</code>, <code class="highlighter-rouge">lt</code> and <code class="highlighter-rouge">le</code>, do not support a special 
-    “semantics” of string comparison (e.g. regarding alphabetical or lexicographical ordering).<br />
-    However, you can rely on the alphabetical sorting of strings with the same length (e.g. “aaa” &lt; “zzz”) and that the 
-    order stays the same over multiple/different search requests.</div>
-
-<p><strong>Comparison of other data types</strong></p>
-
-<div class="alert alert-info" role="alert"><i class="fa fa-info-circle"></i> <b>Note:</b> Please note that the comparison of other data types is is supported by the API, but it 
-    only supports comparison of same data types, and does not do any conversion during comparison.</div>
-
-<h3 id="relational-operators">Relational operators</h3>
-
-<p>The following relational operators are supported.</p>
-
-<h4 id="eq">eq</h4>
-<p>Search for property values equal to <code class="highlighter-rouge">&lt;value&gt;</code>.</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>eq(&lt;property&gt;,&lt;value&gt;)
-</code></pre></div></div>
-
-<p><strong>Example - search for things owned by “SID123”</strong></p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>eq(attributes/owner,"SID123")
-</code></pre></div></div>
-
-<h4 id="ne">ne</h4>
-<p>Search for property values not equal to <code class="highlighter-rouge">&lt;value&gt;</code>.</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ne(&lt;property&gt;,&lt;value&gt;)
-</code></pre></div></div>
-
-<p><strong>Example - search for things with owner different than “SID123”</strong></p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ne(attributes/owner,"SID123")
-</code></pre></div></div>
-
-<p>The response will contain only things which <strong>do</strong> provide an owner attribute (in this case with value 0 or not SID123).</p>
-
-<h4 id="gt">gt</h4>
-<p>Search for property values greater than a <code class="highlighter-rouge">&lt;value&gt;</code>.</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gt(&lt;property&gt;,&lt;value&gt;) 
-</code></pre></div></div>
-
-<p><strong>Example - search for things with thing ID greater than “A000”</strong></p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gt(thingId,"A000")
-</code></pre></div></div>
-
-<h4 id="ge">ge</h4>
-<p>Search for property values greater than or equal to a <code class="highlighter-rouge">&lt;value&gt;</code>.</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ge(&lt;property&gt;,&lt;value&gt;) 
-</code></pre></div></div>
-
-<p><strong>Example - search for things with thing ID “A000” or greater</strong></p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ge(thingId,"A000")
-</code></pre></div></div>
-
-<h4 id="lt">lt</h4>
-<p>Search for property values less than a <code class="highlighter-rouge">&lt;value&gt;</code>.</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>lt(&lt;property&gt;,&lt;value&gt;) 
-</code></pre></div></div>
-
-<p><strong>Example - search for things with thing ID lower than “A000”</strong></p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>lt(thingId,"A000")
-</code></pre></div></div>
-
-<h4 id="le">le</h4>
-<p>Search for property values less than or equal to a <code class="highlighter-rouge">&lt;value&gt;</code>.</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>le(&lt;property&gt;,&lt;value&gt;) 
-</code></pre></div></div>
-
-<p><strong>Example - search for things with thing ID “A000” or lower</strong></p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>le(thingId,"A000")
-</code></pre></div></div>
-
-<h4 id="in">in</h4>
-<p>Search for property values which contains at least one of the listed <code class="highlighter-rouge">&lt;value&gt;</code>s.</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>in(&lt;property&gt;,&lt;value&gt;,&lt;value&gt;, ...) 
-</code></pre></div></div>
-
-<p><strong>Example - search for things with thing ID “A000” or “AB00” or “AZ99”</strong></p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>in(thingId,"A000","AB00","AZ99")
-</code></pre></div></div>
-
-<h4 id="like">like</h4>
-<p>Search for property values which are like (similar) a <code class="highlighter-rouge">&lt;value&gt;</code>.</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>like(&lt;property&gt;,&lt;value&gt;) 
-</code></pre></div></div>
-
-<p><strong>Details concerning the like-operator</strong></p>
-
-<p>The <code class="highlighter-rouge">like</code> operator provides some regular expression capabilities for pattern matching Strings.<br />
-The following expressions are supported:</p>
-<ul>
-  <li>*endswith =&gt; match at the end of a specific String.</li>
-  <li>startswith* =&gt; match at the beginning of a specific String.</li>
-  <li>*contains* =&gt; match if contains a specific String.</li>
-  <li>Th?ng =&gt; match for a wildcard character.</li>
-</ul>
-
-<p><strong>Examples</strong></p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>like(attributes/key1,"*known-chars-at-end")
-
-like(attributes/key1,"known-chars-at-start*") 
-
-like(attributes/key1,"*known-chars-in-between*") 
-
-like(attributes/key1,"just-som?-char?-unkn?wn")
-</code></pre></div></div>
-
-<h4 id="exists">exists</h4>
-<p>Search for property values which exist.</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>exists(&lt;property&gt;)
-</code></pre></div></div>
-
-<p><strong>Example - search for things which have a feature with ID “feature_1”</strong></p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>exists(features/feature_1)
-</code></pre></div></div>
-
-<p><strong>Example - search for lamps which are located in the “living-room”</strong></p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>and(exists(features/lamp),eq(attributes/location,"living-room"))
-</code></pre></div></div>
-
-<h3 id="logical-operators">Logical operators</h3>
-
-<h4 id="and">and</h4>
-<p>Ensure that all given queries match.</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>and(&lt;query&gt;,&lt;query&gt;, ...)
-</code></pre></div></div>
-
-<p><strong>Example - search for things which are located on the “upper floor” in the “living-room”</strong></p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>and(eq(attributes/floor,"upper floor"),eq(attributes/location,"living-room"))
-</code></pre></div></div>
-
-<p><strong>Example - search for lamps which have a on value of true</strong></p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>and(eq(features/lamp/properties/on,true))
-</code></pre></div></div>
-
-<p><strong>Example - search for lamps which have a color “blue”</strong></p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>and(eq(features/lamp/properties/color,"blue"))
-</code></pre></div></div>
-
-<h4 id="or">or</h4>
-<p>At least one of the given queries match.</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>or(&lt;query&gt;,&lt;query&gt;, ...)
-</code></pre></div></div>
-
-<p><strong>Example - search for all things located on the “upper floor”, and all things with location “living-room”</strong></p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>or(eq(attributes/floor,"upper floor"),eq(attributes/location,"living-room"))
-</code></pre></div></div>
-
-<h2 id="rql-sorting">RQL sorting</h2>
-
-<p>The RQL sorting part specifies in which order the result should be returned.</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sort(&lt;+|-&gt;&lt;property&gt;,&lt;+|-&gt;&lt;property&gt;,...)
-</code></pre></div></div>
-
-<ul>
-  <li>Use <strong>+</strong> for an ascending sort order (URL encoded character <strong>%2B</strong>)</li>
-  <li>Use <strong>-</strong> for a descending sort order (URL encoded character <strong>%2D</strong>)</li>
-</ul>
-
-<p><strong>Example - sort the list ascending by the thing ID</strong></p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sort(+thingId)
-</code></pre></div></div>
-
-<p><strong>Example - sort the list ascending by an attribute</strong></p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sort(+attributes/location)
-</code></pre></div></div>
-
-<p><strong>Example - multiple sort options</strong></p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sort(-attributes/location,+thingId)
-</code></pre></div></div>
-
-<p>This expression will sort the list descending by location attribute.<br />
-In case there are multiple things with the same location attribute, these are sorted ascending by their ID.</p>
-
-<h3 id="sorting-of-string-values">Sorting of string values</h3>
-
-<div class="alert alert-info" role="alert"><i class="fa fa-info-circle"></i> <b>Note:</b> Sorting does not support a special “semantics” of string comparison (e.g. regarding 
-    alphabetical or lexicographical ordering). However, you can rely on the alphabetical sorting of strings with the 
-    same length (e.g. “aaa” &lt; “zzz”) and that the order stays the same over multiple/different search requests.</div>
-
-<h3 id="sorting-of-other-values">Sorting of other values</h3>
-
-<div class="alert alert-info" role="alert"><i class="fa fa-info-circle"></i> <b>Note:</b> Sorting does not support a special “semantics” of comparison for fields with values of 
-    different data types (e.g. numbers vs. strings). However, you can rely on the fact that values of the same type are 
-    sorted respectively.</div>
+<p>In order to apply queries when searching, Ditto uses the <a href="basic-rql.html">RQL notation</a> which is also applied for other 
+scenarios (e.g. filtering <a href="basic-changenotifications.html">notifications</a>).</p>
 
 <h2 id="rql-paging">RQL paging</h2>
 
-<p>The RQL limiting part specifies which part (or “page”) should be returned of a large result set.</p>
+<p>The RQL limiting part specifies which part (or “page”) should be returned of a large search result set.</p>
 
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>limit(&lt;offset&gt;,&lt;count&gt;)
 </code></pre></div></div>
@@ -1330,6 +1120,10 @@ In case there are multiple things with the same location attribute, these are so
         
         
         
+        <a href="tag_rql.html" class="btn btn-default navbar-btn cursorNorm" role="button">rql</a>
+        
+        
+        
     </div>
 
 </div>
@@ -1344,7 +1138,7 @@ In case there are multiple things with the same location attribute, these are so
                     </div>
                     <p class="notice">
                         &copy;2018 Eclipse Ditto.
-                         Site last generated: Aug 22, 2018 <br />
+                         Site last generated: Sep 21, 2018 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">
