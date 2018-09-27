@@ -4,9 +4,9 @@
     <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="">
-<meta name="keywords" content="protocol,  channel, command, event, json, live, protocol, response, twin">
-<title> Protocol overview | Eclipse Ditto</title>
+<meta name="description" content="Version 0.8.0-M2 of Eclipse Ditto, released on 27.09.2018">
+<meta name="keywords" content="release_notes,  release notes, announcements, changelog">
+<title> Release notes 0.8.0-M2 | Eclipse Ditto</title>
 
 <link rel="stylesheet" href="css/syntax.css">
 <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" crossorigin="anonymous">
@@ -167,7 +167,7 @@
                                 searchInput: document.getElementById('search-input'),
                                 resultsContainer: document.getElementById('results-container'),
                                 dataSource: 'search.json',
-                                searchResultTemplate: '<li><a href="{url}" title="Protocol overview">{title}</a></li>',
+                                searchResultTemplate: '<li><a href="{url}" title="Release notes 0.8.0-M2">{title}</a></li>',
                                 noResultsText: 'No results found.',
                                 limit: 10,
                                 fuzzy: true,
@@ -278,7 +278,7 @@
               
               
               
-              <li><a href="release_notes_080-M2.html">0.8.0-M2 Release notes</a></li>
+              <li class="active"><a href="release_notes_080-M2.html">0.8.0-M2 Release notes</a></li>
               
               
               
@@ -651,7 +651,7 @@
               
               
               
-              <li class="active"><a href="protocol-overview.html">Overview</a></li>
+              <li><a href="protocol-overview.html">Overview</a></li>
               
               
               
@@ -1012,13 +1012,15 @@
 
 
 <div class="post-header">
-   <h1 class="post-title-main">Protocol overview</h1>
+   <h1 class="post-title-main">Release notes 0.8.0-M2</h1>
 </div>
 
 
 
 <div class="post-content">
 
+   
+    <div class="summary">Version 0.8.0-M2 of Eclipse Ditto, released on 27.09.2018</div>
    
 
     
@@ -1052,21 +1054,64 @@ $('#toc').on('click', 'a', function() {
 
     
 
-  <p>The Ditto Protocol defines a JSON based text protocol for communicating with <strong>Digital Twins</strong> and the actual physical
-devices they mirror.</p>
+  <p>This milestone release focuses mainly on the newly added MQTT connectivity. It brings Ditto an important step closer 
+to the <a href="https://projects.eclipse.org/projects/iot.ditto/releases/0.8.0">first planned release 0.8.0</a>.</p>
 
-<p>It defines several <strong>commands</strong> both the actual device and the <strong>Digital Twin</strong> are able to understand.</p>
+<p>Since the last milestone of Eclipse Ditto <a href="release_notes_080-M1.html">0.8.0-M1</a>, the following changes, new features and
+bugfixes were added.</p>
 
-<p>The communication pattern is defined by the Ditto protocol and shown in the next section.</p>
+<h2 id="changes">Changes</h2>
 
-<h2 id="communication-pattern">Communication pattern</h2>
+<h3 id="define-and-enforce-max-entity-sizes-in-ditto-cluster"><a href="https://github.com/eclipse/ditto/issues/221">Define and enforce max. entity sizes in Ditto cluster</a></h3>
 
-<p>The typical communication pattern when interacting with a <strong>Digital Twin</strong> or the actual device using the Ditto Protocol 
-is composed of multiple correlated Protocol messages.
-Therefore, each Protocol message contains a <code class="highlighter-rouge">correlation-id</code> which can be used to associate related Protocol messages.</p>
+<p>In previous versions of Ditto the entity sizes (e.g. for things and policies) were technically not limited. The only 
+implicit limit was a max. cluster message size of 10m. As Ditto is not intended to manage digital twins which are that
+big, the sizes of the twins are now by default limited to:</p>
+<ul>
+  <li>max <a href="basic-thing.html">Thing</a> size: 100k</li>
+  <li>max <a href="basic-policy.html">Policy</a> size: 100k</li>
+  <li>max <a href="basic-messages.html">Message payload</a> size: 250k</li>
+</ul>
 
-<p>The <a href="basic-signals.html#communication-pattern">Signals</a> chapter already describes the basic communication pattern of
-<strong>commands</strong>, <strong>responses</strong> and <strong>events</strong>.</p>
+<p>They can be adjusted to other needs via the configuration located in 
+<a href="https://github.com/eclipse/ditto/blob/master/services/base/src/main/resources/ditto-limits.conf">ditto-limits.conf</a>.</p>
+
+<p>The default maximum frame size in the ditto cluster was changed to 256k and can be adjusted in the 
+<a href="https://github.com/eclipse/ditto/blob/master/services/base/src/main/resources/ditto-akka-config.conf#L93">ditto-akka-config.conf</a>.</p>
+
+<h2 id="new-features">New features</h2>
+
+<h3 id="mqtt-support"><a href="https://github.com/eclipse/ditto/issues/220">MQTT support</a></h3>
+
+<p>In two big PRs (<a href="https://github.com/eclipse/ditto/pull/225">#225</a> and <a href="https://github.com/eclipse/ditto/pull/235">#235</a>) 
+Ditto added support for connecting to MQTT brokers (like for example <a href="https://mosquitto.org">Eclipse Mosquitto</a>) via its
+<a href="connectivity-overview.html">connectivity feature</a>. Have a look at the 
+<a href="connectivity-protocol-bindings-mqtt.html">MQTT protocol binding</a> for details.</p>
+
+<h3 id="subscribing-for-change-notifications-by-optional-filter"><a href="https://github.com/eclipse/ditto/issues/149">Subscribing for change notifications by optional filter</a></h3>
+
+<p>Until previous versions, when <a href="basic-changenotifications.html">subscribing for changes</a>, the subscriber always got all
+changes he was entitled to see (based on <a href="basic-auth.html">access control</a>). Now it is possible to specify for which
+changes to subscribe based on the optional <code class="highlighter-rouge">namespaces</code> to consider and an optional <a href="basic-rql.html">RQL</a> <code class="highlighter-rouge">filter</code>.
+The new feature is documented as <a href="basic-changenotifications.html#filtering">change notification filters</a>.</p>
+
+<h3 id="support-for-conditional-requests"><a href="https://github.com/eclipse/ditto/pull/226">Support for conditional requests</a></h3>
+
+<p>Ditto’s APIs now support <code class="highlighter-rouge">If-Match</code> and <code class="highlighter-rouge">If-None-Match</code> headers specified in 
+<a href="https://tools.ietf.org/html/rfc7232#section-3.2">rfc7232</a> for <code class="highlighter-rouge">things</code> and <code class="highlighter-rouge">policies</code> resources. Have a look at the
+new <a href="https://www.eclipse.org/ditto/httpapi-concepts.html">documentation for conditional requests</a> for how this concept
+can help with advanced interaction-patterns with your twins.</p>
+
+<h2 id="bugfixes">Bugfixes</h2>
+
+<h3 id="reconnection-to-amqp-091-connections"><a href="https://github.com/eclipse/ditto/issues/228">Reconnection to AMQP 0.9.1 connections</a></h3>
+
+<p>Reconnection did not always work, e.g. when the AMQP 0.9.1 broker was not reachable for a while.</p>
+
+<h3 id="various-smaller-bugfixes">Various smaller bugfixes</h3>
+
+<p>This is a complete list of the 
+<a href="https://github.com/eclipse/ditto/pulls?q=is%3Apr+milestone%3A0.8.0-M2+">merged pull requests</a>.</p>
 
 
     <div class="tags">
@@ -1075,7 +1120,7 @@ Therefore, each Protocol message contains a <code class="highlighter-rouge">corr
         
         
         
-        <a href="tag_protocol.html" class="btn btn-default navbar-btn cursorNorm" role="button">protocol</a>
+        <a href="tag_release_notes.html" class="btn btn-default navbar-btn cursorNorm" role="button">release_notes</a>
         
         
         
