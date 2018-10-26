@@ -1084,11 +1084,7 @@ If a command sets the header <code class="highlighter-rouge">reply-to</code>, th
   <li>Source <code class="highlighter-rouge">"addresses"</code> are MQTT topics to subscribe to. Wildcards <code class="highlighter-rouge">+</code> and <code class="highlighter-rouge">#</code> are allowed.</li>
   <li><code class="highlighter-rouge">"authorizationContext"</code> may <em>not</em> contain placeholders <code class="highlighter-rouge">{{ header:&lt;header-name&gt; }}</code> as MQTT 3.1.1
 has no application headers.</li>
-  <li>The additional field <code class="highlighter-rouge">"filters"</code> defines filters of MQTT messages by checking their topics against their payload.
-If at least one filter is defined, then messages are dropped if their topics do not match any of the filters.
-Filters can be specified using placeholders <code class="highlighter-rouge">{{ thing:id }}</code>,
-<code class="highlighter-rouge">{{ thing:namespace }}</code> or <code class="highlighter-rouge">{{ thing:name }}</code>.</li>
-  <li>The additional field <code class="highlighter-rouge">"qos"</code> sets the maximum Quality of Service to request when subscribing for messages. Its value
+  <li>The optional field <code class="highlighter-rouge">"qos"</code> sets the maximum Quality of Service to request when subscribing for messages. Its value
 can be <code class="highlighter-rouge">0</code> for at-most-once delivery, <code class="highlighter-rouge">1</code> for at-least-once delivery and <code class="highlighter-rouge">2</code> for exactly-once delivery.
 The default value is <code class="highlighter-rouge">2</code> (exactly-once).
 Support of any Quality of Service depends on the external MQTT broker; <a href="https://docs.aws.amazon.com/iot/">AWS IoT</a> for example does not
@@ -1101,12 +1097,95 @@ acknowledge subscriptions with <code class="highlighter-rouge">qos=2</code>.</li
     </span><span class="s2">"..."</span><span class="w">
   </span><span class="p">],</span><span class="w">
   </span><span class="s2">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"ditto:inbound-auth-subject"</span><span class="p">,</span><span class="w"> </span><span class="s2">"..."</span><span class="p">],</span><span class="w">
-  </span><span class="s2">"filters"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-    </span><span class="s2">"telemetry/{{ thing:id }}"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"device/{{ thing:namespace }}/{{ thing:name }}"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"..."</span><span class="w">
-  </span><span class="p">],</span><span class="w">
   </span><span class="s2">"qos"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h4 id="enforcement">Enforcement</h4>
+
+<p>Messages received from external systems are mapped to Ditto internal format, either by applying some custom mapping or 
+the default mapping for <a href="protocol-overview.html">Ditto Protocol</a> messages.</p>
+
+<p>During this mapping the digital twin of the device is determined i.e. 
+which Thing is accessed or modified as a result of the message. By default no sanity check is done if this target Thing 
+corresponds to the device that originally sent the message. In some use case this might be valid, but in other scenarios 
+you might want to enforce that a device only sends data to its digital twin. Note that this could also be achieved by 
+assigning a specific policy to each device and use <a href="basic-connections.html#placeholders">placeholders</a> in the 
+authorization subject, but this can get 
+cumbersome to maintain for a large number of devices.</p>
+
+<p>With an enforcement you can use a single policy for all devices 
+and still make sure that a device only modifies its associated digital twin. Enforcement is only feasible if the message
+contains the verified identity of the sending device (e.g. in a message header). This verification has to be done by the
+external system e.g. by properly authenticating the devices and providing the identity in the messages sent to Ditto.</p>
+
+<p>The enforcement configuration consists of two fields:</p>
+<ul>
+  <li><code class="highlighter-rouge">input</code>: Defines where device identity is extracted.</li>
+  <li><code class="highlighter-rouge">filters</code>: Defines the filters that are matched against the input. At least one filter must match the input value, 
+otherwise the message is rejected.</li>
+</ul>
+
+<p>The following placeholders are available for the <code class="highlighter-rouge">filters</code> field:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Placeholder</th>
+      <th>Description</th>
+      <th>Example</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="highlighter-rouge">{{ thing:id }}</code></td>
+      <td>Full ID composed of ‘‘namespace’’ + ‘’:’’ as a separator + ‘‘name’’</td>
+      <td>eclipse.ditto:thing-42</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">{{ thing:namespace }}</code></td>
+      <td>Namespace (i.e. first part of an ID)</td>
+      <td>eclipse.ditto</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">{{ thing:name }}</code></td>
+      <td>Name (i.e. second part of an ID )</td>
+      <td>thing-42</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>The following placeholders are available for the <code class="highlighter-rouge">input</code> field:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Placeholder</th>
+      <th>Description</th>
+      <th>Example</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="highlighter-rouge">{{ source:address }}</code></td>
+      <td>The topic on which the message was received.</td>
+      <td>devices/sensors/temperature1</td>
+    </tr>
+  </tbody>
+</table>
+
+<h5 id="example-of-an-enforcement-configuration-for-mqtt-sources">Example of an enforcement configuration for MQTT sources</h5>
+
+<p>Assuming a device <code class="highlighter-rouge">temperature1</code> publishes its telemetry data to an MQTT broker on topic <code class="highlighter-rouge">devices/sensors/temperature1</code>.
+The MQTT broker verifies that no other device is allowed to publish on this topic. To enforce that the device can 
+only send data to the Thing <code class="highlighter-rouge">sensors:temperature1</code> the following enforcement configuration can be used:</p>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"enforcement"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"input"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{{ source:address }}"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"filters"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="s2">"devices/{{ thing:namespace }}/{{ thing:name }}"</span><span class="w"> </span><span class="p">]</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="s2">"addresses"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="s2">"devices/sensors/#"</span><span class="w"> </span><span class="p">],</span><span class="w">
+  </span><span class="s2">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"ditto:inbound-auth-subject"</span><span class="p">,</span><span class="w"> </span><span class="s2">"..."</span><span class="p">]</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
@@ -1156,26 +1235,26 @@ following parameters can additionally be provided when specifying the <code clas
     <tr>
       <td>Subscribe for <a href="basic-changenotifications.html">events/change notifications</a></td>
       <td><code class="highlighter-rouge">_/_/things/twin/events</code></td>
-      <td>yes</td>
-      <td>yes</td>
+      <td>✔</td>
+      <td>✔</td>
     </tr>
     <tr>
       <td>Subscribe for <a href="basic-messages.html">messages</a></td>
       <td><code class="highlighter-rouge">_/_/things/live/messages</code></td>
-      <td>yes</td>
-      <td> </td>
+      <td>✔</td>
+      <td>❌</td>
     </tr>
     <tr>
       <td>Subscribe for <a href="protocol-twinlive.html">live commands</a></td>
       <td><code class="highlighter-rouge">_/_/things/live/commands</code></td>
-      <td>yes</td>
-      <td> </td>
+      <td>✔</td>
+      <td>❌</td>
     </tr>
     <tr>
       <td>Subscribe for <a href="protocol-twinlive.html">live events</a></td>
       <td><code class="highlighter-rouge">_/_/things/live/events</code></td>
-      <td>yes</td>
-      <td>yes</td>
+      <td>✔</td>
+      <td>✔</td>
     </tr>
   </tbody>
 </table>
@@ -1187,7 +1266,7 @@ with <code class="highlighter-rouge">&amp;</code>. You have to URL encode the fi
 would match an attribute “counter” to be greater than 42. Additionally it would subscribe to messages in the namespace
 <code class="highlighter-rouge">org.eclipse.ditto</code>:</p>
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"eclipse-ditto-sandbox/{{ thing:id }}"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"eclipse-ditto-sandbox/{{ thing:id }}"</span><span class="p">,</span><span class="w">
   </span><span class="s2">"topics"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
     </span><span class="s2">"_/_/things/twin/events?namespaces=org.eclipse.ditto&amp;filter=gt(attributes/counter,42)"</span><span class="p">,</span><span class="w">
     </span><span class="s2">"_/_/things/live/messages?namespaces=org.eclipse.ditto"</span><span class="w">
@@ -1261,7 +1340,7 @@ for how to set it up.</p>
   </span><span class="s2">"failoverEnabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
   </span><span class="s2">"uri"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ssl://test.mosquitto.org:8884"</span><span class="p">,</span><span class="w">
   </span><span class="s2">"validateCertificates"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"ca"</span><span class="p">:</span><span class="w"> </span><span class="s2">"-----BEGIN CERTIFICATE-----</span><span class="se">\n</span><span class="s2">&lt;test.mosquitto.org certificate&gt;</span><span class="se">\n</span><span class="s2">-----END CERTIFICATE-----"</span><span class="w">
+  </span><span class="s2">"ca"</span><span class="p">:</span><span class="w"> </span><span class="s2">"-----BEGIN CERTIFICATE-----</span><span class="se">\n</span><span class="s2">&lt;test.mosquitto.org certificate&gt;</span><span class="se">\n</span><span class="s2">-----END CERTIFICATE-----"</span><span class="p">,</span><span class="w">
   </span><span class="s2">"credentials"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
     </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"client-cert"</span><span class="p">,</span><span class="w">
     </span><span class="s2">"cert"</span><span class="p">:</span><span class="w"> </span><span class="s2">"-----BEGIN CERTIFICATE-----</span><span class="se">\n</span><span class="s2">&lt;signed client certificate&gt;</span><span class="se">\n</span><span class="s2">-----END CERTIFICATE-----"</span><span class="p">,</span><span class="w">
@@ -1319,7 +1398,7 @@ for how to set it up.</p>
                     </div>
                     <p class="notice">
                         &copy;2018 Eclipse Ditto.
-                         Site last generated: Oct 19, 2018 <br />
+                         Site last generated: Oct 26, 2018 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

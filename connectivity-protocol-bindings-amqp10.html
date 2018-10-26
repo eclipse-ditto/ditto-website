@@ -1089,6 +1089,94 @@ inbound messages are processed. These subjects may contain placeholders, see
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
+<h4 id="enforcement">Enforcement</h4>
+
+<p>Messages received from external systems are mapped to Ditto internal format, either by applying some custom mapping or 
+the default mapping for <a href="protocol-overview.html">Ditto Protocol</a> messages.</p>
+
+<p>During this mapping the digital twin of the device is determined i.e. 
+which Thing is accessed or modified as a result of the message. By default no sanity check is done if this target Thing 
+corresponds to the device that originally sent the message. In some use case this might be valid, but in other scenarios 
+you might want to enforce that a device only sends data to its digital twin. Note that this could also be achieved by 
+assigning a specific policy to each device and use <a href="basic-connections.html#placeholders">placeholders</a> in the 
+authorization subject, but this can get 
+cumbersome to maintain for a large number of devices.</p>
+
+<p>With an enforcement you can use a single policy for all devices 
+and still make sure that a device only modifies its associated digital twin. Enforcement is only feasible if the message
+contains the verified identity of the sending device (e.g. in a message header). This verification has to be done by the
+external system e.g. by properly authenticating the devices and providing the identity in the messages sent to Ditto.</p>
+
+<p>The enforcement configuration consists of two fields:</p>
+<ul>
+  <li><code class="highlighter-rouge">input</code>: Defines where device identity is extracted.</li>
+  <li><code class="highlighter-rouge">filters</code>: Defines the filters that are matched against the input. At least one filter must match the input value, 
+otherwise the message is rejected.</li>
+</ul>
+
+<p>The following placeholders are available for the <code class="highlighter-rouge">filters</code> field:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Placeholder</th>
+      <th>Description</th>
+      <th>Example</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="highlighter-rouge">{{ thing:id }}</code></td>
+      <td>Full ID composed of ‘‘namespace’’ + ‘’:’’ as a separator + ‘‘name’’</td>
+      <td>eclipse.ditto:thing-42</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">{{ thing:namespace }}</code></td>
+      <td>Namespace (i.e. first part of an ID)</td>
+      <td>eclipse.ditto</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">{{ thing:name }}</code></td>
+      <td>Name (i.e. second part of an ID )</td>
+      <td>thing-42</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>The following placeholders are available for the <code class="highlighter-rouge">input</code> field:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Placeholder</th>
+      <th>Description</th>
+      <th>Example</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="highlighter-rouge">{{ header:&lt;name&gt; }}</code></td>
+      <td>Any header from the message received via the source.</td>
+      <td><code class="highlighter-rouge">{{header:device:id }}</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<h5 id="example-of-an-enforcement-configuration-for-amqp-10-sources">Example of an enforcement configuration for AMQP 1.0 sources</h5>
+
+<p>Assuming a device <code class="highlighter-rouge">sensor:temperature1</code> pushes its telemetry data to Ditto which is stored in a Thing 
+<code class="highlighter-rouge">sensor:temperature1</code>. The device identity is provided in a header field <code class="highlighter-rouge">device_id</code>. To enforce that the device can 
+only send data to the Thing <code class="highlighter-rouge">sensor:temperature1</code> the following enforcement configuration can be used:</p>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"enforcement"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"input"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{{ header:device_id }}"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"filters"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="s2">"{{ thing:id }}"</span><span class="w"> </span><span class="p">]</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="s2">"addresses"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="s2">"telemetry/hono_tenant"</span><span class="w"> </span><span class="p">],</span><span class="w">
+  </span><span class="s2">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"ditto:inbound-auth-subject"</span><span class="p">,</span><span class="w"> </span><span class="s2">"..."</span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
 <h3 id="target-format">Target format</h3>
 
 <p>An AMQP 1.0 connection requires the protocol configuration target object to have an <code class="highlighter-rouge">address</code> property with a source
@@ -1130,26 +1218,26 @@ following parameters can additionally be provided when specifying the <code clas
     <tr>
       <td>Subscribe for <a href="basic-changenotifications.html">events/change notifications</a></td>
       <td><code class="highlighter-rouge">_/_/things/twin/events</code></td>
-      <td>yes</td>
-      <td>yes</td>
+      <td>✔</td>
+      <td>✔</td>
     </tr>
     <tr>
       <td>Subscribe for <a href="basic-messages.html">messages</a></td>
       <td><code class="highlighter-rouge">_/_/things/live/messages</code></td>
-      <td>yes</td>
-      <td> </td>
+      <td>✔</td>
+      <td>❌</td>
     </tr>
     <tr>
       <td>Subscribe for <a href="protocol-twinlive.html">live commands</a></td>
       <td><code class="highlighter-rouge">_/_/things/live/commands</code></td>
-      <td>yes</td>
-      <td> </td>
+      <td>✔</td>
+      <td>❌</td>
     </tr>
     <tr>
       <td>Subscribe for <a href="protocol-twinlive.html">live events</a></td>
       <td><code class="highlighter-rouge">_/_/things/live/events</code></td>
-      <td>yes</td>
-      <td>yes</td>
+      <td>✔</td>
+      <td>✔</td>
     </tr>
   </tbody>
 </table>
@@ -1252,7 +1340,7 @@ Protocol</a>, you can configure a custom <a href="connectivity-mapping.html">pay
                     </div>
                     <p class="notice">
                         &copy;2018 Eclipse Ditto.
-                         Site last generated: Oct 19, 2018 <br />
+                         Site last generated: Oct 26, 2018 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">
