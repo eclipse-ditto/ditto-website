@@ -1055,15 +1055,13 @@ $('#toc').on('click', 'a', function() {
   
 <h2 id="creatething">CreateThing</h2>
 
+<p>Creates a new Thing with ID <code class="highlighter-rouge">com.acme:xdk_53</code> that uses an existing Policy with ID <code class="highlighter-rouge">com.acme:the_policy_id</code>.</p>
+
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
   </span><span class="s2">"topic"</span><span class="p">:</span><span class="w"> </span><span class="s2">"com.acme/xdk_53/things/twin/commands/create"</span><span class="p">,</span><span class="w">
   </span><span class="s2">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
   </span><span class="s2">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/"</span><span class="p">,</span><span class="w">
   </span><span class="s2">"value"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"__schemaVersion"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"__lifecycle"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ACTIVE"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"_revision"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"_namespace"</span><span class="p">:</span><span class="w"> </span><span class="s2">"com.acme"</span><span class="p">,</span><span class="w">
     </span><span class="s2">"thingId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"com.acme:xdk_53"</span><span class="p">,</span><span class="w">
     </span><span class="s2">"policyId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"com.acme:the_policy_id"</span><span class="p">,</span><span class="w">
     </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
@@ -1146,6 +1144,43 @@ $('#toc').on('click', 'a', function() {
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
+<h2 id="alternative-creatething-commands">Alternative CreateThing commands</h2>
+
+<p>If you want to copy an existing Policy instead of creating a new one by yourself or reference an existing Policy, you
+can adjust the CreateThing command like demonstrated in the following examples.</p>
+
+<h3 id="creatething-with-copied-policy-by-policy-id">CreateThing with copied Policy by Policy ID</h3>
+
+<p>Creates a new Thing with ID <code class="highlighter-rouge">com.acme:xdk_53</code> with a Policy copied from the Policy with ID <code class="highlighter-rouge">com.acme:the_policy_id_to_copy</code>.</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"topic"</span><span class="p">:</span><span class="w"> </span><span class="s2">"com.acme/xdk_53/things/twin/commands/create"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
+  </span><span class="s2">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"value"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"thingId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"com.acme:xdk_53"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"policyId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"com.acme:the_policy_id"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"_copyPolicyFrom"</span><span class="p">:</span><span class="w"> </span><span class="s2">"com:acme:the_policy_id_to_copy"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h3 id="creatething-with-copied-policy-by-thing-reference">CreateThing with copied Policy by Thing reference</h3>
+
+<p>Creates a new Thing with ID <code class="highlighter-rouge">com.acme:xdk_53</code> with a Policy copied from a Thing with ID <code class="highlighter-rouge">com.acme:xdk_52</code>.</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"topic"</span><span class="p">:</span><span class="w"> </span><span class="s2">"com.acme/xdk_53/things/twin/commands/create"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
+  </span><span class="s2">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"value"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"thingId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"com.acme:xdk_53"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"policyId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"com.acme:the_policy_id"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"_copyPolicyFrom"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{{ ref:things/com:acme:xdk_52/policyId }}"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
 
 
     <div class="tags">
@@ -1164,7 +1199,7 @@ $('#toc').on('click', 'a', function() {
                     </div>
                     <p class="notice">
                         &copy;2018 Eclipse Ditto.
-                         Site last generated: Oct 26, 2018 <br />
+                         Site last generated: Nov 8, 2018 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">
