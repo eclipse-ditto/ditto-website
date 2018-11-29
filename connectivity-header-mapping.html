@@ -5,8 +5,8 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="">
-<meta name="keywords" content="http,  api, http, REST, postman, explore">
-<title> HTTP API Run in Postman | Eclipse Ditto</title>
+<meta name="keywords" content="connectivity,  header, mapping">
+<title> Header mapping for connections | Eclipse Ditto</title>
 
 <link rel="stylesheet" href="css/syntax.css">
 <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" crossorigin="anonymous">
@@ -167,7 +167,7 @@
                                 searchInput: document.getElementById('search-input'),
                                 resultsContainer: document.getElementById('results-container'),
                                 dataSource: 'search.json',
-                                searchResultTemplate: '<li><a href="{url}" title="HTTP API Run in Postman">{title}</a></li>',
+                                searchResultTemplate: '<li><a href="{url}" title="Header mapping for connections">{title}</a></li>',
                                 noResultsText: 'No results found.',
                                 limit: 10,
                                 fuzzy: true,
@@ -588,7 +588,7 @@
               
               
               
-              <li class="active"><a href="httpapi-postman.html">Run in Postman</a></li>
+              <li><a href="httpapi-postman.html">Run in Postman</a></li>
               
               
               
@@ -641,7 +641,7 @@
               
               
               
-              <li><a href="connectivity-header-mapping.html">Header mapping</a></li>
+              <li class="active"><a href="connectivity-header-mapping.html">Header mapping</a></li>
               
               
               
@@ -1034,7 +1034,7 @@
 
 
 <div class="post-header">
-   <h1 class="post-title-main">HTTP API Run in Postman</h1>
+   <h1 class="post-title-main">Header mapping for connections</h1>
 </div>
 
 
@@ -1074,12 +1074,204 @@ $('#toc').on('click', 'a', function() {
 
     
 
-  <p>Use <a href="https://www.getpostman.com">Postman</a> and import the Ditto Postman collection which can be downloaded here:</p>
+  <p>When receiving messages from external systems or sending messages to external systems, the protocol headers of the 
+messages can be mapped to and from internal DittoHeaders.</p>
+
+<p>That way the headers can be passed through Ditto or defined DittoHeaders like for example <code class="highlighter-rouge">correlation-id</code> may be 
+mapped to a header used for message correlation in the external system.</p>
+
+<p>A header mapping can be defined individually for every source and target of a connection. For examples of a definition 
+see <a href="connectivity-protocol-bindings-amqp091.html#source-header-mapping">source header mapping</a> 
+and <a href="connectivity-protocol-bindings-amqp091.html#target-header-mapping">target header mapping</a> for AMQP 0.9.1 connections
+or <a href="connectivity-protocol-bindings-amqp10.html#source-header-mapping">source header mapping</a> 
+and <a href="connectivity-protocol-bindings-amqp10.html#target-header-mapping">target header mapping</a> for AMQP 1.0 connections.</p>
+
+<h2 id="supported-placeholders">Supported placeholders</h2>
+
+<p>The already defined <a href="basic-connections.html#placeholders">placeholders of connections</a> are supported inside header
+mappings combined with the header mapping specific <a href="#topic-placeholders">topic placeholder</a>.</p>
+
+<p>In total, the following placeholders are available during header mapping:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Placeholder</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="highlighter-rouge">{{ thing:id }}</code></td>
+      <td>full ID composed of ‘‘namespace’’ + ‘’:’’ as a separator + ‘‘name’’</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">{{ thing:namespace }}</code></td>
+      <td>Namespace (i.e. first part of an ID)</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">{{ thing:name }}</code></td>
+      <td>Name (i.e. second part of an ID )</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">{{ header:&lt;header-name&gt; }}</code></td>
+      <td>any external protocol header</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">{{ topic:full }}</code></td>
+      <td>full <a href="protocol-specification-topic.html">Ditto Protocol topic path</a></td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">{{ topic:namespace }}</code></td>
+      <td>Ditto Protocol <a href="protocol-specification-topic.html#namespace">Namespace</a></td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">{{ topic:entityId }}</code></td>
+      <td>Ditto Protocol <a href="protocol-specification-topic.html#entity-id">Entity ID</a></td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">{{ topic:group }}</code></td>
+      <td>Ditto Protocol <a href="protocol-specification-topic.html#group">Group</a></td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">{{ topic:channel }}</code></td>
+      <td>Ditto Protocol <a href="protocol-specification-topic.html#channel">Channel</a></td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">{{ topic:criterion }}</code></td>
+      <td>Ditto Protocol <a href="protocol-specification-topic.html#criterion">Criterion</a></td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">{{ topic:action }}</code></td>
+      <td>Ditto Protocol <a href="protocol-specification-topic.html#action-optional">Action</a></td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">{{ topic:subject }}</code></td>
+      <td>Ditto Protocol <a href="protocol-specification-topic.html#messages-criterion-actions">Subject</a> (for message commands)</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">{{ topic:action|subject }}</code></td>
+      <td>either Ditto Protocol <a href="protocol-specification-topic.html#action-optional">Action</a> or <a href="protocol-specification-topic.html#messages-criterion-actions">Subject</a> (for message commands)</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="topic-placeholders">Topic placeholders</h2>
+
+<p>Only inside the header mapping, the <a href="protocol-specification-topic.html">Ditto Protocol topic</a> may be accessed via the 
+<code class="highlighter-rouge">topic:</code> placeholders:</p>
+
 <ul>
-  <li><a href="postman/Ditto.postman_collection.json">Ditto Postman collection</a></li>
-  <li><a href="postman/Ditto_Sandbox.postman_environment.json">Ditto Postman environment for sandbox</a></li>
+  <li><code class="highlighter-rouge">{{ topic:full }}</code>: full path in the form <code class="highlighter-rouge">{namespace}/{entityId}/{group}/{channel}/{criterion}/{action|subject}</code></li>
+  <li><code class="highlighter-rouge">{{ topic:namespace }}</code>: <a href="protocol-specification-topic.html#namespace">Namespace</a> part</li>
+  <li><code class="highlighter-rouge">{{ topic:entityId }}</code>: <a href="protocol-specification-topic.html#entity-id">Entity ID</a> part</li>
+  <li><code class="highlighter-rouge">{{ topic:group }}</code>: <a href="protocol-specification-topic.html#group">Group</a> part</li>
+  <li><code class="highlighter-rouge">{{ topic:channel }}</code>: <a href="protocol-specification-topic.html#channel">Channel</a> part</li>
+  <li><code class="highlighter-rouge">{{ topic:criterion }}</code>: <a href="protocol-specification-topic.html#criterion">Criterion</a> part</li>
+  <li><code class="highlighter-rouge">{{ topic:action }}</code>: <a href="protocol-specification-topic.html#action-optional">Action</a> part</li>
+  <li><code class="highlighter-rouge">{{ topic:subject }}</code>: <a href="protocol-specification-topic.html#messages-criterion-actions">Subject</a> part (for message commands)</li>
+  <li><code class="highlighter-rouge">{{ topic:action|subject }}</code>: either <a href="protocol-specification-topic.html#action-optional">Action</a> or <a href="protocol-specification-topic.html#messages-criterion-actions">Subject</a> (for message commands)</li>
 </ul>
 
+<p>For a topic path with the intention of <a href="protocol-examples-creatething.html">creating a Thing</a> 
+<em>org.eclipse.ditto/device-123/things/twin/commands/create</em> these placeholders would be resolved as follows:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Placeholder</th>
+      <th>Resolved value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="highlighter-rouge">topic:full</code></td>
+      <td><em>org.eclipse.ditto/device-123/things/twin/commands/create</em></td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">topic:namespace</code></td>
+      <td><em>org.eclipse.ditto</em></td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">topic:entityId</code></td>
+      <td><em>device-123</em></td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">topic:group</code></td>
+      <td><em>things</em></td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">topic:channel</code></td>
+      <td><em>twin</em></td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">topic:criterion</code></td>
+      <td><em>commands</em></td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">topic:action</code></td>
+      <td><em>create</em></td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">topic:subject</code></td>
+      <td>❌</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">topic:action|subject</code></td>
+      <td><em>create</em></td>
+    </tr>
+  </tbody>
+</table>
+
+<p>For a topic path with the intention of <a href="protocol-specification-things-messages.html#sending-a-message-to-a-thing">sending a message to a Thing</a> 
+<em>org.eclipse.ditto/device-123/things/live/messages/hello.world</em> these placeholders are resolved as follows:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Placeholder</th>
+      <th>Resolved value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="highlighter-rouge">topic:full</code></td>
+      <td><em>org.eclipse.ditto/device-123/things/live/messages/hello.world</em></td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">topic:namespace</code></td>
+      <td><em>org.eclipse.ditto</em></td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">topic:entityId</code></td>
+      <td><em>device-123</em></td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">topic:group</code></td>
+      <td><em>things</em></td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">topic:channel</code></td>
+      <td><em>live</em></td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">topic:criterion</code></td>
+      <td><em>messages</em></td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">topic:action</code></td>
+      <td>❌</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">topic:subject</code></td>
+      <td><em>hello.world</em></td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">topic:action|subject</code></td>
+      <td><em>hello.world</em></td>
+    </tr>
+  </tbody>
+</table>
 
 
     <div class="tags">
@@ -1088,7 +1280,7 @@ $('#toc').on('click', 'a', function() {
         
         
         
-        <a href="tag_http.html" class="btn btn-default navbar-btn cursorNorm" role="button">http</a>
+        <a href="tag_connectivity.html" class="btn btn-default navbar-btn cursorNorm" role="button">connectivity</a>
         
         
         

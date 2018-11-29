@@ -641,6 +641,13 @@
               
               
               
+              <li><a href="connectivity-header-mapping.html">Header mapping</a></li>
+              
+              
+              
+              
+              
+              
               <li><a href="connectivity-mapping.html">Payload mapping</a></li>
               
               
@@ -1189,20 +1196,23 @@ otherwise the message is rejected.</li>
   </tbody>
 </table>
 
-<h5 id="example-of-an-enforcement-configuration-for-mqtt-sources">Example of an enforcement configuration for MQTT sources</h5>
-
 <p>Assuming a device <code class="highlighter-rouge">temperature1</code> publishes its telemetry data to an MQTT broker on topic <code class="highlighter-rouge">devices/sensors/temperature1</code>.
 The MQTT broker verifies that no other device is allowed to publish on this topic. To enforce that the device can 
 only send data to the Thing <code class="highlighter-rouge">sensors:temperature1</code> the following enforcement configuration can be used:</p>
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"addresses"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="s2">"devices/sensors/#"</span><span class="w"> </span><span class="p">],</span><span class="w">
+  </span><span class="s2">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"ditto:inbound-auth-subject"</span><span class="p">,</span><span class="w"> </span><span class="s2">"..."</span><span class="p">],</span><span class="w">
+  </span><span class="s2">"qos"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
   </span><span class="s2">"enforcement"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
     </span><span class="s2">"input"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{{ source:address }}"</span><span class="p">,</span><span class="w">
     </span><span class="s2">"filters"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="s2">"devices/{{ thing:namespace }}/{{ thing:name }}"</span><span class="w"> </span><span class="p">]</span><span class="w">
-  </span><span class="p">},</span><span class="w">
-  </span><span class="s2">"addresses"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="s2">"devices/sensors/#"</span><span class="w"> </span><span class="p">],</span><span class="w">
-  </span><span class="s2">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"ditto:inbound-auth-subject"</span><span class="p">,</span><span class="w"> </span><span class="s2">"..."</span><span class="p">]</span><span class="w">
+  </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
+
+<h4 id="source-header-mapping">Source header mapping</h4>
+
+<p>As MQTT 3.1.1 does not support headers in its protocol, a <a href="connectivity-header-mapping.html">header mapping</a> is not possible to configure here.</p>
 
 <h3 id="target-format">Target format</h3>
 
@@ -1289,6 +1299,10 @@ would match an attribute “counter” to be greater than 42. Additionally it wo
   </span><span class="s2">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"ditto:outbound-auth-subject"</span><span class="p">,</span><span class="w"> </span><span class="s2">"..."</span><span class="p">]</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
+
+<h4 id="target-header-mapping">Target header mapping</h4>
+
+<p>As MQTT 3.1.1 does not support headers in its protocol, a <a href="connectivity-header-mapping.html">header mapping</a> is not possible to configure here.</p>
 
 <h2 id="establishing-a-connection-to-an-mqtt-311-endpoint">Establishing a connection to an MQTT 3.1.1 endpoint</h2>
 
@@ -1413,7 +1427,7 @@ for how to set it up.</p>
                     </div>
                     <p class="notice">
                         &copy;2018 Eclipse Ditto.
-                         Site last generated: Nov 14, 2018 <br />
+                         Site last generated: Nov 29, 2018 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

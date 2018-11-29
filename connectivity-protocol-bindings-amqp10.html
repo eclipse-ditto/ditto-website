@@ -641,6 +641,13 @@
               
               
               
+              <li><a href="connectivity-header-mapping.html">Header mapping</a></li>
+              
+              
+              
+              
+              
+              
               <li><a href="connectivity-mapping.html">Payload mapping</a></li>
               
               
@@ -1172,23 +1179,38 @@ otherwise the message is rejected.</li>
     <tr>
       <td><code class="highlighter-rouge">{{ header:&lt;name&gt; }}</code></td>
       <td>Any header from the message received via the source.</td>
-      <td><code class="highlighter-rouge">{{header:device:id }}</code></td>
+      <td><code class="highlighter-rouge">{{header:device_id }}</code></td>
     </tr>
   </tbody>
 </table>
-
-<h5 id="example-of-an-enforcement-configuration-for-amqp-10-sources">Example of an enforcement configuration for AMQP 1.0 sources</h5>
 
 <p>Assuming a device <code class="highlighter-rouge">sensor:temperature1</code> pushes its telemetry data to Ditto which is stored in a Thing 
 <code class="highlighter-rouge">sensor:temperature1</code>. The device identity is provided in a header field <code class="highlighter-rouge">device_id</code>. To enforce that the device can 
 only send data to the Thing <code class="highlighter-rouge">sensor:temperature1</code> the following enforcement configuration can be used:</p>
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"addresses"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="s2">"telemetry/hono_tenant"</span><span class="w"> </span><span class="p">],</span><span class="w">
+  </span><span class="s2">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"ditto:inbound-auth-subject"</span><span class="p">],</span><span class="w">
   </span><span class="s2">"enforcement"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
     </span><span class="s2">"input"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{{ header:device_id }}"</span><span class="p">,</span><span class="w">
     </span><span class="s2">"filters"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="s2">"{{ thing:id }}"</span><span class="w"> </span><span class="p">]</span><span class="w">
-  </span><span class="p">},</span><span class="w">
-  </span><span class="s2">"addresses"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="s2">"telemetry/hono_tenant"</span><span class="w"> </span><span class="p">],</span><span class="w">
-  </span><span class="s2">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"ditto:inbound-auth-subject"</span><span class="p">,</span><span class="w"> </span><span class="s2">"..."</span><span class="p">]</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h4 id="source-header-mapping">Source header mapping</h4>
+
+<p>For incoming AMQP 1.0 messages, an optional <a href="connectivity-header-mapping.html">header mapping</a> may be applied.</p>
+
+<p>The JSON for an AMQP 1.0 source with header mapping could like this:</p>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"addresses"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="s2">"&lt;source&gt;"</span><span class="w">
+  </span><span class="p">],</span><span class="w">
+  </span><span class="s2">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"ditto:inbound-auth-subject"</span><span class="p">],</span><span class="w">
+  </span><span class="s2">"headerMapping"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"correlation-id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{{ header:message-id }}"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"content-type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{{ header:content-type }}"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
@@ -1270,6 +1292,27 @@ would match an attribute “counter” to be greater than 42. Additionally it wo
     </span><span class="s2">"_/_/things/live/messages?namespaces=org.eclipse.ditto"</span><span class="w">
   </span><span class="p">],</span><span class="w">
   </span><span class="s2">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"ditto:outbound-auth-subject"</span><span class="p">,</span><span class="w"> </span><span class="s2">"..."</span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h4 id="target-header-mapping">Target header mapping</h4>
+
+<p>For outgoing AMQP 1.0 messages, an optional <a href="connectivity-header-mapping.html">header mapping</a> may be applied.</p>
+
+<p>The JSON for an AMQP 1.0 target with header mapping could like this:</p>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;target&gt;"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"topics"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="s2">"_/_/things/twin/events"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"_/_/things/live/messages?namespaces=org.eclipse.ditto"</span><span class="w">
+  </span><span class="p">],</span><span class="w">
+  </span><span class="s2">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"ditto:inbound-auth-subject"</span><span class="p">],</span><span class="w">
+  </span><span class="s2">"headerMapping"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"message-id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{{ header:correlation-id }}"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"content-type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{{ header:content-type }}"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"subject"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{{ topic:subject }}"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"reply-to"</span><span class="p">:</span><span class="w"> </span><span class="s2">"all-replies"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
@@ -1355,7 +1398,7 @@ Protocol</a>, you can configure a custom <a href="connectivity-mapping.html">pay
                     </div>
                     <p class="notice">
                         &copy;2018 Eclipse Ditto.
-                         Site last generated: Nov 14, 2018 <br />
+                         Site last generated: Nov 29, 2018 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">
