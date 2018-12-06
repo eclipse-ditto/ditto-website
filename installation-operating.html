@@ -1074,7 +1074,8 @@ $('#toc').on('click', 'a', function() {
 
     
 
-  <p>After Ditto was once successfully started, the next step is to set it up for continuously operating it.</p>
+  
+<p>Once you have successfully started Ditto, proceed with setting it up for continuous operation.</p>
 
 <p>This page shows the basics for operating Ditto.</p>
 
@@ -1085,7 +1086,7 @@ $('#toc').on('click', 'a', function() {
 <ul>
   <li>grepping log output from STDOUT/STDERR via Docker’s <a href="https://docs.docker.com/engine/admin/logging/overview/">logging drivers</a>
     <ul>
-      <li>Benefits: simple, works with all Docker logging drivers (e.g. “awslogs”, “splunk”, …)</li>
+      <li>Benefits: simple, works with all Docker logging drivers (e.g. “awslogs”, “splunk”, etc.)</li>
     </ul>
   </li>
 </ul>
@@ -1094,25 +1095,28 @@ $('#toc').on('click', 'a', function() {
 
 <h2 id="monitoring">Monitoring</h2>
 
-<p>Additionally to the obligatory logging monitoring is included in the Ditto images. That means that certain metrics are 
-automatically gathered and published on a HTTP port where it can be scraped from a <a href="https://prometheus.io">Prometheus</a> 
-backend from where the metrics can be accessed to display in dashboards (e.g. with <a href="https://grafana.com">Grafana</a>).</p>
+<p>In addition to logging, the Ditto images include monitoring features. Specific metrics are
+automatically gathered and published on a HTTP port. There it can be scraped by a <a href="https://prometheus.io">Prometheus</a>
+backend, from where the metrics can be accessed to display in dashboards (e.g. with <a href="https://grafana.com">Grafana</a>).</p>
 
 <h3 id="configuring">Configuring</h3>
 
-<p>In the default configuration each Ditto service opens a HTTP endpoint where it provides the Prometheus metrics on port
+<p>In the default configuration, each Ditto service opens a HTTP endpoint, where it provides the Prometheus metrics on port
 <code class="highlighter-rouge">9095</code>. This can be changed via the environment variable <code class="highlighter-rouge">PROMETHEUS_PORT</code>.</p>
 
 <p>Ditto will automatically publish gathered metrics at the endpoint <code class="highlighter-rouge">http://&lt;container-host-or-ip&gt;:9095/</code>.</p>
 
-<p>Prometheus can then be configured to poll on all Ditto service endpoints in order to persist the historical metrics.
+<p>Further, Prometheus can be configured to poll on all Ditto service endpoints in order to persist the historical metrics.
 Grafana can add a Prometheus server as its data source and can display 
 the metrics based on the keys mentioned in section <a href="#gathered-metrics">“Gathered metrics”</a>.</p>
 
 <h3 id="gathered-metrics">Gathered metrics</h3>
 
 <p>In order to inspect which metrics are exported to Prometheus, just visit the Prometheus HTTP endpoint of a Ditto service:
-<code class="highlighter-rouge">http://&lt;container-host-or-ip&gt;:9095/</code>, e.g. for the <a href="architecture-services-gateway.html">gateway-service</a> an excerpt:</p>
+<code class="highlighter-rouge">http://&lt;container-host-or-ip&gt;:9095/</code>.</p>
+
+<p>The following example shows an excerpt of metrics gathered for the
+<a href="architecture-services-gateway.html">gateway-service</a>.</p>
 
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#Kamon Metrics
 # TYPE jvm_threads gauge
@@ -1139,7 +1143,7 @@ jvm_memory_bytes_count{component="system-metrics",measure="used",segment="miscel
 jvm_memory_bytes_sum{component="system-metrics",measure="used",segment="miscellaneous-non-heap-storage"} 786350080.0
 </code></pre></div></div>
 
-<p>So what Ditto reports in a nutshell:</p>
+<p>To put it in a nutshell, Ditto reports:</p>
 
 <ul>
   <li>JVM metrics for all services
@@ -1174,11 +1178,9 @@ jvm_memory_bytes_sum{component="system-metrics",measure="used",segment="miscella
 
 <h2 id="devops-commands">DevOps commands</h2>
 
-<p>Starting with Ditto Milestone 0.1.0-M2, an HTTP API for so called “DevOps commands” was added.<br />
-This API is intended for making operating Ditto easier by reducing the need to restart Ditto services for configuration
-changes.</p>
+<p>The “DevOps commands” API allows Ditto operators to make changes to a running installation without restarts.</p>
 
-<p>Following DevOps commands are supported:</p>
+<p>The following DevOps commands are supported:</p>
 
 <ul>
   <li>Dynamically retrieve and change log levels</li>
@@ -1187,13 +1189,15 @@ changes.</p>
 
 <h3 id="dynamically-adjust-log-levels">Dynamically adjust log levels</h3>
 
-<p>Dynamically changing the log levels is a very useful tool when debugging a problem occurring only in production without
-the need to restart the server and thereby fixing the bug.</p>
+<p>Changing the log levels dynamically is very useful when debugging an accidental problem,
+since the cause of the problem could be lost on service restart.</p>
 
 <h4 id="retrieve-all-log-levels">Retrieve all log levels</h4>
 
-<p>Example response for retrieving all currently configured log levels:<br />
+<p>Example for retrieving all currently configured log levels:<br />
 <code class="highlighter-rouge">GET /devops/logging</code></p>
+
+<p>Response:</p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
     </span><span class="s2">"gateway"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
@@ -1245,6 +1249,8 @@ the need to restart the server and thereby fixing the bug.</p>
 <p>Example response for retrieving all currently configured log levels of gateways services:<br />
 <code class="highlighter-rouge">GET /devops/logging/gateway</code></p>
 
+<p>Response:</p>
+
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
     </span><span class="s2">"1"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
         </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"devops.responses:retrieveLoggerConfig"</span><span class="p">,</span><span class="w">
@@ -1265,10 +1271,12 @@ the need to restart the server and thereby fixing the bug.</p>
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
-<h4 id="change-a-specific-log-level-for-one-services">Change a specific log level for one services</h4>
+<h4 id="change-a-specific-log-level-for-one-service">Change a specific log level for one service</h4>
 
-<p>Example request payload to change the log level of logger <code class="highlighter-rouge">org.eclipse.ditto</code> in all gateway services to <code class="highlighter-rouge">DEBUG</code>:<br />
-<code class="highlighter-rouge">PUT /devops/logging/gateway</code></p>
+<p>Example request payload to change the log level of logger <code class="highlighter-rouge">org.eclipse.ditto</code> in all
+instances of gateway-service to <code class="highlighter-rouge">DEBUG</code>:</p>
+
+<p><code class="highlighter-rouge">PUT /devops/logging/gateway</code></p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
     </span><span class="s2">"logger"</span><span class="p">:</span><span class="w"> </span><span class="s2">"org.eclipse.ditto"</span><span class="p">,</span><span class="w">
@@ -1278,8 +1286,9 @@ the need to restart the server and thereby fixing the bug.</p>
 
 <h3 id="piggyback-commands">Piggyback commands</h3>
 
-<p>You can use a DevOps command to send a command to another actor in the cluster. Those special commands are named
-piggyback commands. A piggyback command must conform to the following schema:</p>
+<p>You can use a DevOps command to send a command to another actor in the cluster.
+Those special commands are called piggyback commands.
+A piggyback command must conform to the following schema:</p>
 
 <script src="docson/widget.js" data-schema="../jsonschema/piggyback-command.json"></script>
 
@@ -1297,9 +1306,173 @@ piggyback commands. A piggyback command must conform to the following schema:</p
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
-<p>Currently piggybacks are only used to configure Dittos connectivity service. More information on this can be found in
+<h4 id="managing-connections">Managing connections</h4>
+
+<p>Piggybacks are used to configure Dittos connectivity service. More information on this can be found in
 the <a href="connectivity-manage-connections.html">Manage Connections</a> section.</p>
 
+<h4 id="erasing-data-within-a-namespace">Erasing data within a namespace</h4>
+
+<p>Ditto supports erasure of <em>all</em> data within a namespace during live operations.
+To do so safely, perform the following steps in sequence.</p>
+
+<ol>
+  <li><a href="#block-all-messages-to-a-namespace">Block all messages to the namespace</a>
+so that actors will not spawn in the namespace.</li>
+  <li><a href="#shutdown-all-actors-in-a-namespace">Shutdown all actors in the namespace</a>
+so that no actor will generate data in the namespace.</li>
+  <li><a href="#erase-all-data-in-a-namespace-from-the-persistence">Erase data from the persistence</a>.</li>
+  <li><a href="#unblock-messages-to-a-namespace">Unblock messages to the namespace</a>
+so that the old namespace could be reused at a later point in time.</li>
+</ol>
+
+<h5 id="block-all-messages-to-a-namespace">Block all messages to a namespace</h5>
+
+<p>Send a piggyback command to <a href="https://doc.akka.io/docs/akka/current/distributed-pub-sub.html">Akka’s pub-sub-mediator</a> with type <code class="highlighter-rouge">namespaces.commands:blockNamespace</code>
+to block all messages sent to actors belonging to a namespace.</p>
+
+<p><code class="highlighter-rouge">PUT /devops/piggygack?timeout=10000</code></p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"targetActorSelection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/system/distributedPubSubMediator"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"aggregate"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="s2">"piggybackCommand"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"namespaces.commands:blockNamespace"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"namespace"</span><span class="p">:</span><span class="w"> </span><span class="s2">"namespaceToBlock"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>Once a namespace is blocked on all members of the Ditto cluster, you will get a response
+similar to the one below. The namespace will remain blocked for the lifetime of the Ditto cluster,
+or until you proceed with <a href="#unblock-messages-to-a-namespace">step 4</a>, which unblocks it.</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"?"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"?"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"namespaces.responses:blockNamespace"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="mi">200</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"namespace"</span><span class="p">:</span><span class="w"> </span><span class="s2">"namespaceToBlock"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"resourceType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"namespaces"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h5 id="shutdown-all-actors-in-a-namespace">Shutdown all actors in a namespace</h5>
+
+<p>Send a piggyback command to <a href="https://doc.akka.io/docs/akka/current/distributed-pub-sub.html">Akka’s pub-sub-mediator</a> with type <code class="highlighter-rouge">common.commands:shutdown</code>
+to request all actors in a namespace to shut down. The value of <code class="highlighter-rouge">piggybackCommand/reason/type</code> must be
+<code class="highlighter-rouge">purge-namespace</code>; otherwise, the namespace’s actors will not stop themselves.</p>
+
+<p><code class="highlighter-rouge">PUT /devops/piggygack?timeout=0</code></p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"targetActorSelection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/system/distributedPubSubMediator"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"piggybackCommand"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"common.commands:shutdown"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"reason"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"purge-namespace"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"details"</span><span class="p">:</span><span class="w"> </span><span class="s2">"namespaceToShutdown"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>The shutdown command has no response because the number of actors shutting down can be very large.
+The response will always be <code class="highlighter-rouge">408</code> timeout.
+Feel free to send the shutdown command several times to make sure.</p>
+
+<h5 id="erase-all-data-in-a-namespace-from-the-persistence">Erase all data in a namespace from the persistence</h5>
+
+<p>Send a piggyback command to <a href="https://doc.akka.io/docs/akka/current/distributed-pub-sub.html">Akka’s pub-sub-mediator</a> with type <code class="highlighter-rouge">namespaces.commands:purgeNamespace</code>
+to erase all data from the persistence.
+It is better to purge a namespace after
+<a href="#block-all-messages-to-a-namespace">blocking</a> it and
+<a href="#shutdown-all-actors-in-a-namespace">shutting down</a>
+all its actors so that no data is written in the namespace while erasing is ongoing.</p>
+
+<p>The erasure may take a long time if the namespace has a lot of data associated with it or if the persistent storage is
+slow. Set the timeout to a safe margin above the estimated erasure time in milliseconds.</p>
+
+<p><code class="highlighter-rouge">PUT /devops/piggygack?timeout=10000</code></p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"targetActorSelection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/system/distributedPubSubMediator"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"aggregate"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="s2">"piggybackCommand"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"namespaces.commands:purgeNamespace"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"namespace"</span><span class="p">:</span><span class="w"> </span><span class="s2">"namespaceToPurge"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>The response contains results of the data purge, one for each resource type.
+Note that to see responses from multiple resource types, the header <code class="highlighter-rouge">aggregate</code> must not be <code class="highlighter-rouge">false</code>.</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"?"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"?"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"namespaces.responses:purgeNamespace"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="mi">200</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"namespace"</span><span class="p">:</span><span class="w"> </span><span class="s2">"namespaceToPurge"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"resourceType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"thing"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"successful"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="s2">"?1"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"namespaces.responses:purgeNamespace"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="mi">200</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"namespace"</span><span class="p">:</span><span class="w"> </span><span class="s2">"namespaceToPurge"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"resourceType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"policy"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"successful"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="s2">"?2"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"namespaces.responses:purgeNamespace"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="mi">200</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"namespace"</span><span class="p">:</span><span class="w"> </span><span class="s2">"namespaceToPurge"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"resourceType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"thing-search"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"successful"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h5 id="unblock-messages-to-a-namespace">Unblock messages to a namespace</h5>
+
+<p>Send a piggyback command to <a href="https://doc.akka.io/docs/akka/current/distributed-pub-sub.html">Akka’s pub-sub-mediator</a> with type <code class="highlighter-rouge">namespaces.commands:unblockNamespace</code>
+to stop blocking messages to a namespace.</p>
+
+<p><code class="highlighter-rouge">PUT /devops/piggygack?timeout=10000</code></p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"targetActorSelection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/system/distributedPubSubMediator"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"aggregate"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="s2">"piggybackCommand"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"namespaces.commands:unblockNamespace"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"namespace"</span><span class="p">:</span><span class="w"> </span><span class="s2">"namespaceToUnblock"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>A response will come once the namespace’s blockade is released on all members of the Ditto cluster.</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"?"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"?"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"namespaces.responses:unblockNamespace"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="mi">200</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"namespace"</span><span class="p">:</span><span class="w"> </span><span class="s2">"namespaceToUnblock"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"resourceType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"namespaces"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
 
 
     <div class="tags">
@@ -1326,7 +1499,7 @@ the <a href="connectivity-manage-connections.html">Manage Connections</a> sectio
                     </div>
                     <p class="notice">
                         &copy;2018 Eclipse Ditto.
-                         Site last generated: Nov 29, 2018 <br />
+                         Site last generated: Dec 6, 2018 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">
