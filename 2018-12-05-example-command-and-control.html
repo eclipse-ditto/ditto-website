@@ -326,8 +326,13 @@ chosen arbitrarily, but must be set as the <code class="highlighter-rouge">reply
                    ],
                    "headerMapping": {
                      "correlation-id": "{{ header:correlation-id }}",
-                     "status": "{{ header:status }}"
+                     "status": "{{ header:status }}",
+                     "content-type": "{{ header:content-type }}"
                    }
+                 },
+                 {
+                   "addresses": ["telemetry/org.eclipse.ditto", "event/org.eclipse.ditto"],
+                   "authorizationContext": ["nginx:demo5"]
                  }
                ],
                "targets": [{
@@ -335,9 +340,11 @@ chosen arbitrarily, but must be set as the <code class="highlighter-rouge">reply
                    "authorizationContext": [
                      "nginx:demo5"
                    ],
+                   "topics":["_/_/things/live/messages"],
                    "headerMapping": {
-                     "correlation-id": "{{ header:correlation-id }}",
+                     "message-id": "{{ header:correlation-id }}",
                      "subject": "{{ topic:subject }}",
+                     "content-type": "application/vnd.eclipse.ditto+json",
                      "reply-to": "control/org.eclipse.ditto/replies"
                    }
                  }
@@ -485,7 +492,7 @@ The Eclipse Ditto team</p>
                     </div>
                     <p class="notice">
                         &copy;2019 Eclipse Ditto.
-                         Site last generated: Feb 4, 2019 <br />
+                         Site last generated: Feb 6, 2019 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">
