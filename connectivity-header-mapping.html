@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="">
-<meta name="keywords" content="connectivity,  header, mapping">
+<meta name="keywords" content="connectivity,  header, mapping, placeholder">
 <title> Header mapping for connections | Eclipse Ditto</title>
 
 <link rel="stylesheet" href="css/syntax.css">
@@ -451,6 +451,13 @@
               
               
               
+              <li><a href="basic-placeholders.html">Placeholders</a></li>
+              
+              
+              
+              
+              
+              
               <li><a href="basic-changenotifications.html">Change notifications</a></li>
               
               
@@ -635,6 +642,13 @@
               
               
               <li><a href="connectivity-protocol-bindings-mqtt.html">MQTT 3.1.1 protocol binding</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="connectivity-protocol-bindings-kafka2.html">Kafka 2.x protocol binding</a></li>
               
               
               
@@ -1028,8 +1042,8 @@
         <!-- Content Column -->
         <div class="col-md-9" id="tg-sb-content">
             <span class="incubation-logo">
-    <img src="images/eclipse_incubation.png" alt="This is an Eclipse incubation project" style="position: fixed;
-    bottom: 10px; right: 10px;"/>
+    <img src="images/eclipse_incubation_vertical_png-02.png" alt="This is an Eclipse incubation project" style="position: fixed;
+    bottom: 10px; right: 10px; width: 100px"/>
 </span>
 
 
@@ -1081,197 +1095,13 @@ messages can be mapped to and from internal DittoHeaders.</p>
 mapped to a header used for message correlation in the external system.</p>
 
 <p>A header mapping can be defined individually for every source and target of a connection. For examples of a definition 
-see <a href="connectivity-protocol-bindings-amqp091.html#source-header-mapping">source header mapping</a> 
-and <a href="connectivity-protocol-bindings-amqp091.html#target-header-mapping">target header mapping</a> for AMQP 0.9.1 connections
-or <a href="connectivity-protocol-bindings-amqp10.html#source-header-mapping">source header mapping</a> 
-and <a href="connectivity-protocol-bindings-amqp10.html#target-header-mapping">target header mapping</a> for AMQP 1.0 connections.</p>
+see <a href="basic-connections.html#source-header-mapping">source header mapping</a> 
+and <a href="basic-connections.html#target-header-mapping">target header mapping</a>.</p>
 
 <h2 id="supported-placeholders">Supported placeholders</h2>
 
-<p>The already defined <a href="basic-connections.html#placeholders">placeholders of connections</a> are supported inside header
-mappings combined with the header mapping specific <a href="#topic-placeholders">topic placeholder</a>.</p>
-
-<p>In total, the following placeholders are available during header mapping:</p>
-
-<table>
-  <thead>
-    <tr>
-      <th>Placeholder</th>
-      <th>Description</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><code class="highlighter-rouge">{{ thing:id }}</code></td>
-      <td>full ID composed of ‘‘namespace’’ + ‘’:’’ as a separator + ‘‘name’’</td>
-    </tr>
-    <tr>
-      <td><code class="highlighter-rouge">{{ thing:namespace }}</code></td>
-      <td>Namespace (i.e. first part of an ID)</td>
-    </tr>
-    <tr>
-      <td><code class="highlighter-rouge">{{ thing:name }}</code></td>
-      <td>Name (i.e. second part of an ID )</td>
-    </tr>
-    <tr>
-      <td><code class="highlighter-rouge">{{ header:&lt;header-name&gt; }}</code></td>
-      <td>any external protocol header</td>
-    </tr>
-    <tr>
-      <td><code class="highlighter-rouge">{{ topic:full }}</code></td>
-      <td>full <a href="protocol-specification-topic.html">Ditto Protocol topic path</a></td>
-    </tr>
-    <tr>
-      <td><code class="highlighter-rouge">{{ topic:namespace }}</code></td>
-      <td>Ditto Protocol <a href="protocol-specification-topic.html#namespace">Namespace</a></td>
-    </tr>
-    <tr>
-      <td><code class="highlighter-rouge">{{ topic:entityId }}</code></td>
-      <td>Ditto Protocol <a href="protocol-specification-topic.html#entity-id">Entity ID</a></td>
-    </tr>
-    <tr>
-      <td><code class="highlighter-rouge">{{ topic:group }}</code></td>
-      <td>Ditto Protocol <a href="protocol-specification-topic.html#group">Group</a></td>
-    </tr>
-    <tr>
-      <td><code class="highlighter-rouge">{{ topic:channel }}</code></td>
-      <td>Ditto Protocol <a href="protocol-specification-topic.html#channel">Channel</a></td>
-    </tr>
-    <tr>
-      <td><code class="highlighter-rouge">{{ topic:criterion }}</code></td>
-      <td>Ditto Protocol <a href="protocol-specification-topic.html#criterion">Criterion</a></td>
-    </tr>
-    <tr>
-      <td><code class="highlighter-rouge">{{ topic:action }}</code></td>
-      <td>Ditto Protocol <a href="protocol-specification-topic.html#action-optional">Action</a></td>
-    </tr>
-    <tr>
-      <td><code class="highlighter-rouge">{{ topic:subject }}</code></td>
-      <td>Ditto Protocol <a href="protocol-specification-topic.html#messages-criterion-actions">Subject</a> (for message commands)</td>
-    </tr>
-    <tr>
-      <td><code class="highlighter-rouge">{{ topic:action|subject }}</code></td>
-      <td>either Ditto Protocol <a href="protocol-specification-topic.html#action-optional">Action</a> or <a href="protocol-specification-topic.html#messages-criterion-actions">Subject</a> (for message commands)</td>
-    </tr>
-  </tbody>
-</table>
-
-<h2 id="topic-placeholders">Topic placeholders</h2>
-
-<p>Only inside the header mapping, the <a href="protocol-specification-topic.html">Ditto Protocol topic</a> may be accessed via the 
-<code class="highlighter-rouge">topic:</code> placeholders:</p>
-
-<ul>
-  <li><code class="highlighter-rouge">{{ topic:full }}</code>: full path in the form <code class="highlighter-rouge">{namespace}/{entityId}/{group}/{channel}/{criterion}/{action|subject}</code></li>
-  <li><code class="highlighter-rouge">{{ topic:namespace }}</code>: <a href="protocol-specification-topic.html#namespace">Namespace</a> part</li>
-  <li><code class="highlighter-rouge">{{ topic:entityId }}</code>: <a href="protocol-specification-topic.html#entity-id">Entity ID</a> part</li>
-  <li><code class="highlighter-rouge">{{ topic:group }}</code>: <a href="protocol-specification-topic.html#group">Group</a> part</li>
-  <li><code class="highlighter-rouge">{{ topic:channel }}</code>: <a href="protocol-specification-topic.html#channel">Channel</a> part</li>
-  <li><code class="highlighter-rouge">{{ topic:criterion }}</code>: <a href="protocol-specification-topic.html#criterion">Criterion</a> part</li>
-  <li><code class="highlighter-rouge">{{ topic:action }}</code>: <a href="protocol-specification-topic.html#action-optional">Action</a> part</li>
-  <li><code class="highlighter-rouge">{{ topic:subject }}</code>: <a href="protocol-specification-topic.html#messages-criterion-actions">Subject</a> part (for message commands)</li>
-  <li><code class="highlighter-rouge">{{ topic:action|subject }}</code>: either <a href="protocol-specification-topic.html#action-optional">Action</a> or <a href="protocol-specification-topic.html#messages-criterion-actions">Subject</a> (for message commands)</li>
-</ul>
-
-<p>For a topic path with the intention of <a href="protocol-examples-creatething.html">creating a Thing</a> 
-<em>org.eclipse.ditto/device-123/things/twin/commands/create</em> these placeholders would be resolved as follows:</p>
-
-<table>
-  <thead>
-    <tr>
-      <th>Placeholder</th>
-      <th>Resolved value</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><code class="highlighter-rouge">topic:full</code></td>
-      <td><em>org.eclipse.ditto/device-123/things/twin/commands/create</em></td>
-    </tr>
-    <tr>
-      <td><code class="highlighter-rouge">topic:namespace</code></td>
-      <td><em>org.eclipse.ditto</em></td>
-    </tr>
-    <tr>
-      <td><code class="highlighter-rouge">topic:entityId</code></td>
-      <td><em>device-123</em></td>
-    </tr>
-    <tr>
-      <td><code class="highlighter-rouge">topic:group</code></td>
-      <td><em>things</em></td>
-    </tr>
-    <tr>
-      <td><code class="highlighter-rouge">topic:channel</code></td>
-      <td><em>twin</em></td>
-    </tr>
-    <tr>
-      <td><code class="highlighter-rouge">topic:criterion</code></td>
-      <td><em>commands</em></td>
-    </tr>
-    <tr>
-      <td><code class="highlighter-rouge">topic:action</code></td>
-      <td><em>create</em></td>
-    </tr>
-    <tr>
-      <td><code class="highlighter-rouge">topic:subject</code></td>
-      <td>❌</td>
-    </tr>
-    <tr>
-      <td><code class="highlighter-rouge">topic:action|subject</code></td>
-      <td><em>create</em></td>
-    </tr>
-  </tbody>
-</table>
-
-<p>For a topic path with the intention of <a href="protocol-specification-things-messages.html#sending-a-message-to-a-thing">sending a message to a Thing</a> 
-<em>org.eclipse.ditto/device-123/things/live/messages/hello.world</em> these placeholders are resolved as follows:</p>
-
-<table>
-  <thead>
-    <tr>
-      <th>Placeholder</th>
-      <th>Resolved value</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><code class="highlighter-rouge">topic:full</code></td>
-      <td><em>org.eclipse.ditto/device-123/things/live/messages/hello.world</em></td>
-    </tr>
-    <tr>
-      <td><code class="highlighter-rouge">topic:namespace</code></td>
-      <td><em>org.eclipse.ditto</em></td>
-    </tr>
-    <tr>
-      <td><code class="highlighter-rouge">topic:entityId</code></td>
-      <td><em>device-123</em></td>
-    </tr>
-    <tr>
-      <td><code class="highlighter-rouge">topic:group</code></td>
-      <td><em>things</em></td>
-    </tr>
-    <tr>
-      <td><code class="highlighter-rouge">topic:channel</code></td>
-      <td><em>live</em></td>
-    </tr>
-    <tr>
-      <td><code class="highlighter-rouge">topic:criterion</code></td>
-      <td><em>messages</em></td>
-    </tr>
-    <tr>
-      <td><code class="highlighter-rouge">topic:action</code></td>
-      <td>❌</td>
-    </tr>
-    <tr>
-      <td><code class="highlighter-rouge">topic:subject</code></td>
-      <td><em>hello.world</em></td>
-    </tr>
-    <tr>
-      <td><code class="highlighter-rouge">topic:action|subject</code></td>
-      <td><em>hello.world</em></td>
-    </tr>
-  </tbody>
-</table>
+<p>The supported placeholders for header mapping are defined in the 
+<a href="basic-placeholders.html#scope-connections">Placeholders - Scope: Connections</a> section.</p>
 
 
     <div class="tags">
@@ -1298,7 +1128,7 @@ mappings combined with the header mapping specific <a href="#topic-placeholders"
                     </div>
                     <p class="notice">
                         &copy;2019 Eclipse Ditto.
-                         Site last generated: Feb 6, 2019 <br />
+                         Site last generated: Mar 26, 2019 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">
