@@ -4,9 +4,9 @@
     <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="">
-<meta name="keywords" content="signal,  command, communication, CQRS, DDD, event, EventSourcing, response, signal">
-<title> Signals | Eclipse Ditto</title>
+<meta name="description" content="Version 0.9.0-M1 of Eclipse Ditto, released on 28.03.2019">
+<meta name="keywords" content="release_notes,  release notes, announcements, changelog">
+<title> Release notes 0.9.0-M1 | Eclipse Ditto</title>
 
 <link rel="stylesheet" href="css/syntax.css">
 <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" crossorigin="anonymous">
@@ -167,7 +167,7 @@
                                 searchInput: document.getElementById('search-input'),
                                 resultsContainer: document.getElementById('results-container'),
                                 dataSource: 'search.json',
-                                searchResultTemplate: '<li><a href="{url}" title="Signals">{title}</a></li>',
+                                searchResultTemplate: '<li><a href="{url}" title="Release notes 0.9.0-M1">{title}</a></li>',
                                 noResultsText: 'No results found.',
                                 limit: 10,
                                 fuzzy: true,
@@ -294,7 +294,7 @@
                       
                       
                       
-                      <li><a href="release_notes_090-M1.html">0.9.0-M1</a></li>
+                      <li class="active"><a href="release_notes_090-M1.html">0.9.0-M1</a></li>
                       
                       
                       
@@ -403,7 +403,7 @@
               
               
               
-              <li class="active"><a href="basic-signals.html">Signals</a></li>
+              <li><a href="basic-signals.html">Signals</a></li>
               
               
               
@@ -1054,13 +1054,15 @@
 
 
 <div class="post-header">
-   <h1 class="post-title-main">Signals</h1>
+   <h1 class="post-title-main">Release notes 0.9.0-M1</h1>
 </div>
 
 
 
 <div class="post-content">
 
+   
+    <div class="summary">Version 0.9.0-M1 of Eclipse Ditto, released on 28.03.2019</div>
    
 
     
@@ -1094,60 +1096,45 @@ $('#toc').on('click', 'a', function() {
 
     
 
-  <p>Ditto has a concept called <code class="highlighter-rouge">Signal</code> which combines common functionality of</p>
-<ul>
-  <li><a href="basic-signals-command.html">Commands,</a></li>
-  <li><a href="basic-signals-commandresponse.html">Command Responses,</a></li>
-  <li><a href="basic-signals-errorresponse.html">Error Responses</a> and</li>
-  <li><a href="basic-signals-event.html">Events.</a></li>
-</ul>
+  <p>After the first release of Ditto <a href="release_notes_080.html">0.8.0</a>, this first milestone of the “0.9.0” release provides
+a preview of what to expect in the next release.</p>
 
-<p>Such common functionality is for example that all those have header fields in which they can be for example correlated
-to each other.</p>
+<h2 id="changes">Changes</h2>
 
-<p>Signals are one of the core concepts of Ditto but they mostly are used internally for communication in the Ditto
-cluster.
-Nevertheless it is very helpful to have a basic understanding of what the Signal types are and in which communication 
-pattern they occur.</p>
+<h3 id="optimizedreduced-memory-consumption-of-ditto-json"><a href="https://github.com/eclipse/ditto/pull/304">Optimized/reduced memory consumption of ditto-json</a></h3>
 
-<h2 id="architectural-style">Architectural style</h2>
+<p><code class="highlighter-rouge">ditto-json</code> used quite a lot of memory when building up JSON structures - this change optimized that by a factor of 
+10-20, so now it is possible to keep ~1.000.000 things in memory with ~4GB of memory.</p>
 
-<p>Ditto uses Commands, Events,
-<a href="#" data-toggle="tooltip" data-original-title="Command-Query Responsibility Segregation. A pattern Ditto applies in order to handle commands (ModifyCommands in Ditto) and queries (QueryCommands in Ditto) differently, e.g. by reading queries from memory and persisting commands to a datastore.">CQRS</a> and EventSourcing.
-<a href="http://cqrs.nu/Faq">This page</a> provides a quite good explanation of the basic concepts on all of those aspects:</p>
+<h3 id="update-several-dependencies"><a href="https://github.com/eclipse/ditto/issues/300">Update several dependencies</a></h3>
 
-<h3 id="command">Command</h3>
+<p>Several used dependencies were updated to their latest (bugfix) releases or even to a stable 1.x version.</p>
 
-<blockquote>
-  <p>People request changes to the domain by sending commands. 
-They are named with a verb in the imperative mood plus and may include the aggregate type, for example <code class="highlighter-rouge">ConfirmOrder</code>. 
-Unlike an event, a command is not a statement of fact; it’s only a request, and thus may be refused.
-(A typical way to convey refusal is to throw an exception).</p>
-</blockquote>
+<h2 id="new-features">New features</h2>
 
-<h3 id="event">Event</h3>
+<h3 id="erasing-data-without-downtime"><a href="https://github.com/eclipse/ditto/issues/234">Erasing data without downtime</a></h3>
 
-<blockquote>
-  <p>An event represents something that took place in the domain.
-They are always named with a past-participle verb, such as <code class="highlighter-rouge">OrderConfirmed</code>. 
-It’s not unusual but also not required for an event to name an aggregate or entity that it relates to; let the domain
-language be your guide.<br />
-Since an event represents something in the past, it can be considered a statement of fact and used to take decisions in
-other parts of the system.</p>
-</blockquote>
+<p>GDPR requires erasure of data on request of data subject.</p>
 
-<h2 id="communication-pattern">Communication pattern</h2>
+<h3 id="enhance-placeholders-by-functions"><a href="https://github.com/eclipse/ditto/issues/337">Enhance placeholders by functions</a></h3>
 
-<ol>
-  <li>A <strong>command</strong> is sent to Ditto where it is then processed.</li>
-  <li>Either a <strong>success response</strong> or an <strong>error response</strong> is sent back to the issuer of the <strong>command</strong>.</li>
-  <li>In addition an <strong>event</strong> is both persisted into the datastore and published.<br />
-The event describes that the change was applied to an entity (e.g. a <code class="highlighter-rouge">Thing</code>).<br />
-Interested parties can subscribe for such <strong>events</strong> and follow the evolving entity.</li>
-</ol>
+<p>The already existing placeholder mechanism for connections was enhanced by optionally adding function calls (currently 
+simple string manipulations like <code class="highlighter-rouge">fn:substring-before(':')</code>).</p>
 
-<div class="alert alert-info" role="alert"><i class="fa fa-info-circle"></i> <b>Note:</b> Events caused by commands from a <strong><a href="basic-connections.html">connection</a></strong> are not published
-            <strong>to the same origin</strong>. The connection can receive a response, but will not additionally get an event.</div>
+<h3 id="connect-to-apache-kafka"><a href="https://github.com/eclipse/ditto/issues/224">Connect to Apache Kafka</a></h3>
+
+<p>In order to publish Ditto protocol messages (e.g. events/responses/messages/…) to Apache Kafka topics.</p>
+
+<h3 id="collect-and-provide-connection-metrics"><a href="https://github.com/eclipse/ditto/issues/317">Collect and provide connection metrics</a></h3>
+
+<p>Provide metrics about established connections (e.g. to AMQP 1.0, Kafka, MQTT, …).</p>
+
+<h2 id="bugfixes">Bugfixes</h2>
+
+<h3 id="various-smaller-bugfixes">Various smaller bugfixes</h3>
+
+<p>This is a complete list of the 
+<a href="https://github.com/eclipse/ditto/pulls?q=is%3Apr+milestone%3A0.9.0-M1+">merged pull requests</a>.</p>
 
 
 
@@ -1157,7 +1144,7 @@ Interested parties can subscribe for such <strong>events</strong> and follow the
         
         
         
-        <a href="tag_signal.html" class="btn btn-default navbar-btn cursorNorm" role="button">signal</a>
+        <a href="tag_release_notes.html" class="btn btn-default navbar-btn cursorNorm" role="button">release_notes</a>
         
         
         
