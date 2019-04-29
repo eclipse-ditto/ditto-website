@@ -4,9 +4,9 @@
     <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="">
-<meta name="keywords" content=" examples, create feature">
-<title> Create a single feature | Eclipse Ditto</title>
+<meta name="description" content="Version 0.9.0-M2 of Eclipse Ditto, released on 29.04.2019">
+<meta name="keywords" content="release_notes,  release notes, announcements, changelog">
+<title> Release notes 0.9.0-M2 | Eclipse Ditto</title>
 
 <link rel="stylesheet" href="css/syntax.css">
 <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" crossorigin="anonymous">
@@ -167,7 +167,7 @@
                                 searchInput: document.getElementById('search-input'),
                                 resultsContainer: document.getElementById('results-container'),
                                 dataSource: 'search.json',
-                                searchResultTemplate: '<li><a href="{url}" title="Create a single feature">{title}</a></li>',
+                                searchResultTemplate: '<li><a href="{url}" title="Release notes 0.9.0-M2">{title}</a></li>',
                                 noResultsText: 'No results found.',
                                 limit: 10,
                                 fuzzy: true,
@@ -300,7 +300,7 @@
                       
                       
                       
-                      <li><a href="release_notes_090-M2.html">0.9.0-M2</a></li>
+                      <li class="active"><a href="release_notes_090-M2.html">0.9.0-M2</a></li>
                       
                       
                       
@@ -907,7 +907,7 @@
                       
                       
                       
-                      <li class="active"><a href="protocol-examples-deletefeature.html">Delete a single Feature</a></li>
+                      <li><a href="protocol-examples-deletefeature.html">Delete a single Feature</a></li>
                       
                       
                       
@@ -1060,13 +1060,15 @@
 
 
 <div class="post-header">
-   <h1 class="post-title-main">Create a single feature</h1>
+   <h1 class="post-title-main">Release notes 0.9.0-M2</h1>
 </div>
 
 
 
 <div class="post-content">
 
+   
+    <div class="summary">Version 0.9.0-M2 of Eclipse Ditto, released on 29.04.2019</div>
    
 
     
@@ -1100,39 +1102,58 @@ $('#toc').on('click', 'a', function() {
 
     
 
-  
-<h2 id="deletefeature">DeleteFeature</h2>
+  <p>This second milestone of the “0.9.0” release provides closes more gaps towards the upcoming release.</p>
 
-<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"topic"</span><span class="p">:</span><span class="w"> </span><span class="s2">"com.acme/xdk_53/things/twin/commands/delete"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
-  </span><span class="s2">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/features/accelerometer"</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre></div></div>
+<h2 id="changes">Changes</h2>
 
-<h2 id="deletefeatureresponse">DeleteFeatureResponse</h2>
+<h3 id="make-it-easy-to-add-new-authentication-mechanisms-and-allow-chaining-them"><a href="https://github.com/eclipse/ditto/issues/348">Make it easy to add new Authentication mechanisms and allow chaining them</a></h3>
 
-<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"topic"</span><span class="p">:</span><span class="w"> </span><span class="s2">"com.acme/xdk_53/things/twin/commands/delete"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
-  </span><span class="s2">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/features/accelerometer"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="mi">204</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre></div></div>
+<p>If we have multiple applicable authentication mechanisms all of them are processed until either one of them 
+authenticates successfully or all of them fail.</p>
 
-<h2 id="featuredeleted">FeatureDeleted</h2>
+<h3 id="unify-implementations-of-things-search-across-api-versions"><a href="https://github.com/eclipse/ditto/pull/392">Unify implementations of things-search across API versions</a></h3>
 
-<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"topic"</span><span class="p">:</span><span class="w"> </span><span class="s2">"com.acme/xdk_53/things/twin/events/deleted"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
-  </span><span class="s2">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/features/accelerometer"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"revision"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre></div></div>
+<p>Ditto’s “search” capabilities were rewritten so that bot API v1 and API v2 use the same MongoDB based search index.</p>
+
+<div class="alert alert-danger" role="alert"><i class="fa fa-exclamation-circle"></i> <b>Warning:</b> If you want to upgrade an existing Ditto installation, the following database 
+        migration has to be done: <strong>Follow the steps documented in <a href="architecture-services-things-search.html#migration-from-ditto-090-m1">the migration notes</a></strong>.</div>
+
+<h2 id="new-features">New features</h2>
+
+<h3 id="various-contributions-for-a-setup-of-eclipse-ditto-on-microsoft-azure">Various contributions for a setup of Eclipse Ditto on Microsoft Azure</h3>
+
+<p>As discussed in the ongoing issue <a href="https://github.com/eclipse/ditto/issues/358">Eclipse Ditto on Microsoft Azure</a> Microsoft
+added a few PRs in order to deploy Ditto on MS Azure cloud:</p>
+
+<ul>
+  <li><a href="https://github.com/eclipse/ditto/pull/364">Enable support for MongoDB persistence in K8s</a></li>
+  <li><a href="https://github.com/eclipse/ditto/pull/375">Fix Nginx connectivity after Helm update</a></li>
+  <li><a href="https://github.com/eclipse/ditto/pull/367">Recover from closed JMS AMQP message producer</a></li>
+  <li><a href="https://github.com/eclipse/ditto/pull/386">Improve nginx configuration for gateway restarts</a></li>
+</ul>
+
+<h2 id="bugfixes">Bugfixes</h2>
+
+<h3 id="mqtt-publish-fails-if-no-sources-are-configured"><a href="https://github.com/eclipse/ditto/issues/387">MQTT publish fails if no sources are configured</a></h3>
+
+<p>Fixed: If using a MQTT connection that only has targets but no sources, publishing of events will fail.</p>
+
+<h3 id="various-smaller-bugfixes">Various smaller bugfixes</h3>
+
+<p>This is a complete list of the 
+<a href="https://github.com/eclipse/ditto/pulls?q=is%3Apr+milestone%3A0.9.0-M2+">merged pull requests</a>.</p>
 
 
 
     <div class="tags">
+        
+        <b>Tags: </b>
+        
+        
+        
+        <a href="tag_release_notes.html" class="btn btn-default navbar-btn cursorNorm" role="button">release_notes</a>
+        
+        
         
     </div>
 
