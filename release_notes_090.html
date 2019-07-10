@@ -4,9 +4,9 @@
     <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="">
-<meta name="keywords" content="http,  api, http, overview, REST">
-<title>  HTTP API overview • Eclipse Ditto • a digital twin framework</title>
+<meta name="description" content="Version 0.9.0 of Eclipse Ditto, released on 10.07.2019">
+<meta name="keywords" content="release_notes,  release notes, announcements, changelog">
+<title>  Release notes 0.9.0 • Eclipse Ditto • a digital twin framework</title>
 
 <link rel="stylesheet" href="css/syntax.css">
 <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" crossorigin="anonymous">
@@ -167,7 +167,7 @@
                                 searchInput: document.getElementById('search-input'),
                                 resultsContainer: document.getElementById('results-container'),
                                 dataSource: 'search.json',
-                                searchResultTemplate: '<li><a href="{url}" title="HTTP API overview">{title}</a></li>',
+                                searchResultTemplate: '<li><a href="{url}" title="Release notes 0.9.0">{title}</a></li>',
                                 noResultsText: 'No results found.',
                                 limit: 10,
                                 fuzzy: true,
@@ -236,7 +236,7 @@
               
               
               
-              <li><a href="release_notes_090.html">0.9.0</a></li>
+              <li class="active"><a href="release_notes_090.html">0.9.0</a></li>
               
               
               
@@ -572,7 +572,7 @@
               
               
               
-              <li class="active"><a href="httpapi-overview.html">Overview</a></li>
+              <li><a href="httpapi-overview.html">Overview</a></li>
               
               
               
@@ -1067,13 +1067,15 @@
 
 
 <div class="post-header">
-   <h1 class="post-title-main">HTTP API overview</h1>
+   <h1 class="post-title-main">Release notes 0.9.0</h1>
 </div>
 
 
 
 <div class="post-content">
 
+   
+    <div class="summary">Version 0.9.0 of Eclipse Ditto, released on 10.07.2019</div>
    
 
     
@@ -1107,22 +1109,104 @@ $('#toc').on('click', 'a', function() {
 
     
 
-  <p>Ditto’s HTTP API is documented separately in the <a href="http-api-doc.html">HTTP API Doc</a>.</p>
+  <p>During several very hot summer days the Eclipse Ditto team worked on that last issues which were blocking our next
+release: <code class="highlighter-rouge">0.9.0</code>.</p>
 
-<p>There you can explore the two different API versions (the difference is described in the
-<a href="basic-overview.html">Basic Overview</a>).</p>
+<p>The successor release of <a href="release_notes_080.html">0.8.0</a> will most likely be the last “0.” incubation release as Ditto
+is moving forward for a <code class="highlighter-rouge">1.0.0</code> and a project graduation in Eclipse IoT.</p>
 
-<p>Ditto does not provide a fully compliant RESTful API in the
-<a href="https://www.ics.uci.edu/~fielding/pubs/dissertation/rest_arch_style.htm">academic sense</a> as it does not include
-hyperlinks in the HTTP responses.
-It however tries to follow the other best practices.</p>
+<p>Same as for <code class="highlighter-rouge">0.8.0</code> this release is completely <a href="https://www.eclipse.org/projects/handbook/#ip">IP (intellectual property) checked by 
+the Eclipse Foundation</a> meaning that project code as well as all used 
+dependencies were “[…] reviewed to ensure that the copyrights expressed are correct, licensing is valid 
+and compatible, and that other issues have been uncovered and properly investigated.”</p>
 
-<p>If you have any feedback on how to improve at that point, Ditto’s developer team is <a href="feedback.html">eager to learn</a>.</p>
+<h2 id="whats-in-this-release">What’s in this release?</h2>
 
-<h2 id="content-type">Content Type</h2>
+<p>Eclipse Ditto 0.9.0 focuses on the following areas:</p>
 
-<p>Currently only content-type <code class="highlighter-rouge">application/json</code> is supported.</p>
+<ul>
+  <li>Memory improvements for huge amounts (multi million) of digital twins which are held in memory</li>
+  <li>Adding metrics and logging around the connectivity feature in order to enable being able to operate connections to foreign systems/brokers via APIs</li>
+  <li>Enhancing Ditto’s connectivity feature by additionally being able to connect to Apache Kafka</li>
+  <li>Performance improvements of Ditto’s search functionality</li>
+  <li>Stabilization of cluster bootstrapping</li>
+  <li>Refactoring of how the services configurations are determined</li>
+  <li>Addition of a Helm template in order to simplify Kubernetes based deployments</li>
+  <li>Contributions from Microsoft in order to ease operating Eclipse Ditto on Microsoft Azure</li>
+</ul>
 
+<div class="alert alert-danger" role="alert"><i class="fa fa-exclamation-circle"></i> <b>Warning:</b> If you want to upgrade an existing Ditto 0.8.0 installation, the following database 
+        migration has to be done: <strong>Follow the steps documented in <a href="architecture-services-things-search.html#migration-from-ditto-090-m1">the migration notes</a></strong>.</div>
+
+<h3 id="changelog">Changelog</h3>
+
+<p>Compared to the latest milestone release <a href="release_notes_090-M2.html">0.9.0-M2</a>, the following changes, new features and
+bugfixes were added.</p>
+
+<h4 id="changes">Changes</h4>
+
+<h5 id="streamline-configuration"><a href="https://github.com/eclipse/ditto/issues/350">Streamline configuration</a></h5>
+
+<p>In this release, we changed how internally the configuration is determined in Ditto’s microservices. This should not 
+have any impact on a user of Eclipse Ditto. As however some configuration keys were remanded or restructured, some
+adjustments when manually configuring Ditto could be required.</p>
+
+<h4 id="new-features">New features</h4>
+
+<h5 id="introduce-cursor-based-paging-for-search-requests"><a href="https://github.com/eclipse/ditto/pull/407">Introduce cursor-based paging for search requests</a></h5>
+
+<p>In order to provide a constant performance for using pagination for the <code class="highlighter-rouge">things-search</code> miscroservice across even large 
+result sets (100s of thousands or more) of digital twins, a new cursor-based approach was added in addition to the 
+old <code class="highlighter-rouge">offset/limit</code> approach which gets slower for each page.</p>
+
+<h5 id="simple-throttling-for-amqp-10-consumers"><a href="https://github.com/eclipse/ditto/pull/420">Simple throttling for amqp 1.0 consumers</a></h5>
+
+<p>Added a simple throttling mechanism for amqp 1.0 consumers.
+The throttling is configurable by defining the number of messages allowed per time interval.</p>
+
+<h5 id="collect-connectivity-log-entries-and-provide-via-devops-command"><a href="https://github.com/eclipse/ditto/issues/318">Collect connectivity log entries and provide via devops command</a></h5>
+
+<p>In order to let a user analyze failures / unexpected behavior in his connections (e.g. to an MQTT or AMQP broker) 
+without giving him full access to the log-files of Ditto, a connection scoped mechanism for retrieving connectivity logs 
+was added.</p>
+
+<h4 id="bugfixes">Bugfixes</h4>
+
+<h5 id="memory-and-performance-fixes-in-concierge-gateway"><a href="https://github.com/eclipse/ditto/pull/400">Memory and performance fixes in concierge, gateway</a></h5>
+
+<p>Ditto’s <code class="highlighter-rouge">concierge</code> service did use a sharding approach for enforcing authorization information which lead to huge 
+amounts of memory required when managing multi million of digital twins.</p>
+
+<p>That, in addition to some memory fixes in the gateway and addition of metrics, was fixed in this PR.</p>
+
+<h5 id="ensure-ordering-for-processed-commands"><a href="https://github.com/eclipse/ditto/pull/417">Ensure ordering for processed commands</a></h5>
+
+<p>In previous versions of Ditto the order in which command were processed not guaranteed to be maintained. As maintaining
+the order however is the expected behavior, we decided to treat that as bug and added to the <code class="highlighter-rouge">concierge</code> service (where
+the order could be lost) to sequentially process commands issues via HTTP/WebSocket and connections.</p>
+
+<p>This release contains several bugfixes, this is a complete list of the 
+<a href="https://github.com/eclipse/ditto/pulls?q=is%3Apr+milestone%3A0.9.0+">merged pull requests</a>.</p>
+
+<h2 id="api-stability">API stability</h2>
+
+<p>As you noticed, Ditto is not yet released as 1.x version, it is still an 
+<a href="https://wiki.eclipse.org/Development_Resources/Process_Guidelines/What_is_Incubation">incubating Eclipse project</a>.</p>
+
+<p>That means that the project <em>could</em> choose to break APIs at any time without prior deprecation.</p>
+
+<p>We however can already guarantee that at the HTTP API for <a href="basic-overview.html#api-version-1">API version 1 and 2</a> the
+API stability is already ensured for the core functionality of managing <code class="highlighter-rouge">things</code> and <code class="highlighter-rouge">policies</code>.</p>
+
+<p>As the commercial product based on Eclipse Ditto, <a href="https://www.bosch-iot-suite.com/things/">Bosch IoT Things</a>, is 
+already used productive and in various projects, the API stability has to be and will be ensured moving forward towards 
+a 1.0.0 release.</p>
+
+<h2 id="roadmap">Roadmap</h2>
+
+<p>The Ditto project plans on releasing (non-milestone releases) twice per year, once every 6 months.</p>
+
+<p>In late 2019 we expect to graduate (exit the Eclipse incubation phase) with a 1.0.0 release.</p>
 
 
     <div class="tags">
@@ -1131,7 +1215,7 @@ It however tries to follow the other best practices.</p>
         
         
         
-        <a href="tag_http.html" class="btn btn-default navbar-btn cursorNorm" role="button">http</a>
+        <a href="tag_release_notes.html" class="btn btn-default navbar-btn cursorNorm" role="button">release_notes</a>
         
         
         

@@ -236,6 +236,13 @@
               
               
               
+              <li><a href="release_notes_090.html">0.9.0</a></li>
+              
+              
+              
+              
+              
+              
               <li><a href="release_notes_080.html">0.8.0</a></li>
               
               
@@ -246,49 +253,7 @@
                       
                       
                       
-                      <li><a href="release_notes_010-M1.html">0.1.0-M1</a></li>
-                      
-                      
-                      
-                      
-                      
-                      <li><a href="release_notes_010-M3.html">0.1.0-M3</a></li>
-                      
-                      
-                      
-                      
-                      
-                      <li><a href="release_notes_020-M1.html">0.2.0-M1</a></li>
-                      
-                      
-                      
-                      
-                      
-                      <li><a href="release_notes_030-M1.html">0.3.0-M1</a></li>
-                      
-                      
-                      
-                      
-                      
-                      <li><a href="release_notes_030-M2.html">0.3.0-M2</a></li>
-                      
-                      
-                      
-                      
-                      
-                      <li><a href="release_notes_080-M1.html">0.8.0-M1</a></li>
-                      
-                      
-                      
-                      
-                      
-                      <li><a href="release_notes_080-M2.html">0.8.0-M2</a></li>
-                      
-                      
-                      
-                      
-                      
-                      <li><a href="release_notes_080-M3.html">0.8.0-M3</a></li>
+                      <li><a href="release_notes_090-M2.html">0.9.0-M2</a></li>
                       
                       
                       
@@ -300,7 +265,49 @@
                       
                       
                       
-                      <li><a href="release_notes_090-M2.html">0.9.0-M2</a></li>
+                      <li><a href="release_notes_080-M3.html">0.8.0-M3</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_080-M2.html">0.8.0-M2</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_080-M1.html">0.8.0-M1</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_030-M2.html">0.3.0-M2</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_030-M1.html">0.3.0-M1</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_020-M1.html">0.2.0-M1</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_010-M3.html">0.1.0-M3</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_010-M1.html">0.1.0-M1</a></li>
                       
                       
                       
@@ -1232,6 +1239,9 @@ For protocol specific examples, consult the <a href="connectivity-protocol-bindi
   <li><a href="#retrieve-connection-status">retrieve connection status</a></li>
   <li><a href="#retrieve-connection-metrics">retrieve connection metrics</a></li>
   <li><a href="#reset-connection-metrics">reset connection metrics</a></li>
+  <li><a href="#enable-connection-logs">enable connection logs</a></li>
+  <li><a href="#retrieve-connection-logs">retrieve connection logs</a></li>
+  <li><a href="#reset-connection-logs">reset connection logs</a></li>
 </ul>
 
 <h3 id="test-connection">Test connection</h3>
@@ -1313,6 +1323,71 @@ necessary for retrieving the connection metrics is the <code class="highlighter-
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
+<h3 id="enable-connection-logs">Enable connection logs</h3>
+
+<p>Enables the connection logging feature of a connection for 24 hours.
+As soon as connection logging is enabled, you will be able to <a href="#retrieve-connection-logs">retrieve connection logs</a>. The
+logs will contain a fixed amount of success and failure logs for each source and target of your connection and correlate
+with the metrics of the connection. This will allow you more insight in what goes well, and more importantly, what goes wrong.</p>
+
+<p>The default duration and the maximum amount of logs stored for one connection can be configured in Ditto’s connectivity service
+configuration.</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+
+    </span><span class="s2">"targetActorSelection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/system/sharding/connection"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"aggregate"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="s2">"piggybackCommand"</span><span class="p">:{</span><span class="w">
+		</span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"connectivity.commands:enableConnectionLogs"</span><span class="p">,</span><span class="w">
+		</span><span class="s2">"connectionId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;connectionID&gt;"</span><span class="w">
+	</span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h3 id="retrieve-connection-logs">Retrieve connection logs</h3>
+
+<p>This command will return a list of success and failure log entries containing information on messages processed by the
+connection. The logs have a maximum amount of entries that they can hold. If the connection produces more log entries,
+the older entries will be dropped. So keep in mind that you might miss some of the log entries.</p>
+
+<p>The response will also provide information on how long the logging feature will still be enabled. Since the timer will
+always be reset when retrieving the logs, the timestamp will always be 24 hours from now.</p>
+
+<p>The default duration and the maximum amount of logs stored for one connection can be configured in Ditto’s connectivity service
+configuration.</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+
+    </span><span class="s2">"targetActorSelection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/system/sharding/connection"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"aggregate"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="s2">"piggybackCommand"</span><span class="p">:{</span><span class="w">
+		</span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"connectivity.commands:retrieveConnectionLogs"</span><span class="p">,</span><span class="w">
+		</span><span class="s2">"connectionId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;connectionID&gt;"</span><span class="w">
+	</span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h3 id="reset-connection-logs">Reset connection logs</h3>
+
+<p>Clears all currently stored connection logs.</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+
+    </span><span class="s2">"targetActorSelection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/system/sharding/connection"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"aggregate"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="s2">"piggybackCommand"</span><span class="p">:{</span><span class="w">
+		</span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"connectivity.commands:resetConnectionLogs"</span><span class="p">,</span><span class="w">
+		</span><span class="s2">"connectionId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;connectionID&gt;"</span><span class="w">
+	</span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
 <h2 id="payload-mapping-configuration">Payload mapping configuration</h2>
 
 <p>To enable a custom <a href="connectivity-mapping.html">payload mapping</a> for a specific connection, you have to configure a
@@ -1353,7 +1428,7 @@ configuration must be embedded in the connection configuration as shown in the <
                     </div>
                     <p class="notice">
                         &copy;2019 Eclipse Ditto.
-                         Site last generated: May 10, 2019 <br />
+                         Site last generated: Jul 10, 2019 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

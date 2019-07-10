@@ -236,6 +236,13 @@
               
               
               
+              <li><a href="release_notes_090.html">0.9.0</a></li>
+              
+              
+              
+              
+              
+              
               <li><a href="release_notes_080.html">0.8.0</a></li>
               
               
@@ -246,49 +253,7 @@
                       
                       
                       
-                      <li><a href="release_notes_010-M1.html">0.1.0-M1</a></li>
-                      
-                      
-                      
-                      
-                      
-                      <li><a href="release_notes_010-M3.html">0.1.0-M3</a></li>
-                      
-                      
-                      
-                      
-                      
-                      <li><a href="release_notes_020-M1.html">0.2.0-M1</a></li>
-                      
-                      
-                      
-                      
-                      
-                      <li><a href="release_notes_030-M1.html">0.3.0-M1</a></li>
-                      
-                      
-                      
-                      
-                      
-                      <li><a href="release_notes_030-M2.html">0.3.0-M2</a></li>
-                      
-                      
-                      
-                      
-                      
-                      <li><a href="release_notes_080-M1.html">0.8.0-M1</a></li>
-                      
-                      
-                      
-                      
-                      
-                      <li><a href="release_notes_080-M2.html">0.8.0-M2</a></li>
-                      
-                      
-                      
-                      
-                      
-                      <li><a href="release_notes_080-M3.html">0.8.0-M3</a></li>
+                      <li><a href="release_notes_090-M2.html">0.9.0-M2</a></li>
                       
                       
                       
@@ -300,7 +265,49 @@
                       
                       
                       
-                      <li><a href="release_notes_090-M2.html">0.9.0-M2</a></li>
+                      <li><a href="release_notes_080-M3.html">0.8.0-M3</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_080-M2.html">0.8.0-M2</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_080-M1.html">0.8.0-M1</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_030-M2.html">0.3.0-M2</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_030-M1.html">0.3.0-M1</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_020-M1.html">0.2.0-M1</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_010-M3.html">0.1.0-M3</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_010-M1.html">0.1.0-M1</a></li>
                       
                       
                       
@@ -1125,7 +1132,7 @@ Paging:     limit(0,5)
 
 <h2 id="search-count-queries">Search count queries</h2>
 
-<p>The same syntax applies for search count queries - only the <a href="basic-rql.html#rql-sorting">sorting</a> and <a href="#rql-paging">paging</a> makes no 
+<p>The same syntax applies for search count queries - only the <a href="basic-rql.html#rql-sorting">sorting</a> and <a href="#rql-paging-deprecated">paging</a> makes no 
 sense here, so there are not necessary to specify.</p>
 
 <h2 id="namespaces">Namespaces</h2>
@@ -1138,7 +1145,32 @@ performance when many Things of different namespaces are managed in Ditto’s se
 <p>In order to apply queries when searching, Ditto uses the <a href="basic-rql.html">RQL notation</a> which is also applied for other 
 scenarios (e.g. filtering <a href="basic-changenotifications.html">notifications</a>).</p>
 
-<h2 id="rql-paging">RQL paging</h2>
+<h2 id="paging-options">Paging options</h2>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>size(&lt;count&gt;)
+</code></pre></div></div>
+
+<p>Limits the search results to <code class="highlighter-rouge">&lt;count&gt;</code> items.</p>
+
+<p>If the paging option is not explicitly specified a <strong>default value</strong> of <em>25</em> is used. The <strong>maximum</strong> allowed count is 
+<em>200</em>.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cursor(&lt;cursor-id&gt;)
+</code></pre></div></div>
+<p>Starts the search at the position of the cursor with ID <code class="highlighter-rouge">&lt;cursor-id&gt;</code>. The cursor ID is obtained from the field 
+<code class="highlighter-rouge">cursor</code> of a previous response and marks the <strong>position after the last entry</strong> of the previous search. A response 
+includes no cursor if there are no more results.</p>
+
+<p>If a request has a <code class="highlighter-rouge">cursor</code> option, then any included <code class="highlighter-rouge">filter</code> or <code class="highlighter-rouge">sort</code> option may not differ from the original request of the cursor. Otherwise, the request is rejected.</p>
+
+<p><strong>Example - return ten items with a cursor</strong></p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>option=size(10),cursor(&lt;cursor-from-previous-result&gt;)
+</code></pre></div></div>
+
+<h2 id="rql-paging-deprecated">RQL paging (deprecated)</h2>
+
+<div class="alert alert-info" role="alert"><i class="fa fa-info-circle"></i> <b>Note:</b> The limit option is deprecated, it may be removed in future releases. Use <a href="basic-search.html#paging-options">cursor-based 
+paging</a> instead.</div>
 
 <p>The RQL limiting part specifies which part (or “page”) should be returned of a large search result set.</p>
 
@@ -1193,7 +1225,7 @@ scenarios (e.g. filtering <a href="basic-changenotifications.html">notifications
                     </div>
                     <p class="notice">
                         &copy;2019 Eclipse Ditto.
-                         Site last generated: May 10, 2019 <br />
+                         Site last generated: Jul 10, 2019 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

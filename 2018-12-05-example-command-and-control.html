@@ -231,7 +231,7 @@
         
 
         <p>With <a href="release_notes_080.html">version 0.8.0</a> Eclipse Ditto can now interact with Eclipse Hono using the 
-<a href="https://www.eclipse.org/hono/concepts/command-and-control">Command &amp; Control</a> feature. It is possible to send a 
+“Command &amp; Control” feature. It is possible to send a 
 Thing (or Feature) message at the Ditto Message API, which is then forwarded to Hono as a 
 command message. Hono routes the message to the device, which in turn can send a response to the command including a 
 status, telling if the command was successfully processed or not. 
@@ -297,7 +297,7 @@ post.</p>
 <p>In order to forward Ditto Messages to the device as a Hono command we first need to setup and configure a 
 <a href="connectivity-manage-connections.html">connection</a> between Eclipse Ditto and Eclipse Hono that is prepared for 
 <em>Command &amp; Control</em> messages. According to the 
-<a href="https://www.eclipse.org/hono/concepts/command-and-control">Hono documentation</a> 
+<a href="https://www.eclipse.org/hono/">Hono documentation</a> 
 the connection must contain a target with the address <code class="highlighter-rouge">control/&lt;tenant-id&gt;/&lt;device-id&gt;</code> 
 and a source with the address <code class="highlighter-rouge">control/&lt;tenant-id&gt;/&lt;reply-identifier&gt;</code>. The <code class="highlighter-rouge">reply-identifier</code> can be 
 chosen arbitrarily, but must be set as the <code class="highlighter-rouge">reply-to</code> header of a command exactly as defined in the connection:</p>
@@ -356,7 +356,7 @@ chosen arbitrarily, but must be set as the <code class="highlighter-rouge">reply
 </code></pre></div></div>
 
 <p>As described in the 
-<a href="https://www.eclipse.org/hono/api/command-and-control-api/#send-a-request-response-command">Hono API description</a> 
+<a href="https://www.eclipse.org/hono/">Hono API description</a> 
 a command message has three mandatory properties: <code class="highlighter-rouge">correlation-id</code>, <code class="highlighter-rouge">subject</code> and <code class="highlighter-rouge">reply-to</code>, these are defined in the 
 target header mapping of the connection. 
 The source header mapping defines a mapping for <code class="highlighter-rouge">correlation-id</code> and <code class="highlighter-rouge">status</code> to internal headers, they are required 
@@ -367,7 +367,7 @@ to properly map the Hono command response to a Ditto message response.</p>
 <p>As we are using the Hono HTTP Adapter to connect our device, send telemetry and receive commands, the designated way 
 is therefor to signal readiness to receive a command by specifying the <code class="highlighter-rouge">hono-ttd</code> parameter on an arbitrary event (for 
 detailed description please consult the 
-[Hono HTTP Adapter] (https://www.eclipse.org/hono/user-guide/http-adapter/#specifying-the-time-a-device-will-wait-for-a-response) 
+[Hono HTTP Adapter] (https://www.eclipse.org/hono/) 
 guide).</p>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">-X</span> POST <span class="nt">-i</span> <span class="nt">-u</span> teapot@org.eclipse.ditto:teapot <span class="nt">-H</span> <span class="s1">'hono-ttd: 60'</span> <span class="nt">-H</span> <span class="s1">'Content-Type: application/json'</span> <span class="se">\</span>
@@ -446,7 +446,7 @@ Content-Length: 10
 <h3 id="alternative-receive-command-and-send-response-via-mqtt">Alternative: Receive command and send response via MQTT</h3>
 
 <p>Alternatively we can also receive the command by subscribing to the MQTT topic <code class="highlighter-rouge">control/+/+/req/#</code> at the 
-<a href="https://www.eclipse.org/hono/user-guide/mqtt-adapter/#command-control">Hono MQTT Adapter</a>:</p>
+<a href="https://www.eclipse.org/hono/">Hono MQTT Adapter</a>:</p>
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>mosquitto_sub <span class="nt">-d</span> <span class="nt">-h</span> hono.eclipse.org <span class="nt">-p</span> 8883 <span class="nt">-v</span> <span class="nt">-u</span> <span class="s1">'teapot@org.eclipse.ditto'</span> <span class="nt">-P</span> teapot <span class="nt">-t</span> <span class="s1">'control/+/+/req/#'</span>
 </code></pre></div></div>
 
@@ -492,7 +492,7 @@ The Eclipse Ditto team</p>
                     </div>
                     <p class="notice">
                         &copy;2019 Eclipse Ditto.
-                         Site last generated: May 10, 2019 <br />
+                         Site last generated: Jul 10, 2019 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">
