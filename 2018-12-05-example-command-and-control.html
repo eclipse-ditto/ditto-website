@@ -280,9 +280,40 @@ post.</p>
 }'</span> http://hono.eclipse.org:28080/credentials/org.eclipse.ditto
 </code></pre></div></div>
 
+<h4 id="create-ditto-policy-for-digital-twin">Create Ditto policy for digital twin</h4>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># create policy in Ditto</span>
+<span class="nv">$ </span>curl <span class="nt">-X</span> PUT <span class="nt">-i</span> <span class="nt">-u</span> demo5:demo <span class="nt">-H</span> <span class="s1">'Content-Type: application/json'</span> <span class="nt">-d</span> <span class="s1">'{
+   "policyId": "org.eclipse.ditto:teapot-policy",
+   "entries": {
+       "DEMO": {
+           "subjects": {
+              "nginx:demo5": {
+                  "type": "basic auth user and user used in connection'</span>s authorizationContext<span class="s2">"
+              }
+           },
+           "</span>resources<span class="s2">": {
+               "</span>thing:/<span class="s2">": {
+                   "</span>grant<span class="s2">": ["</span>READ<span class="s2">", "</span>WRITE<span class="s2">"],
+                   "</span>revoke<span class="s2">": []
+               },
+               "</span>policy:/<span class="s2">": {
+                   "</span>grant<span class="s2">": ["</span>READ<span class="s2">", "</span>WRITE<span class="s2">"],
+                   "</span>revoke<span class="s2">": []
+               },
+               "</span>message:/<span class="s2">": {
+                   "</span>grant<span class="s2">": ["</span>READ<span class="s2">", "</span>WRITE<span class="s2">"],
+                   "</span>revoke<span class="s2">": []
+               }
+           }
+       }
+   }
+}' https://ditto.eclipse.org/api/2/policies/org.eclipse.ditto:teapot-policy 
+</span></code></pre></div></div>
+
 <h4 id="create-ditto-digital-twin">Create Ditto digital twin</h4>
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># create thing in Ditto</span>
 <span class="nv">$ </span>curl <span class="nt">-X</span> PUT <span class="nt">-i</span> <span class="nt">-u</span> demo5:demo <span class="nt">-H</span> <span class="s1">'Content-Type: application/json'</span> <span class="nt">-d</span> <span class="s1">'{
+    "policyId": "org.eclipse.ditto:teapot-policy",
     "features": {
       "water": {
         "properties": {
@@ -329,14 +360,10 @@ chosen arbitrarily, but must be set as the <code class="highlighter-rouge">reply
                      "status": "{{ header:status }}",
                      "content-type": "{{ header:content-type }}"
                    }
-                 },
-                 {
-                   "addresses": ["telemetry/org.eclipse.ditto", "event/org.eclipse.ditto"],
-                   "authorizationContext": ["nginx:demo5"]
                  }
                ],
                "targets": [{
-                   "address": "control/org.eclipse.ditto/{{ thing:id }}",
+                   "address": "control/org.eclipse.ditto/{{ thing:name }}",
                    "authorizationContext": [
                      "nginx:demo5"
                    ],
@@ -492,7 +519,7 @@ The Eclipse Ditto team</p>
                     </div>
                     <p class="notice">
                         &copy;2019 Eclipse Ditto.
-                         Site last generated: Jul 10, 2019 <br />
+                         Site last generated: Aug 28, 2019 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

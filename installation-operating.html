@@ -1217,6 +1217,7 @@ jvm_memory_bytes_sum{component="system-metrics",measure="used",segment="miscella
 
 <ul>
   <li>Dynamically retrieve and change log levels</li>
+  <li>Dynamically retrieve service configuration</li>
   <li>Piggyback commands</li>
 </ul>
 
@@ -1317,6 +1318,98 @@ instances of gateway-service to <code class="highlighter-rouge">DEBUG</code>:</p
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
+<h3 id="dynamically-retrieve-configurations">Dynamically retrieve configurations</h3>
+
+<p>Runtime configurations of services are available for the Ditto operator at
+<code class="highlighter-rouge">/devops/config/</code> with optional restrictions by service name, instance ID and configuration path.
+The entire runtime configuration of a service may be dozens of kilobytes big. If it exceeds the cluster message size
+of 250 kB, then it can only be read piece by piece via the <code class="highlighter-rouge">path</code> query parameter.</p>
+
+<h4 id="retrieve-all-service-configurations">Retrieve all service configurations</h4>
+
+<p>Retrieve the configuration at the path <code class="highlighter-rouge">ditto.info</code> thus:</p>
+
+<p><code class="highlighter-rouge">GET /devops/config?path=ditto.info</code></p>
+
+<p>It is recommended to not omit the query parameter <code class="highlighter-rouge">path</code>. Otherwise the full configurations of all services are
+aggregated in the response, which can become megabytes big.</p>
+
+<p>The path <code class="highlighter-rouge">ditto.info</code> points to information on service name, service instance index, JVM arguments and environment
+variables. Response example:</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"?"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"?"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"common.responses:retrieveConfig"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="mi">200</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"config"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"env"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="s2">"PATH"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/usr/games:/usr/local/games"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="s2">"service"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="s2">"instance-index"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"service-name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"gateway"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="s2">"vm-args"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+          </span><span class="s2">"-Dfile.encoding=UTF-8"</span><span class="w">
+        </span><span class="p">]</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="s2">"?1"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"common.responses:retrieveConfig"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="mi">200</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"config"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"env"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="s2">"CONNECTIVITY_FLUSH_PENDING_RESPONSES_TIMEOUT"</span><span class="p">:</span><span class="w"> </span><span class="s2">"3d"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="s2">"service"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="s2">"instance-index"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"service-name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"connectivity"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="s2">"vm-args"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+          </span><span class="s2">"-Dditto.connectivity.connection.snapshot.threshold=2"</span><span class="w">
+        </span><span class="p">]</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h4 id="retrieve-the-configuration-of-a-service-instance">Retrieve the configuration of a service instance</h4>
+
+<p>Retrieving the configuration of a specific service instance is much faster
+because the response is not aggregated from an unknown number of respondents
+over the duration given in the query parameter <code class="highlighter-rouge">timeout</code>.</p>
+
+<p>To retrieve <code class="highlighter-rouge">ditto</code> configuration from Gateway instance <code class="highlighter-rouge">1</code>:</p>
+
+<p><code class="highlighter-rouge">GET /devops/config/gateway/1?path=ditto</code></p>
+
+<p>Response example:</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"?"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"?"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"common.responses:retrieveConfig"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="mi">200</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"config"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"cluster"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="s2">"number-of-shards"</span><span class="p">:</span><span class="w"> </span><span class="mi">20</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="s2">"gateway"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="s2">"authentication"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"devops"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+              </span><span class="s2">"password"</span><span class="p">:</span><span class="w"> </span><span class="s2">"foobar"</span><span class="p">,</span><span class="w">
+              </span><span class="s2">"securestatus"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+          </span><span class="p">}</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
 <h3 id="piggyback-commands">Piggyback commands</h3>
 
 <p>You can use a DevOps command to send a command to another actor in the cluster.
@@ -1343,6 +1436,239 @@ A piggyback command must conform to the following schema:</p>
 
 <p>Piggybacks are used to configure Dittos connectivity service. More information on this can be found in
 the <a href="connectivity-manage-connections.html">Manage Connections</a> section.</p>
+
+<h4 id="managing-background-cleanup">Managing background cleanup</h4>
+
+<p>Ditto deletes unnecessary events and snapshots in the background according to database load.
+<a href="architecture-services-concierge.html">Concierge</a> has a cluster-singleton coordinating the background cleanup process.
+The cluster singleton responds to piggyback-commands to query its state and configuration, modify the configuration,
+and restart the background cleanup process.</p>
+
+<p>Each command is sent to the actor selection <code class="highlighter-rouge">/user/conciergeRoot/eventSnapshotCleanupCoordinatorProxy</code> on <em>one</em>
+Concierge instance, typically <code class="highlighter-rouge">INSTANCE_INDEX=1</code> in a docker-based installation:</p>
+
+<p><code class="highlighter-rouge">POST /devops/piggygack/concierge/&lt;INSTANCE_INDEX&gt;?timeout=10000</code></p>
+
+<h5 id="query-background-cleanup-coordinator-state">Query background cleanup coordinator state</h5>
+
+<p><code class="highlighter-rouge">POST /devops/piggygack/concierge/&lt;INSTANCE_INDEX&gt;?timeout=10000</code></p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"targetActorSelection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/user/conciergeRoot/eventSnapshotCleanupCoordinatorProxy"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"aggregate"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="s2">"piggybackCommand"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"status.commands:retrieveHealth"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>The response has the following details:</p>
+
+<ul>
+  <li><code class="highlighter-rouge">events</code>: State transitions of the actor. The top entry is the current state of the actor.</li>
+  <li><code class="highlighter-rouge">credit-decisions</code>: Decisions on how many cleanup actions were permitted, when, and why.</li>
+  <li><code class="highlighter-rouge">actions</code>: Log of cleanup actions, their round-trip times, and whether they were successful.</li>
+</ul>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"?"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"?"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"status.responses:retrieveHealth"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="mi">200</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"statusInfo"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"UP"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"details"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+          </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"INFO"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+              </span><span class="s2">"events"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                </span><span class="p">{</span><span class="w"> </span><span class="s2">"2019-06-24T13:42:29.878Z"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Stream terminated. Result=&lt;Done&gt; Error=&lt;null&gt;"</span><span class="w"> </span><span class="p">},</span><span class="w">
+                </span><span class="p">{</span><span class="w"> </span><span class="s2">"2019-06-24T13:42:19.474Z"</span><span class="p">:</span><span class="w"> </span><span class="s2">"WOKE_UP"</span><span class="w"> </span><span class="p">}</span><span class="w">
+              </span><span class="p">],</span><span class="w">
+              </span><span class="s2">"credit-decisions"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                </span><span class="p">{</span><span class="w"> </span><span class="s2">"2019-06-24T13:42:29.609Z"</span><span class="p">:</span><span class="w"> </span><span class="s2">"100: maxTimeNanos=0 is below threshold=20000000"</span><span class="w"> </span><span class="p">},</span><span class="w">
+                </span><span class="p">{</span><span class="w"> </span><span class="s2">"2019-06-24T13:42:25.232Z"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0: maxTimeNanos=47358000 is above threshold=20000000"</span><span class="w"> </span><span class="p">}</span><span class="w">
+              </span><span class="p">],</span><span class="w">
+              </span><span class="s2">"actions"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                </span><span class="p">{</span><span class="w"> </span><span class="s2">"2019-06-24T13:42:28.801Z"</span><span class="p">:</span><span class="w"> </span><span class="s2">"200 start=2019-06-24T13:42:28.755Z &lt;thing:ditto:thing1&gt;"</span><span class="w"> </span><span class="p">}</span><span class="w">
+              </span><span class="p">]</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+          </span><span class="p">}</span><span class="w">
+        </span><span class="p">]</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h5 id="query-background-cleanup-coordinator-configuration">Query background cleanup coordinator configuration</h5>
+
+<p><code class="highlighter-rouge">POST /devops/piggygack/concierge/&lt;INSTANCE_INDEX&gt;?timeout=10000</code></p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"targetActorSelection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/user/conciergeRoot/eventSnapshotCleanupCoordinatorProxy"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"aggregate"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="s2">"piggybackCommand"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"common.commands:retrieveConfig"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>Response example:</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"?"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"?"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"common.responses:retrieveConfig"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="mi">200</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"config"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"cleanup-timeout"</span><span class="p">:</span><span class="w"> </span><span class="s2">"30s"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"credit-decision"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="s2">"credit-per-batch"</span><span class="p">:</span><span class="w"> </span><span class="mi">100</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"interval"</span><span class="p">:</span><span class="w"> </span><span class="s2">"10s"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"metric-report-timeout"</span><span class="p">:</span><span class="w"> </span><span class="s2">"10s"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"timer-threshold"</span><span class="p">:</span><span class="w"> </span><span class="s2">"20ms"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="s2">"keep"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="s2">"actions"</span><span class="p">:</span><span class="w"> </span><span class="mi">120</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"credit-decisions"</span><span class="p">:</span><span class="w"> </span><span class="mi">30</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"events"</span><span class="p">:</span><span class="w"> </span><span class="mi">15</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="s2">"parallelism"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"persistence-ids"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="s2">"burst"</span><span class="p">:</span><span class="w"> </span><span class="mi">25</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"stream-idle-timeout"</span><span class="p">:</span><span class="w"> </span><span class="s2">"10m"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"stream-request-timeout"</span><span class="p">:</span><span class="w"> </span><span class="s2">"10s"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="s2">"quiet-period"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5m"</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h5 id="modify-background-cleanup-coordinator-configuration">Modify background cleanup coordinator configuration</h5>
+
+<p>Send a piggyback command of type <code class="highlighter-rouge">common.commands:modifyConfig</code> to change the configuration of the background cleanup
+coordinator. All subsequent cleanup processes will use the new configuration. Any ongoing cleanup is not affected.
+Configurations absent in the payload of the piggyback command remain unchanged.</p>
+
+<p><code class="highlighter-rouge">POST /devops/piggygack/concierge/&lt;INSTANCE_INDEX&gt;?timeout=10000</code></p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"targetActorSelection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/user/conciergeRoot/eventSnapshotCleanupCoordinatorProxy"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"aggregate"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="s2">"piggybackCommand"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"common.commands:modifyConfig"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"config"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"quiet-period"</span><span class="p">:</span><span class="w"> </span><span class="s2">"240d"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>The response contains the effective configuration of the background cleanup coordinator. If the configuration in the
+piggyback command contains any error, then an error is logged and the actor’s configuration is unchanged.</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"?"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"?"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"common.responses:modifyConfig"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="mi">200</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"config"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"cleanup-timeout"</span><span class="p">:</span><span class="w"> </span><span class="s2">"30s"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"credit-decision"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="s2">"credit-per-batch"</span><span class="p">:</span><span class="w"> </span><span class="mi">100</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"interval"</span><span class="p">:</span><span class="w"> </span><span class="s2">"10s"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"metric-report-timeout"</span><span class="p">:</span><span class="w"> </span><span class="s2">"10s"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"timer-threshold"</span><span class="p">:</span><span class="w"> </span><span class="s2">"20ms"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="s2">"keep"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="s2">"actions"</span><span class="p">:</span><span class="w"> </span><span class="mi">120</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"credit-decisions"</span><span class="p">:</span><span class="w"> </span><span class="mi">30</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"events"</span><span class="p">:</span><span class="w"> </span><span class="mi">15</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="s2">"parallelism"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"persistence-ids"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="s2">"burst"</span><span class="p">:</span><span class="w"> </span><span class="mi">25</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"stream-idle-timeout"</span><span class="p">:</span><span class="w"> </span><span class="s2">"10m"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"stream-request-timeout"</span><span class="p">:</span><span class="w"> </span><span class="s2">"10s"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="s2">"quiet-period"</span><span class="p">:</span><span class="w"> </span><span class="s2">"240d"</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h5 id="shutdown-background-cleanup-coordinator">Shutdown background cleanup coordinator</h5>
+
+<p>Send a piggyback command of type <code class="highlighter-rouge">common.commands:shutdown</code> to stop the background cleanup process.
+The next process is scheduled after the <code class="highlighter-rouge">quiet-period</code> duration in the coordinator’s configuration.</p>
+
+<p><code class="highlighter-rouge">POST /devops/piggygack/concierge/&lt;INSTANCE_INDEX&gt;?timeout=10000</code></p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"targetActorSelection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/user/conciergeRoot/eventSnapshotCleanupCoordinatorProxy"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"aggregate"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="s2">"piggybackCommand"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"common.commands:shutdown"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>Response example:</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"?"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"?"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"common.responses:shutdown"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="mi">200</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Restarting stream in &lt;PT5760H30M5S&gt;."</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h5 id="cleanup-events-and-snapshots-of-an-entity">Cleanup events and snapshots of an entity</h5>
+
+<p>Send a cleanup command by piggyback to the entity’s service and shard region to trigger removal of stale events and
+snapshots manually. Here is an example for things. Change the service name and shard region name accordingly for
+policies and connections. Typically in a docker based environment, use <code class="highlighter-rouge">INSTANCE_INDEX=1</code>.</p>
+
+<p><code class="highlighter-rouge">POST /devops/piggygack/things/&lt;INSTANCE_INDEX&gt;?timeout=10000</code></p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"targetActorSelection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/system/sharding/thing"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"aggregate"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="s2">"piggybackCommand"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"cleanup.commands:cleanupPersistence"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"entityId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ditto:thing1"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>Response example:</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"?"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"?"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"cleanup.responses:cleanupPersistence"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="mi">200</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"entityId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"thing:ditto:thing1"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
 
 <h4 id="erasing-data-within-a-namespace">Erasing data within a namespace</h4>
 
@@ -1532,7 +1858,7 @@ to stop blocking messages to a namespace.</p>
                     </div>
                     <p class="notice">
                         &copy;2019 Eclipse Ditto.
-                         Site last generated: Jul 10, 2019 <br />
+                         Site last generated: Aug 28, 2019 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

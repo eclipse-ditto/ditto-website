@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="">
 <meta name="keywords" content="blog,  ">
-<title>  Announcing Ditto Milestone 0.8.0-M1 </title>
+<title>  OpenID Connect </title>
 
 <link rel="stylesheet" href="css/syntax.css">
 <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" crossorigin="anonymous">
@@ -167,7 +167,7 @@
                                 searchInput: document.getElementById('search-input'),
                                 resultsContainer: document.getElementById('results-container'),
                                 dataSource: 'search.json',
-                                searchResultTemplate: '<li><a href="{url}" title="Announcing Ditto Milestone 0.8.0-M1">{title}</a></li>',
+                                searchResultTemplate: '<li><a href="{url}" title="OpenID Connect">{title}</a></li>',
                                 noResultsText: 'No results found.',
                                 limit: 10,
                                 fuzzy: true,
@@ -197,20 +197,12 @@
 <!-- Output author details if some exist. -->
 <!-- Output author details if some exist. -->
 <!---->
-<!--<span>-->
-    <!--&lt;!&ndash; Mugshot. &ndash;&gt;-->
-    <!--<img src="https://www.gravatar.com/avatar/90a82dc2af1620df1f955e211ecc4dee?s=135" alt="A photo of Thomas Jäckle" />-->
-
-<!--&lt;!&ndash; Personal Info. &ndash;&gt;-->
-    <!--Written by <a href="http://twitter.com/thjaeckle" target="_blank">Thomas Jäckle</a>-->
-<!--</span>-->
-<!---->
 
 <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
 
     <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">Announcing Ditto Milestone 0.8.0-M1</h1>
-        <p class="post-meta">Published by <img src="https://www.gravatar.com/avatar/90a82dc2af1620df1f955e211ecc4dee?s=135" alt="A photo of Thomas Jäckle" style="width:50px;border-radius:50%;display:inline-block;margin-right:5px;" /><span itemprop="author" itemscope itemtype="http://schema.org/Person"><span itemprop="name"><a href="http://twitter.com/thjaeckle" target="_blank">Thomas Jäckle</a> </span></span> on <time datetime="2018-08-14T00:00:00-04:00" itemprop="datePublished">Aug 14, 2018</time> - Tags:
+        <h1 class="post-title" itemprop="name headline">OpenID Connect</h1>
+        <p class="post-meta">Published by <img src="https://www.gravatar.com/avatar/d41d8cd98f00b204e9800998ecf8427e?s=135" alt="A photo of " style="width:50px;border-radius:50%;display:inline-block;margin-right:5px;" /><span itemprop="author" itemscope itemtype="http://schema.org/Person"><span itemprop="name"><a href="" target="_blank"></a> </span></span> on <time datetime="2019-08-28T00:00:00-04:00" itemprop="datePublished">Aug 28, 2019</time> - Tags:
             
             
             
@@ -230,36 +222,84 @@
 
         
 
-        <p>Even during the summer break the Ditto team worked hard in order to provide the next milestone release. Here it is: 
-Milestone 0.8.0-M1.</p>
+        <p>Eclipse Ditto now supports all OAuth 2.0 providers which implement <a href="https://openid.net/connect/">OpenID Connect</a> out-of-the-box.
+You can find a list of certified providers at <a href="https://openid.net/developers/certified/">OpenID Connect - Certified OpenID Provider Servers and Services</a>.</p>
 
-<p>Have a look at the Milestone <a href="release_notes_080-M1.html">0.8.0-M1 release notes</a> for what changed in detail and why
-there was a version bump from 0.3.0-M2 to 0.8.0-M1.</p>
+<p>With this post, we want to give an example of this new feature using the open source provider <a href="https://www.ory.sh">ORY Hydra</a>.
+Follow their <a href="https://www.ory.sh/docs/next/hydra/configure-deploy#installing-ory-hydra">installation guide</a> for a
+ docker based setup on your development machine.</p>
 
-<p>The main changes and new features are</p>
+<h4 id="configuration">Configuration</h4>
+<p>Download the self-signed certificate form the ORY Hydra server: https://localhost:9000/.well-known/openid-configuration</p>
 
-<ul>
-  <li>security enhancement by making some of Ditto’s headers not settable from the outside</li>
-  <li>report application metrics to Prometheus</li>
-  <li>automatically form a cluster when running in Kubernetes</li>
-  <li>improvement of Ditto’s <code class="highlighter-rouge">things-service</code> memory consumption</li>
-  <li>stabilization of the connectivity to AMQP 1.0 and 0.9.1</li>
-</ul>
+<p>Use the downloaded certificate for the akka-http ssl configuration.</p>
+<pre><code class="language-hocon">ssl-config {
+  trustManager = {
+    stores = [
+      { type = "PEM", path = "/path/to/cert/globalsign.crt" }
+    ]
+  }
+}
+</code></pre>
 
-<h2 id="artifacts">Artifacts</h2>
+<p>The authentication provider must be added to the ditto-gateway configuration.</p>
+<pre><code class="language-hocon">ditto.gateway.authentication {
+    oauth {
+      openid-connect-issuers = {
+        ory = "https://localhost:9000/"
+      }
+    }
+}
+</code></pre>
 
-<p>The new Java artifacts have been published at the <a href="https://repo.eclipse.org/content/repositories/ditto/">Eclipse Maven repository</a>
-as well as <a href="https://repo1.maven.org/maven2/org/eclipse/ditto/">Maven central</a>.</p>
+<p>The configured subject-issuer will be used to prefix the value of the “sub” claim, e.g.</p>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"subjects"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"ory:foo@bar.com"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"generated"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
 
-<p>The Docker images have been pushed to Docker Hub:</p>
-<ul>
-  <li><a href="https://hub.docker.com/r/eclipse/ditto-policies/">eclipse/ditto-policies</a></li>
-  <li><a href="https://hub.docker.com/r/eclipse/ditto-things/">eclipse/ditto-things</a></li>
-  <li><a href="https://hub.docker.com/r/eclipse/ditto-things-search/">eclipse/ditto-things-search</a></li>
-  <li><a href="https://hub.docker.com/r/eclipse/ditto-gateway/">eclipse/ditto-gateway</a></li>
-  <li><a href="https://hub.docker.com/r/eclipse/ditto-connectivity/">eclipse/ditto-connectivity</a></li>
-  <li><a href="https://hub.docker.com/r/eclipse/ditto-concierge/">eclipse/ditto-concierge</a></li>
-</ul>
+<h4 id="authenticate-ditto-api">Authenticate Ditto API</h4>
+<p>Create an OAuth client with hydra to be able to create ID Tokens.</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker run <span class="nt">--rm</span> <span class="nt">-it</span> <span class="se">\</span>
+  <span class="nt">-e</span> <span class="nv">HYDRA_ADMIN_URL</span><span class="o">=</span>https://ory-hydra-example--hydra:4445 <span class="se">\</span>
+  <span class="nt">--network</span> hydraguide <span class="se">\</span>
+  oryd/hydra:v1.0.0 <span class="se">\</span>
+  clients create <span class="nt">--skip-tls-verify</span> <span class="se">\</span>
+    <span class="nt">--id</span> eclipse-ditto <span class="se">\</span>
+    <span class="nt">--secret</span> some-secret <span class="se">\</span>
+    <span class="nt">--grant-types</span> authorization_code,refresh_token,client_credentials,implicit <span class="se">\</span>
+    <span class="nt">--response-types</span> token,code,id_token <span class="se">\</span>
+    <span class="nt">--scope</span> openid,offline <span class="se">\</span>
+    <span class="nt">--callbacks</span> http://127.0.0.1:9010/callback
+</code></pre></div></div>
+
+<p>Use the client to generate an ID Token.</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker run <span class="nt">--rm</span> <span class="nt">-it</span> <span class="se">\</span>
+  <span class="nt">--network</span> hydraguide <span class="se">\</span>
+  <span class="nt">-p</span> 9010:9010 <span class="se">\</span>
+  oryd/hydra:v1.0.0 <span class="se">\</span>
+  token user <span class="nt">--skip-tls-verify</span> <span class="se">\</span>
+    <span class="nt">--port</span> 9010 <span class="se">\</span>
+    <span class="nt">--auth-url</span> https://localhost:9000/oauth2/auth <span class="se">\</span>
+    <span class="nt">--token-url</span> https://ory-hydra-example--hydra:4444/oauth2/token <span class="se">\</span>
+    <span class="nt">--client-id</span> eclipse-ditto <span class="se">\</span>
+    <span class="nt">--client-secret</span> some-secret <span class="se">\</span>
+    <span class="nt">--scope</span> openid
+</code></pre></div></div>
+<p>After that perform the OAuth 2.0 Authorize Code Flow by opening the link, as prompted, 
+in your browser, and follow the steps shown there.</p>
+
+<p>Use the generated token to authenticate Ditto API.</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">-X</span> POST <span class="se">\</span>
+  http://localhost:8080/api/2/things <span class="se">\</span>
+  <span class="nt">-H</span> <span class="s1">'Authorization: Bearer &lt;JWT&gt;'</span> <span class="se">\</span>
+  <span class="nt">-H</span> <span class="s1">'Content-Type: application/json'</span> <span class="se">\</span>
+  <span class="nt">-d</span> <span class="s1">'{}'</span>
+</code></pre></div></div>
 
 <p><br />
 <br /></p>

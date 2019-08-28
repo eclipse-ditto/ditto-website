@@ -5,9 +5,106 @@
         <description>Announcements, tutorials and examples around Eclipse Ditto and Digital Twins</description>
         <link>https://www.eclipse.org/ditto/</link>
         <atom:link href="https://www.eclipse.org/ditto/feed.xml" rel="self" type="application/rss+xml"/>
-        <pubDate>Wed, 10 Jul 2019 05:00:07 -0400</pubDate>
-        <lastBuildDate>Wed, 10 Jul 2019 05:00:07 -0400</lastBuildDate>
+        <pubDate>Wed, 28 Aug 2019 10:04:01 -0400</pubDate>
+        <lastBuildDate>Wed, 28 Aug 2019 10:04:01 -0400</lastBuildDate>
         <generator>Jekyll v3.6.2</generator>
+        
+        <item>
+            <title>OpenID Connect</title>
+            <description>&lt;p&gt;Eclipse Ditto now supports all OAuth 2.0 providers which implement &lt;a href=&quot;https://openid.net/connect/&quot;&gt;OpenID Connect&lt;/a&gt; out-of-the-box.
+You can find a list of certified providers at &lt;a href=&quot;https://openid.net/developers/certified/&quot;&gt;OpenID Connect - Certified OpenID Provider Servers and Services&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;With this post, we want to give an example of this new feature using the open source provider &lt;a href=&quot;https://www.ory.sh&quot;&gt;ORY Hydra&lt;/a&gt;.
+Follow their &lt;a href=&quot;https://www.ory.sh/docs/next/hydra/configure-deploy#installing-ory-hydra&quot;&gt;installation guide&lt;/a&gt; for a
+ docker based setup on your development machine.&lt;/p&gt;
+
+&lt;h4 id=&quot;configuration&quot;&gt;Configuration&lt;/h4&gt;
+&lt;p&gt;Download the self-signed certificate form the ORY Hydra server: https://localhost:9000/.well-known/openid-configuration&lt;/p&gt;
+
+&lt;p&gt;Use the downloaded certificate for the akka-http ssl configuration.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&quot;language-hocon&quot;&gt;ssl-config {
+  trustManager = {
+    stores = [
+      { type = &quot;PEM&quot;, path = &quot;/path/to/cert/globalsign.crt&quot; }
+    ]
+  }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The authentication provider must be added to the ditto-gateway configuration.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&quot;language-hocon&quot;&gt;ditto.gateway.authentication {
+    oauth {
+      openid-connect-issuers = {
+        ory = &quot;https://localhost:9000/&quot;
+      }
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The configured subject-issuer will be used to prefix the value of the “sub” claim, e.g.&lt;/p&gt;
+&lt;div class=&quot;language-json highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;subjects&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;ory:foo@bar.com&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;type&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;generated&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h4 id=&quot;authenticate-ditto-api&quot;&gt;Authenticate Ditto API&lt;/h4&gt;
+&lt;p&gt;Create an OAuth client with hydra to be able to create ID Tokens.&lt;/p&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;docker run &lt;span class=&quot;nt&quot;&gt;--rm&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-it&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;-e&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;HYDRA_ADMIN_URL&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;https://ory-hydra-example--hydra:4445 &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;--network&lt;/span&gt; hydraguide &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+  oryd/hydra:v1.0.0 &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+  clients create &lt;span class=&quot;nt&quot;&gt;--skip-tls-verify&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;--id&lt;/span&gt; eclipse-ditto &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;--secret&lt;/span&gt; some-secret &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;--grant-types&lt;/span&gt; authorization_code,refresh_token,client_credentials,implicit &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;--response-types&lt;/span&gt; token,code,id_token &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;--scope&lt;/span&gt; openid,offline &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;--callbacks&lt;/span&gt; http://127.0.0.1:9010/callback
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Use the client to generate an ID Token.&lt;/p&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;docker run &lt;span class=&quot;nt&quot;&gt;--rm&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-it&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;--network&lt;/span&gt; hydraguide &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;-p&lt;/span&gt; 9010:9010 &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+  oryd/hydra:v1.0.0 &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+  token user &lt;span class=&quot;nt&quot;&gt;--skip-tls-verify&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;--port&lt;/span&gt; 9010 &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;--auth-url&lt;/span&gt; https://localhost:9000/oauth2/auth &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;--token-url&lt;/span&gt; https://ory-hydra-example--hydra:4444/oauth2/token &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;--client-id&lt;/span&gt; eclipse-ditto &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;--client-secret&lt;/span&gt; some-secret &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;--scope&lt;/span&gt; openid
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;After that perform the OAuth 2.0 Authorize Code Flow by opening the link, as prompted, 
+in your browser, and follow the steps shown there.&lt;/p&gt;
+
+&lt;p&gt;Use the generated token to authenticate Ditto API.&lt;/p&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;curl &lt;span class=&quot;nt&quot;&gt;-X&lt;/span&gt; POST &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+  http://localhost:8080/api/2/things &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;-H&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'Authorization: Bearer &amp;lt;JWT&amp;gt;'&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;-H&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'Content-Type: application/json'&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;-d&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'{}'&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;br /&gt;
+&lt;br /&gt;&lt;/p&gt;
+&lt;figure&gt;&lt;img class=&quot;docimage&quot; src=&quot;images/ditto.svg&quot; alt=&quot;Ditto&quot; style=&quot;max-width: 500px&quot; /&gt;&lt;/figure&gt;
+
+&lt;p&gt;–&lt;br /&gt;
+The Eclipse Ditto team&lt;/p&gt;
+</description>
+            <pubDate>Wed, 28 Aug 2019 00:00:00 -0400</pubDate>
+            <link>https://www.eclipse.org/ditto/2019-08-28-openid-connect.html</link>
+            <guid isPermaLink="true">https://www.eclipse.org/ditto/2019-08-28-openid-connect.html</guid>
+            
+            <category>blog</category>
+            
+            
+        </item>
         
         <item>
             <title>Announcing Eclipse Ditto Release 0.9.0</title>
@@ -235,9 +332,40 @@ post.&lt;/p&gt;
 }'&lt;/span&gt; http://hono.eclipse.org:28080/credentials/org.eclipse.ditto
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
+&lt;h4 id=&quot;create-ditto-policy-for-digital-twin&quot;&gt;Create Ditto policy for digital twin&lt;/h4&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;# create policy in Ditto&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;curl &lt;span class=&quot;nt&quot;&gt;-X&lt;/span&gt; PUT &lt;span class=&quot;nt&quot;&gt;-i&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-u&lt;/span&gt; demo5:demo &lt;span class=&quot;nt&quot;&gt;-H&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'Content-Type: application/json'&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-d&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'{
+   &quot;policyId&quot;: &quot;org.eclipse.ditto:teapot-policy&quot;,
+   &quot;entries&quot;: {
+       &quot;DEMO&quot;: {
+           &quot;subjects&quot;: {
+              &quot;nginx:demo5&quot;: {
+                  &quot;type&quot;: &quot;basic auth user and user used in connection'&lt;/span&gt;s authorizationContext&lt;span class=&quot;s2&quot;&gt;&quot;
+              }
+           },
+           &quot;&lt;/span&gt;resources&lt;span class=&quot;s2&quot;&gt;&quot;: {
+               &quot;&lt;/span&gt;thing:/&lt;span class=&quot;s2&quot;&gt;&quot;: {
+                   &quot;&lt;/span&gt;grant&lt;span class=&quot;s2&quot;&gt;&quot;: [&quot;&lt;/span&gt;READ&lt;span class=&quot;s2&quot;&gt;&quot;, &quot;&lt;/span&gt;WRITE&lt;span class=&quot;s2&quot;&gt;&quot;],
+                   &quot;&lt;/span&gt;revoke&lt;span class=&quot;s2&quot;&gt;&quot;: []
+               },
+               &quot;&lt;/span&gt;policy:/&lt;span class=&quot;s2&quot;&gt;&quot;: {
+                   &quot;&lt;/span&gt;grant&lt;span class=&quot;s2&quot;&gt;&quot;: [&quot;&lt;/span&gt;READ&lt;span class=&quot;s2&quot;&gt;&quot;, &quot;&lt;/span&gt;WRITE&lt;span class=&quot;s2&quot;&gt;&quot;],
+                   &quot;&lt;/span&gt;revoke&lt;span class=&quot;s2&quot;&gt;&quot;: []
+               },
+               &quot;&lt;/span&gt;message:/&lt;span class=&quot;s2&quot;&gt;&quot;: {
+                   &quot;&lt;/span&gt;grant&lt;span class=&quot;s2&quot;&gt;&quot;: [&quot;&lt;/span&gt;READ&lt;span class=&quot;s2&quot;&gt;&quot;, &quot;&lt;/span&gt;WRITE&lt;span class=&quot;s2&quot;&gt;&quot;],
+                   &quot;&lt;/span&gt;revoke&lt;span class=&quot;s2&quot;&gt;&quot;: []
+               }
+           }
+       }
+   }
+}' https://ditto.eclipse.org/api/2/policies/org.eclipse.ditto:teapot-policy 
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
 &lt;h4 id=&quot;create-ditto-digital-twin&quot;&gt;Create Ditto digital twin&lt;/h4&gt;
 &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;# create thing in Ditto&lt;/span&gt;
 &lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;curl &lt;span class=&quot;nt&quot;&gt;-X&lt;/span&gt; PUT &lt;span class=&quot;nt&quot;&gt;-i&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-u&lt;/span&gt; demo5:demo &lt;span class=&quot;nt&quot;&gt;-H&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'Content-Type: application/json'&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-d&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'{
+    &quot;policyId&quot;: &quot;org.eclipse.ditto:teapot-policy&quot;,
     &quot;features&quot;: {
       &quot;water&quot;: {
         &quot;properties&quot;: {
@@ -284,14 +412,10 @@ chosen arbitrarily, but must be set as the &lt;code class=&quot;highlighter-roug
                      &quot;status&quot;: &quot;{{ header:status }}&quot;,
                      &quot;content-type&quot;: &quot;{{ header:content-type }}&quot;
                    }
-                 },
-                 {
-                   &quot;addresses&quot;: [&quot;telemetry/org.eclipse.ditto&quot;, &quot;event/org.eclipse.ditto&quot;],
-                   &quot;authorizationContext&quot;: [&quot;nginx:demo5&quot;]
                  }
                ],
                &quot;targets&quot;: [{
-                   &quot;address&quot;: &quot;control/org.eclipse.ditto/{{ thing:id }}&quot;,
+                   &quot;address&quot;: &quot;control/org.eclipse.ditto/{{ thing:name }}&quot;,
                    &quot;authorizationContext&quot;: [
                      &quot;nginx:demo5&quot;
                    ],
@@ -639,228 +763,6 @@ The Eclipse Ditto team&lt;/p&gt;
             <guid isPermaLink="true">https://www.eclipse.org/ditto/2018-09-27-milestone-announcement-080-M2.html</guid>
             
             <category>blog</category>
-            
-            
-        </item>
-        
-        <item>
-            <title>Selective push notifications available</title>
-            <description>&lt;p&gt;The &lt;a href=&quot;architecture-services-connectivity.html&quot;&gt;connectivity service&lt;/a&gt; supercharged Ditto’s flexibility in integrating with other services.
-It’s such a great feature to let the other connected services know about thing updates and property changes.
-Even the direct exchange with real-world assets became more flexible through the multi-protocol support.
-But with a steady increase in connected devices, those messages easily sum up to a huge number.&lt;/p&gt;
-
-&lt;div class=&quot;alert alert-info&quot; role=&quot;alert&quot;&gt;&lt;i class=&quot;fa fa-info-circle&quot;&gt;&lt;/i&gt; &lt;b&gt;Note:&lt;/b&gt; In order to simplify a little, we here use the term &lt;code class=&quot;highlighter-rouge&quot;&gt;message&lt;/code&gt; as synonym for both Ditto 
-        &lt;a href=&quot;basic-signals.html&quot;&gt;signals&lt;/a&gt; and &lt;a href=&quot;basic-messages.html&quot;&gt;messages&lt;/a&gt;.&lt;/div&gt;
-
-&lt;p&gt;Also, not every consuming application needs to know everything that’s going on.
-In fact, the only use case that requires processing of every message is logging.
-Therefore most of the times an application waits for a specific message to trigger a specific action.
-So all other messages are discarded unused.
-This adds a lot of unnecessary overhead both to the message transport capabilities and the processing of messages at the receiving end.&lt;/p&gt;
-
-&lt;p&gt;But what if you could avoid receiving those messages at all.&lt;br /&gt;
-Well, you can!&lt;br /&gt;
-This is exactly what selective push notifications do: 
-Configurable message filters that are applied to Ditto’s publishing connection before anything goes on the line. 
-They can help you with a lot of problems in a bunch of scenarios:&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;Bandwidth limitations: The amount of occurring events is too large and/or frequent to be delivered via the available channels. With selective message filters, you can mute the noise in your event stream.&lt;/li&gt;
-  &lt;li&gt;Information hiding: Let consuming services only know what they need to know. Message filters allow you to control all published content in great detail.&lt;/li&gt;
-  &lt;li&gt;Specialized notifications: A specific event filter can be used to set a value thresholds or a status-change trigger. This removes the burden of implementing filter logic on the application side.&lt;/li&gt;
-  &lt;li&gt;Event routing: Create multiple connections with Ditto’s connectivity service and route your events through those aligned with your requirements. All by specifying appropriate filters for your connection targets.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;The following diagram visualizes this context:&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;images/blog/2018-09-21-selective-push-notifications-visual-comparison.png&quot; alt=&quot;visual comparison&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;With the upcoming Ditto release &lt;code class=&quot;highlighter-rouge&quot;&gt;0.8.0-M2&lt;/code&gt;, those filters are available for the following endpoints:&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;WebSocket&lt;/li&gt;
-  &lt;li&gt;Server-Sent Events (SSE)&lt;/li&gt;
-  &lt;li&gt;All supported connectivity protocols (AMQP 0.9.1, AMQP 1.0 / &lt;a href=&quot;https://eclipse.org/hono/&quot;&gt;Eclipse Hono&lt;/a&gt;, MQTT)&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;You can use a basic namespace filter on the following topics:&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;Twin events&lt;/li&gt;
-  &lt;li&gt;Live events&lt;/li&gt;
-  &lt;li&gt;Live messages&lt;/li&gt;
-  &lt;li&gt;Live commands&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;This filter is a comma-separated list of selected namespaces. It only allows messages related to one of the given namespaces.&lt;/p&gt;
-
-&lt;p&gt;Furthermore, there is an additional &lt;a href=&quot;basic-rql.html&quot;&gt;RQL filter&lt;/a&gt; for an advanced description of twin and live events.
-Powered by the mighty syntax of Ditto’s search API it allows configuring the selected events in the same manner as you search for things.&lt;/p&gt;
-
-&lt;p&gt;Check out the &lt;a href=&quot;basic-changenotifications.html#filtering&quot;&gt;documentation&lt;/a&gt; for more information on options and configuration.&lt;/p&gt;
-
-&lt;h2 id=&quot;a-simple-example&quot;&gt;A simple example&lt;/h2&gt;
-
-&lt;p&gt;Imagine you have a flat with multiple environmental sensors: Some measure temperature, some humidity and some both.
-This information can be useful for different applications.
-In our case, a smart thermostat uses the sensor data to control the indoor climate and there is also a fire alarm installed that detects fires by abnormal high measured temperatures&lt;/p&gt;
-
-&lt;p&gt;The following figure displays this setting:&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;images/blog/2018-09-21-selective-push-notifications-example-setup.png&quot; alt=&quot;example setup&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;So let’s start with the prerequisites. You need:&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;A running Ditto instance with a valid user (You can follow our &lt;a href=&quot;intro-hello-world.html&quot;&gt;Hello World example&lt;/a&gt; to create one). This example uses dittos default user on a locally running instance.&lt;/li&gt;
-  &lt;li&gt;A tool for executing HTTP requests (e.g. Ditto’s Swagger API, cURL, Postman). We use this to create our twins and simulate the sensors.&lt;/li&gt;
-  &lt;li&gt;A modern browser supporting WebSockets. This example uses &lt;a href=&quot;https://websocket.org/echo.html&quot;&gt;websocket.org&lt;/a&gt; as a websocket client. The site will tell you if your browser supports the WebSocket protocol. We will mock our applications this way.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;the-digital-twins&quot;&gt;The digital twins&lt;/h3&gt;
-
-&lt;p&gt;First we configure our sensors digital twins:&lt;/p&gt;
-
-&lt;p&gt;A temperature sensor&lt;/p&gt;
-&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;curl &lt;span class=&quot;nt&quot;&gt;-X&lt;/span&gt; PUT &lt;span class=&quot;nt&quot;&gt;-u&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'ditto:ditto'&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--header&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'Content-Type: application/json'&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-d&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-    &lt;span class=&quot;s1&quot;&gt;'{
-       &quot;features&quot;: {
-         &quot;environmentSensor&quot;: {
-           &quot;properties&quot;: { 
-             &quot;temperature&quot;: 0.0
-           }
-         }
-       }
-     }'&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-    &lt;span class=&quot;s1&quot;&gt;'http://localhost:8080/api/2/things/org.eclipse.ditto%3ATemperatureSensor'&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;A humidity sensor&lt;/p&gt;
-&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;curl &lt;span class=&quot;nt&quot;&gt;-X&lt;/span&gt; PUT &lt;span class=&quot;nt&quot;&gt;-u&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'ditto:ditto'&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--header&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'Content-Type: application/json'&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-d&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-    &lt;span class=&quot;s1&quot;&gt;'{
-       &quot;features&quot;: {
-         &quot;environmentSensor&quot;: {
-           &quot;properties&quot;: { 
-             &quot;humidity&quot;: 0
-           }
-         }
-       }
-     }'&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-    &lt;span class=&quot;s1&quot;&gt;'http://localhost:8080/api/2/things/org.eclipse.ditto%3AHumiditySensor'&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;A combined temperature and humidity sensor&lt;/p&gt;
-&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;curl &lt;span class=&quot;nt&quot;&gt;-X&lt;/span&gt; PUT &lt;span class=&quot;nt&quot;&gt;-u&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'ditto:ditto'&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--header&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'Content-Type: application/json'&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-d&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-    &lt;span class=&quot;s1&quot;&gt;'{
-       &quot;features&quot;: {
-         &quot;environmentSensor&quot;: {
-           &quot;properties&quot;: {
-             &quot;temperature&quot;: 0.0,
-             &quot;humidity&quot;: 0
-           }
-         }
-       }
-     }'&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-    &lt;span class=&quot;s1&quot;&gt;'http://localhost:8080/api/2/things/org.eclipse.ditto%3ATemperatureAndHumiditySensor'&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;And finally, a teapot&lt;/p&gt;
-&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;curl &lt;span class=&quot;nt&quot;&gt;-X&lt;/span&gt; PUT &lt;span class=&quot;nt&quot;&gt;-u&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'ditto:ditto'&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--header&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'Content-Type: application/json'&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-d&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-    &lt;span class=&quot;s1&quot;&gt;'{}'&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-    &lt;span class=&quot;s1&quot;&gt;'http://localhost:8080/api/2/things/org.eclipse.ditto%3ATeapot'&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;mocking-the-consuming-applications&quot;&gt;Mocking the consuming applications&lt;/h3&gt;
-
-&lt;p&gt;Open your browser on https://websocket.org/echo.html. 
-This site allows you to connect with any WebSocket endpoint and supports simple sending and receiving of messages. The interface is shown below:&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;images/blog/2018-09-21-selective-push-notifications-websocket_org.png&quot; alt=&quot;websocket.org site&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;Enter Ditto’s WebSocket endpoint with user credentials &lt;code class=&quot;highlighter-rouge&quot;&gt;ws://ditto:ditto@localhost:8080/ws/2&lt;/code&gt; and hit the &lt;em&gt;Connect&lt;/em&gt; button.
-The log output should confirm the action by printing a simple &lt;code class=&quot;highlighter-rouge&quot;&gt;CONNECTED&lt;/code&gt;.&lt;/p&gt;
-
-&lt;p&gt;This means the socket is open and you’re able to receive messages from Ditto.
-But first, you should let Ditto know in what kind of messages you’re interested.
-This interest differs for both of the example applications:&lt;/p&gt;
-
-&lt;p&gt;The thermostat app only needs to know every humidity and temperature report so you can define a filter for change events on twins having those properties:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;START-SEND-EVENTS?filter=or(exists(features/environmentSensor/properties/temperature),exists(features/environmentSensor/properties/humidity))
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Paste it into the &lt;em&gt;Message&lt;/em&gt; input and use the &lt;em&gt;Send&lt;/em&gt; button to post it. Ditto should acknowledge with a &lt;code class=&quot;highlighter-rouge&quot;&gt;START-SEND-EVENTS:ACK&lt;/code&gt;.&lt;/p&gt;
-
-&lt;p&gt;That’s it for our thermostat app, let’s proceed to the fire alarm.
-Open https://websocket.org/echo.html again in a separate tab and repeat the connection process.
-But instead of consuming all temperature and humidity reports, we only want to be notified when a specific temperature threshold is exceeded.
-90°C seems to be a solid value for this:&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;START-SEND-EVENTS?filter=gt(features/environmentSensor/properties/temperature,90)
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;After receiving Ditto’s acknowledgment, you’re done with the configuration.&lt;/p&gt;
-
-&lt;h3 id=&quot;report-mocked-sensor-values-to-ditto&quot;&gt;Report mocked sensor values to Ditto&lt;/h3&gt;
-
-&lt;p&gt;Use Ditto’s HTTP API to send mocked data on behalf of our sensors. First report a new humidity value for the humidity sensor:&lt;/p&gt;
-
-&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;curl &lt;span class=&quot;nt&quot;&gt;-X&lt;/span&gt; PUT &lt;span class=&quot;nt&quot;&gt;-u&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'ditto:ditto'&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--header&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'Content-Type: application/json'&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-d&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-    &lt;span class=&quot;s1&quot;&gt;'55'&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-    &lt;span class=&quot;s1&quot;&gt;'http://localhost:8080/api/2/things/org.eclipse.ditto%3AHumiditySensor/features/environmentSensor/properties/humidity'&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Now check both websocket.org tabs. The thermostat tab should have received an event with the reported value while nothing happened in the alarm tab.&lt;/p&gt;
-
-&lt;p&gt;Continue with some temperature data from another sensor:&lt;/p&gt;
-
-&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;curl &lt;span class=&quot;nt&quot;&gt;-X&lt;/span&gt; PUT &lt;span class=&quot;nt&quot;&gt;-u&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'ditto:ditto'&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--header&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'Content-Type: application/json'&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-d&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-    &lt;span class=&quot;s1&quot;&gt;'23'&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-    &lt;span class=&quot;s1&quot;&gt;'http://localhost:8080/api/2/things/org.eclipse.ditto%3ATemperatureAndHumiditySensor/features/environmentSensor/properties/temperature'&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;The value change should be reported to the thermostat, but still no events for the alarm tab.&lt;/p&gt;
-
-&lt;p&gt;Finally it’s time to start a fire. Report a very high temperature for the third sensor:&lt;/p&gt;
-
-&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;curl &lt;span class=&quot;nt&quot;&gt;-X&lt;/span&gt; PUT &lt;span class=&quot;nt&quot;&gt;-u&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'ditto:ditto'&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--header&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'Content-Type: application/json'&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-d&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-    &lt;span class=&quot;s1&quot;&gt;'120'&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-    &lt;span class=&quot;s1&quot;&gt;'http://localhost:8080/api/2/things/org.eclipse.ditto%3ATemperatureSensor/features/environmentSensor/properties/temperature'&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Now both applications should have received the reported data, and the fire alarm can use this event to (virtually) trigger its bell.&lt;/p&gt;
-
-&lt;p&gt;But what about the teapot? Let him declare his identity by setting a personal message:&lt;/p&gt;
-
-&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;curl &lt;span class=&quot;nt&quot;&gt;-X&lt;/span&gt; PUT &lt;span class=&quot;nt&quot;&gt;-u&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'ditto:ditto'&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--header&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'Content-Type: application/json'&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-d&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-    &lt;span class=&quot;s1&quot;&gt;'{
-       &quot;properties&quot;: {
-         &quot;message&quot;: &quot;I'&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\'&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'m a teapot&quot;
-       }
-     }'&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-    &lt;span class=&quot;s1&quot;&gt;'http://localhost:8080/api/2/things/org.eclipse.ditto%3ATeapot/features/status'&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Unfortunately, no one cares and this no one is notified about that change.&lt;/p&gt;
-
-&lt;p&gt;&lt;br /&gt;
-We do hope that &lt;strong&gt;you&lt;/strong&gt; care about this feature, we think it’s really awesome.
-&lt;br /&gt;&lt;/p&gt;
-&lt;figure&gt;&lt;img class=&quot;docimage&quot; src=&quot;images/ditto.svg&quot; alt=&quot;Ditto&quot; style=&quot;max-width: 500px&quot; /&gt;&lt;/figure&gt;
-
-&lt;p&gt;–&lt;br /&gt;
-The Eclipse Ditto team&lt;/p&gt;
-
-</description>
-            <pubDate>Fri, 21 Sep 2018 00:00:00 -0400</pubDate>
-            <link>https://www.eclipse.org/ditto/2018-09-21-selective-push-notifications.html</link>
-            <guid isPermaLink="true">https://www.eclipse.org/ditto/2018-09-21-selective-push-notifications.html</guid>
-            
-            <category>blog</category>
-            
-            <category>connectivity</category>
-            
-            <category>rql</category>
             
             
         </item>
