@@ -5,8 +5,8 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="">
-<meta name="keywords" content="getting_startedtroubleshooting,  bugtracker, chat, contact, feedback, forum, github, gitter, mailing-list, questions, support, troubleshooting">
-<title>  Feedback • Eclipse Ditto • a digital twin framework</title>
+<meta name="keywords" content="client_sdk,  ">
+<title>  Client SDK Java • Eclipse Ditto • a digital twin framework</title>
 
 <link rel="stylesheet" href="css/syntax.css">
 <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" crossorigin="anonymous">
@@ -167,7 +167,7 @@
                                 searchInput: document.getElementById('search-input'),
                                 resultsContainer: document.getElementById('results-container'),
                                 dataSource: 'search.json',
-                                searchResultTemplate: '<li><a href="{url}" title="Feedback">{title}</a></li>',
+                                searchResultTemplate: '<li><a href="{url}" title="Client SDK Java">{title}</a></li>',
                                 noResultsText: 'No results found.',
                                 limit: 10,
                                 fuzzy: true,
@@ -713,7 +713,7 @@
               
               
               
-              <li><a href="client-sdk-java.html">Java</a></li>
+              <li class="active"><a href="client-sdk-java.html">Java</a></li>
               
               
               
@@ -1071,7 +1071,7 @@
   
   
     
-    <li class="active"><a href="feedback.html">Feedback</a></li>
+    <li><a href="feedback.html">Feedback</a></li>
     
   
   
@@ -1099,7 +1099,7 @@
 
 
 <div class="post-header">
-   <h1 class="post-title-main">Feedback</h1>
+   <h1 class="post-title-main">Client SDK Java</h1>
 </div>
 
 
@@ -1139,14 +1139,131 @@ $('#toc').on('click', 'a', function() {
 
     
 
-  <p>You have following possibilities in order to get support or give feedback:</p>
+  <p>A client SDK for Java in order to interact with digital twins provided by an Eclipse Ditto backend.</p>
+
+<h2 id="features">Features</h2>
 
 <ul>
-  <li>Join the chat at <a href="https://gitter.im/eclipse/ditto?utm_source=badge&amp;utm_medium=badge&amp;utm_campaign=pr-badge&amp;utm_content=badge">https://gitter.im/eclipse/ditto,</a> for questions</li>
-  <li>send a message to the <a href="https://dev.eclipse.org/mailman/listinfo/ditto-dev">mailing-list,</a></li>
-  <li>ask a question in the <a href="https://www.eclipse.org/forums/index.php/f/364/">Eclipse forum,</a></li>
-  <li>create a <a href="https://github.com/eclipse/ditto/issues">GitHub issue.</a></li>
+  <li>Digital twin management: CRUD (create, read, update, delete) of Ditto <a href="https://www.eclipse.org/ditto/basic-thing.html">things</a></li>
+  <li><a href="https://www.eclipse.org/ditto/basic-changenotifications.html">Change notifications</a>: 
+consume notifications whenever a “watched” digital twin is modified</li>
+  <li>Send/receive <a href="https://www.eclipse.org/ditto/basic-messages.html">messages</a> to/from devices connected via a digital twin</li>
+  <li>Use the <a href="https://www.eclipse.org/ditto/protocol-twinlive.html#live">live channel</a> in order to react on commands directed
+to devices targeting their “live” state</li>
 </ul>
+
+<h2 id="communication-channel">Communication channel</h2>
+
+<p>The Ditto Java client interacts with an Eclipse Ditto backend via Ditto’s 
+<a href="https://www.eclipse.org/ditto/httpapi-protocol-bindings-websocket.html">WebSocket</a> sending and receiving messages
+in <a href="https://www.eclipse.org/ditto/protocol-overview.html">Ditto Protocol</a>.</p>
+
+<h2 id="usage">Usage</h2>
+
+<p>Maven coordinates:</p>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;dependency&gt;</span>
+   <span class="nt">&lt;groupId&gt;</span>org.eclipse.ditto<span class="nt">&lt;/groupId&gt;</span>
+   <span class="nt">&lt;artifactId&gt;</span>ditto-client<span class="nt">&lt;/artifactId&gt;</span>
+   <span class="nt">&lt;version&gt;</span>${ditto-client.version}<span class="nt">&lt;/version&gt;</span>
+<span class="nt">&lt;/dependency&gt;</span>
+</code></pre></div></div>
+
+<h3 id="instantiate--configure-a-new-ditto-client">Instantiate &amp; configure a new Ditto client</h3>
+
+<p>In order to configure your Ditto client instance, use the <code class="highlighter-rouge">DittoClientFactory</code> in order to</p>
+<ul>
+  <li>obtain a <code class="highlighter-rouge">CommonConfiguration</code> builder</li>
+  <li>build a <code class="highlighter-rouge">DittoClient</code> instance after configuration was done</li>
+</ul>
+
+<p>For example:</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">CredentialsAuthenticationConfiguration</span> <span class="n">authenticationConfiguration</span> <span class="o">=</span> <span class="n">CredentialsAuthenticationConfiguration</span><span class="o">.</span><span class="na">newBuilder</span><span class="o">()</span>
+   <span class="o">.</span><span class="na">username</span><span class="o">(</span><span class="s">"ditto"</span><span class="o">)</span>
+   <span class="o">.</span><span class="na">password</span><span class="o">(</span><span class="s">"ditto"</span><span class="o">)</span>
+   <span class="o">.</span><span class="na">build</span><span class="o">();</span>
+
+<span class="c1">// optionally configure a proxy server or a truststore containing the trusted CAs for SSL connection establishment</span>
+<span class="n">ProxyConfiguration</span> <span class="n">proxyConfiguration</span> <span class="o">=</span> <span class="n">ProxyConfiguration</span><span class="o">.</span><span class="na">newBuilder</span><span class="o">()</span>
+   <span class="o">.</span><span class="na">proxyHost</span><span class="o">(</span><span class="s">"localhost"</span><span class="o">)</span>
+   <span class="o">.</span><span class="na">proxyPort</span><span class="o">(</span><span class="mi">3128</span><span class="o">)</span>
+   <span class="o">.</span><span class="na">build</span><span class="o">();</span>
+
+<span class="n">TrustStoreConfiguration</span> <span class="n">trustStoreConfiguration</span> <span class="o">=</span> <span class="n">TrustStoreConfiguration</span><span class="o">.</span><span class="na">newBuilder</span><span class="o">()</span>
+   <span class="o">.</span><span class="na">location</span><span class="o">(</span><span class="n">TRUSTSTORE_LOCATION</span><span class="o">)</span>
+   <span class="o">.</span><span class="na">password</span><span class="o">(</span><span class="n">TRUSTSTORE_PASSWORD</span><span class="o">)</span>
+   <span class="o">.</span><span class="na">build</span><span class="o">();</span>
+
+<span class="n">CommonConfiguration</span> <span class="n">configuration</span> <span class="o">=</span> <span class="n">DittoClientFactory</span><span class="o">.</span><span class="na">configurationBuilder</span><span class="o">()</span>
+   <span class="o">.</span><span class="na">providerConfiguration</span><span class="o">(</span><span class="n">MessagingProviders</span><span class="o">.</span><span class="na">dittoWebsocketProviderBuilder</span><span class="o">()</span>
+      <span class="o">.</span><span class="na">endpoint</span><span class="o">(</span><span class="s">"wss://ditto.eclipse.org"</span><span class="o">)</span>
+      <span class="o">.</span><span class="na">authenticationConfiguration</span><span class="o">(</span><span class="n">authenticationConfiguration</span><span class="o">)</span>
+      <span class="o">.</span><span class="na">build</span><span class="o">()</span>
+   <span class="o">)</span>
+   <span class="o">.</span><span class="na">proxyConfiguration</span><span class="o">(</span><span class="n">proxyConfiguration</span><span class="o">)</span>
+   <span class="o">.</span><span class="na">trustStoreConfiguration</span><span class="o">(</span><span class="n">trustStoreConfiguration</span><span class="o">)</span>
+   <span class="o">.</span><span class="na">build</span><span class="o">();</span>
+
+<span class="n">DittoClient</span> <span class="n">client</span> <span class="o">=</span> <span class="n">DittoClientFactory</span><span class="o">.</span><span class="na">newInstance</span><span class="o">(</span><span class="n">configuration</span><span class="o">);</span>
+</code></pre></div></div>
+
+<h3 id="use-the-ditto-client">Use the Ditto client</h3>
+
+<h4 id="manage-twins">Manage twins</h4>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">client</span><span class="o">.</span><span class="na">twin</span><span class="o">().</span><span class="na">create</span><span class="o">(</span><span class="s">"org.eclipse.ditto:new-thing"</span><span class="o">).</span><span class="na">handle</span><span class="o">((</span><span class="n">createdThing</span><span class="o">,</span> <span class="n">throwable</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="o">{</span>
+    <span class="k">if</span> <span class="o">(</span><span class="n">createdThing</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"Created new thing: "</span> <span class="o">+</span> <span class="n">createdThing</span><span class="o">);</span>
+    <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"Thing could not be created due to: "</span> <span class="o">+</span> <span class="n">throwable</span><span class="o">.</span><span class="na">getMessage</span><span class="o">());</span>
+    <span class="o">}</span>
+    <span class="k">return</span> <span class="n">client</span><span class="o">.</span><span class="na">twin</span><span class="o">().</span><span class="na">forId</span><span class="o">(</span><span class="n">thingId</span><span class="o">).</span><span class="na">putAttribute</span><span class="o">(</span><span class="s">"first-updated-at"</span><span class="o">,</span> <span class="n">OffsetDateTime</span><span class="o">.</span><span class="na">now</span><span class="o">().</span><span class="na">toString</span><span class="o">());</span>
+<span class="o">}).</span><span class="na">get</span><span class="o">();</span> <span class="c1">// this will block the thread! work asynchronously whenever possible!</span>
+</code></pre></div></div>
+
+<h4 id="subscribe-for-change-notifications">Subscribe for change notifications</h4>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">client</span><span class="o">.</span><span class="na">twin</span><span class="o">().</span><span class="na">startConsumption</span><span class="o">().</span><span class="na">get</span><span class="o">();</span>
+<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"Subscribed for Twin events"</span><span class="o">);</span>
+<span class="n">client</span><span class="o">.</span><span class="na">twin</span><span class="o">().</span><span class="na">registerForThingChanges</span><span class="o">(</span><span class="s">"my-changes"</span><span class="o">,</span> <span class="n">change</span> <span class="o">-&gt;</span> <span class="o">{</span>
+   <span class="k">if</span> <span class="o">(</span><span class="n">change</span><span class="o">.</span><span class="na">getAction</span><span class="o">()</span> <span class="o">==</span> <span class="n">ChangeAction</span><span class="o">.</span><span class="na">CREATED</span><span class="o">)</span> <span class="o">{</span>
+       <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"An existing Thing was modified: "</span> <span class="o">+</span> <span class="n">change</span><span class="o">.</span><span class="na">getThing</span><span class="o">());</span>
+       <span class="c1">// perform custom actions ..</span>
+   <span class="o">}</span>
+<span class="o">});</span>
+</code></pre></div></div>
+
+<h4 id="sendreceive-messages">Send/receive messages</h4>
+
+<p>Register for receiving messages with the subject <code class="highlighter-rouge">hello.world</code> on any thing:</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">client</span><span class="o">.</span><span class="na">live</span><span class="o">().</span><span class="na">registerForMessage</span><span class="o">(</span><span class="s">"globalMessageHandler"</span><span class="o">,</span> <span class="s">"hello.world"</span><span class="o">,</span> <span class="n">message</span> <span class="o">-&gt;</span> <span class="o">{</span>
+   <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"Received Message with subject "</span> <span class="o">+</span>  <span class="n">message</span><span class="o">.</span><span class="na">getSubject</span><span class="o">());</span>
+   <span class="n">message</span><span class="o">.</span><span class="na">reply</span><span class="o">()</span>
+      <span class="o">.</span><span class="na">statusCode</span><span class="o">(</span><span class="n">HttpStatusCode</span><span class="o">.</span><span class="na">IM_A_TEAPOT</span><span class="o">)</span>
+      <span class="o">.</span><span class="na">payload</span><span class="o">(</span><span class="s">"Hello, I'm just a Teapot!"</span><span class="o">)</span>
+      <span class="o">.</span><span class="na">send</span><span class="o">();</span>
+<span class="o">});</span>
+</code></pre></div></div>
+
+<p>Send a message with the subject <code class="highlighter-rouge">hello.world</code> to the thing with ID <code class="highlighter-rouge">org.eclipse.ditto:new-thing</code>:</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">client</span><span class="o">.</span><span class="na">live</span><span class="o">().</span><span class="na">forId</span><span class="o">(</span><span class="s">"org.eclipse.ditto:new-thing"</span><span class="o">)</span>
+   <span class="o">.</span><span class="na">message</span><span class="o">()</span>
+   <span class="o">.</span><span class="na">from</span><span class="o">()</span>
+   <span class="o">.</span><span class="na">subject</span><span class="o">(</span><span class="s">"hello.world"</span><span class="o">)</span>
+   <span class="o">.</span><span class="na">payload</span><span class="o">(</span><span class="s">"I am a Teapot"</span><span class="o">)</span>
+   <span class="o">.</span><span class="na">send</span><span class="o">(</span><span class="n">String</span><span class="o">.</span><span class="na">class</span><span class="o">,</span> <span class="o">(</span><span class="n">response</span><span class="o">,</span> <span class="n">throwable</span><span class="o">)</span> <span class="o">-&gt;</span>
+      <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"Got response: "</span> <span class="o">+</span> <span class="n">response</span><span class="o">.</span><span class="na">getPayload</span><span class="o">().</span><span class="na">orElse</span><span class="o">(</span><span class="kc">null</span><span class="o">))</span>
+   <span class="o">);</span>
+</code></pre></div></div>
+
+<h2 id="further-examples">Further Examples</h2>
+
+<p>For further examples on how to use the Ditto client, please have a look at the class 
+<a href="src/test/java/org/eclipse/ditto/client/DittoClientUsageExamples.java">DittoClientUsageExamples</a> which is
+configured to connect to the <a href="https://ditto.eclipse.org">Ditto sandbox</a>.</p>
 
 
     <div class="tags">
@@ -1154,12 +1271,6 @@ $('#toc').on('click', 'a', function() {
         <b>Tags: </b>
         
         
-        
-        <a href="tag_getting_started.html" class="btn btn-default navbar-btn cursorNorm" role="button">getting_started</a>
-        
-        
-        
-        <a href="tag_troubleshooting.html" class="btn btn-default navbar-btn cursorNorm" role="button">troubleshooting</a>
         
         
         

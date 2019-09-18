@@ -5,8 +5,8 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="">
-<meta name="keywords" content="getting_startedtroubleshooting,  bugtracker, chat, contact, feedback, forum, github, gitter, mailing-list, questions, support, troubleshooting">
-<title>  Feedback • Eclipse Ditto • a digital twin framework</title>
+<meta name="keywords" content="client_sdk,  ">
+<title>  Client SDK JavaScript • Eclipse Ditto • a digital twin framework</title>
 
 <link rel="stylesheet" href="css/syntax.css">
 <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" crossorigin="anonymous">
@@ -167,7 +167,7 @@
                                 searchInput: document.getElementById('search-input'),
                                 resultsContainer: document.getElementById('results-container'),
                                 dataSource: 'search.json',
-                                searchResultTemplate: '<li><a href="{url}" title="Feedback">{title}</a></li>',
+                                searchResultTemplate: '<li><a href="{url}" title="Client SDK JavaScript">{title}</a></li>',
                                 noResultsText: 'No results found.',
                                 limit: 10,
                                 fuzzy: true,
@@ -720,7 +720,7 @@
               
               
               
-              <li><a href="client-sdk-javascript.html">JavaScript</a></li>
+              <li class="active"><a href="client-sdk-javascript.html">JavaScript</a></li>
               
               
               
@@ -1071,7 +1071,7 @@
   
   
     
-    <li class="active"><a href="feedback.html">Feedback</a></li>
+    <li><a href="feedback.html">Feedback</a></li>
     
   
   
@@ -1099,7 +1099,7 @@
 
 
 <div class="post-header">
-   <h1 class="post-title-main">Feedback</h1>
+   <h1 class="post-title-main">Client SDK JavaScript</h1>
 </div>
 
 
@@ -1139,14 +1139,67 @@ $('#toc').on('click', 'a', function() {
 
     
 
-  <p>You have following possibilities in order to get support or give feedback:</p>
+  <p>A TypeScript library to facilitate working the the REST-like HTTP API and web socket API of Eclipse Ditto.</p>
 
+<h2 id="how-to-use-it">How to use it</h2>
+<p>Install <code class="highlighter-rouge">@eclipse-ditto/ditto-javascript-client-dom</code> for the DOM (browser) implementation, 
+<code class="highlighter-rouge">@eclipse-ditto/ditto-javascript-client-node</code> for the NodeJS implementation, or <code class="highlighter-rouge">@eclipse/ditto-javascript-client-api-ditto</code> for
+the API and build your own client implementation.</p>
+
+<p>More information can be found in the descriptions of the subpackages:</p>
 <ul>
-  <li>Join the chat at <a href="https://gitter.im/eclipse/ditto?utm_source=badge&amp;utm_medium=badge&amp;utm_campaign=pr-badge&amp;utm_content=badge">https://gitter.im/eclipse/ditto,</a> for questions</li>
-  <li>send a message to the <a href="https://dev.eclipse.org/mailman/listinfo/ditto-dev">mailing-list,</a></li>
-  <li>ask a question in the <a href="https://www.eclipse.org/forums/index.php/f/364/">Eclipse forum,</a></li>
-  <li>create a <a href="https://github.com/eclipse/ditto/issues">GitHub issue.</a></li>
+  <li><a href="./lib/api/README.md">@eclipse-ditto/ditto-javascript-client-api</a></li>
+  <li><a href="./lib/dom/README.md">@eclipse-ditto/ditto-javascript-client-dom</a></li>
+  <li><a href="./lib/node/README.md">@eclipse-ditto/ditto-javascript-client-node</a></li>
 </ul>
+
+<h2 id="compatibility-with-eclipse-ditto">Compatibility with <a href="https://github.com/eclipse/ditto">Eclipse Ditto</a></h2>
+
+<p>The <code class="highlighter-rouge">@eclipse-ditto/ditto-javascript-client-&lt;package&gt;_&lt;ditto-major-version&gt;</code> modules
+will be compatible with the <code class="highlighter-rouge">&lt;ditto-major-version&gt;</code>, so e.g. <code class="highlighter-rouge">@eclipse-ditto/ditto-javascript-client-&lt;package&gt;_1</code>
+will be compatible with Eclipse Ditto 1.x. The javascript modules themselves use 
+<a href="https://docs.npmjs.com/about-semantic-versioning">semantic versioning</a> for their
+api changes. All modules are released together, so if there is a version
+<code class="highlighter-rouge">@eclipse-ditto/ditto-javascript-client-api_0:1.0.1</code>, there’s also a release
+of <code class="highlighter-rouge">@eclipse-ditto/ditto-javascript-client-dom_0:1.0.1</code>.</p>
+
+<p>The newest release of the JavaScript client will always try to cover as much API
+functionality of the same Eclipse Ditto major version as possible. There might
+however be missing features for which we would be very happy to accept contributions.</p>
+
+<h2 id="coding">Coding</h2>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>npm install
+npm run build
+npm run lint
+npm test
+# or npm run test:watch
+</code></pre></div></div>
+
+<h2 id="troubleshooting">Troubleshooting</h2>
+<p>If you get strange errors, it would be best cleaning all dependencies and
+starting from the beginning again:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>npm run clean
+# by hand delete node_modules in the root folder, or use a tool like rm, rimraf, etc.
+npm install
+npm run build
+# ...
+</code></pre></div></div>
+<p>It is important to know that during install and build some extra processes
+are triggered by e.g. lerna which will symlink the <code class="highlighter-rouge">api</code> dependency into 
+the node_modules of <code class="highlighter-rouge">dom</code> and <code class="highlighter-rouge">node</code> packages.</p>
+
+<h2 id="internals">Internals</h2>
+<p>This project is using <a href="https://github.com/lerna/lerna">lerna</a> to split up the
+client into different packages. This way we can have standalone codeable 
+subprojects (<code class="highlighter-rouge">api</code>, <code class="highlighter-rouge">dom</code> and <code class="highlighter-rouge">node</code>) but still are able to control dependencies,
+build processes or release processes globally.</p>
+
+<p>Furthermore we use <a href="https://rollupjs.org/">rollup.js</a> for providing multiple
+module types of the packages, e.g. the <code class="highlighter-rouge">api</code> will be published as IIFE,
+ES Module and CommonJS module.</p>
+
+<p>For automatically generating barrel files, <a href="https://github.com/bencoveney/barrelsby">barrelsby</a>
+is used during the build process.</p>
 
 
     <div class="tags">
@@ -1154,12 +1207,6 @@ $('#toc').on('click', 'a', function() {
         <b>Tags: </b>
         
         
-        
-        <a href="tag_getting_started.html" class="btn btn-default navbar-btn cursorNorm" role="button">getting_started</a>
-        
-        
-        
-        <a href="tag_troubleshooting.html" class="btn btn-default navbar-btn cursorNorm" role="button">troubleshooting</a>
         
         
         
