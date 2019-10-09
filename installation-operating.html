@@ -1150,6 +1150,72 @@ $('#toc').on('click', 'a', function() {
 
 <p>This page shows the basics for operating Ditto.</p>
 
+<h2 id="configuration">Configuration</h2>
+
+<p>Each service may be configured via it’s java VM variables on service startup.</p>
+
+<p>The following example configures the devops password of the gateway-service started via docker-compose. In order
+to supply additional configuration one has to add the variable in the corresponding <code class="highlighter-rouge">entrypoint</code> section of the
+<code class="highlighter-rouge">docker-compose.yml</code> file.</p>
+
+<div class="language-yml highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="s">...</span>
+    <span class="s">entrypoint</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">java</span>
+      <span class="c1"># Alternative approach for configuration of the service</span>
+      <span class="pi">-</span> <span class="s">-Dditto.gateway.authentication.devops.password=foobar</span>
+      <span class="pi">-</span> <span class="s">-jar</span>
+      <span class="pi">-</span> <span class="s">starter.jar</span>
+</code></pre></div></div>
+
+<p>The executable for the microservice is called <code class="highlighter-rouge">starter.jar</code>. The configuration variables have to be set before
+the <code class="highlighter-rouge">-jar</code> option.</p>
+
+<p>For a list of available configuration options go to the respective configuration files under the services 
+directory. E.g. for the gateway service visit <a href="https://github.com/eclipse/ditto/blob/master/services/gateway/starter/src/main/resources/gateway.conf">/services/gateway/starter/src/main/resources/gateway.conf</a>.</p>
+
+<h3 id="openid-connect">OpenID Connect</h3>
+
+<p>The authentication provider must be added to the ditto-gateway configuration.</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">ditto</span><span class="o">.</span><span class="na">gateway</span><span class="o">.</span><span class="na">authentication</span> <span class="o">{</span>
+    <span class="n">oauth</span> <span class="o">{</span>
+      <span class="n">openid</span><span class="o">-</span><span class="n">connect</span><span class="o">-</span><span class="n">issuers</span> <span class="o">=</span> <span class="o">{</span>
+        <span class="n">myprovider</span> <span class="o">=</span> <span class="s">"https://localhost:9000/"</span>
+      <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p>The configured subject-issuer will be used to prefix the value of the “sub” claim, e.g.</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"subjects"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"&lt;provider&gt;:&lt;sub-claim&gt;"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"generated"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>As of the OAuth2.0 and OpenID Connect standards Ditto expects the headers <code class="highlighter-rouge">Authorization: Bearer &lt;JWT&gt;</code> and 
+<code class="highlighter-rouge">Content-Type: application/json</code>, containing the issued token of the provider.</p>
+
+<p><strong>The token has to be issued beforehand. The required logic is not provided by ditto.</strong> When using 
+the OIDC provider <a href="https://www.keycloak.org/">keycloak</a>, a project like <a href="https://github.com/keycloak/keycloak-gatekeeper">keycloak-gatekeeper</a> 
+may be put infront of ditto to handle the token-logic.</p>
+
+<p><strong>If the chosen OIDC provider uses a self-signed certificate</strong>, the certificate has to be retrieved and configured for the 
+akka-http ssl configuration.</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">ssl</span><span class="o">-</span><span class="n">config</span> <span class="o">{</span>
+  <span class="n">trustManager</span> <span class="o">=</span> <span class="o">{</span>
+    <span class="n">stores</span> <span class="o">=</span> <span class="o">[</span>
+      <span class="o">{</span> <span class="n">type</span> <span class="o">=</span> <span class="s">"PEM"</span><span class="o">,</span> <span class="n">path</span> <span class="o">=</span> <span class="s">"/path/to/cert/globalsign.crt"</span> <span class="o">}</span>
+    <span class="o">]</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
 <h2 id="logging">Logging</h2>
 
 <p>Gathering logs for a running Ditto installation can be achieved by:</p>
@@ -1896,7 +1962,7 @@ to stop blocking messages to a namespace.</p>
                     </div>
                     <p class="notice">
                         &copy;2019 Eclipse Ditto.
-                         Site last generated: Oct 2, 2019 <br />
+                         Site last generated: Oct 9, 2019 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">
