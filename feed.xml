@@ -5,9 +5,65 @@
         <description>Announcements, tutorials and examples around Eclipse Ditto and Digital Twins</description>
         <link>https://www.eclipse.org/ditto/</link>
         <atom:link href="https://www.eclipse.org/ditto/feed.xml" rel="self" type="application/rss+xml"/>
-        <pubDate>Thu, 10 Oct 2019 02:37:09 -0400</pubDate>
-        <lastBuildDate>Thu, 10 Oct 2019 02:37:09 -0400</lastBuildDate>
+        <pubDate>Fri, 18 Oct 2019 04:48:51 -0400</pubDate>
+        <lastBuildDate>Fri, 18 Oct 2019 04:48:51 -0400</lastBuildDate>
         <generator>Jekyll v3.6.2</generator>
+        
+        <item>
+            <title>Integration of HTTP endpoints/webhooks</title>
+            <description>&lt;p&gt;By adding another connectivity type - &lt;a href=&quot;connectivity-protocol-bindings-http.html&quot;&gt;HTTP&lt;/a&gt; - to Ditto’s 
+ connectivity, it is now (to be released in the next Ditto milestone 1.0.0-M2) possible to to 
+ publish &lt;em&gt;twin events&lt;/em&gt;, &lt;em&gt;messages&lt;/em&gt;, &lt;em&gt;live commands and events&lt;/em&gt; to existing HTTP servers/endpoints.&lt;/p&gt;
+
+&lt;p&gt;That is especially useful for invoking existing APIs (which are most of the time HTTP based) whenever e.g.
+ a digital twin was modified.&lt;/p&gt;
+
+&lt;p&gt;One example on how to benefit from this new feature is to invoke a custom 
+ &lt;a href=&quot;https://ifttt.com&quot;&gt;IFTTT&lt;/a&gt; (if-this-than-that) &lt;a href=&quot;https://ifttt.com/maker_webhooks&quot;&gt;webhook&lt;/a&gt; via a HTTP &lt;code class=&quot;highlighter-rouge&quot;&gt;POST&lt;/code&gt; request
+ which then may trigger other IFTTT follow-up-actions (e.g. send a chat message to a &lt;a href=&quot;https://ifttt.com/slack&quot;&gt;Slack&lt;/a&gt; 
+ room).&lt;/p&gt;
+
+&lt;p&gt;For IFTTT “webhooks” the address would be &lt;code class=&quot;highlighter-rouge&quot;&gt;POST https://maker.ifttt.com/trigger/&amp;lt;your-event-name&amp;gt;/with/key/&amp;lt;your-key&amp;gt;&lt;/code&gt; 
+ and the expected JSON body:&lt;/p&gt;
+
+&lt;div class=&quot;language-json highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;value1&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;...&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;value2&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;...&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;value3&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;...&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;In combination with &lt;a href=&quot;connectivity-mapping.html&quot;&gt;payload mapping&lt;/a&gt;, the &lt;code class=&quot;highlighter-rouge&quot;&gt;value1&lt;/code&gt; to &lt;code class=&quot;highlighter-rouge&quot;&gt;value3&lt;/code&gt; fields requested by the IFTTT
+API can be extracted from the &lt;a href=&quot;protocol-specification.html&quot;&gt;Ditto Protocol&lt;/a&gt; and could contain the changed value.&lt;/p&gt;
+
+&lt;p&gt;In combination with &lt;a href=&quot;basic-connections.html#target-topics-and-filtering&quot;&gt;filters for targets&lt;/a&gt; you can even specify to
+only publish e.g. &lt;code class=&quot;highlighter-rouge&quot;&gt;twin events&lt;/code&gt;, where the temperature of a twin exceeded a certain threshold:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;{
+  &quot;address&quot;: &quot;POST:/trigger/&amp;lt;your-event-name&amp;gt;/with/key/&amp;lt;your-key&amp;gt;&quot;,
+  &quot;topics&quot;: [
+    &quot;_/_/things/twin/events?filter=gt(features/temperature/value,25)&quot;
+  ],
+  ...
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Get creative on which HTTP APIs to trigger based on twin events. E.g. invoke a “function-as-a-service” API or invoke the 
+Twitter API and let your digital twin tweet whenever it detects, that it is getting too warm in your office.&lt;/p&gt;
+
+&lt;figure&gt;&lt;img class=&quot;docimage&quot; src=&quot;images/ditto.svg&quot; alt=&quot;Ditto&quot; style=&quot;max-width: 500px&quot; /&gt;&lt;/figure&gt;
+
+&lt;p&gt;–&lt;br /&gt;
+The Eclipse Ditto team&lt;/p&gt;
+</description>
+            <pubDate>Thu, 17 Oct 2019 00:00:00 -0400</pubDate>
+            <link>https://www.eclipse.org/ditto/2019-10-17-http-connectivity.html</link>
+            <guid isPermaLink="true">https://www.eclipse.org/ditto/2019-10-17-http-connectivity.html</guid>
+            
+            <category>blog</category>
+            
+            
+        </item>
         
         <item>
             <title>Announcing Ditto Milestone 1.0.0-M1a</title>
@@ -701,63 +757,6 @@ The Eclipse Ditto team&lt;/p&gt;
             <pubDate>Wed, 14 Nov 2018 00:00:00 -0500</pubDate>
             <link>https://www.eclipse.org/ditto/2018-11-14-milestone-announcement-080-M3.html</link>
             <guid isPermaLink="true">https://www.eclipse.org/ditto/2018-11-14-milestone-announcement-080-M3.html</guid>
-            
-            <category>blog</category>
-            
-            
-        </item>
-        
-        <item>
-            <title>Example demonstrating connectivity to an MQTT broker</title>
-            <description>&lt;p&gt;Eclipse Ditto can now connect to MQTT 3.1.1 brokers.&lt;/p&gt;
-
-&lt;p&gt;Perfect timing to happily welcome a new colleague to our team behind Eclipse Ditto: &lt;a href=&quot;https://github.com/joosdavid&quot;&gt;David&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;In order to get familiar with Ditto and the development with digital twins, David was assigned with one of his first 
-tasks to get his hands on one of our newest features, &lt;a href=&quot;connectivity-protocol-bindings-mqtt.html&quot;&gt;MQTT connectivity&lt;/a&gt; 
-which was released recently with milestone &lt;a href=&quot;2018-09-27-milestone-announcement-080-M2.html&quot;&gt;0.8.0-M2&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;On his journey into digital twin land he made a great example with an ESP8266 powered board connected via an MQTT broker
-to Ditto and published it to the 
-&lt;a href=&quot;https://github.com/eclipse/ditto-examples/tree/master/mqtt-bidirectional&quot;&gt;Eclipse Ditto examples repository&lt;/a&gt;:&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;This example is about how to communicate between device and solution in a two way pattern through Ditto using MQTT. 
-  This means we will add a policy, a thing and a MQTT connection to Ditto. 
-  When Ditto ist set up and working, we will create real world device (“octopus board”) and connect it to it’s 
-  digital twin via MQTT.
-  &lt;br /&gt;&lt;br /&gt;
-  At the end, we will create a basic frontend webapp. 
-  The webapp will automatically connect to Ditto when you type in your credentials, automatically pull your things 
-  and show them in a list.
-  &lt;br /&gt;
-  You can create, modify and delete devices in the webapp and if there is a real world device connected to the thing 
-  in the list, you can send it a command message to control any feature on it. 
-  The list of things will always be up-to-date when you listen to server-sent-events, which you can activate easily 
-  with pressing a button.&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;figure&gt;&lt;img class=&quot;docimage&quot; src=&quot;https://raw.githubusercontent.com/eclipse/ditto-examples/master/mqtt-bidirectional/img/diagram.jpg&quot; alt=&quot;Eclipse Ditto bidirectional MQTT diagram&quot; style=&quot;max-width: 800px&quot; /&gt;&lt;figcaption&gt;Source: https://github.com/eclipse/ditto-examples&lt;/figcaption&gt;&lt;/figure&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;We will use an Octopus-board with an ESP8266 on it. It has several sensors built in, but for simplicity we will
- just use it’s temperature and altitude sensor. 
- &lt;br /&gt;
- To show the functionality of Eclipse Ditto messages, we will switch on/off a LED on the Octopus-board through it.&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;If you have any wishes, improvements, are missing something
-or just want to get in touch with us, you can use one of
-our &lt;a href=&quot;https://eclipse.org/ditto/feedback.html&quot;&gt;feedback channels&lt;/a&gt;.&lt;/p&gt;
-
-&lt;figure&gt;&lt;img class=&quot;docimage&quot; src=&quot;images/ditto.svg&quot; alt=&quot;Ditto&quot; style=&quot;max-width: 500px&quot; /&gt;&lt;/figure&gt;
-
-&lt;p&gt;–&lt;br /&gt;
-The Eclipse Ditto team&lt;/p&gt;
-</description>
-            <pubDate>Tue, 16 Oct 2018 00:00:00 -0400</pubDate>
-            <link>https://www.eclipse.org/ditto/2018-10-16-example-mqtt-bidirectional.html</link>
-            <guid isPermaLink="true">https://www.eclipse.org/ditto/2018-10-16-example-mqtt-bidirectional.html</guid>
             
             <category>blog</category>
             
