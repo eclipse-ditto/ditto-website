@@ -400,6 +400,12 @@
                       
                       
                       
+                      
+                      
+                      <li><a href="basic-namespaces-and-names.html">Namespaces and Names</a></li>
+                      
+                      
+                      
                   </ul>
               </li>
               
@@ -1163,6 +1169,18 @@ optimized representation of the <code class="highlighter-rouge">Thing</code> dat
 <p>No custom indexes have to be defined as the structure in the database is “flattened” so that all data contained in 
 <a href="basic-thing.html">Things</a> can be searched for efficiently.</p>
 
+<h2 id="consistency">Consistency</h2>
+
+<p>Ditto’s search index provides <strong>eventual consistency</strong>.</p>
+
+<p>In order to reduce load to the database when processing updates in a high frequency, the search index is updated in 
+small batches with an default interval of 1 second (configurable via environment variable 
+<code class="highlighter-rouge">THINGS_SEARCH_UPDATER_STREAM_WRITE_INTERVAL</code>).</p>
+
+<p>That means that when a thing is updated and the API (e.g. the HTTP endpoint) returns a success response, the search index
+will not reflect that change in that instant. The change will most likely be reflected in the search index within
+1-2 seconds. In rare cases the duration until consistency is reached again might be higher.</p>
+
 <h2 id="search-queries">Search queries</h2>
 
 <p>Queries can be made via Ditto’s APIs (<a href="httpapi-search.html">HTTP</a> or 
@@ -1270,7 +1288,7 @@ paging</a> instead.</div>
                     </div>
                     <p class="notice">
                         &copy;2019 Eclipse Ditto.
-                         Site last generated: Oct 18, 2019 <br />
+                         Site last generated: Oct 30, 2019 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">
