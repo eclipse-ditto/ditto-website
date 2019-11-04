@@ -253,6 +253,12 @@
                       
                       
                       
+                      <li><a href="release_notes_100-M2.html">1.0.0-M2</a></li>
+                      
+                      
+                      
+                      
+                      
                       <li><a href="release_notes_100-M1a.html">1.0.0-M1a</a></li>
                       
                       
@@ -1441,18 +1447,40 @@ configuration.</p>
 
 <h2 id="payload-mapping-configuration">Payload mapping configuration</h2>
 
-<p>To enable a custom <a href="connectivity-mapping.html">payload mapping</a> for a specific connection, you have to configure a
-mapping context in the connection configuration object. The following snippet shows an example <code class="highlighter-rouge">mappingContext</code>. This
-configuration must be embedded in the connection configuration as shown in the <a href="basic-connections.html">Connections</a> section.</p>
+<p>To enable a custom <a href="connectivity-mapping.html">payload mapping</a> for a specific source or target of a connection, you 
+have to configure a payload mapping definition in the connection configuration object. The following snippet shows an 
+example <code class="highlighter-rouge">mappingDefinitions</code>. This configuration must be embedded in the connection configuration as shown in the 
+<a href="basic-connections.html">Connections</a> section. These payload mapping definitions are then referenced by its ID 
+(the key of the JSON object) in the sources and targets of the connection using the field <code class="highlighter-rouge">payloadMapping</code>. 
+If no payload mapping or definition is provided, the <a href="connectivity-mapping.html#ditto-mapper">Ditto message mapping</a> 
+is used as the default.</p>
 
-<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="s2">"mappingContext"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"mappingEngine"</span><span class="p">:</span><span class="w"> </span><span class="s2">"JavaScript"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"options"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"incomingScript"</span><span class="p">:</span><span class="w"> </span><span class="s2">".."</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"outgoingScript"</span><span class="p">:</span><span class="w"> </span><span class="s2">".."</span><span class="w">
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="err">...</span><span class="w">
+  </span><span class="s2">"mappingDefinitions"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"customJs"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">                     </span><span class="err">//</span><span class="w"> </span><span class="err">(</span><span class="mi">1</span><span class="err">)</span><span class="w">
+      </span><span class="s2">"mappingEngine"</span><span class="p">:</span><span class="w"> </span><span class="s2">"JavaScript"</span><span class="p">,</span><span class="w">  </span><span class="err">//</span><span class="w"> </span><span class="err">(</span><span class="mi">2</span><span class="err">)</span><span class="w">
+      </span><span class="s2">"options"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">                    </span><span class="err">//</span><span class="w"> </span><span class="err">(</span><span class="mi">3</span><span class="err">)</span><span class="w">
+        </span><span class="s2">"incomingScript"</span><span class="p">:</span><span class="w"> </span><span class="s2">".."</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"outgoingScript"</span><span class="p">:</span><span class="w"> </span><span class="s2">".."</span><span class="w">
+      </span><span class="p">}</span><span class="w">
     </span><span class="p">}</span><span class="w">
-  </span><span class="p">}</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="s2">"sources"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"addresses"</span><span class="p">:</span><span class="w"> </span><span class="s2">"source"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"payloadMapping"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"customJs"</span><span class="p">]</span><span class="w">  
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+  </span><span class="err">...</span><span class="w">
+</span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
+
+<ul>
+  <li>(1) This ID can be used in sources and targets of the connection to reference this payload mapping definition.</li>
+  <li>(2) The <code class="highlighter-rouge">mappingEngine</code> defines the underlying <code class="highlighter-rouge">MessageMapper</code> implementation.</li>
+  <li>(3) The <code class="highlighter-rouge">options</code> are used to configure the mapper instance to your needs.</li>
+</ul>
 
 
     <div class="tags">
@@ -1479,7 +1507,7 @@ configuration must be embedded in the connection configuration as shown in the <
                     </div>
                     <p class="notice">
                         &copy;2019 Eclipse Ditto.
-                         Site last generated: Oct 30, 2019 <br />
+                         Site last generated: Nov 4, 2019 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

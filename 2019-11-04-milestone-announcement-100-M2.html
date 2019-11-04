@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="">
 <meta name="keywords" content="blog,  ">
-<title>  Connectivity to Apache Kafka in Eclipse Ditto </title>
+<title>  Announcing Ditto Milestone 1.0.0-M2 </title>
 
 <link rel="stylesheet" href="css/syntax.css">
 <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" crossorigin="anonymous">
@@ -167,7 +167,7 @@
                                 searchInput: document.getElementById('search-input'),
                                 resultsContainer: document.getElementById('results-container'),
                                 dataSource: 'search.json',
-                                searchResultTemplate: '<li><a href="{url}" title="Connectivity to Apache Kafka in Eclipse Ditto">{title}</a></li>',
+                                searchResultTemplate: '<li><a href="{url}" title="Announcing Ditto Milestone 1.0.0-M2">{title}</a></li>',
                                 noResultsText: 'No results found.',
                                 limit: 10,
                                 fuzzy: true,
@@ -209,8 +209,8 @@
 <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
 
     <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">Connectivity to Apache Kafka in Eclipse Ditto</h1>
-        <p class="post-meta">Published by <img src="https://www.gravatar.com/avatar/90a82dc2af1620df1f955e211ecc4dee?s=135" alt="A photo of Thomas Jäckle" style="width:50px;border-radius:50%;display:inline-block;margin-right:5px;" /><span itemprop="author" itemscope itemtype="http://schema.org/Person"><span itemprop="name"><a href="http://twitter.com/thjaeckle" target="_blank">Thomas Jäckle</a> </span></span> on <time datetime="2019-03-13T00:00:00-04:00" itemprop="datePublished">Mar 13, 2019</time> - Tags:
+        <h1 class="post-title" itemprop="name headline">Announcing Ditto Milestone 1.0.0-M2</h1>
+        <p class="post-meta">Published by <img src="https://www.gravatar.com/avatar/90a82dc2af1620df1f955e211ecc4dee?s=135" alt="A photo of Thomas Jäckle" style="width:50px;border-radius:50%;display:inline-block;margin-right:5px;" /><span itemprop="author" itemscope itemtype="http://schema.org/Person"><span itemprop="name"><a href="http://twitter.com/thjaeckle" target="_blank">Thomas Jäckle</a> </span></span> on <time datetime="2019-11-04T00:00:00-05:00" itemprop="datePublished">Nov 4, 2019</time> - Tags:
             
             
             
@@ -230,21 +230,37 @@
 
         
 
-        <p>Today we added connectivity to <a href="https://kafka.apache.org/">Apache Kafka</a>. In a first step, it is possible to publish
-<em>twin events</em>, <em>messages</em>, <em>live commands and events</em> to Kafka topics.</p>
+        <p>The second and last milestone of the upcoming release 
+<a href="https://projects.eclipse.org/projects/iot.ditto/releases/1.0.0">1.0.0</a> was released today.</p>
 
-<p>Since the last addition to Ditto’s connectivity which <a href="2018-10-16-example-mqtt-bidirectional.html">added MQTT connectivity</a>,
-the connectivity feature got a lot of stabilization and new smaller features, e.g. the recent addition of 
-<a href="basic-placeholders.html#function-expressions">placeholder functions</a>.</p>
+<p>Have a look at the Milestone <a href="release_notes_100-M2.html">1.0.0-M2 release notes</a> for what changed in detail.</p>
 
-<p>Returning to the Kafka integration Ditto can now, for example, whenever a <a href="intro-digitaltwins.html">digital twin</a> is 
-changed (e.g. a device updated some state data), publish a <em>twin event</em> to a Kafka topic.</p>
+<p>The main changes and new features since the last release <a href="release_notes_100-M1a.html">1.0.0-M1a release notes</a> are</p>
 
-<p>If you already rely on Apache Kafka as a source for your data lake or analytics, integrating Ditto and its digital twins
-is now super easy.</p>
+<ul>
+  <li>invoking custom foreign HTTP endpoints as a result of events/messages</li>
+  <li>ability to reflect Eclipse Hono’s device connection state in Ditto’s things</li>
+  <li>support for OpenID Connect / OAuth2.0 based authentication in Ditto Java Client</li>
+  <li>configurbale throttling of max. consumed WebSocket commands / time interval</li>
+</ul>
 
-<p>Find out more at our <a href="connectivity-protocol-bindings-kafka2.html">Kafka documentation</a>.</p>
+<h2 id="artifacts">Artifacts</h2>
 
+<p>The new Java artifacts have been published at the <a href="https://repo.eclipse.org/content/repositories/ditto/">Eclipse Maven repository</a>
+as well as <a href="https://repo1.maven.org/maven2/org/eclipse/ditto/">Maven central</a>.</p>
+
+<p>The Docker images have been pushed to Docker Hub:</p>
+<ul>
+  <li><a href="https://hub.docker.com/r/eclipse/ditto-policies/">eclipse/ditto-policies</a></li>
+  <li><a href="https://hub.docker.com/r/eclipse/ditto-things/">eclipse/ditto-things</a></li>
+  <li><a href="https://hub.docker.com/r/eclipse/ditto-things-search/">eclipse/ditto-things-search</a></li>
+  <li><a href="https://hub.docker.com/r/eclipse/ditto-gateway/">eclipse/ditto-gateway</a></li>
+  <li><a href="https://hub.docker.com/r/eclipse/ditto-connectivity/">eclipse/ditto-connectivity</a></li>
+  <li><a href="https://hub.docker.com/r/eclipse/ditto-concierge/">eclipse/ditto-concierge</a></li>
+</ul>
+
+<p><br />
+<br /></p>
 <figure><img class="docimage" src="images/ditto.svg" alt="Ditto" style="max-width: 500px" /></figure>
 
 <p>–<br />

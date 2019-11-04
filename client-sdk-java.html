@@ -253,6 +253,12 @@
                       
                       
                       
+                      <li><a href="release_notes_100-M2.html">1.0.0-M2</a></li>
+                      
+                      
+                      
+                      
+                      
                       <li><a href="release_notes_100-M1a.html">1.0.0-M1a</a></li>
                       
                       
@@ -1190,41 +1196,37 @@ in <a href="https://www.eclipse.org/ditto/protocol-overview.html">Ditto Protocol
 
 <h3 id="instantiate--configure-a-new-ditto-client">Instantiate &amp; configure a new Ditto client</h3>
 
-<p>In order to configure your Ditto client instance, use the <code class="highlighter-rouge">DittoClientFactory</code> in order to</p>
+<p>To configure your Ditto client instance, use the <code class="highlighter-rouge">org.eclipse.ditto.client.configuration</code> package in order to</p>
 <ul>
-  <li>obtain a <code class="highlighter-rouge">CommonConfiguration</code> builder</li>
-  <li>build a <code class="highlighter-rouge">DittoClient</code> instance after configuration was done</li>
+  <li>create instances of <code class="highlighter-rouge">AuthenticationProvider</code> and <code class="highlighter-rouge">MessagingProvider</code></li>
+  <li>create a <code class="highlighter-rouge">DittoClient</code> instance</li>
 </ul>
 
 <p>For example:</p>
 
-<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">CredentialsAuthenticationConfiguration</span> <span class="n">authenticationConfiguration</span> <span class="o">=</span> <span class="n">CredentialsAuthenticationConfiguration</span><span class="o">.</span><span class="na">newBuilder</span><span class="o">()</span>
-   <span class="o">.</span><span class="na">username</span><span class="o">(</span><span class="s">"ditto"</span><span class="o">)</span>
-   <span class="o">.</span><span class="na">password</span><span class="o">(</span><span class="s">"ditto"</span><span class="o">)</span>
-   <span class="o">.</span><span class="na">build</span><span class="o">();</span>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">AuthenticationProvider</span> <span class="n">authenticationProvider</span> <span class="o">=</span>
+    <span class="n">AuthenticationProviders</span><span class="o">.</span><span class="na">clientCredentials</span><span class="o">(</span><span class="n">ClientCredentialsAuthenticationConfiguration</span><span class="o">.</span><span class="na">newBuilder</span><span class="o">()</span>
+        <span class="o">.</span><span class="na">clientId</span><span class="o">(</span><span class="s">"my-oauth-client-id"</span><span class="o">)</span>
+        <span class="o">.</span><span class="na">clientSecret</span><span class="o">(</span><span class="s">"my-oauth-client-secret"</span><span class="o">)</span>
+        <span class="o">.</span><span class="na">scopes</span><span class="o">(</span><span class="s">"offline_access email"</span><span class="o">)</span>
+        <span class="o">.</span><span class="na">tokenEndpoint</span><span class="o">(</span><span class="s">"https://my-oauth-provider/oauth/token"</span><span class="o">)</span>
+        <span class="o">.</span><span class="na">build</span><span class="o">());</span>
 
-<span class="c1">// optionally configure a proxy server or a truststore containing the trusted CAs for SSL connection establishment</span>
-<span class="n">ProxyConfiguration</span> <span class="n">proxyConfiguration</span> <span class="o">=</span> <span class="n">ProxyConfiguration</span><span class="o">.</span><span class="na">newBuilder</span><span class="o">()</span>
-   <span class="o">.</span><span class="na">proxyHost</span><span class="o">(</span><span class="s">"localhost"</span><span class="o">)</span>
-   <span class="o">.</span><span class="na">proxyPort</span><span class="o">(</span><span class="mi">3128</span><span class="o">)</span>
-   <span class="o">.</span><span class="na">build</span><span class="o">();</span>
+<span class="n">MessagingProvider</span> <span class="n">messagingProvider</span> <span class="o">=</span> <span class="n">MessagingProviders</span><span class="o">.</span><span class="na">webSocket</span><span class="o">(</span><span class="n">WebSocketMessagingConfiguration</span><span class="o">.</span><span class="na">newBuilder</span><span class="o">()</span>
+    <span class="o">.</span><span class="na">endpoint</span><span class="o">(</span><span class="s">"wss://ditto.eclipse.org"</span><span class="o">)</span>
+    <span class="o">.</span><span class="na">jsonSchemaVersion</span><span class="o">(</span><span class="n">JsonSchemaVersion</span><span class="o">.</span><span class="na">V_1</span><span class="o">)</span>
+    <span class="c1">// optionally configure a proxy server or a truststore containing the trusted CAs for SSL connection establishment</span>
+    <span class="o">.</span><span class="na">proxyConfiguration</span><span class="o">(</span><span class="n">ProxyConfiguration</span><span class="o">.</span><span class="na">newBuilder</span><span class="o">()</span>
+        <span class="o">.</span><span class="na">proxyHost</span><span class="o">(</span><span class="s">"localhost"</span><span class="o">)</span>
+        <span class="o">.</span><span class="na">proxyPort</span><span class="o">(</span><span class="mi">3128</span><span class="o">)</span>
+        <span class="o">.</span><span class="na">build</span><span class="o">())</span>
+    <span class="o">.</span><span class="na">trustStoreConfiguration</span><span class="o">(</span><span class="n">TrustStoreConfiguration</span><span class="o">.</span><span class="na">newBuilder</span><span class="o">()</span>
+        <span class="o">.</span><span class="na">location</span><span class="o">(</span><span class="n">TRUSTSTORE_LOCATION</span><span class="o">)</span>
+        <span class="o">.</span><span class="na">password</span><span class="o">(</span><span class="n">TRUSTSTORE_PASSWORD</span><span class="o">)</span>
+        <span class="o">.</span><span class="na">build</span><span class="o">())</span>
+    <span class="o">.</span><span class="na">build</span><span class="o">(),</span> <span class="n">authenticationProvider</span><span class="o">);</span>
 
-<span class="n">TrustStoreConfiguration</span> <span class="n">trustStoreConfiguration</span> <span class="o">=</span> <span class="n">TrustStoreConfiguration</span><span class="o">.</span><span class="na">newBuilder</span><span class="o">()</span>
-   <span class="o">.</span><span class="na">location</span><span class="o">(</span><span class="n">TRUSTSTORE_LOCATION</span><span class="o">)</span>
-   <span class="o">.</span><span class="na">password</span><span class="o">(</span><span class="n">TRUSTSTORE_PASSWORD</span><span class="o">)</span>
-   <span class="o">.</span><span class="na">build</span><span class="o">();</span>
-
-<span class="n">CommonConfiguration</span> <span class="n">configuration</span> <span class="o">=</span> <span class="n">DittoClientFactory</span><span class="o">.</span><span class="na">configurationBuilder</span><span class="o">()</span>
-   <span class="o">.</span><span class="na">providerConfiguration</span><span class="o">(</span><span class="n">MessagingProviders</span><span class="o">.</span><span class="na">dittoWebsocketProviderBuilder</span><span class="o">()</span>
-      <span class="o">.</span><span class="na">endpoint</span><span class="o">(</span><span class="s">"wss://ditto.eclipse.org"</span><span class="o">)</span>
-      <span class="o">.</span><span class="na">authenticationConfiguration</span><span class="o">(</span><span class="n">authenticationConfiguration</span><span class="o">)</span>
-      <span class="o">.</span><span class="na">build</span><span class="o">()</span>
-   <span class="o">)</span>
-   <span class="o">.</span><span class="na">proxyConfiguration</span><span class="o">(</span><span class="n">proxyConfiguration</span><span class="o">)</span>
-   <span class="o">.</span><span class="na">trustStoreConfiguration</span><span class="o">(</span><span class="n">trustStoreConfiguration</span><span class="o">)</span>
-   <span class="o">.</span><span class="na">build</span><span class="o">();</span>
-
-<span class="n">DittoClient</span> <span class="n">client</span> <span class="o">=</span> <span class="n">DittoClientFactory</span><span class="o">.</span><span class="na">newInstance</span><span class="o">(</span><span class="n">configuration</span><span class="o">);</span>
+<span class="n">DittoClient</span> <span class="n">client</span> <span class="o">=</span> <span class="n">DittoClients</span><span class="o">.</span><span class="na">newInstance</span><span class="o">(</span><span class="n">messagingProvider</span><span class="o">);</span>
 </code></pre></div></div>
 
 <h3 id="use-the-ditto-client">Use the Ditto client</h3>
@@ -1307,7 +1309,7 @@ in <a href="https://www.eclipse.org/ditto/protocol-overview.html">Ditto Protocol
                     </div>
                     <p class="notice">
                         &copy;2019 Eclipse Ditto.
-                         Site last generated: Oct 30, 2019 <br />
+                         Site last generated: Nov 4, 2019 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

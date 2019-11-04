@@ -253,6 +253,12 @@
                       
                       
                       
+                      <li><a href="release_notes_100-M2.html">1.0.0-M2</a></li>
+                      
+                      
+                      
+                      
+                      
                       <li><a href="release_notes_100-M1a.html">1.0.0-M1a</a></li>
                       
                       
@@ -1203,6 +1209,186 @@ cloud in the structure and <a href="protocol-overview.html">protocol</a> Ditto r
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>0x08BD (hex representation)
 </code></pre></div></div>
 
+<h2 id="builtin-mappers">Builtin mappers</h2>
+
+<p>The following message mappers are included in the Ditto codebase:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Mapper Alias</th>
+      <th>Description</th>
+      <th>Inbound</th>
+      <th>Outbound</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><a href="#ditto-mapper">Ditto</a></td>
+      <td>Assumes that inbound/outbound messages are already in <a href="protocol-overview.html">Ditto Protocol</a> (JSON) format.</td>
+      <td>✓</td>
+      <td>✓</td>
+    </tr>
+    <tr>
+      <td><a href="#javascript-mapper">JavaScript</a></td>
+      <td>Converts arbitrary messages from and to the <a href="protocol-overview.html">Ditto Protocol</a> format using <strong>custom</strong> JavaScript code executed by Ditto.</td>
+      <td>✓</td>
+      <td>✓</td>
+    </tr>
+    <tr>
+      <td><a href="#normalized-mapper">Normalized</a></td>
+      <td>Transforms the payload of events to a normalized view.</td>
+      <td> </td>
+      <td>✓</td>
+    </tr>
+    <tr>
+      <td><a href="#connectionstatus-mapper">ConnectionStatus</a></td>
+      <td>This mapper handles messages containing <code class="highlighter-rouge">creation-time</code> and <code class="highlighter-rouge">ttd</code> headers by updating a feature of the targeted thing with <a href="basic-feature.html#feature-definition">definition</a> <a href="https://vorto.eclipse.org/#/details/org.eclipse.ditto:ConnectionStatus:1.0.0">ConnectionStatus</a>.</td>
+      <td>✓</td>
+      <td> </td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="ditto-mapper">Ditto mapper</h3>
+
+<p>This is the default <a href="protocol-overview.html">Ditto Protocol</a> mapper. If you do not specify any payload mapping this
+ mapper is used to map inbound and outbound messages. The mapper requires has no mandatory options, so its alias can
+ be directly used as a mapper reference.</p>
+
+<p>It assumes that received messages are in <a href="protocol-specification.html">Ditto Protocol JSON</a> and emits outgoing messages
+ also in that format.</p>
+
+<h3 id="javascript-mapper">JavaScript mapper</h3>
+
+<p>This mapper may be used whenever any inbound messages are not yet in <a href="protocol-overview.html">Ditto Protocol</a>. By using 
+ the built in <a href="#javascript-mapping-engine">JavaScript mapping engine</a> (based on Rhino) custom defined JavaScript scripts
+ can be executed which are responsible for creating <a href="protocol-specification.html">Ditto Protocol JSON</a> message from 
+ arbitrary consumed payload.</p>
+
+<p>The same is possible for outbound messages in order to transform <a href="protocol-specification.html">Ditto Protocol JSON</a>
+ messages (e.g. events or responses) to arbitrary other formats.</p>
+
+<h4 id="configuration-options">Configuration options</h4>
+
+<ul>
+  <li><code class="highlighter-rouge">incomingScript</code> (required): the mapping script for incoming messages</li>
+  <li><code class="highlighter-rouge">outgoingScript</code> (required):  the mapping script for outgoing messages</li>
+  <li><code class="highlighter-rouge">loadBytebufferJS</code> (optional, default: <code class="highlighter-rouge">"false"</code>): whether to load ByteBufferJS library</li>
+  <li><code class="highlighter-rouge">loadLongJS</code> (optional, default: <code class="highlighter-rouge">"false"</code>): whether to load LongJS library</li>
+</ul>
+
+<h3 id="normalized-mapper">Normalized Mapper</h3>
+
+<p>This mapper transforms <code class="highlighter-rouge">created</code> and <code class="highlighter-rouge">modified</code> events (other type of messages are dropped) to a normalized view. 
+Events are mapped to a nested sparse JSON.</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"topic"</span><span class="p">:</span><span class="w"> </span><span class="s2">"thing/id/things/twin/events/modified"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="s2">"content-type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"application/vnd.eclipse.ditto+json"</span><span class="w"> </span><span class="p">},</span><span class="w">
+  </span><span class="s2">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/features/sensors/properties/temperature/indoor/value"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"value"</span><span class="p">:</span><span class="w"> </span><span class="mi">42</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>would result in the following normalized JSON representation:</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"thingId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"thing:id"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"features"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"sensors"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"temperature"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="s2">"indoor"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"value"</span><span class="p">:</span><span class="w"> </span><span class="mi">42</span><span class="w">
+          </span><span class="p">}</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="s2">"_context"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"topic"</span><span class="p">:</span><span class="w"> </span><span class="s2">"thing/id/things/twin/events/modified"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/features/sensors/properties/temperature/indoor/value"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"content-type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"application/vnd.eclipse.ditto+json"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+<p>The <code class="highlighter-rouge">_context</code> field contains the original message content excluding the <code class="highlighter-rouge">value</code>.</p>
+
+<h4 id="configuration-options-1">Configuration options</h4>
+
+<ul>
+  <li><code class="highlighter-rouge">fields</code> (optional, default: all fields): comma separated list of fields that are contained in the result (see also
+ chapter about <a href="httpapi-concepts.html#with-field-selector">field selectors</a>)</li>
+</ul>
+
+<h3 id="connectionstatus-mapper">ConnectionStatus Mapper</h3>
+<p>This mapper transforms the information from the <code class="highlighter-rouge">ttd</code> and <code class="highlighter-rouge">creation-time</code> message headers (see Eclipse Hono <a href="https://www.eclipse.org/hono/docs/concepts/device-notifications/">device
+ notifications</a>) into a ModifyFeature
+ command that complies with the <a href="https://vorto.eclipse.org/#/details/org.eclipse.ditto:ConnectionStatus:1.0.0">Vorto functionblock</a> <code class="highlighter-rouge">org.eclipse.ditto:ConnectionStatus</code>.</p>
+
+<p>The connectivity state of the device is then represented in a Feature.<br />
+ It is mostly used in conjunction with another mapper that transforms the payload e.g.:<br />
+ <code class="highlighter-rouge">"payloadMapping": [ "Ditto" , "connectionStatus" ]</code></p>
+
+<p>Example of a resulting <code class="highlighter-rouge">ConnectionStatus</code> feature:</p>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"thingId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"eclipse:ditto"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"features"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"ConnectionStatus"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"definition"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="s2">"org.eclipse.ditto:ConnectionStatus:1.0.0"</span><span class="w"> </span><span class="p">],</span><span class="w">
+      </span><span class="s2">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="s2">"readySince"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2019-10-29T14:16:18Z"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"readyUntil"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2019-10-29T14:21:18Z"</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h4 id="configuration-options-2">Configuration options</h4>
+
+<ul>
+  <li><code class="highlighter-rouge">thingId</code> (required): The ID of the Thing that is updated with the connectivity state. It can either be a fixed value
+ or a header placeholder (e.g. <code class="highlighter-rouge">{{ header:device_id }}</code>).</li>
+  <li><code class="highlighter-rouge">featureId</code> (optional, default: <code class="highlighter-rouge">ConnectionStatus</code>): The ID of the Feature that is updated. It can either be a
+ fixed value or resolved from a message header (e.g. <code class="highlighter-rouge">{{ header:feature_id }}</code>).</li>
+</ul>
+
+<h2 id="example-connection-with-multiple-mappers">Example connection with multiple mappers</h2>
+
+<p>The following example connection defines a <code class="highlighter-rouge">ConnectionStatus</code> mapping with the ID <code class="highlighter-rouge">status</code> and references it in a
+ source.<br />
+ Messages received via this source will be mapped by the <code class="highlighter-rouge">Ditto</code> mapping and the <code class="highlighter-rouge">ConnectionStatus</code> mapping.<br /> 
+ The <code class="highlighter-rouge">Ditto</code> mapping requires no options to be configured, so you can directly use its alias <code class="highlighter-rouge">Ditto</code>.</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w"> 
+  </span><span class="err">...</span><span class="w">  
+  </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"exampleConnection"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"sources"</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="w">
+      </span><span class="s2">"addresses"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"&lt;source&gt;"</span><span class="p">],</span><span class="w">
+      </span><span class="s2">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"ditto:inbound"</span><span class="p">],</span><span class="w">
+      </span><span class="s2">"payloadMapping"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"Ditto"</span><span class="p">,</span><span class="w"> </span><span class="s2">"status"</span><span class="p">]</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">],</span><span class="w">
+  </span><span class="s2">"mappingDefinitions"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"mappingEngine"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ConnectionStatus"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"options"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"thingId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{{ header:device_id }}"</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<div class="alert alert-info" role="alert"><i class="fa fa-info-circle"></i> <b>Note:</b> Starting aliases with an uppercase character and IDs with a lowercase character is
+ encouraged to avoid confusion but this is not enforced. </div>
+
 <h2 id="javascript-mapping-engine">JavaScript mapping engine</h2>
 
 <p>Ditto utilizes the <a href="https://github.com/mozilla/rhino">Rhino</a> JavaScript engine for Java for evaluating the JavaScript
@@ -1215,17 +1401,6 @@ applied in a better way.</p>
 connections to different endpoints are managed for different tenants at the same time. This requires the isolation of
 each single script to avoid interference with other scripts and to protect the JVM executing the script against harmful
 code execution.</p>
-
-<h3 id="configuration-options">Configuration options</h3>
-
-<p>The Ditto <code class="highlighter-rouge">JavaScript</code> mapping engine does support the following configuration options:</p>
-
-<ul>
-  <li><code class="highlighter-rouge">incomingScript</code> (string): the JavaScript function to invoke in order to transform incoming external messages to Ditto Protocol messages</li>
-  <li><code class="highlighter-rouge">outgoingScript</code> (string): the JavaScript function to invoke in order to transform outgoing Ditto Protocol messages to external messages</li>
-  <li><code class="highlighter-rouge">loadBytebufferJS</code> (boolean): whether to load the <a href="https://github.com/dcodeIO/bytebuffer.js">bytebuffer.js</a> library</li>
-  <li><code class="highlighter-rouge">loadLongJS</code> (boolean): whether to load the <a href="https://github.com/dcodeIO/long.js">long.js</a> library</li>
-</ul>
 
 <h3 id="constraints">Constraints</h3>
 
@@ -1274,7 +1449,9 @@ them in a mapping function. See <a href="http://mozilla.github.io/rhino/compat/e
  * @param {string} path - The path which is affected by the message, e.g.: "/attributes"
  * @param {Object.&lt;string, string&gt;} dittoHeaders - The headers Object containing all Ditto Protocol header values
  * @param {*} [value] - The value to apply / which was applied (e.g. in a "modify" action)
- * @returns {DittoProtocolMessage} dittoProtocolMessage - the mapped Ditto Protocol message or &lt;code&gt;null&lt;/code&gt; if the message could/should not be mapped
+ * @returns {DittoProtocolMessage} dittoProtocolMessage - 
+ *  the mapped Ditto Protocol message or 
+ *  &lt;code&gt;null&lt;/code&gt; if the message could/should not be mapped
  */</span>
 <span class="kd">let</span> <span class="nx">buildDittoProtocolMsg</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">namespace</span><span class="p">,</span> <span class="nx">id</span><span class="p">,</span> <span class="nx">group</span><span class="p">,</span> <span class="nx">channel</span><span class="p">,</span> <span class="nx">criterion</span><span class="p">,</span> <span class="nx">action</span><span class="p">,</span> <span class="nx">path</span><span class="p">,</span> <span class="nx">dittoHeaders</span><span class="p">,</span> <span class="nx">value</span><span class="p">)</span> <span class="p">{</span>
 
@@ -1292,7 +1469,9 @@ them in a mapping function. See <a href="http://mozilla.github.io/rhino/compat/e
  * @param {string} [textPayload] - The external mapped String
  * @param {ArrayBuffer} [bytePayload] - The external mapped bytes as ArrayBuffer
  * @param {string} [contentType] - The returned Content-Type
- * @returns {ExternalMessage} externalMessage - the mapped external message or &lt;code&gt;null&lt;/code&gt; if the message could/should not be mapped
+ * @returns {ExternalMessage} externalMessage - 
+ *  the mapped external message
+ *  or &lt;code&gt;null&lt;/code&gt; if the message could/should not be mapped
  */</span>
 <span class="kd">let</span> <span class="nx">buildExternalMsg</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">headers</span><span class="p">,</span> <span class="nx">textPayload</span><span class="p">,</span> <span class="nx">bytePayload</span><span class="p">,</span> <span class="nx">contentType</span><span class="p">)</span> <span class="p">{</span>
 
@@ -1356,7 +1535,10 @@ them in a mapping function. See <a href="http://mozilla.github.io/rhino/compat/e
  * @param {string} [textPayload] - The String to be mapped
  * @param {ArrayBuffer} [bytePayload] - The bytes to be mapped as ArrayBuffer
  * @param {string} [contentType] - The received Content-Type, e.g. "application/json"
- * @returns {DittoProtocolMessage} dittoProtocolMessage - the mapped Ditto Protocol message or &lt;code&gt;null&lt;/code&gt; if the message could/should not be mapped
+ * @returns {(DittoProtocolMessage|Array&lt;DittoProtocolMessage&gt;)} dittoProtocolMessage(s) -
+ *  the mapped Ditto Protocol message,
+ *  an array of Ditto Protocol messages or
+ *  &lt;code&gt;null&lt;/code&gt; if the message could/should not be mapped
  */</span>
 <span class="kd">function</span> <span class="nx">mapToDittoProtocolMsg</span><span class="p">(</span>
     <span class="nx">headers</span><span class="p">,</span>
@@ -1383,9 +1565,9 @@ them in a mapping function. See <a href="http://mozilla.github.io/rhino/compat/e
 <span class="p">}</span>
 </code></pre></div></div>
 
-<p>The result of the function has to be an JavaScript object in <a href="protocol-overview.html">Ditto Protocol</a>, that’s where the helper
-method <code class="highlighter-rouge">Ditto.buildDittoProtocolMsg</code> can help: it explicitly defines which parameters are required for the Ditto Protocol
-message.</p>
+<p>The result of the function has to be an JavaScript object in <a href="protocol-overview.html">Ditto Protocol</a> or an array of 
+such JavaScript objects. That’s where the helper method <code class="highlighter-rouge">Ditto.buildDittoProtocolMsg</code> is useful: it explicitly 
+defines which parameters are required for the Ditto Protocol message.</p>
 
 <h3 id="mapping-outgoing-messages">Mapping outgoing messages</h3>
 
@@ -1403,7 +1585,10 @@ can be mapped to external messages by implementing the following JavaScript func
  * @param {string} path - The path which is affected by the message, e.g.: "/attributes"
  * @param {Object.&lt;string, string&gt;} dittoHeaders - The headers Object containing all Ditto Protocol header values
  * @param {*} [value] - The value to apply / which was applied (e.g. in a "modify" action)
- * @returns {ExternalMessage} externalMessage - The mapped external message or &lt;code&gt;null&lt;/code&gt; if the message could/should not be mapped
+ * @returns {(ExternalMessage|Array&lt;ExternalMessage&gt;)} externalMessage -
+ *  The mapped external message,
+ *  an array of external messages or
+ *  &lt;code&gt;null&lt;/code&gt; if the message could/should not be mapped
  */</span>
 <span class="kd">function</span> <span class="nx">mapFromDittoProtocolMsg</span><span class="p">(</span>
     <span class="nx">namespace</span><span class="p">,</span>
@@ -1430,9 +1615,9 @@ can be mapped to external messages by implementing the following JavaScript func
 <span class="p">}</span>
 </code></pre></div></div>
 
-<p>The result of the function has to be an JavaScript object with the fields <code class="highlighter-rouge">headers</code>, <code class="highlighter-rouge">textPayload</code>, <code class="highlighter-rouge">bytePayload</code> and <code class="highlighter-rouge">contentType</code>.
-That’s where the helper method <code class="highlighter-rouge">Ditto.buildExternalMsg</code> can help: it explicitly defines which parameters are required for the external
-message.</p>
+<p>The result of the function has to be a JavaScript object or an array of JavaScript objects with the fields <code class="highlighter-rouge">headers</code>, 
+<code class="highlighter-rouge">textPayload</code>, <code class="highlighter-rouge">bytePayload</code> and <code class="highlighter-rouge">contentType</code>. That’s where the helper method <code class="highlighter-rouge">Ditto.buildExternalMsg</code> is useful: it
+ explicitly defines which parameters are required for the external message.</p>
 
 <h2 id="javascript-payload-types">JavaScript payload types</h2>
 
@@ -1718,9 +1903,9 @@ with the following signature to implement (this is only for experts, the sources
     
     <span class="kt">void</span> <span class="nf">configure</span><span class="o">(</span><span class="n">MessageMapperConfiguration</span> <span class="n">configuration</span><span class="o">);</span>
     
-    <span class="n">Optional</span><span class="o">&lt;</span><span class="n">Adaptable</span><span class="o">&gt;</span> <span class="nf">map</span><span class="o">(</span><span class="n">ExternalMessage</span> <span class="n">message</span><span class="o">);</span>
+    <span class="n">List</span><span class="o">&lt;</span><span class="n">Adaptable</span><span class="o">&gt;</span> <span class="nf">map</span><span class="o">(</span><span class="n">ExternalMessage</span> <span class="n">message</span><span class="o">);</span>
     
-    <span class="n">Optional</span><span class="o">&lt;</span><span class="n">ExternalMessage</span><span class="o">&gt;</span> <span class="nf">map</span><span class="o">(</span><span class="n">Adaptable</span> <span class="n">adaptable</span><span class="o">);</span>
+    <span class="n">List</span><span class="o">&lt;</span><span class="n">ExternalMessage</span><span class="o">&gt;</span> <span class="nf">map</span><span class="o">(</span><span class="n">Adaptable</span> <span class="n">adaptable</span><span class="o">);</span>
 <span class="o">}</span>
 </code></pre></div></div>
 
@@ -1731,18 +1916,33 @@ in order to pass in configurations, thresholds, etc.</p>
 <p>Then, simply implement both of the <code class="highlighter-rouge">map</code> methods:</p>
 
 <ul>
-  <li><code class="highlighter-rouge">Optional&lt;Adaptable&gt; map(ExternalMessage message)</code> maps from an incoming external message to a <a href="protocol-overview.html">Ditto Protocol</a> <code class="highlighter-rouge">Adaptable</code></li>
-  <li><code class="highlighter-rouge">Optional&lt;ExternalMessage&gt; map(Adaptable adaptable)</code> maps from an outgoing <a href="protocol-overview.html">Ditto Protocol</a> <code class="highlighter-rouge">Adaptable</code> to an external message</li>
+  <li><code class="highlighter-rouge">List&lt;Adaptable&gt; map(ExternalMessage message)</code> maps from an incoming external message to
+    <ul>
+      <li>an empty list of <code class="highlighter-rouge">Adaptable</code>s if the incoming message should be dropped</li>
+      <li>a list of one or many <a href="protocol-overview.html">Ditto Protocol</a> <code class="highlighter-rouge">Adaptable</code>s</li>
+    </ul>
+  </li>
+  <li><code class="highlighter-rouge">List&lt;ExternalMessage&gt; map(Adaptable adaptable)</code> maps from an outgoing <a href="protocol-overview.html">Ditto Protocol</a> <code class="highlighter-rouge">Adaptable</code> to
+    <ul>
+      <li>an empty list of <code class="highlighter-rouge">ExternalMessage</code>s if the outgoing message should be dropped</li>
+      <li>a list of one or many external messages</li>
+    </ul>
+  </li>
 </ul>
 
-<p>In order to use this custom Java based mapper implementation, two steps are required:</p>
+<p>In order to use this custom Java based mapper implementation, the following steps are required:</p>
 
 <ul>
+  <li>the implementing Class must be annotated with <code class="highlighter-rouge">@PayloadMapper(alias="customMapper")</code> and define at least one alias</li>
+  <li>if the custom mapper requires mandatory options then specify <code class="highlighter-rouge">@PayloadMapper(alias="customMapper", requiresMandatoryConfiguration=true)</code></li>
   <li>the Class needs obviously to be on the classpath of the <a href="architecture-services-connectivity.html">connectivity</a> microservice 
 in order to be loaded</li>
-  <li>when creating a new connection you have to specify the full qualified classname of your class as <code class="highlighter-rouge">mappingEngine</code> in the
-connection’s <code class="highlighter-rouge">mappingContext</code></li>
+  <li>when creating a new connection you have to specify the alias of your mapper as the <code class="highlighter-rouge">mappingEngine</code> in the
+connection’s <code class="highlighter-rouge">mappingDefinitions</code> and reference the ID of your mapper in a source or a target</li>
 </ul>
+
+<div class="alert alert-success" role="alert"><i class="fa fa-check-square-o"></i> <b>Tip:</b> If your mapper does not require any options (<code class="highlighter-rouge">requiresMandatoryConfiguration=false</code>), you can
+ directly reference the alias in a source or a target without first defining it inside <code class="highlighter-rouge">mappingDefinitions</code>.</div>
 
 
     <div class="tags">
@@ -1769,7 +1969,7 @@ connection’s <code class="highlighter-rouge">mappingContext</code></li>
                     </div>
                     <p class="notice">
                         &copy;2019 Eclipse Ditto.
-                         Site last generated: Oct 30, 2019 <br />
+                         Site last generated: Nov 4, 2019 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">
