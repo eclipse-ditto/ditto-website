@@ -699,14 +699,14 @@
               
               
               
-              <li><a href="connectivity-header-mapping.html">Header mapping</a></li>
-              
-              
-              
-              
-              
-              
               <li><a href="connectivity-mapping.html">Payload mapping</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="connectivity-header-mapping.html">Header mapping</a></li>
               
               
               
@@ -1178,14 +1178,49 @@ the <code class="highlighter-rouge">content-type</code> of AMQP 1.0 messages mus
 <p>If messages which are not in Ditto Protocol should be processed, a <a href="connectivity-mapping.html">payload mapping</a> must
 be configured for the AMQP 1.0 connection in order to transform the messages.</p>
 
-<h2 id="amqp-10-properties">AMQP 1.0 properties</h2>
+<h2 id="amqp-10-properties-and-application-properties">AMQP 1.0 properties and application properties</h2>
 
-<p>Supported AMQP 1.0 properties which are interpreted in a specific way are:</p>
+<p>When set as external headers by outgoing payload or header mapping, the properties defined by AMQP 1.0 specification are
+set to the corresponding header value. Conversely, the values of AMQP 1.0 properties are available for incoming payload
+and header mapping as external headers. The supported AMQP 1.0 properties are:</p>
 
 <ul>
-  <li><code class="highlighter-rouge">content-type</code>: for defining the Ditto Protocol content-type</li>
-  <li><code class="highlighter-rouge">correlation-id</code>: for correlating request messages to responses</li>
+  <li><code class="highlighter-rouge">message-id</code></li>
+  <li><code class="highlighter-rouge">user-id</code></li>
+  <li><code class="highlighter-rouge">to</code></li>
+  <li><code class="highlighter-rouge">subject</code></li>
+  <li><code class="highlighter-rouge">reply-to</code></li>
+  <li><code class="highlighter-rouge">correlation-id</code></li>
+  <li><code class="highlighter-rouge">content-type</code></li>
+  <li><code class="highlighter-rouge">absolute-expiry-time</code></li>
+  <li><code class="highlighter-rouge">creation-time</code></li>
+  <li><code class="highlighter-rouge">group-id</code></li>
+  <li><code class="highlighter-rouge">group-sequence</code></li>
+  <li><code class="highlighter-rouge">reply-to-group-id</code></li>
 </ul>
+
+<p>External headers not on this list are mapped to AMQP application properties.
+To set an application property whose name is identical to an AMQP 1.0 property, prefix it by
+<code class="highlighter-rouge">amqp.application.property:</code>. The following <a href="basic-connections.html#target-header-mapping">target header mapping</a> sets
+the application property <code class="highlighter-rouge">to</code> to the value of the Ditto protocol header <code class="highlighter-rouge">reply-to</code>:</p>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"headerMapping"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"amqp.application.property:to"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{{ header:reply-to }}"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>To read an application property whose name is identical to an AMQP 1.0 property, prefix it by
+<code class="highlighter-rouge">amqp.application.property:</code>. The following <a href="basic-connections.html#source-header-mapping">source header mapping</a> sets
+the Ditto protocol header <code class="highlighter-rouge">reply-to</code> to the value of the application property <code class="highlighter-rouge">to</code>:</p>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"headerMapping"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"reply-to"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{{ header:amqp.application.property:to }}"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<div class="alert alert-info" role="alert"><i class="fa fa-info-circle"></i> <b>Note:</b> For now, setting or reading the AMQP 1.0 property ‘content-encoding’ is impossible.</div>
 
 <h2 id="specific-connection-configuration">Specific connection configuration</h2>
 
@@ -1318,7 +1353,7 @@ existing connections.</p>
                     </div>
                     <p class="notice">
                         &copy;2019 Eclipse Ditto.
-                         Site last generated: Nov 25, 2019 <br />
+                         Site last generated: Nov 27, 2019 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

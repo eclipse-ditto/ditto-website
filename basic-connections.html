@@ -699,14 +699,14 @@
               
               
               
-              <li><a href="connectivity-header-mapping.html">Header mapping</a></li>
-              
-              
-              
-              
-              
-              
               <li><a href="connectivity-mapping.html">Payload mapping</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="connectivity-header-mapping.html">Header mapping</a></li>
               
               
               
@@ -1218,11 +1218,12 @@ specific limitations. Those are documented with the corresponding protocol bindi
 
 <p>Sources contain:</p>
 <ul>
-  <li>several addresses (depending on the <a href="#connection-types">connection type</a> those are interpreted differently, e.g. as queues, topics, etc.)</li>
-  <li>a consumer count defining how many consumers should be attached to each source address</li>
-  <li>an authorization context (see <a href="#authorization">authorization</a>) specifying which <a href="basic-acl.html#authorization-subject">authorization subject</a> is used to authorize messages from the source</li>
-  <li>enforcement information that allows filtering the messages that are consumed in this source</li>
-  <li><a href="connectivity-header-mapping.html">header mapping</a> for mapping headers of source messages to internal headers</li>
+  <li>several addresses (depending on the <a href="#connection-types">connection type</a> those are interpreted differently, e.g. as queues, topics, etc.),</li>
+  <li>a consumer count defining how many consumers should be attached to each source address,</li>
+  <li>an authorization context (see <a href="#authorization">authorization</a>) specifying which <a href="basic-acl.html#authorization-subject">authorization subject</a> is used to authorize messages from the source,</li>
+  <li>enforcement information that allows filtering the messages that are consumed in this source,</li>
+  <li><a href="connectivity-header-mapping.html">header mapping</a> for mapping headers of source messages to internal headers, and</li>
+  <li>a reply-target to configure publication of any responses of incoming commands.</li>
 </ul>
 
 <h4 id="source-enforcement">Source enforcement</h4>
@@ -1317,9 +1318,12 @@ only send data to the Thing <code class="highlighter-rouge">sensor:temperature1<
 
 <h4 id="source-header-mapping">Source header mapping</h4>
 
-<p>For incoming messages, an optional <a href="connectivity-header-mapping.html">header mapping</a> may be applied.</p>
+<p>For incoming messages, an optional <a href="connectivity-header-mapping.html">header mapping</a> may be applied.
+Mapped headers are added to the headers of the Ditto protocol message obtained by payload mapping.
+The default <a href="connectivity-mapping.html#ditto-mapper">Ditto payload mapper</a> does not retain any external header;
+in this case all Ditto protocol headers come from the header mapping.</p>
 
-<p>The JSON for a source with header mapping could like this:</p>
+<p>The JSON for a source with header mapping could look like this:</p>
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
   </span><span class="s2">"addresses"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
     </span><span class="s2">"&lt;source&gt;"</span><span class="w">
@@ -1328,6 +1332,27 @@ only send data to the Thing <code class="highlighter-rouge">sensor:temperature1<
   </span><span class="s2">"headerMapping"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
     </span><span class="s2">"correlation-id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{{ header:message-id }}"</span><span class="p">,</span><span class="w">
     </span><span class="s2">"content-type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{{ header:content-type }}"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h4 id="source-reply-target">Source reply target</h4>
+
+<p>A source may define a reply target to publish the responses of incoming commands.
+For a reply target, the address and header mapping are defined in itself, whereas its payload mapping is inherited
+from the parent source, because a payload mapping definition specifies the transformation for both incoming and outgoing
+messages.</p>
+
+<p>For example, to publish responses at the target address equal to the <code class="highlighter-rouge">reply-to</code> header of incoming commands,
+define source header mapping and reply target as follows. If an incoming command does not have the <code class="highlighter-rouge">reply-to</code> header,
+then its response is dropped.</p>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"headerMapping"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"reply-to"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{{ header:reply-to }}"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="s2">"replyTarget"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{{ header:reply-to }}"</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
@@ -1345,10 +1370,10 @@ only send data to the Thing <code class="highlighter-rouge">sensor:temperature1<
 
 <p>Targets contain:</p>
 <ul>
-  <li>one address (that is interpreted differently depending on the <a href="#connection-types">connection type</a>, e.g. as queue, topic, etc.)</li>
-  <li><a href="#target-topics-and-filtering">topics</a> that will be sent to the target</li>
-  <li>an authorization context (see <a href="#authorization">authorization</a>) specifying which <a href="basic-acl.html#authorization-subject">authorization subject</a> is used to authorize messages to the target</li>
-  <li><a href="connectivity-header-mapping.html">header mapping</a> for mapping headers internal headers to target headers</li>
+  <li>one address (that is interpreted differently depending on the <a href="#connection-types">connection type</a>, e.g. as queue, topic, etc.),</li>
+  <li><a href="#target-topics-and-filtering">topics</a> that will be sent to the target,</li>
+  <li>an authorization context (see <a href="#authorization">authorization</a>) specifying which <a href="basic-acl.html#authorization-subject">authorization subject</a> is used to authorize messages to the target, and</li>
+  <li><a href="connectivity-header-mapping.html">header mapping</a> to compute external headers from Ditto protocol headers.</li>
 </ul>
 
 <h4 id="target-topics-and-filtering">Target topics and filtering</h4>
@@ -1413,7 +1438,10 @@ would match an attribute “counter” to be greater than 42. Additionally it wo
 
 <h4 id="target-header-mapping">Target header mapping</h4>
 
-<p>For outgoing messages, an optional <a href="connectivity-header-mapping.html">header mapping</a> may be applied.</p>
+<p>For outgoing messages, an optional <a href="connectivity-header-mapping.html">header mapping</a> may be applied.
+Mapped headers are added to the external headers.
+The default <a href="connectivity-mapping.html#ditto-mapper">Ditto payload mapper</a> does not define any external header;
+in this case all external headers come from the header mapping.</p>
 
 <p>The JSON for a target with header mapping could like this:</p>
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
@@ -1457,8 +1485,7 @@ Those are put into the <code class="highlighter-rouge">specificConfig</code> fie
 
 <p>The configuration of a connection allows to use placeholders at certain places. This allows more fine grained control 
 over how messages are consumed or where they are published to. The general syntax of a placeholder is 
-<code class="highlighter-rouge">{{ placeholder }}</code>. Have a look at the <a href="basic-placeholders.html">placeholders concept</a> for more details on that. 
-A missing placeholder results in an error which is passed back to the sender (if a <em>reply-to</em> header was provided).</p>
+<code class="highlighter-rouge">{{ placeholder }}</code>. Have a look at the <a href="basic-placeholders.html">placeholders concept</a> for more details on that.</p>
 
 <h3 id="placeholder-for-source-authorization-subjects">Placeholder for source authorization subjects</h3>
 
@@ -1526,7 +1553,8 @@ For a Thing with the ID <em>org.eclipse.ditto:device-123</em> these placeholders
 </table>
 
 <p>Even more than the ones above, all mentioned <a href="basic-placeholders.html#scope-connections">connection placeholders</a> may be
-used in target addresses.</p>
+used in target addresses. However, if any placeholder in the target address fails to resolve, then the message will be
+dropped.</p>
 
 <p>Example:</p>
 
@@ -1568,7 +1596,7 @@ used in target addresses.</p>
                     </div>
                     <p class="notice">
                         &copy;2019 Eclipse Ditto.
-                         Site last generated: Nov 25, 2019 <br />
+                         Site last generated: Nov 27, 2019 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

@@ -699,14 +699,14 @@
               
               
               
-              <li class="active"><a href="connectivity-header-mapping.html">Header mapping</a></li>
-              
-              
-              
-              
-              
-              
               <li><a href="connectivity-mapping.html">Payload mapping</a></li>
+              
+              
+              
+              
+              
+              
+              <li class="active"><a href="connectivity-header-mapping.html">Header mapping</a></li>
               
               
               
@@ -1164,20 +1164,24 @@ $('#toc').on('click', 'a', function() {
 
     
 
-  <p>When receiving messages from external systems or sending messages to external systems, the protocol headers of the 
-messages can be mapped to and from internal DittoHeaders.</p>
+  <p>When receiving messages from external systems or sending messages to external systems, the external headers of the 
+messages can be mapped to and from Ditto protocol headers.</p>
 
-<p>That way the headers can be passed through Ditto or defined DittoHeaders like for example <code class="highlighter-rouge">correlation-id</code> may be 
+<p>That way the headers can be passed through Ditto, or defined Ditto protocol headers like for example <code class="highlighter-rouge">correlation-id</code> may be 
 mapped to a header used for message correlation in the external system.</p>
 
 <p>A header mapping can be defined individually for every source and target of a connection. For examples of a definition 
 see <a href="basic-connections.html#source-header-mapping">source header mapping</a> 
 and <a href="basic-connections.html#target-header-mapping">target header mapping</a>.</p>
 
+<div class="alert alert-info" role="alert"><i class="fa fa-info-circle"></i> <b>Note:</b> Do not map headers prefixed by ‘ditto-‘. Ditto uses them internally. Setting them in header mapping has no effect.</div>
+
 <h2 id="supported-placeholders">Supported placeholders</h2>
 
 <p>The supported placeholders for header mapping are defined in the 
-<a href="basic-placeholders.html#scope-connections">Placeholders - Scope: Connections</a> section.</p>
+<a href="basic-placeholders.html#scope-connections">Placeholders - Scope: Connections</a> section.
+If a placeholder fails to resolve for a header value, then that header is not set. Placeholder resolution failure
+does not prevent sending of the message or setting other headers with resolved values.</p>
 
 
     <div class="tags">
@@ -1204,7 +1208,7 @@ and <a href="basic-connections.html#target-header-mapping">target header mapping
                     </div>
                     <p class="notice">
                         &copy;2019 Eclipse Ditto.
-                         Site last generated: Nov 25, 2019 <br />
+                         Site last generated: Nov 27, 2019 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">
