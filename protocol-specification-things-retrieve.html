@@ -236,6 +236,13 @@
               
               
               
+              <li><a href="release_notes_100.html">1.0.0</a></li>
+              
+              
+              
+              
+              
+              
               <li><a href="release_notes_090.html">0.9.0</a></li>
               
               
@@ -941,6 +948,30 @@
                       
                       
                       
+                      <li><a href="protocol-examples-createthingdefinition.html">Create a Definition</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-deletethingdefinition.html">Delete a Definition</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-modifythingdefinition.html">Modify a Definition</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-retrievethingdefinition.html">Retrieve a Definition</a></li>
+                      
+                      
+                      
+                      
+                      
                       <li><a href="protocol-examples-createfeatures.html">Create Features</a></li>
                       
                       
@@ -1117,13 +1148,7 @@
 
         <!-- Content Column -->
         <div class="col-md-9" id="tg-sb-content">
-            <span class="incubation-logo">
-    <img src="images/eclipse_incubation_vertical_png-02.png" alt="This is an Eclipse incubation project" style="position: fixed;
-    bottom: 10px; right: 10px; width: 100px"/>
-</span>
-
-
-<div class="post-header">
+            <div class="post-header">
    <h1 class="post-title-main">Things - Retrieve protocol specification</h1>
 </div>
 
@@ -1405,11 +1430,88 @@ The Attribute (JSON) can be referenced hierarchically by applying <a href="https
 <p><strong>Example:</strong> 
 <a href="protocol-examples-retrieveattribute.html">Retrieve a single Attribute</a></p>
 
+<h2 id="retrieve-the-definition-of-a-thing">Retrieve the definition of a Thing</h2>
+
+<p>Retrieve the Definition of the Thing.</p>
+
+<h3 id="command-3">Command</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Field</th>
+      <th>Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>topic</strong></td>
+      <td><code class="highlighter-rouge">&lt;namespace&gt;/&lt;thingId&gt;/things/&lt;channel&gt;/commands/retrieve</code></td>
+    </tr>
+    <tr>
+      <td><strong>path</strong></td>
+      <td><code class="highlighter-rouge">/definition</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="response-3">Response</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Field</th>
+      <th> </th>
+      <th>Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>topic</strong></td>
+      <td> </td>
+      <td><code class="highlighter-rouge">&lt;namespace&gt;/&lt;thingId&gt;/things/&lt;channel&gt;/commands/retrieve</code></td>
+    </tr>
+    <tr>
+      <td><strong>path</strong></td>
+      <td> </td>
+      <td><code class="highlighter-rouge">/definition</code></td>
+    </tr>
+    <tr>
+      <td><strong>value</strong></td>
+      <td> </td>
+      <td>The specific Definition of the Thing as JSON.</td>
+    </tr>
+    <tr>
+      <td><strong>status</strong></td>
+      <td><em>code</em></td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td><code class="highlighter-rouge">200</code></td>
+      <td>Success.</td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td><code class="highlighter-rouge">404</code></td>
+      <td>Not Found - the requested Definition does not exist or the requesting user does not have enough permission to retrieve it.</td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td> </td>
+      <td>See <a href="protocol-examples-errorresponses.html">Thing Error Responses</a> for examples of other error responses.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>Example:</strong> 
+<a href="protocol-examples-retrieveattribute.html">Retrieve a single Attribute</a></p>
+
 <h2 id="retrieve-all-features-of-a-thing">Retrieve all Features of a Thing</h2>
 
 <p>Retrieve the Features of a Thing identified by identified by the <code class="highlighter-rouge">&lt;namespace&gt;</code> and the <code class="highlighter-rouge">&lt;thingId&gt;</code> in the <code class="highlighter-rouge">topic</code>.</p>
 
-<h3 id="command-3">Command</h3>
+<h3 id="command-4">Command</h3>
 
 <table>
   <thead>
@@ -1430,7 +1532,7 @@ The Attribute (JSON) can be referenced hierarchically by applying <a href="https
   </tbody>
 </table>
 
-<h3 id="response-3">Response</h3>
+<h3 id="response-4">Response</h3>
 
 <table>
   <thead>
@@ -1487,7 +1589,7 @@ The Attribute (JSON) can be referenced hierarchically by applying <a href="https
 <p>Retrieve a specific Feature (identified by the <code class="highlighter-rouge">&lt;featureId&gt;</code> in the <code class="highlighter-rouge">path</code>) of the Thing 
 (identified by the <code class="highlighter-rouge">&lt;namespace&gt;</code> and the <code class="highlighter-rouge">&lt;thingId&gt;</code> in the <code class="highlighter-rouge">topic</code>).</p>
 
-<h3 id="command-4">Command</h3>
+<h3 id="command-5">Command</h3>
 
 <table>
   <thead>
@@ -1508,7 +1610,7 @@ The Attribute (JSON) can be referenced hierarchically by applying <a href="https
   </tbody>
 </table>
 
-<h3 id="response-4">Response</h3>
+<h3 id="response-5">Response</h3>
 
 <table>
   <thead>
@@ -1565,7 +1667,7 @@ The Attribute (JSON) can be referenced hierarchically by applying <a href="https
 <p>Retrieve the Definition of a Feature (identified by the <code class="highlighter-rouge">&lt;featureId&gt;</code> in the <code class="highlighter-rouge">path</code>) of the Thing 
 (identified by the <code class="highlighter-rouge">&lt;namespace&gt;</code> and the <code class="highlighter-rouge">&lt;thingId&gt;</code> in the <code class="highlighter-rouge">topic</code>).</p>
 
-<h3 id="command-5">Command</h3>
+<h3 id="command-6">Command</h3>
 
 <table>
   <thead>
@@ -1586,7 +1688,7 @@ The Attribute (JSON) can be referenced hierarchically by applying <a href="https
   </tbody>
 </table>
 
-<h3 id="response-5">Response</h3>
+<h3 id="response-6">Response</h3>
 
 <table>
   <thead>
@@ -1643,7 +1745,7 @@ The Attribute (JSON) can be referenced hierarchically by applying <a href="https
 <p>Retrieve all Properties of a Feature (identified by the <code class="highlighter-rouge">&lt;featureId&gt;</code> in the <code class="highlighter-rouge">path</code>) of the Thing 
 (identified by the <code class="highlighter-rouge">&lt;namespace&gt;</code> and the <code class="highlighter-rouge">&lt;thingId&gt;</code> in the <code class="highlighter-rouge">topic</code>).</p>
 
-<h3 id="command-6">Command</h3>
+<h3 id="command-7">Command</h3>
 
 <table>
   <thead>
@@ -1664,7 +1766,7 @@ The Attribute (JSON) can be referenced hierarchically by applying <a href="https
   </tbody>
 </table>
 
-<h3 id="response-6">Response</h3>
+<h3 id="response-7">Response</h3>
 
 <table>
   <thead>
@@ -1721,7 +1823,7 @@ The Attribute (JSON) can be referenced hierarchically by applying <a href="https
 <p>Retrieve the Property of the Feature identified by the <code class="highlighter-rouge">&lt;featureId&gt;</code> in the path.
 The Property (JSON) can be referenced hierarchically by applying <a href="https://tools.ietf.org/html/rfc6901">JSON Pointer notation (RFC-6901)</a>.</p>
 
-<h3 id="command-7">Command</h3>
+<h3 id="command-8">Command</h3>
 
 <table>
   <thead>
@@ -1742,7 +1844,7 @@ The Property (JSON) can be referenced hierarchically by applying <a href="https:
   </tbody>
 </table>
 
-<h3 id="response-7">Response</h3>
+<h3 id="response-8">Response</h3>
 
 <table>
   <thead>
@@ -1819,7 +1921,7 @@ The Property (JSON) can be referenced hierarchically by applying <a href="https:
                     </div>
                     <p class="notice">
                         &copy;2019 Eclipse Ditto.
-                         Site last generated: Nov 27, 2019 <br />
+                         Site last generated: Dec 11, 2019 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

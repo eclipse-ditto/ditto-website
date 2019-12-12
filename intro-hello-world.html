@@ -236,6 +236,13 @@
               
               
               
+              <li><a href="release_notes_100.html">1.0.0</a></li>
+              
+              
+              
+              
+              
+              
               <li><a href="release_notes_090.html">0.9.0</a></li>
               
               
@@ -941,6 +948,30 @@
                       
                       
                       
+                      <li><a href="protocol-examples-createthingdefinition.html">Create a Definition</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-deletethingdefinition.html">Delete a Definition</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-modifythingdefinition.html">Modify a Definition</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-retrievethingdefinition.html">Retrieve a Definition</a></li>
+                      
+                      
+                      
+                      
+                      
                       <li><a href="protocol-examples-createfeatures.html">Create Features</a></li>
                       
                       
@@ -1117,13 +1148,7 @@
 
         <!-- Content Column -->
         <div class="col-md-9" id="tg-sb-content">
-            <span class="incubation-logo">
-    <img src="images/eclipse_incubation_vertical_png-02.png" alt="This is an Eclipse incubation project" style="position: fixed;
-    bottom: 10px; right: 10px; width: 100px"/>
-</span>
-
-
-<div class="post-header">
+            <div class="post-header">
    <h1 class="post-title-main">Hello world</h1>
 </div>
 
@@ -1170,10 +1195,13 @@ $('#toc').on('click', 'a', function() {
 
 <p>Assume we want to create a digital twin for a car. The twin should hold static metadata and dynamic state data. The state data should change as often as its real world counterpart does.</p>
 
-<p>Those static and dynamic types of data are mapped in the Ditto model to “attributes” (for static metadata) and “features” (for dynamic state data).
+<p>Those static and dynamic types of data are mapped in the Ditto model to “attributes” (for static metadata), “features” 
+(for dynamic state data) and “definition” (to link a model the thing follows, 
+e.g. an <a href="https://www.eclipse.org/vorto/">Eclipse Vorto</a> “information model”).
 A JSON representation of some metadata and state data could for example look like this:</p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"definition"</span><span class="p">:</span><span class="w"> </span><span class="s2">"digitaltwin:DigitaltwinExample:1.0.0"</span><span class="p">,</span><span class="w">
   </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
     </span><span class="s2">"manufacturer"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ACME"</span><span class="p">,</span><span class="w">
     </span><span class="s2">"VIN"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0815666337"</span><span class="w">
@@ -1203,12 +1231,14 @@ A JSON representation of some metadata and state data could for example look lik
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
-<p>Background: Ditto only knows about “attributes” and “features”.</p>
+<p>Background: Ditto only knows about “attributes”, “features” and the “definition”.</p>
 
 <p>Inside “attributes” (the metadata) we can add as much JSON keys as we like with any JSON value we need.</p>
 
 <p>Inside “features” (the state data) we can add as much features as we like - but each feature needs to have a “properties” JSON object.
 Inside that JSON object we can add as much JSON keys as we like with any JSON value we need.</p>
+
+<p>Inside “definition” we can add one JSON string value.</p>
 
 <h2 id="creating-your-first-thing">Creating your first Thing</h2>
 
@@ -1217,6 +1247,7 @@ Those credentials have been created by default in the <a href="https://github.co
 (See <a href="https://github.com/eclipse/ditto/blob/master/deployment/docker/README.md">ditto/deployment/docker/README.md</a>)</p>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">-u</span> ditto:ditto <span class="nt">-X</span> PUT <span class="nt">-d</span> <span class="s1">'{
+   "definition": "digitaltwin:DigitaltwinExample:1.0.0",
    "attributes": {
      "manufacturer": "ACME",
      "VIN": "0815666337"
@@ -1311,7 +1342,7 @@ e.g. searching all Things with the same <code class="highlighter-rouge">manufact
                     </div>
                     <p class="notice">
                         &copy;2019 Eclipse Ditto.
-                         Site last generated: Nov 27, 2019 <br />
+                         Site last generated: Dec 11, 2019 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

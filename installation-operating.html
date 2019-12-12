@@ -236,6 +236,13 @@
               
               
               
+              <li><a href="release_notes_100.html">1.0.0</a></li>
+              
+              
+              
+              
+              
+              
               <li><a href="release_notes_090.html">0.9.0</a></li>
               
               
@@ -941,6 +948,30 @@
                       
                       
                       
+                      <li><a href="protocol-examples-createthingdefinition.html">Create a Definition</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-deletethingdefinition.html">Delete a Definition</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-modifythingdefinition.html">Modify a Definition</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-retrievethingdefinition.html">Retrieve a Definition</a></li>
+                      
+                      
+                      
+                      
+                      
                       <li><a href="protocol-examples-createfeatures.html">Create Features</a></li>
                       
                       
@@ -1117,13 +1148,7 @@
 
         <!-- Content Column -->
         <div class="col-md-9" id="tg-sb-content">
-            <span class="incubation-logo">
-    <img src="images/eclipse_incubation_vertical_png-02.png" alt="This is an Eclipse incubation project" style="position: fixed;
-    bottom: 10px; right: 10px; width: 100px"/>
-</span>
-
-
-<div class="post-header">
+            <div class="post-header">
    <h1 class="post-title-main">Operating Ditto</h1>
 </div>
 
@@ -1191,16 +1216,12 @@ by specifying that environment variable when running the container.</p>
 “System property” you pass to the Java process.</p>
 
 <p>The following example configures the devops password of the gateway-service started via docker-compose. In order
-to supply additional configuration one has to add the variable in the corresponding <code class="highlighter-rouge">entrypoint</code> section of the
+to supply additional configuration one has to add the variable in the corresponding <code class="highlighter-rouge">command</code> section of the
 <code class="highlighter-rouge">docker-compose.yml</code> file.</p>
 
 <div class="language-yml highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="s">...</span>
-    <span class="s">entrypoint</span><span class="pi">:</span>
-      <span class="pi">-</span> <span class="s">java</span>
-      <span class="c1"># Alternative approach for configuration of the service</span>
-      <span class="pi">-</span> <span class="s">-Dditto.gateway.authentication.devops.password=foobar</span>
-      <span class="pi">-</span> <span class="s">-jar</span>
-      <span class="pi">-</span> <span class="s">starter.jar</span>
+    <span class="s"># Alternative approach for configuration of the service</span>
+    <span class="s">command</span><span class="pi">:</span> <span class="s">java -Dditto.gateway.authentication.devops.password=foobar -jar starter.jar</span>
 </code></pre></div></div>
 
 <p>The executable for the microservice is called <code class="highlighter-rouge">starter.jar</code>. The configuration variables have to be set before
@@ -1238,9 +1259,9 @@ the <code class="highlighter-rouge">-jar</code> option.</p>
 <p>As of the OAuth2.0 and OpenID Connect standards Ditto expects the headers <code class="highlighter-rouge">Authorization: Bearer &lt;JWT&gt;</code> and 
 <code class="highlighter-rouge">Content-Type: application/json</code>, containing the issued token of the provider.</p>
 
-<p><strong>The token has to be issued beforehand. The required logic is not provided by ditto.</strong> When using 
+<p><strong>The token has to be issued beforehand. The required logic is not provided by Ditto.</strong> When using 
 the OIDC provider <a href="https://www.keycloak.org/">keycloak</a>, a project like <a href="https://github.com/keycloak/keycloak-gatekeeper">keycloak-gatekeeper</a> 
-may be put infront of ditto to handle the token-logic.</p>
+may be put in front of Ditto to handle the token-logic.</p>
 
 <p><strong>If the chosen OIDC provider uses a self-signed certificate</strong>, the certificate has to be retrieved and configured for the 
 akka-http ssl configuration.</p>
@@ -2000,7 +2021,7 @@ to stop blocking messages to a namespace.</p>
                     </div>
                     <p class="notice">
                         &copy;2019 Eclipse Ditto.
-                         Site last generated: Nov 27, 2019 <br />
+                         Site last generated: Dec 11, 2019 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

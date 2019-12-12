@@ -236,6 +236,13 @@
               
               
               
+              <li><a href="release_notes_100.html">1.0.0</a></li>
+              
+              
+              
+              
+              
+              
               <li><a href="release_notes_090.html">0.9.0</a></li>
               
               
@@ -941,6 +948,30 @@
                       
                       
                       
+                      <li><a href="protocol-examples-createthingdefinition.html">Create a Definition</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-deletethingdefinition.html">Delete a Definition</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-modifythingdefinition.html">Modify a Definition</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-retrievethingdefinition.html">Retrieve a Definition</a></li>
+                      
+                      
+                      
+                      
+                      
                       <li><a href="protocol-examples-createfeatures.html">Create Features</a></li>
                       
                       
@@ -1117,13 +1148,7 @@
 
         <!-- Content Column -->
         <div class="col-md-9" id="tg-sb-content">
-            <span class="incubation-logo">
-    <img src="images/eclipse_incubation_vertical_png-02.png" alt="This is an Eclipse incubation project" style="position: fixed;
-    bottom: 10px; right: 10px; width: 100px"/>
-</span>
-
-
-<div class="post-header">
+            <div class="post-header">
    <h1 class="post-title-main">Payload mapping in connectivity service</h1>
 </div>
 
@@ -1449,19 +1474,21 @@ them in a mapping function. See <a href="http://mozilla.github.io/rhino/compat/e
  * @param {string} path - The path which is affected by the message, e.g.: "/attributes"
  * @param {Object.&lt;string, string&gt;} dittoHeaders - The headers Object containing all Ditto Protocol header values
  * @param {*} [value] - The value to apply / which was applied (e.g. in a "modify" action)
+ * @param {number} status - The status code that indicates the result of the command.
  * @returns {DittoProtocolMessage} dittoProtocolMessage - 
  *  the mapped Ditto Protocol message or 
  *  &lt;code&gt;null&lt;/code&gt; if the message could/should not be mapped
  */</span>
-<span class="kd">let</span> <span class="nx">buildDittoProtocolMsg</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">namespace</span><span class="p">,</span> <span class="nx">id</span><span class="p">,</span> <span class="nx">group</span><span class="p">,</span> <span class="nx">channel</span><span class="p">,</span> <span class="nx">criterion</span><span class="p">,</span> <span class="nx">action</span><span class="p">,</span> <span class="nx">path</span><span class="p">,</span> <span class="nx">dittoHeaders</span><span class="p">,</span> <span class="nx">value</span><span class="p">)</span> <span class="p">{</span>
+<span class="kd">function</span> <span class="nx">buildDittoProtocolMsg</span><span class="p">(</span><span class="nx">namespace</span><span class="p">,</span> <span class="nx">id</span><span class="p">,</span> <span class="nx">group</span><span class="p">,</span> <span class="nx">channel</span><span class="p">,</span> <span class="nx">criterion</span><span class="p">,</span> <span class="nx">action</span><span class="p">,</span> <span class="nx">path</span><span class="p">,</span> <span class="nx">dittoHeaders</span><span class="p">,</span> <span class="nx">value</span><span class="p">,</span> <span class="nx">status</span><span class="p">)</span> <span class="p">{</span>
 
     <span class="kd">let</span> <span class="nx">dittoProtocolMsg</span> <span class="o">=</span> <span class="p">{};</span>
     <span class="nx">dittoProtocolMsg</span><span class="p">.</span><span class="nx">topic</span> <span class="o">=</span> <span class="nx">namespace</span> <span class="o">+</span> <span class="s2">"/"</span> <span class="o">+</span> <span class="nx">id</span> <span class="o">+</span> <span class="s2">"/"</span> <span class="o">+</span> <span class="nx">group</span> <span class="o">+</span> <span class="s2">"/"</span> <span class="o">+</span> <span class="nx">channel</span> <span class="o">+</span> <span class="s2">"/"</span> <span class="o">+</span> <span class="nx">criterion</span> <span class="o">+</span> <span class="s2">"/"</span> <span class="o">+</span> <span class="nx">action</span><span class="p">;</span>
     <span class="nx">dittoProtocolMsg</span><span class="p">.</span><span class="nx">path</span> <span class="o">=</span> <span class="nx">path</span><span class="p">;</span>
     <span class="nx">dittoProtocolMsg</span><span class="p">.</span><span class="nx">headers</span> <span class="o">=</span> <span class="nx">dittoHeaders</span><span class="p">;</span>
     <span class="nx">dittoProtocolMsg</span><span class="p">.</span><span class="nx">value</span> <span class="o">=</span> <span class="nx">value</span><span class="p">;</span>
+    <span class="nx">dittoProtocolMsg</span><span class="p">.</span><span class="nx">status</span> <span class="o">=</span> <span class="nx">status</span><span class="p">;</span>
     <span class="k">return</span> <span class="nx">dittoProtocolMsg</span><span class="p">;</span>
-<span class="p">};</span>
+<span class="p">}</span>
 
 <span class="cm">/**
  * Builds an external message from the passed parameters.
@@ -1473,7 +1500,7 @@ them in a mapping function. See <a href="http://mozilla.github.io/rhino/compat/e
  *  the mapped external message
  *  or &lt;code&gt;null&lt;/code&gt; if the message could/should not be mapped
  */</span>
-<span class="kd">let</span> <span class="nx">buildExternalMsg</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">headers</span><span class="p">,</span> <span class="nx">textPayload</span><span class="p">,</span> <span class="nx">bytePayload</span><span class="p">,</span> <span class="nx">contentType</span><span class="p">)</span> <span class="p">{</span>
+<span class="kd">function</span> <span class="nx">buildExternalMsg</span><span class="p">(</span><span class="nx">headers</span><span class="p">,</span> <span class="nx">textPayload</span><span class="p">,</span> <span class="nx">bytePayload</span><span class="p">,</span> <span class="nx">contentType</span><span class="p">)</span> <span class="p">{</span>
 
     <span class="kd">let</span> <span class="nx">externalMsg</span> <span class="o">=</span> <span class="p">{};</span>
     <span class="nx">externalMsg</span><span class="p">.</span><span class="nx">headers</span> <span class="o">=</span> <span class="nx">headers</span><span class="p">;</span>
@@ -1481,7 +1508,7 @@ them in a mapping function. See <a href="http://mozilla.github.io/rhino/compat/e
     <span class="nx">externalMsg</span><span class="p">.</span><span class="nx">bytePayload</span> <span class="o">=</span> <span class="nx">bytePayload</span><span class="p">;</span>
     <span class="nx">externalMsg</span><span class="p">.</span><span class="nx">contentType</span> <span class="o">=</span> <span class="nx">contentType</span><span class="p">;</span>
     <span class="k">return</span> <span class="nx">externalMsg</span><span class="p">;</span>
-<span class="p">};</span>
+<span class="p">}</span>
 
 <span class="cm">/**
  * Transforms the passed ArrayBuffer to a String interpreting the content of the passed arrayBuffer as unsigned 8
@@ -1490,10 +1517,10 @@ them in a mapping function. See <a href="http://mozilla.github.io/rhino/compat/e
  * @param {ArrayBuffer} arrayBuffer the ArrayBuffer to transform to a String
  * @returns {String} the transformed String
  */</span>
-<span class="kd">let</span> <span class="nx">arrayBufferToString</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">arrayBuffer</span><span class="p">)</span> <span class="p">{</span>
+<span class="kd">function</span> <span class="nx">arrayBufferToString</span><span class="p">(</span><span class="nx">arrayBuffer</span><span class="p">)</span> <span class="p">{</span>
 
     <span class="k">return</span> <span class="nb">String</span><span class="p">.</span><span class="nx">fromCharCode</span><span class="p">.</span><span class="nx">apply</span><span class="p">(</span><span class="kc">null</span><span class="p">,</span> <span class="k">new</span> <span class="nb">Uint8Array</span><span class="p">(</span><span class="nx">arrayBuffer</span><span class="p">));</span>
-<span class="p">};</span>
+<span class="p">}</span>
 
 <span class="cm">/**
  * Transforms the passed String to an ArrayBuffer using unsigned 8 bit integers.
@@ -1501,7 +1528,7 @@ them in a mapping function. See <a href="http://mozilla.github.io/rhino/compat/e
  * @param {String} string the String to transform to an ArrayBuffer
  * @returns {ArrayBuffer} the transformed ArrayBuffer
  */</span>
-<span class="kd">let</span> <span class="nx">stringToArrayBuffer</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">string</span><span class="p">)</span> <span class="p">{</span>
+<span class="kd">function</span> <span class="nx">stringToArrayBuffer</span><span class="p">(</span><span class="nx">string</span><span class="p">)</span> <span class="p">{</span>
 
     <span class="kd">let</span> <span class="nx">buf</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">ArrayBuffer</span><span class="p">(</span><span class="nx">string</span><span class="p">.</span><span class="nx">length</span><span class="p">);</span>
     <span class="kd">let</span> <span class="nx">bufView</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Uint8Array</span><span class="p">(</span><span class="nx">buf</span><span class="p">);</span>
@@ -1509,7 +1536,7 @@ them in a mapping function. See <a href="http://mozilla.github.io/rhino/compat/e
         <span class="nx">bufView</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">=</span> <span class="nx">string</span><span class="p">.</span><span class="nx">charCodeAt</span><span class="p">(</span><span class="nx">i</span><span class="p">);</span>
     <span class="p">}</span>
     <span class="k">return</span> <span class="nx">buf</span><span class="p">;</span>
-<span class="p">};</span>
+<span class="p">}</span>
 
 <span class="cm">/**
  * Transforms the passed ArrayBuffer to a {ByteBuffer} (from bytebuffer.js library which needs to be loaded).
@@ -1517,12 +1544,12 @@ them in a mapping function. See <a href="http://mozilla.github.io/rhino/compat/e
  * @param {ArrayBuffer} arrayBuffer the ArrayBuffer to transform
  * @returns {ByteBuffer} the transformed ByteBuffer
  */</span>
-<span class="kd">let</span> <span class="nx">asByteBuffer</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">arrayBuffer</span><span class="p">)</span> <span class="p">{</span>
+<span class="kd">function</span> <span class="nx">asByteBuffer</span><span class="p">(</span><span class="nx">arrayBuffer</span><span class="p">)</span> <span class="p">{</span>
     
     <span class="kd">let</span> <span class="nx">byteBuffer</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">ArrayBuffer</span><span class="p">(</span><span class="nx">arrayBuffer</span><span class="p">.</span><span class="nx">byteLength</span><span class="p">);</span>
     <span class="k">new</span> <span class="nb">Uint8Array</span><span class="p">(</span><span class="nx">byteBuffer</span><span class="p">).</span><span class="kd">set</span><span class="p">(</span><span class="k">new</span> <span class="nb">Uint8Array</span><span class="p">(</span><span class="nx">arrayBuffer</span><span class="p">));</span>
     <span class="k">return</span> <span class="nx">dcodeIO</span><span class="p">.</span><span class="nx">ByteBuffer</span><span class="p">.</span><span class="nx">wrap</span><span class="p">(</span><span class="nx">byteBuffer</span><span class="p">);</span>
-<span class="p">};</span>
+<span class="p">}</span>
 </code></pre></div></div>
 
 <h3 id="mapping-incoming-messages">Mapping incoming messages</h3>
@@ -1560,12 +1587,13 @@ them in a mapping function. See <a href="http://mozilla.github.io/rhino/compat/e
         <span class="nx">action</span><span class="p">,</span>
         <span class="nx">path</span><span class="p">,</span>
         <span class="nx">dittoHeaders</span><span class="p">,</span>
-        <span class="nx">value</span>
+        <span class="nx">value</span><span class="p">,</span>
+        <span class="nx">status</span>
     <span class="p">);</span>
 <span class="p">}</span>
 </code></pre></div></div>
 
-<p>The result of the function has to be an JavaScript object in <a href="protocol-overview.html">Ditto Protocol</a> or an array of 
+<p>The result of the function has to be a JavaScript object in <a href="protocol-overview.html">Ditto Protocol</a> or an array of 
 such JavaScript objects. That’s where the helper method <code class="highlighter-rouge">Ditto.buildDittoProtocolMsg</code> is useful: it explicitly 
 defines which parameters are required for the Ditto Protocol message.</p>
 
@@ -1585,6 +1613,7 @@ can be mapped to external messages by implementing the following JavaScript func
  * @param {string} path - The path which is affected by the message, e.g.: "/attributes"
  * @param {Object.&lt;string, string&gt;} dittoHeaders - The headers Object containing all Ditto Protocol header values
  * @param {*} [value] - The value to apply / which was applied (e.g. in a "modify" action)
+ * @param {number} status - The status code that indicates the result of the command.
  * @returns {(ExternalMessage|Array&lt;ExternalMessage&gt;)} externalMessage -
  *  The mapped external message,
  *  an array of external messages or
@@ -1599,7 +1628,8 @@ can be mapped to external messages by implementing the following JavaScript func
     <span class="nx">action</span><span class="p">,</span>
     <span class="nx">path</span><span class="p">,</span>
     <span class="nx">dittoHeaders</span><span class="p">,</span>
-    <span class="nx">value</span>
+    <span class="nx">value</span><span class="p">,</span>
+    <span class="nx">status</span>
 <span class="p">)</span> <span class="p">{</span>
 
     <span class="c1">// ###</span>
@@ -1969,7 +1999,7 @@ connection’s <code class="highlighter-rouge">mappingDefinitions</code> and ref
                     </div>
                     <p class="notice">
                         &copy;2019 Eclipse Ditto.
-                         Site last generated: Nov 27, 2019 <br />
+                         Site last generated: Dec 11, 2019 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">
