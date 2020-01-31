@@ -1166,7 +1166,7 @@ function changeSelectedDocVersionDropdownSelection(element) {
   var versionOptions = element.options;
   for (var i = 0; i < versionOptions.length; i++) {
     var versionValue = versionOptions[i].value;
-    if ((versionValue !== "") && pathName.startsWith("/"+versionValue+"/")) {
+    if ((versionValue !== "") && pathName.startsWith("/ditto/"+versionValue+"/")) {
       $("#docVersion").val(versionValue);
       return;
     }
@@ -1177,9 +1177,10 @@ function changeSelectedDocVersionDropdownSelection(element) {
 }
 function changeSelectedDocVersion() {
   var versionValue = $('#docVersion').val();
-  window.location.pathname = versionValue + window.location.pathname;
+  window.location.pathname = "/ditto/" + versionValue + window.location.pathname.replace("/ditto/", "/");
 }
 </script>
+
             </div>
             
         
