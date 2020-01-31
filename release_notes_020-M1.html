@@ -193,7 +193,19 @@
                 
 
 <ul id="mysidebar" class="nav">
-  <li class="sidebarTitle">Eclipse Ditto </li>
+  <li class="sidebarTitle">
+    <label for="docVersion">Eclipse Ditto  version:</label>
+    <select id="docVersion" name="docVersion">
+      
+      <option value="">development</option>
+      
+      <option value="1.0">1.0</option>
+      
+    </select>
+    <div id="dev-warning">
+      <div markdown="span" class="alert alert-warning" role="alert" style="font-size:0.6em"><i class="fa fa-warning"></i> <b>Important:</b> This documentation reflects the latest 'development'. You might want to choose a released version.</div>
+    </div>
+  </li>
   
   
   
@@ -1140,8 +1152,34 @@
 </ul>
 
 <!-- this highlights the active parent class in the sidebar. this is critical so that the parent expands when you're viewing a page. This must appear below the sidebar code above. Otherwise, if placed inside customscripts.js, the script runs before the sidebar code runs and the class never gets inserted.-->
-<script>$("li.active").parents('li').toggleClass("active");</script>
+<script>$("li.active").parents('li').toggleClass("active");
 
+$(function() {
+  $("#dev-warning").hide();
+  changeSelectedDocVersionDropdownSelection($("#docVersion")[0]);
+  $("#docVersion").change(changeSelectedDocVersion);
+});
+
+function changeSelectedDocVersionDropdownSelection(element) {
+  var pathName = window.location.pathname;
+
+  var versionOptions = element.options;
+  for (var i = 0; i < versionOptions.length; i++) {
+    var versionValue = versionOptions[i].value;
+    if ((versionValue !== "") && pathName.startsWith("/"+versionValue+"/")) {
+      $("#docVersion").val(versionValue);
+      return;
+    }
+  }
+  // fallback: dev with "empty" version value:
+  $("#docVersion").val("");
+  $("#dev-warning").show();
+}
+function changeSelectedDocVersion() {
+  var versionValue = $('#docVersion').val();
+  window.location.pathname = versionValue + window.location.pathname;
+}
+</script>
             </div>
             
         
@@ -1261,7 +1299,7 @@ a look at <a href="basic-feature.html#feature-definition">its documentation</a>.
                     </div>
                     <p class="notice">
                         &copy;2020 Eclipse Ditto.
-                         Site last generated: Jan 30, 2020 <br />
+                         Site last generated: Jan 31, 2020 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">
