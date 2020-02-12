@@ -528,6 +528,13 @@
               
               
               
+              <li><a href="basic-enrichment.html">Signal enrichment</a></li>
+              
+              
+              
+              
+              
+              
               <li><a href="basic-search.html">Search</a></li>
               
               
@@ -645,13 +652,6 @@
               
               
               <li><a href="httpapi-sse.html">Server sent events</a></li>
-              
-              
-              
-              
-              
-              
-              <li><a href="httpapi-postman.html">Run in Postman</a></li>
               
               
               
@@ -1252,7 +1252,7 @@ $('#toc').on('click', 'a', function() {
 
 <h2 id="api-versioning">API versioning</h2>
 
-<p>Ditto’s HTTP API is versioned in the URL: <code class="highlighter-rouge">/api/&lt;apiVersion&gt;</code>. Currently Ditto distinguishes between API version <code class="highlighter-rouge">1</code> and
+<p>Ditto’s HTTP API is versioned in the URL: <code class="highlighter-rouge">/api/&lt;apiVersion&gt;</code>. Currently Ditto distinguishes between deprecated API version <code class="highlighter-rouge">1</code> and
 API version <code class="highlighter-rouge">2</code>.</p>
 
 <p>The API version is a promise that no HTTP resources (the static ones defined by Ditto itself) are modified in an 
@@ -1271,9 +1271,40 @@ managed by <a href="basic-policy.html">Policies</a>. The <code class="highlighte
 representation of the model classes, e.g. <a href="basic-thing.html#model-specification">Thing</a> for the layout of the <code class="highlighter-rouge">/things</code>
 endpoint and <a href="basic-policy.html">Policy</a> for the layout of the <code class="highlighter-rouge">/policies</code> endpoint.</p>
 
-<h3 id="api-version-1">API version 1</h3>
+<h3 id="api-version-1---deprecated">API version 1 - Deprecated</h3>
 
 <p>In API version 1, each <code class="highlighter-rouge">Thing</code> contains the information about the authorization in an inlined <a href="basic-acl.html">ACL</a>.</p>
+
+<h4 id="migration-from-api-1-to-api-2">Migration from API 1 to API 2</h4>
+
+<p>In case you need to migrate a thing which was created via API 1 to API 2, 
+please note that you need to migrate the access control list entries (ACL) into a <strong>policy</strong>, and to assign your thing to such a policy.</p>
+
+<ol>
+  <li>
+    <p>Request the thing to be migrated, via API 2 and use the field-selector to specify that the inline policy (i.e. <code class="highlighter-rouge">_policy</code>) should also be retrieved.</p>
+
+    <p><code class="highlighter-rouge">GET /api/2/things/{$thingId}?fields=_policy</code></p>
+
+    <p><a href="https://www.eclipse.org/ditto/http-api-doc.html#/Things/get_things__thingId_">Retrieve a specific Thing</a></p>
+  </li>
+  <li>
+    <p>Create a new policy from the content of the requested inline policy, with a <code class="highlighter-rouge">policyId</code> of your choice (e.g. same as the <code class="highlighter-rouge">thingId</code>).</p>
+
+    <p><code class="highlighter-rouge">PUT /api/2/policies/{$policyId}</code></p>
+
+    <p><a href="https://www.eclipse.org/ditto/http-api-doc.html#/Policies/put_policies__policyId_">Create or update a Policy with a specified ID</a></p>
+  </li>
+  <li>
+    <p>Assign the new <code class="highlighter-rouge">policyId</code> to the thing to be migrated.</p>
+
+    <p><code class="highlighter-rouge">PUT /api/2/things/{$thingId}/policyId</code></p>
+
+    <p><a href="https://www.eclipse.org/ditto/http-api-doc.html#/Things/put_things__thingId__policyId">Create or update the Policy ID of a Thing</a></p>
+  </li>
+</ol>
+
+<p><strong>Note</strong>: Henceforth the thing cannot be read nor written via API 1.</p>
 
 <h4 id="things-in-api-1"><code class="highlighter-rouge">/things</code> in API 1</h4>
 
@@ -1814,7 +1845,7 @@ in the meantime.</li>
                     </div>
                     <p class="notice">
                         &copy;2020 Eclipse Ditto.
-                         Site last generated: Jan 31, 2020 <br />
+                         Site last generated: Feb 12, 2020 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

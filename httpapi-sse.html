@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="">
-<meta name="keywords" content="httprql,  http, api, sse, EventSource">
+<meta name="keywords" content="httprql,  http, api, sse, EventSource, fields, projection, extra, enrich">
 <title>  HTTP API server sent events (SSE) • Eclipse Ditto • a digital twin framework</title>
 
 <link rel="stylesheet" href="css/syntax.css">
@@ -528,6 +528,13 @@
               
               
               
+              <li><a href="basic-enrichment.html">Signal enrichment</a></li>
+              
+              
+              
+              
+              
+              
               <li><a href="basic-search.html">Search</a></li>
               
               
@@ -645,13 +652,6 @@
               
               
               <li class="active"><a href="httpapi-sse.html">Server sent events</a></li>
-              
-              
-              
-              
-              
-              
-              <li><a href="httpapi-postman.html">Run in Postman</a></li>
               
               
               
@@ -1311,6 +1311,21 @@ specific parts can be watched for changes, e.g.:</p>
 <div class="alert alert-success" role="alert"><i class="fa fa-check-square-o"></i> <b>Tip:</b> The <code class="highlighter-rouge">thingId</code> should always be included in the <code class="highlighter-rouge">fields</code> query, otherwise it is no longer
     reproducible, for which Thing the change was made.</div>
 
+<h4 id="field-enrichment">Field enrichment</h4>
+
+<div class="bs-callout bs-callout-primary">Available since Ditto <strong>1.1.0</strong></div>
+
+<p>In addition to the fields projection one can also choose to select <a href="basic-enrichment.html">extra fields</a> 
+to return in addition to the actually changed fields, e.g.:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http://localhost:8080/api/&lt;1|2&gt;/things?extraFields=attributes
+</code></pre></div></div>
+
+<p>The result is that the sent out SSE messages are merged from the actually changed data + the extra fields.</p>
+
+<p>This can be used in combination with the below mentioned <a href="#filtering-by-rql-expression">RQL filter</a>, e.g.:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http://localhost:8080/api/&lt;1|2&gt;/things?extraFields=attributes/location&amp;filter=eq(attributes/location,"kitchen")
+</code></pre></div></div>
+
 <h4 id="filtering-by-namespaces">Filtering by namespaces</h4>
 
 <p>As described in <a href="basic-changenotifications.html#by-namespaces">change notifications</a>, it is possible to only subscribe
@@ -1329,16 +1344,10 @@ parameter with an <a href="basic-rql.html">RQL expression</a>, e.g.:</p>
 
 <h3 id="example-for-sse-on-things">Example for SSE on Things</h3>
 
-<p>Assuming we have a Thing (in API version 1) with the following JSON content:</p>
+<p>Assuming we have a Thing with the following JSON content:</p>
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
   </span><span class="s2">"thingId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"org.eclipse.ditto:fancy-thing"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"acl"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"{userId}"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"READ"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"WRITE"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"ADMINISTRATE"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
-    </span><span class="p">}</span><span class="w">
-  </span><span class="p">},</span><span class="w">
+  </span><span class="s2">"policyId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"org.eclipse.ditto:fancy-thing"</span><span class="p">,</span><span class="w">
   </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
     </span><span class="s2">"manufacturer"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ACME corp"</span><span class="p">,</span><span class="w">
     </span><span class="s2">"complex"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
@@ -1361,7 +1370,7 @@ parameter with an <a href="basic-rql.html">RQL expression</a>, e.g.:</p>
 event to the console. This one tracks only changes to the Thing with ID <code class="highlighter-rouge">org.eclipse.ditto:fancy-thing</code> and only watches
 for changes on the feature <code class="highlighter-rouge">lamp</code>:</p>
 <div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// the javascript must be served from the same domain as Ditto is running in order to avoid CORS problems</span>
-<span class="kd">let</span> <span class="nx">source</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">EventSource</span><span class="p">(</span><span class="s1">'/api/1/things?ids=org.eclipse.ditto:fancy-thing&amp;fields=thingId,features/lamp'</span><span class="p">);</span>
+<span class="kd">let</span> <span class="nx">source</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">EventSource</span><span class="p">(</span><span class="s1">'/api/2/things?ids=org.eclipse.ditto:fancy-thing&amp;fields=thingId,features/lamp'</span><span class="p">);</span>
 <span class="nx">source</span><span class="p">.</span><span class="nx">onmessage</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
     <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">event</span><span class="p">.</span><span class="nx">data</span><span class="p">);</span>
 <span class="p">};</span>
@@ -1416,7 +1425,7 @@ payload: true
                     </div>
                     <p class="notice">
                         &copy;2020 Eclipse Ditto.
-                         Site last generated: Jan 31, 2020 <br />
+                         Site last generated: Feb 12, 2020 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

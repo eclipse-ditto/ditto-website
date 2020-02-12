@@ -528,6 +528,13 @@
               
               
               
+              <li><a href="basic-enrichment.html">Signal enrichment</a></li>
+              
+              
+              
+              
+              
+              
               <li><a href="basic-search.html">Search</a></li>
               
               
@@ -645,13 +652,6 @@
               
               
               <li><a href="httpapi-sse.html">Server sent events</a></li>
-              
-              
-              
-              
-              
-              
-              <li><a href="httpapi-postman.html">Run in Postman</a></li>
               
               
               
@@ -1435,6 +1435,50 @@ WebSocket session, the following text message has to be sent to the backend: <co
   </tbody>
 </table>
 
+<h3 id="enrichment">Enrichment</h3>
+
+<div class="bs-callout bs-callout-primary">Available since Ditto <strong>1.1.0</strong></div>
+
+<p>When extra fields should be added to outgoing messages on the WebSocket channel, an <code class="highlighter-rouge">extraFields</code> parameter can be added
+to the request message. This is supported for all request messages:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Description</th>
+      <th>Request message</th>
+      <th><a href="basic-enrichment.html">Enrich by extra fields</a></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Subscribe for <a href="basic-changenotifications.html">events/change notifications</a></td>
+      <td><code class="highlighter-rouge">START-SEND-EVENTS</code></td>
+      <td>✔</td>
+    </tr>
+    <tr>
+      <td>Subscribe for <a href="basic-messages.html">messages</a></td>
+      <td><code class="highlighter-rouge">START-SEND-MESSAGES</code></td>
+      <td>✔</td>
+    </tr>
+    <tr>
+      <td>Subscribe for <a href="protocol-twinlive.html">live commands</a></td>
+      <td><code class="highlighter-rouge">START-SEND-LIVE-COMMANDS</code></td>
+      <td>✔</td>
+    </tr>
+    <tr>
+      <td>Subscribe for <a href="protocol-twinlive.html">live events</a></td>
+      <td><code class="highlighter-rouge">START-SEND-LIVE-EVENTS</code></td>
+      <td>✔</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Analog to the <a href="#filtering">filtering</a> the parameter is defined like an HTTP query parameter, e.g.:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>START-SEND-EVENTS?extraFields=attributes/counter,features/ConnectionStatus
+START-SEND-MESSAGES?extraFields=attributes
+</code></pre></div></div>
+
 <h3 id="filtering">Filtering</h3>
 
 <p>In order to only consume specific events like described in <a href="basic-changenotifications.html">change notifications</a>, the
@@ -1445,8 +1489,8 @@ following parameters can additionally be provided when sending the WebSocket pro
     <tr>
       <th>Description</th>
       <th>Request message</th>
-      <th>Filter by namespaces</th>
-      <th>Filter by RQL expression</th>
+      <th><a href="basic-changenotifications.html#by-namespaces">Filter by namespaces</a></th>
+      <th><a href="basic-changenotifications.html#by-rql-expression">Filter by RQL expression</a></th>
     </tr>
   </thead>
   <tbody>
@@ -1485,6 +1529,10 @@ would match an attribute “counter” to be greater than 42:</p>
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>START-SEND-EVENTS?namespaces=org.eclipse.ditto&amp;filter=gt(attributes/counter,42)
 </code></pre></div></div>
 
+<p>The filtering may be also used in combination with an <a href="#enrichment">enrichment</a>, e.g.:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>START-SEND-EVENTS?extraFields=attributes&amp;filter=gt(attributes/counter,42)
+</code></pre></div></div>
+
 
     <div class="tags">
         
@@ -1518,7 +1566,7 @@ would match an attribute “counter” to be greater than 42:</p>
                     </div>
                     <p class="notice">
                         &copy;2020 Eclipse Ditto.
-                         Site last generated: Jan 31, 2020 <br />
+                         Site last generated: Feb 12, 2020 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

@@ -528,6 +528,13 @@
               
               
               
+              <li><a href="basic-enrichment.html">Signal enrichment</a></li>
+              
+              
+              
+              
+              
+              
               <li><a href="basic-search.html">Search</a></li>
               
               
@@ -645,13 +652,6 @@
               
               
               <li><a href="httpapi-sse.html">Server sent events</a></li>
-              
-              
-              
-              
-              
-              
-              <li><a href="httpapi-postman.html">Run in Postman</a></li>
               
               
               
@@ -1530,11 +1530,12 @@ them in a mapping function. See <a href="http://mozilla.github.io/rhino/compat/e
  * @param {Object.&lt;string, string&gt;} dittoHeaders - The headers Object containing all Ditto Protocol header values
  * @param {*} [value] - The value to apply / which was applied (e.g. in a "modify" action)
  * @param {number} status - The status code that indicates the result of the command.
+ * @param {Object} extra - The enriched extra fields when selected via "extraFields" option.
  * @returns {DittoProtocolMessage} dittoProtocolMessage - 
  *  the mapped Ditto Protocol message or 
  *  &lt;code&gt;null&lt;/code&gt; if the message could/should not be mapped
  */</span>
-<span class="kd">function</span> <span class="nx">buildDittoProtocolMsg</span><span class="p">(</span><span class="nx">namespace</span><span class="p">,</span> <span class="nx">id</span><span class="p">,</span> <span class="nx">group</span><span class="p">,</span> <span class="nx">channel</span><span class="p">,</span> <span class="nx">criterion</span><span class="p">,</span> <span class="nx">action</span><span class="p">,</span> <span class="nx">path</span><span class="p">,</span> <span class="nx">dittoHeaders</span><span class="p">,</span> <span class="nx">value</span><span class="p">,</span> <span class="nx">status</span><span class="p">)</span> <span class="p">{</span>
+<span class="kd">function</span> <span class="nx">buildDittoProtocolMsg</span><span class="p">(</span><span class="nx">namespace</span><span class="p">,</span> <span class="nx">id</span><span class="p">,</span> <span class="nx">group</span><span class="p">,</span> <span class="nx">channel</span><span class="p">,</span> <span class="nx">criterion</span><span class="p">,</span> <span class="nx">action</span><span class="p">,</span> <span class="nx">path</span><span class="p">,</span> <span class="nx">dittoHeaders</span><span class="p">,</span> <span class="nx">value</span><span class="p">,</span> <span class="nx">status</span><span class="p">,</span> <span class="nx">extra</span><span class="p">)</span> <span class="p">{</span>
 
     <span class="kd">let</span> <span class="nx">dittoProtocolMsg</span> <span class="o">=</span> <span class="p">{};</span>
     <span class="nx">dittoProtocolMsg</span><span class="p">.</span><span class="nx">topic</span> <span class="o">=</span> <span class="nx">namespace</span> <span class="o">+</span> <span class="s2">"/"</span> <span class="o">+</span> <span class="nx">id</span> <span class="o">+</span> <span class="s2">"/"</span> <span class="o">+</span> <span class="nx">group</span> <span class="o">+</span> <span class="s2">"/"</span> <span class="o">+</span> <span class="nx">channel</span> <span class="o">+</span> <span class="s2">"/"</span> <span class="o">+</span> <span class="nx">criterion</span> <span class="o">+</span> <span class="s2">"/"</span> <span class="o">+</span> <span class="nx">action</span><span class="p">;</span>
@@ -1542,6 +1543,7 @@ them in a mapping function. See <a href="http://mozilla.github.io/rhino/compat/e
     <span class="nx">dittoProtocolMsg</span><span class="p">.</span><span class="nx">headers</span> <span class="o">=</span> <span class="nx">dittoHeaders</span><span class="p">;</span>
     <span class="nx">dittoProtocolMsg</span><span class="p">.</span><span class="nx">value</span> <span class="o">=</span> <span class="nx">value</span><span class="p">;</span>
     <span class="nx">dittoProtocolMsg</span><span class="p">.</span><span class="nx">status</span> <span class="o">=</span> <span class="nx">status</span><span class="p">;</span>
+    <span class="nx">dittoProtocolMsg</span><span class="p">.</span><span class="nx">extra</span> <span class="o">=</span> <span class="nx">extra</span><span class="p">;</span>
     <span class="k">return</span> <span class="nx">dittoProtocolMsg</span><span class="p">;</span>
 <span class="p">}</span>
 
@@ -1669,6 +1671,7 @@ can be mapped to external messages by implementing the following JavaScript func
  * @param {Object.&lt;string, string&gt;} dittoHeaders - The headers Object containing all Ditto Protocol header values
  * @param {*} [value] - The value to apply / which was applied (e.g. in a "modify" action)
  * @param {number} status - The status code that indicates the result of the command.
+ * @param {Object} extra - The enriched extra fields when selected via "extraFields" option.
  * @returns {(ExternalMessage|Array&lt;ExternalMessage&gt;)} externalMessage -
  *  The mapped external message,
  *  an array of external messages or
@@ -1684,7 +1687,8 @@ can be mapped to external messages by implementing the following JavaScript func
     <span class="nx">path</span><span class="p">,</span>
     <span class="nx">dittoHeaders</span><span class="p">,</span>
     <span class="nx">value</span><span class="p">,</span>
-    <span class="nx">status</span>
+    <span class="nx">status</span><span class="p">,</span>
+    <span class="nx">extra</span>
 <span class="p">)</span> <span class="p">{</span>
 
     <span class="c1">// ###</span>
@@ -2054,7 +2058,7 @@ connection’s <code class="highlighter-rouge">mappingDefinitions</code> and ref
                     </div>
                     <p class="notice">
                         &copy;2020 Eclipse Ditto.
-                         Site last generated: Jan 31, 2020 <br />
+                         Site last generated: Feb 12, 2020 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">
