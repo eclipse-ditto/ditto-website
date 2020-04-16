@@ -195,13 +195,15 @@
 <ul id="mysidebar" class="nav">
   <li class="sidebarTitle">
     <label for="docVersion">Eclipse Ditto  version:</label>
-    <select id="docVersion" name="docVersion">
-      
-      <option value="">development</option>
-      
-      <option value="1.0">1.0</option>
-      
-    </select>
+    <div class="select-wrapper">
+      <select id="docVersion" name="docVersion">
+        
+        <option value="">development</option>
+        
+        <option value="1.0">1.0</option>
+        
+      </select>
+    </div>
     <div id="dev-warning">
       <div markdown="span" class="alert alert-warning" role="alert" style="font-size:0.6em"><i class="fa fa-warning"></i> <b>Important:</b> This documentation reflects the latest 'development'. You might want to choose a released version.</div>
     </div>
@@ -1303,6 +1305,13 @@
               
               
               
+              
+              
+              <li><a href="protocol-examples-search.html">→ Search examples</a></li>
+              
+              
+              
+              
           </ul>
         </li>
     
@@ -1433,7 +1442,365 @@ $('#toc').on('click', 'a', function() {
 
     
 
-  <div class="alert alert-danger" role="alert"><i class="fa fa-exclamation-circle"></i> <b>Warning:</b> Search commands are not yet mapped in the Ditto protocol.<br />Stay tuned!</div>
+  <p>The <a href="basic-search.html">search aspect</a> of the Ditto protocol consists of 3 commands and 4 events that together implement
+the <a href="https://reactive-streams.org">reactive-streams</a> protocol over any duplex transport layer.
+For each search request, Ditto acts as the reactive-streams publisher of pages of search results,
+and the client acts as the subscriber.
+By reactive-streams means, the client controls how fast pages are delivered to it and may cancel
+a search request before all results are sent.</p>
+
+<p>While <a href="basic-connections.html">connections</a> do not expose or require a duplex transport layer,
+the search protocol is available for them as well: Send commands from client to Ditto via any
+<a href="basic-connections.html#sources">connection source</a>. For each command, 0 or more events from Ditto to client
+are published to the reply-target of the source.</p>
+
+<p>For reactive-streams on the JVM, a publisher-subscriber pair is identified by a <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/concurrent/Flow.Subscription.html">Subscription</a> object according
+to reference equality.
+Similarly, the search protocol commands and events of one search query are identified by a subscription ID.</p>
+
+<p>Each search protocol command or event corresponds to a reactive-streams <em>signal</em> and are bound
+by the same rules in the <a href="https://github.com/reactive-streams/reactive-streams-jvm/blob/v1.0.3/README.md">reactive-streams specification</a>.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Reactive-streams signal</th>
+      <th>Search protocol message topic</th>
+      <th>Type</th>
+      <th>Message direction</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/concurrent/Flow.Publisher.html#subscribe(java.util.concurrent.Flow.Subscriber)">Publisher#subscribe</a></td>
+      <td><a href="#subscribe"><code class="highlighter-rouge">_/_/things/twin/search/subscribe</code></a></td>
+      <td>Command</td>
+      <td>Client to Ditto</td>
+    </tr>
+    <tr>
+      <td><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/concurrent/Flow.Subscription.html#request(long)">Subscription#request</a></td>
+      <td><a href="#request"><code class="highlighter-rouge">_/_/things/twin/search/request</code></a></td>
+      <td>Command</td>
+      <td>Client to Ditto</td>
+    </tr>
+    <tr>
+      <td><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/concurrent/Flow.Subscription.html#cancel()">Subscription#cancel</a></td>
+      <td><a href="#cancel"><code class="highlighter-rouge">_/_/things/twin/search/cancel</code></a></td>
+      <td>Command</td>
+      <td>Client to Ditto</td>
+    </tr>
+    <tr>
+      <td><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/concurrent/Flow.Subscriber.html#onSubscribe(java.util.concurrent.Flow.Subscription)">Subscriber#onSubscribe</a></td>
+      <td><a href="#created"><code class="highlighter-rouge">_/_/things/twin/search/created</code></a></td>
+      <td>Event</td>
+      <td>Ditto to Client</td>
+    </tr>
+    <tr>
+      <td><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/concurrent/Flow.Subscriber.html#onNext(T)">Subscriber#onNext</a></td>
+      <td><a href="#next"><code class="highlighter-rouge">_/_/things/twin/search/next</code></a></td>
+      <td>Event</td>
+      <td>Ditto to Client</td>
+    </tr>
+    <tr>
+      <td><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/concurrent/Flow.Subscriber.html#onComplete()">Subscriber#onComplete</a></td>
+      <td><a href="#complete"><code class="highlighter-rouge">_/_/things/twin/search/complete</code></a></td>
+      <td>Event</td>
+      <td>Ditto to Client</td>
+    </tr>
+    <tr>
+      <td><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/concurrent/Flow.Subscriber.html#onError(java.lang.Throwable)">Subscriber#onError</a></td>
+      <td><a href="#failed"><code class="highlighter-rouge">_/_/things/twin/search/failed</code></a></td>
+      <td>Event</td>
+      <td>Ditto to Client</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="interaction-pattern">Interaction pattern</h2>
+
+<p>For one search query, the commands from client to Ditto should follow this protocol:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>subscribe request* cancel?
+</code></pre></div></div>
+<p>The client should send one <a href="#subscribe">“subscribe”</a> command,
+followed by multiple <a href="#request">“request”</a> commands and an optional <a href="#cancel">“cancel”</a> command.</p>
+
+<p>In response to a <a href="#subscribe">“subscribe”</a> command and after each <a href="#request">“request”</a> command,
+Ditto will send 0 or more events to the client according to the following protocol:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>created next* (complete | failed)?
+</code></pre></div></div>
+<p>A <a href="#created">“created”</a> event bearing the subscription ID is always sent.
+0 or more <a href="#next">“next”</a> events are sent according to the amount of search results and the number of pages requested by
+the client. A <a href="#complete">“complete”</a> or <a href="#failed">“failed”</a> event comes at the
+end unless the client sends a <a href="#cancel">“cancel”</a> command before the search results are exhausted.</p>
+
+<p>There is no special event in response to a <a href="#cancel">“cancel”</a> command.
+The client may continue to receive buffered <a href="#next">“next”</a>,
+<a href="#complete">“complete”</a> or <a href="#failed">“failed”</a> events after sending a <a href="#cancel">“cancel”</a> command.</p>
+
+<p>In addition to the rules of reactive-streams, Ditto guarantees that no <a href="#complete">“complete”</a> or
+<a href="#failed">“failed”</a> event will arrive
+before the client expresses its readiness by a first <a href="#request">“request”</a> command. The reason is to facilitate
+concurrency at the client side. Without the extra guarantee, a multi-threaded client would have to process a
+<a href="#complete">“complete”</a> or <a href="#failed">“failed”</a> event in parallel of the preceding <a href="#created">“created”</a> event.
+It would put the burden of sequentialization at the client side and complicate the programming there.</p>
+
+<h2 id="commands-from-client-to-ditto">Commands from Client to Ditto</h2>
+
+<h3 id="subscribe">Subscribe</h3>
+
+<p>Sent a <a href="#subscribe">“subscribe”</a> command to Ditto to start receiving search results.
+Ditto will always respond with a <a href="#created">“created”</a> event.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Field</th>
+      <th>Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>topic</strong></td>
+      <td><code class="highlighter-rouge">_/_/things/twin/search/subscribe</code></td>
+    </tr>
+    <tr>
+      <td><strong>path</strong></td>
+      <td><code class="highlighter-rouge">/</code></td>
+    </tr>
+    <tr>
+      <td><strong>fields</strong></td>
+      <td>Contains a comma separated list of fields, to describe which things to be included in the search results.</td>
+    </tr>
+    <tr>
+      <td><strong>value</strong></td>
+      <td>JSON object specifying the search query. <script src="docson/widget.js" data-schema="../jsonschema/protocol-search-subscribe-payload.json"></script></td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td> </td>
+    </tr>
+  </tbody>
+</table>
+
+<p>The standard <a href="basic-rql.html#rql-filter">filter</a>,  <a href="basic-search.html#sorting-and-paging-options">options</a>
+and the <a href="basic-search.html#namespaces">namespaces</a> can be specified in the <code class="highlighter-rouge">value</code> field
+of a <a href="#subscribe">“subscribe”</a> command.
+They have identical semantics and default values as other search APIs.
+In particular:</p>
+<ul>
+  <li>When given in the <code class="highlighter-rouge">options</code> field, <code class="highlighter-rouge">size(&lt;count&gt;)</code> limits the number of search results delivered
+in one <a href="#next">“next”</a> event to <code class="highlighter-rouge">&lt;count&gt;</code> items. The default value of <code class="highlighter-rouge">&lt;count&gt;</code> is 25 and the maximum value is 200.</li>
+  <li>When given in the <code class="highlighter-rouge">options</code> field, <code class="highlighter-rouge">sort(&lt;+"-&gt;&lt;property1&gt;, ...)</code> sets the order of search results.
+If not given, the default <code class="highlighter-rouge">sort(+thingId)</code> is used.</li>
+</ul>
+
+<p>The paging options <code class="highlighter-rouge">cursor</code> and <code class="highlighter-rouge">limit</code> of the <a href="httpapi-search.html">HTTP-API</a> are not supported here, because
+they are not meaningful for the search protocol. For the HTTP-API, those options are for iterating through large
+numbers of search results over many HTTP requests in a stateless manner.
+The search protocol is not stateless and does not require the client to keep track of any cursor or offset;
+results of any size are streamed over an arbitrarily long period of time.</p>
+
+<h3 id="request">Request</h3>
+
+<p>After obtaining a subscription ID from a <a href="#created">“created”</a> event,
+use <a href="#request">“request”</a> commands to tell Ditto how many pages of search results you are prepared to receive.
+Ditto will send <a href="#next">“next”</a> events until all requested pages are fulfilled,
+the search results are exhausted, or an error occurred.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Field</th>
+      <th>Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>topic</strong></td>
+      <td><code class="highlighter-rouge">_/_/things/twin/search/request</code></td>
+    </tr>
+    <tr>
+      <td><strong>path</strong></td>
+      <td><code class="highlighter-rouge">/</code></td>
+    </tr>
+    <tr>
+      <td><strong>value</strong></td>
+      <td>JSON object specifying the number of pages to request. <script src="docson/widget.js" data-schema="../jsonschema/protocol-search-request-payload.json"></script></td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td> </td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="cancel">Cancel</h3>
+
+<p>After obtaining a subscription ID from a <a href="#created">“created”</a> event,
+use a <a href="#cancel">“cancel”</a> command to stop Ditto from sending more pages of the search results.
+Pages in-flight may yet arrive, but the client will eventually stop receiving
+events of the same subscription ID.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Field</th>
+      <th>Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>topic</strong></td>
+      <td><code class="highlighter-rouge">_/_/things/twin/search/cancel</code></td>
+    </tr>
+    <tr>
+      <td><strong>path</strong></td>
+      <td><code class="highlighter-rouge">/</code></td>
+    </tr>
+    <tr>
+      <td><strong>value</strong></td>
+      <td>Identifies a search subscription. <script src="docson/widget.js" data-schema="../jsonschema/protocol-search-subscriptionid.json"></script></td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td> </td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="events-from-ditto-to-client">Events from Ditto to Client</h2>
+
+<h3 id="created">Created</h3>
+
+<p>To any <a href="#subscribe">“subscribe”</a> command, Ditto will always respond with a <a href="#created">“created”</a> event.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Field</th>
+      <th>Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>topic</strong></td>
+      <td><code class="highlighter-rouge">_/_/things/twin/search/created</code></td>
+    </tr>
+    <tr>
+      <td><strong>path</strong></td>
+      <td><code class="highlighter-rouge">/</code></td>
+    </tr>
+    <tr>
+      <td><strong>value</strong></td>
+      <td>Discloses the ID of a search subscription which all subsequent commands should include. <script src="docson/widget.js" data-schema="../jsonschema/protocol-search-subscriptionid.json"></script></td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td> </td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="next">Next</h3>
+
+<p>Each <a href="#next">“next”</a> event contains one page of the search results.
+Ditto will not send more <a href="#next">“next”</a> events for a given subscription ID than the total number of pages
+requested by previous <a href="#request">“request”</a> commands.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Field</th>
+      <th>Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>topic</strong></td>
+      <td><code class="highlighter-rouge">_/_/things/twin/search/next</code></td>
+    </tr>
+    <tr>
+      <td><strong>path</strong></td>
+      <td><code class="highlighter-rouge">/</code></td>
+    </tr>
+    <tr>
+      <td><strong>value</strong></td>
+      <td>JSON object containing one page of the search results. <script src="docson/widget.js" data-schema="../jsonschema/protocol-search-next-payload.json"></script></td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td> </td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="complete">Complete</h3>
+
+<p>A search subscription ends with a <a href="#complete">“complete”</a> or a <a href="#failed">“failed”</a> event from Ditto,
+or with an <a href="#cancel">“cancel”</a> command from the client.
+Ditto sends a <a href="#complete">“complete”</a> event when all pages of the search results are delivered to the client.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Field</th>
+      <th>Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>topic</strong></td>
+      <td><code class="highlighter-rouge">_/_/things/twin/search/complete</code></td>
+    </tr>
+    <tr>
+      <td><strong>path</strong></td>
+      <td><code class="highlighter-rouge">/</code></td>
+    </tr>
+    <tr>
+      <td><strong>value</strong></td>
+      <td>Identifies a search subscription. <script src="docson/widget.js" data-schema="../jsonschema/protocol-search-subscriptionid.json"></script></td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td> </td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="failed">Failed</h3>
+
+<p>A search subscription ends with a <a href="#complete">“complete”</a> or a <a href="#failed">“failed”</a> event from Ditto,
+or with an <a href="#cancel">“cancel”</a> command from the client.
+Ditto sends a <a href="#failed">“failed”</a> event when an internal error occurred,
+or when the client breaches the reactive-streams specification.
+It is not possible to <a href="#request">“request”</a> more pages of the search results after a <a href="#failed">“failed”</a> event.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Field</th>
+      <th>Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>topic</strong></td>
+      <td><code class="highlighter-rouge">_/_/things/twin/search/failed</code></td>
+    </tr>
+    <tr>
+      <td><strong>path</strong></td>
+      <td><code class="highlighter-rouge">/</code></td>
+    </tr>
+    <tr>
+      <td><strong>value</strong></td>
+      <td>JSON object containing the reason for the failure. <script src="docson/widget.js" data-schema="../jsonschema/protocol-search-failed-payload.json"></script></td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td> </td>
+    </tr>
+  </tbody>
+</table>
 
 
     <div class="tags">
@@ -1464,7 +1831,7 @@ $('#toc').on('click', 'a', function() {
                     </div>
                     <p class="notice">
                         &copy;2020 Eclipse Ditto.
-                         Site last generated: Apr 9, 2020 <br />
+                         Site last generated: Apr 16, 2020 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

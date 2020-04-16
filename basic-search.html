@@ -195,13 +195,15 @@
 <ul id="mysidebar" class="nav">
   <li class="sidebarTitle">
     <label for="docVersion">Eclipse Ditto  version:</label>
-    <select id="docVersion" name="docVersion">
-      
-      <option value="">development</option>
-      
-      <option value="1.0">1.0</option>
-      
-    </select>
+    <div class="select-wrapper">
+      <select id="docVersion" name="docVersion">
+        
+        <option value="">development</option>
+        
+        <option value="1.0">1.0</option>
+        
+      </select>
+    </div>
     <div id="dev-warning">
       <div markdown="span" class="alert alert-warning" role="alert" style="font-size:0.6em"><i class="fa fa-warning"></i> <b>Important:</b> This documentation reflects the latest 'development'. You might want to choose a released version.</div>
     </div>
@@ -1303,6 +1305,13 @@
               
               
               
+              
+              
+              <li><a href="protocol-examples-search.html">→ Search examples</a></li>
+              
+              
+              
+              
           </ul>
         </li>
     
@@ -1433,7 +1442,35 @@ $('#toc').on('click', 'a', function() {
 
     
 
-  <p>Ditto provides a search functionality as one of the services around its managed <strong>digital twins</strong>.</p>
+  <p>Ditto provides a search functionality as one of the services around its managed <strong>digital twins</strong>.
+The functionality is available for the following APIs.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>API</th>
+      <th>Access Method</th>
+      <th>Characteristics</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><a href="httpapi-search.html">HTTP</a></td>
+      <td>HTTP request-response</td>
+      <td>Stateless</td>
+    </tr>
+    <tr>
+      <td><a href="protocol-specification-things-search.html">Ditto protocol</a></td>
+      <td><a href="httpapi-protocol-bindings-websocket.html">Websocket</a> and <a href="basic-connections.html">connections</a></td>
+      <td><a href="https://reactive-streams.org">Reactive-streams</a> compatible</td>
+    </tr>
+    <tr>
+      <td><a href="httpapi-sse.html#sse-api-searchthings">Server-sent events</a></td>
+      <td><a href="https://html.spec.whatwg.org/multipage/server-sent-events.html">HTML5 server-sent events</a></td>
+      <td>Streaming with resumption</td>
+    </tr>
+  </tbody>
+</table>
 
 <h2 id="search-index">Search index</h2>
 
@@ -1449,7 +1486,7 @@ optimized representation of the <code class="highlighter-rouge">Thing</code> dat
 <p>Ditto’s search index provides <strong>eventual consistency</strong>.</p>
 
 <p>In order to reduce load to the database when processing updates in a high frequency, the search index is updated in 
-small batches with an default interval of 1 second (configurable via environment variable 
+small batches with a default interval of 1 second (configurable via environment variable 
 <code class="highlighter-rouge">THINGS_SEARCH_UPDATER_STREAM_WRITE_INTERVAL</code>).</p>
 
 <p>That means that when a thing is updated and the API (e.g. the HTTP endpoint) returns a success response, the search index
@@ -1465,7 +1502,7 @@ will not reflect that change in that instant. The change will most likely be ref
 and return the first 5 results:</p>
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Filter:     eq(attributes/location,"living-room")
 Sorting:    sort(+thingId)
-Paging:     limit(0,5)
+Paging:     size(5),cursor(CURSOR_ID)
 </code></pre></div></div>
 
 <h2 id="search-count-queries">Search count queries</h2>
@@ -1483,12 +1520,19 @@ performance when many Things of different namespaces are managed in Ditto’s se
 <p>In order to apply queries when searching, Ditto uses the <a href="basic-rql.html">RQL notation</a> which is also applied for other 
 scenarios (e.g. filtering <a href="basic-changenotifications.html">notifications</a>).</p>
 
-<h2 id="paging-options">Paging options</h2>
+<h2 id="sorting-and-paging-options">Sorting and paging options</h2>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>size(&lt;count&gt;)
+<p>The <a href="basic-rql.html#rql-sorting"><code class="highlighter-rouge">sort</code> option</a> governs the order of search results.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sort(&lt;+|-&gt;&lt;property1&gt;,&lt;+|-&gt;&lt;property2&gt;,...)
 </code></pre></div></div>
 
-<p>Limits the search results to <code class="highlighter-rouge">&lt;count&gt;</code> items.</p>
+<p>If not given, search results are listed in the ascending order of thing IDs, namely <code class="highlighter-rouge">sort(+thingId)</code>.</p>
+
+<p>The <code class="highlighter-rouge">size</code> option</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>size(&lt;count&gt;)
+</code></pre></div></div>
+<p>limits the search results delivered in one HTTP response or one Ditto protocol message to <code class="highlighter-rouge">&lt;count&gt;</code> items.</p>
 
 <p>If the paging option is not explicitly specified a <strong>default value</strong> of <em>25</em> is used. The <strong>maximum</strong> allowed count is 
 <em>200</em>.</p>
@@ -1507,7 +1551,7 @@ includes no cursor if there are no more results.</p>
 
 <h2 id="rql-paging-deprecated">RQL paging (deprecated)</h2>
 
-<div class="alert alert-info" role="alert"><i class="fa fa-info-circle"></i> <b>Note:</b> The limit option is deprecated, it may be removed in future releases. Use <a href="basic-search.html#paging-options">cursor-based 
+<div class="alert alert-info" role="alert"><i class="fa fa-info-circle"></i> <b>Note:</b> The limit option is deprecated, it may be removed in future releases. Use <a href="basic-search.html#sorting-and-paging-options">cursor-based 
 paging</a> instead.</div>
 
 <p>The RQL limiting part specifies which part (or “page”) should be returned of a large search result set.</p>
@@ -1530,7 +1574,7 @@ paging</a> instead.</div>
 </code></pre></div></div>
 <p>i.e. Return the next ten items (from index 11 to 20)</p>
 
-<div class="alert alert-info" role="alert"><i class="fa fa-info-circle"></i> <b>Note:</b> We recommend <strong>not to use high offsets</strong> (e.g. higher than 10000) for paging in API 2 
+<div class="alert alert-info" role="alert"><i class="fa fa-info-circle"></i> <b>Note:</b> We recommend <strong>not to use high offsets</strong> (e.g. higher than 10000) for paging
     because of potential performance degradations.</div>
 
 
@@ -1563,7 +1607,7 @@ paging</a> instead.</div>
                     </div>
                     <p class="notice">
                         &copy;2020 Eclipse Ditto.
-                         Site last generated: Apr 9, 2020 <br />
+                         Site last generated: Apr 16, 2020 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">
