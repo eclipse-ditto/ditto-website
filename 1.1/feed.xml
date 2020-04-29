@@ -1,0 +1,1095 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>Eclipse Ditto Blog</title>
+        <description>Announcements, tutorials and examples around Eclipse Ditto and Digital Twins</description>
+        <link>https://www.eclipse.org/ditto/</link>
+        <atom:link href="https://www.eclipse.org/ditto/feed.xml" rel="self" type="application/rss+xml"/>
+        <pubDate>Wed, 29 Apr 2020 08:55:14 +0000</pubDate>
+        <lastBuildDate>Wed, 29 Apr 2020 08:55:14 +0000</lastBuildDate>
+        <generator>Jekyll v3.6.2</generator>
+        
+        <item>
+            <title>Announcing Eclipse Ditto Release 1.1.0</title>
+            <description>&lt;p&gt;Today, approximately 4 months after Eclipse Ditto’s &lt;a href=&quot;2019-12-12-release-announcement-100.html&quot;&gt;1.0.0&lt;/a&gt; release, 
+the team is happy to announce the first minor (feature) update of Ditto &lt;code class=&quot;highlighter-rouge&quot;&gt;1.0&lt;/code&gt;:&lt;br /&gt;
+&lt;strong&gt;Eclipse Ditto 1.1.0&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;The Ditto team was quite busy, 1.1.0 focuses on the following areas:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Management of &lt;a href=&quot;basic-policy.html&quot;&gt;Policies&lt;/a&gt; via &lt;a href=&quot;protocol-specification-policies.html&quot;&gt;Ditto Protocol&lt;/a&gt;
+    &lt;ul&gt;
+      &lt;li&gt;Addition of policy APIs in Ditto &lt;a href=&quot;client-sdk-java.html&quot;&gt;Java client&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Possibility to &lt;a href=&quot;basic-search.html&quot;&gt;search&lt;/a&gt; via &lt;a href=&quot;protocol-specification-things-search.html&quot;&gt;Ditto Protocol&lt;/a&gt;
+    &lt;ul&gt;
+      &lt;li&gt;Addition of search APIs in Ditto &lt;a href=&quot;client-sdk-java.html&quot;&gt;Java client&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Enrich published Ditto events/message via additional &lt;a href=&quot;basic-enrichment.html&quot;&gt;custom fields&lt;/a&gt; of the affected thing
+    &lt;ul&gt;
+      &lt;li&gt;Addition of enrichment APIs in Ditto &lt;a href=&quot;client-sdk-java.html&quot;&gt;Java client&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Support for establishing managed &lt;a href=&quot;basic-connections.html&quot;&gt;connections&lt;/a&gt; via &lt;a href=&quot;connectivity-protocol-bindings-mqtt5.html&quot;&gt;MQTT 5&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;End-2-end &lt;a href=&quot;basic-acknowledgements.html&quot;&gt;acknowledgements&lt;/a&gt; preparing Ditto to enable “at least once” processing
+    &lt;ul&gt;
+      &lt;li&gt;Addition of acknowledgement APIs in Ditto &lt;a href=&quot;client-sdk-java.html&quot;&gt;Java client&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Officially documented &lt;a href=&quot;installation-operating.html#pre-authentication&quot;&gt;pre-authenticated&lt;/a&gt; authentication mechanism&lt;/li&gt;
+  &lt;li&gt;Use of Java 11 for running Ditto containers&lt;/li&gt;
+  &lt;li&gt;Deprecation of API version 1 (authorization via &lt;a href=&quot;basic-acl.html&quot;&gt;ACL&lt;/a&gt; mechanism)&lt;/li&gt;
+  &lt;li&gt;Use of CBOR as cluster internal replacement for JSON serialization&lt;/li&gt;
+  &lt;li&gt;Further improvements on increasing throughput&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Please have a look at the &lt;a href=&quot;release_notes_110.html&quot;&gt;1.1.0 release notes&lt;/a&gt; for a more detailed information on the release.&lt;/p&gt;
+
+&lt;h2 id=&quot;artifacts&quot;&gt;Artifacts&lt;/h2&gt;
+
+&lt;p&gt;The new Java artifacts have been published at the &lt;a href=&quot;https://repo.eclipse.org/content/repositories/ditto/&quot;&gt;Eclipse Maven repository&lt;/a&gt;
+as well as &lt;a href=&quot;https://repo1.maven.org/maven2/org/eclipse/ditto/&quot;&gt;Maven central&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Also the &lt;a href=&quot;client-sdk-java.html&quot;&gt;Ditto Java client&lt;/a&gt;’s artifacts were published to Maven central.&lt;/p&gt;
+
+&lt;p&gt;The Docker images have been pushed to Docker Hub:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://hub.docker.com/r/eclipse/ditto-policies/&quot;&gt;eclipse/ditto-policies&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://hub.docker.com/r/eclipse/ditto-things/&quot;&gt;eclipse/ditto-things&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://hub.docker.com/r/eclipse/ditto-things-search/&quot;&gt;eclipse/ditto-things-search&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://hub.docker.com/r/eclipse/ditto-gateway/&quot;&gt;eclipse/ditto-gateway&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://hub.docker.com/r/eclipse/ditto-connectivity/&quot;&gt;eclipse/ditto-connectivity&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://hub.docker.com/r/eclipse/ditto-concierge/&quot;&gt;eclipse/ditto-concierge&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;kubernetes-ready-helm-chart&quot;&gt;Kubernetes ready: Helm chart&lt;/h2&gt;
+
+&lt;p&gt;In order to run Eclipse Ditto in a Kubernetes environment, best rely on the official 
+&lt;a href=&quot;https://hub.helm.sh/charts/eclipse-iot/ditto&quot;&gt;Helm chart&lt;/a&gt; and deploy Ditto via the Helm package manager.&lt;/p&gt;
+
+&lt;p&gt;&lt;br /&gt;
+&lt;br /&gt;&lt;/p&gt;
+&lt;figure&gt;&lt;img class=&quot;docimage&quot; src=&quot;images/ditto.svg&quot; alt=&quot;Ditto&quot; style=&quot;max-width: 500px&quot; /&gt;&lt;/figure&gt;
+
+&lt;p&gt;–&lt;br /&gt;
+The Eclipse Ditto team&lt;/p&gt;
+</description>
+            <pubDate>Wed, 29 Apr 2020 00:00:00 +0000</pubDate>
+            <link>https://www.eclipse.org/ditto/2020-04-29-release-announcement-110.html</link>
+            <guid isPermaLink="true">https://www.eclipse.org/ditto/2020-04-29-release-announcement-110.html</guid>
+            
+            <category>blog</category>
+            
+            
+        </item>
+        
+        <item>
+            <title>Digital twins of devices connected via LoRaWAN to TTN</title>
+            <description>&lt;figure&gt;&lt;img class=&quot;docimage&quot; src=&quot;images/2020-04-16-Logo_TTVC_color.png&quot; alt=&quot;TTVC logo&quot; style=&quot;max-width:300px;padding-left:1em;float:right&quot; /&gt;&lt;/figure&gt;
+
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;A workshop of the &lt;a href=&quot;https://www.thethingsnetwork.org/article/the-things-virtual-conference&quot;&gt;2020 The Things Virtual Conference&lt;/a&gt;
+on April 16th 2020 is/was about how to connect Eclipse Ditto to “The Things Network” via TTN’s MQTT broker in order to 
+automatically update digital twins of devices connected via LoRaWAN to the TTN backend.&lt;/p&gt;
+
+&lt;p&gt;You can find the slides &lt;a href=&quot;slides/2020_04_16-ttn-virtual-conference/index.html&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;This blogpost helps setting up this kind of connection and shall also be used as a step-by-step tutorial during
+ the workshop.&lt;/p&gt;
+
+&lt;iframe width=&quot;560&quot; height=&quot;315&quot; src=&quot;https://www.youtube-nocookie.com/embed/D33JrN2RWiI&quot; frameborder=&quot;0&quot; allow=&quot;accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture&quot; allowfullscreen=&quot;&quot;&gt;&lt;/iframe&gt;
+
+&lt;h2 id=&quot;requirements&quot;&gt;Requirements&lt;/h2&gt;
+
+&lt;p&gt;You’ll need:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;an operating system capable of running Docker (best use a Linux distribution)&lt;/li&gt;
+  &lt;li&gt;4 CPU cores and 4GB of RAM are advised (less can work, but the Ditto cluster startup is more fragile then)&lt;/li&gt;
+  &lt;li&gt;to have installed: &lt;code class=&quot;highlighter-rouge&quot;&gt;curl&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;git&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Also, you’ll need a TTN account and an existing application with at least one device if you want to follow the hands-on
+part and want to create digital twins of your devices connected to TTN.&lt;/p&gt;
+
+&lt;h2 id=&quot;preparation&quot;&gt;Preparation&lt;/h2&gt;
+
+&lt;p&gt;Please follow these initial preparation steps (if you don’t already have Docker and Docker Compose installed).&lt;/p&gt;
+
+&lt;p&gt;When you have access to a Kubernetes cluster and already have worked with &lt;a href=&quot;https://helm.sh&quot;&gt;Helm&lt;/a&gt; (the package manager
+for Kubernetes), you can alternatively install Ditto via its official 
+&lt;a href=&quot;https://hub.helm.sh/charts/eclipse-iot/ditto&quot;&gt;Helm chart&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h3 id=&quot;install-docker&quot;&gt;Install Docker&lt;/h3&gt;
+
+&lt;p&gt;Assumption: You’re running a Debian or Ubuntu based Linux distribution containing the &lt;code class=&quot;highlighter-rouge&quot;&gt;apt&lt;/code&gt; package manager.&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;apt install docker.io
+&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;service docker start
+&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;usermod &lt;span class=&quot;nt&quot;&gt;-a&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-G&lt;/span&gt; docker &amp;lt;your-username&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Logout and login again so that your user gets the “docker” group.&lt;/p&gt;
+
+&lt;h3 id=&quot;install-docker-compose&quot;&gt;Install Docker Compose&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://docs.docker.com/compose/install/&quot;&gt;Follow the installation guide here&lt;/a&gt;, in short:&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;curl &lt;span class=&quot;nt&quot;&gt;-L&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;https://github.com/docker/compose/releases/download/1.25.4/docker-compose-&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;$(&lt;/span&gt;uname &lt;span class=&quot;nt&quot;&gt;-s&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;$(&lt;/span&gt;uname &lt;span class=&quot;nt&quot;&gt;-m&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-o&lt;/span&gt; /usr/local/bin/docker-compose
+&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;chmod +x /usr/local/bin/docker-compose
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;clone-ditto-codebase&quot;&gt;Clone Ditto codebase&lt;/h3&gt;
+
+&lt;p&gt;That is required to get the &lt;code class=&quot;highlighter-rouge&quot;&gt;docker-compose.yaml&lt;/code&gt; file and other resources required to run Ditto with Docker Compose.&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git clone &lt;span class=&quot;nt&quot;&gt;--depth&lt;/span&gt; 1 https://github.com/eclipse/ditto.git
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;startup-ditto-cluster&quot;&gt;Startup Ditto cluster&lt;/h2&gt;
+
+&lt;p&gt;Change directory into the just cloned git repository - optionally adjust the &lt;code class=&quot;highlighter-rouge&quot;&gt;DITTO_EXTERNAL_PORT&lt;/code&gt; variable to where 
+Ditto is reachable after the start:&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;cd &lt;/span&gt;ditto/deployment/docker/
+&lt;span class=&quot;nb&quot;&gt;export &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;DITTO_EXTERNAL_PORT&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;80
+docker-compose up &lt;span class=&quot;nt&quot;&gt;-d&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Verify that Ditto is running:&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;docker-compose ps
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;The output should look similar like this:&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;         Name                       Command               State           Ports         
+----------------------------------------------------------------------------------------
+docker_concierge_1       /sbin/tini -- java -jar st ...   Up      8080/tcp              
+docker_connectivity_1    /sbin/tini -- java -jar st ...   Up      8080/tcp              
+docker_gateway_1         /sbin/tini -- java -Dditto ...   Up      0.0.0.0:8081-&amp;gt;8080/tcp
+docker_mongodb_1         docker-entrypoint.sh mongo ...   Up      27017/tcp             
+docker_nginx_1           nginx -g daemon off;             Up      0.0.0.0:80-&amp;gt;80/tcp    
+docker_policies_1        /sbin/tini -- java -jar st ...   Up      8080/tcp              
+docker_swagger-ui_1      nginx -g daemon off;             Up      80/tcp, 8080/tcp      
+docker_things-search_1   /sbin/tini -- java -jar st ...   Up      8080/tcp              
+docker_things_1          /sbin/tini -- java -jar st ...   Up      8080/tcp
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Verify that your Ditto cluster is healthy. Please give it ~1 minute in order to properly start up.&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;curl &lt;span class=&quot;nt&quot;&gt;-u&lt;/span&gt; devops:foobar http://localhost:&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;DITTO_EXTERNAL_PORT&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;/status/health
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;The returned output should start with:&lt;/p&gt;
+&lt;div class=&quot;language-json highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;label&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;roles&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;status&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;UP&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;err&quot;&gt;...&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;If your Ditto cluster has trouble starting up (e.g. because you only have less CPU cores than advised), try the following
+startup command instead:&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;docker-compose start mongodb&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; sleep 30&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; docker-compose start policies things&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; sleep 60&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; docker-compose start concierge&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; sleep 60&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; docker-compose start things-search&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; sleep 60&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; docker-compose start connectivity&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; sleep 60&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; docker-compose up &lt;span class=&quot;nt&quot;&gt;-d&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;configure-connection-to-ttn-mqtt-broker&quot;&gt;Configure connection to TTN MQTT broker&lt;/h2&gt;
+
+&lt;p&gt;The Things Network provides a built in MQTT broker which you can connect to using your TTN application credentials.
+For a more detailed description on that topic, please refer to the 
+&lt;a href=&quot;https://www.thethingsnetwork.org/docs/applications/mqtt/quick-start.html&quot;&gt;TTN MQTT Quick Start&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Eclipse Ditto can establish connections to MQTT brokers. This is a schematic picture of what we now will do:&lt;/p&gt;
+
+&lt;figure&gt;&lt;img class=&quot;docimage&quot; src=&quot;images/../slides/images/ttn-ditto-via-mqtt.png&quot; alt=&quot;TTN to Ditto via MQTT&quot; style=&quot;max-width:600px;padding-left:1em&quot; /&gt;&lt;/figure&gt;
+
+&lt;p&gt;In order to connect to your own TTN application, perform the following steps.&lt;/p&gt;
+
+&lt;p&gt;You can find the &lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;lt;AppId&amp;gt;&lt;/code&gt; (application ID) and &lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;lt;AppKey&amp;gt;&lt;/code&gt; (access key) in your TTN console of your application.
+For &lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;lt;Region&amp;gt;&lt;/code&gt;, e.g. choose &lt;code class=&quot;highlighter-rouge&quot;&gt;'eu'&lt;/code&gt; when your application is in handled by the Handler ‘ttn-handler-eu’.&lt;/p&gt;
+
+&lt;p&gt;Please export your application’s credentials locally to environment variables:&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;export &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;TTN_REGION&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'&amp;lt;Region&amp;gt;'&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;export &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;TTN_APP_ID&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'&amp;lt;AppID&amp;gt;'&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;export &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;TTN_APP_KEY&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'&amp;lt;AppKey&amp;gt;'&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;After having done that, you can already create the connection of Ditto to the TTN MQTT broker:&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;curl &lt;span class=&quot;nt&quot;&gt;-X&lt;/span&gt; POST &lt;span class=&quot;nt&quot;&gt;-u&lt;/span&gt; devops:foobar &lt;span class=&quot;nt&quot;&gt;-H&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'Content-Type: application/json'&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-d&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'{
+    &quot;targetActorSelection&quot;: &quot;/system/sharding/connection&quot;,
+    &quot;headers&quot;: {
+        &quot;aggregate&quot;: false
+    },
+    &quot;piggybackCommand&quot;: {
+        &quot;type&quot;: &quot;connectivity.commands:createConnection&quot;,
+        &quot;connection&quot;: {
+            &quot;id&quot;: &quot;ttn-connection-via-mqtt&quot;,
+            &quot;name&quot;: &quot;TTN-MQTT&quot;,
+            &quot;connectionType&quot;: &quot;mqtt&quot;,
+            &quot;connectionStatus&quot;: &quot;open&quot;,
+            &quot;uri&quot;: &quot;tcp://'&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;TTN_APP_ID&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;':'&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;TTN_APP_KEY&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'@'&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;TTN_REGION&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'.thethings.network:1883&quot;,
+            &quot;failoverEnabled&quot;: true,
+            &quot;clientCount&quot;: 1,
+            &quot;validateCertificates&quot;: false,
+            &quot;sources&quot;: [{
+                &quot;addresses&quot;: [
+                    &quot;'&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;TTN_APP_ID&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'/devices/+/up&quot;
+                ],
+                &quot;consumerCount&quot;: 1,
+                &quot;qos&quot;: 0,
+                &quot;authorizationContext&quot;: [
+                  &quot;pre-authenticated:ttn-connection&quot;
+                ],
+                &quot;enforcement&quot;: {
+                    &quot;input&quot;: &quot;{{ source:address }}&quot;,
+                    &quot;filters&quot;: [
+                        &quot;'&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;TTN_APP_ID&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'/devices/{{ thing:name }}/up&quot;
+                    ]
+                },
+                &quot;replyTarget&quot;: {
+                    &quot;enabled&quot;: false
+                },
+                &quot;payloadMapping&quot;: [
+                    &quot;ttn-demo-mapping&quot;
+                ]
+            }],
+            &quot;mappingDefinitions&quot;: {
+                &quot;ttn-demo-mapping&quot;: {
+                     &quot;mappingEngine&quot;: &quot;JavaScript&quot;,
+                     &quot;options&quot;: {
+                         &quot;incomingScript&quot;: &quot;function mapToDittoProtocolMsg(\n  headers,\n  textPayload,\n  bytePayload,\n  contentType\n) {\n\n  let ttnJson = JSON.parse(textPayload);\n  let deviceId = ttnJson['&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;'&quot;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'dev_id'&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;'&quot;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'];\n  let payloadFields = ttnJson['&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;'&quot;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'payload_fields'&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;'&quot;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'];\n  \n  let attributesObj = {\n    hardwareSerial: ttnJson['&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;'&quot;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'hardware_serial'&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;'&quot;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'],\n    ttnCounter: ttnJson['&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;'&quot;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'counter'&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;'&quot;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;']\n  };\n  \n  let featuresObj = {\n    temperature: {\n      properties: {\n        value: payloadFields['&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;'&quot;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'temperature_7'&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;'&quot;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;']\n      }\n    },\n    pressure: {\n      properties: {\n        value: payloadFields['&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;'&quot;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'barometric_pressure_10'&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;'&quot;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;']\n      }\n    },\n    humidity: {\n      properties: {\n        value: payloadFields['&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;'&quot;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'relative_humidity_8'&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;'&quot;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;']\n      }\n    }\n  };\n  \n  let thing = {\n    attributes: attributesObj,\n    features: featuresObj\n  };\n  \n  let dittoHeaders = {\n    '&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;'&quot;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'response-required'&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;'&quot;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;': false,\n    '&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;'&quot;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'If-Match'&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;'&quot;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;': '&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;'&quot;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'*'&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;'&quot;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'\n  };\n\n  return Ditto.buildDittoProtocolMsg(\n    '&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;'&quot;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'org.eclipse.ditto.ttn.demo'&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;'&quot;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;',\n    deviceId,\n    '&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;'&quot;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'things'&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;'&quot;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;',\n    '&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;'&quot;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'twin'&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;'&quot;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;',\n    '&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;'&quot;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'commands'&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;'&quot;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;',\n    '&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;'&quot;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'modify'&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;'&quot;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;',\n    '&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;'&quot;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'/'&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;'&quot;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;',\n    dittoHeaders,\n    thing\n  );\n}&quot;,
+                         &quot;outgoingScript&quot;: &quot;function mapFromDittoProtocolMsg() { return null; }&quot;,
+                         &quot;loadBytebufferJS&quot;: &quot;false&quot;,
+                         &quot;loadLongJS&quot;: &quot;false&quot;
+                     }
+                }
+            }
+        }
+    }
+}'&lt;/span&gt; http://localhost:&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;DITTO_EXTERNAL_PORT&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;/devops/piggyback/connectivity?timeout&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;8s
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Explanation - what is done here:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;using curl with the &lt;code class=&quot;highlighter-rouge&quot;&gt;devops&lt;/code&gt; (admin) user and its initial password &lt;code class=&quot;highlighter-rouge&quot;&gt;foobar&lt;/code&gt; we create a connection of type &lt;code class=&quot;highlighter-rouge&quot;&gt;mqtt&lt;/code&gt; 
+(you can find further information on that in Ditto’s &lt;a href=&quot;connectivity-protocol-bindings-mqtt.html&quot;&gt;MQTT docs&lt;/a&gt;)&lt;/li&gt;
+  &lt;li&gt;we use the TTN application credentials in the configured &lt;code class=&quot;highlighter-rouge&quot;&gt;&quot;uri&quot;&lt;/code&gt;, connect via plain TCP 
+(SSL is also possible but in this case a little more complicated as the server certificate of the TTN MQTT broker
+ would have to be imported)&lt;/li&gt;
+  &lt;li&gt;we add an entry in &lt;code class=&quot;highlighter-rouge&quot;&gt;&quot;sources&quot;&lt;/code&gt;:
+    &lt;ul&gt;
+      &lt;li&gt;defining the MQTT topic (&lt;code class=&quot;highlighter-rouge&quot;&gt;&quot;addresses&quot;&lt;/code&gt;) to subscribe to&lt;/li&gt;
+      &lt;li&gt;specifying in which &lt;code class=&quot;highlighter-rouge&quot;&gt;&quot;authorizationContext&quot;&lt;/code&gt; messages from this connection shall be executed&lt;/li&gt;
+      &lt;li&gt;defining in the &lt;code class=&quot;highlighter-rouge&quot;&gt;&quot;enforcement&quot;&lt;/code&gt; that, based on the MQTT topic, a device may only update the Ditto twin having the same name&lt;/li&gt;
+      &lt;li&gt;declaring that a custom payload mapping shall be applied for each incoming message&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;in the &lt;code class=&quot;highlighter-rouge&quot;&gt;&quot;mappingDefinitions&quot;&lt;/code&gt; we define the previously used “ttn-demo-mapping” as JavaScript based mapping:
+    &lt;ul&gt;
+      &lt;li&gt;only an “incoming” script is defined as we don’t handle downstream messages to TTN in this example&lt;/li&gt;
+      &lt;li&gt;when you want to understand the script in more depth, please take a look at the &lt;a href=&quot;#javascript-payload-mapping-script-in-detail&quot;&gt;details about it&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;alert alert-success&quot; role=&quot;alert&quot;&gt;&lt;i class=&quot;fa fa-check-square-o&quot;&gt;&lt;/i&gt; &lt;b&gt;Tip:&lt;/b&gt; As you have other custom &lt;code class=&quot;highlighter-rouge&quot;&gt;payload_fields&lt;/code&gt; for your TTN devices, please adjust the script 
+                             if you want to see the device’s custom payload fields in your Ditto twins.&lt;/div&gt;
+
+&lt;h2 id=&quot;create-a-common-policy-for-the-twins-to-be-created&quot;&gt;Create a common policy for the twins to be created&lt;/h2&gt;
+
+&lt;p&gt;Eclipse Ditto secures each API access to the managed twins by applying authorization of the authenticated user.&lt;br /&gt;
+Those “rules” which authenticated user may access which twins are defined in &lt;a href=&quot;basic-policy.html&quot;&gt;Policies&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;In order to proceed with our scenario, we create a single Policy which shall be used for all twins we create in a later 
+step:&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;curl &lt;span class=&quot;nt&quot;&gt;-X&lt;/span&gt; PUT &lt;span class=&quot;nt&quot;&gt;-u&lt;/span&gt; ditto:ditto &lt;span class=&quot;nt&quot;&gt;-H&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'Content-Type: application/json'&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-d&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'{
+   &quot;policyId&quot;: &quot;org.eclipse.ditto.ttn.demo:twin-policy&quot;,
+   &quot;entries&quot;: {
+       &quot;USER&quot;: {
+           &quot;subjects&quot;: {
+              &quot;nginx:ditto&quot;: {
+                  &quot;type&quot;: &quot;basic auth user authenticated via nginx&quot;
+              }
+           },
+           &quot;resources&quot;: {
+               &quot;thing:/&quot;: {
+                   &quot;grant&quot;: [&quot;READ&quot;, &quot;WRITE&quot;],
+                   &quot;revoke&quot;: []
+               },
+               &quot;policy:/&quot;: {
+                   &quot;grant&quot;: [&quot;READ&quot;, &quot;WRITE&quot;],
+                   &quot;revoke&quot;: []
+               },
+               &quot;message:/&quot;: {
+                   &quot;grant&quot;: [&quot;READ&quot;, &quot;WRITE&quot;],
+                   &quot;revoke&quot;: []
+               }
+           }
+       },
+       &quot;TTN&quot;: {
+           &quot;subjects&quot;: {
+              &quot;pre-authenticated:ttn-connection&quot;: {
+                  &quot;type&quot;: &quot;used in the connections authorizationContext to the TTN MQTT&quot;
+              }
+           },
+           &quot;resources&quot;: {
+               &quot;thing:/&quot;: {
+                   &quot;grant&quot;: [&quot;WRITE&quot;],
+                   &quot;revoke&quot;: []
+               }
+           }
+       }
+   }
+}'&lt;/span&gt; http://localhost:&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;DITTO_EXTERNAL_PORT&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;/api/2/policies/org.eclipse.ditto.ttn.demo:twin-policy
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Explanation - what is done here:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;we create a new Policy with the ID &lt;code class=&quot;highlighter-rouge&quot;&gt;&quot;org.eclipse.ditto.ttn.demo:twin-policy&quot;&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;it contains 2 entries:
+    &lt;ul&gt;
+      &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&quot;USER&quot;&lt;/code&gt;: this Policy entry contains the authorization information of the user of the twin APIs (authenticated via the contained “nginx” acting as reverse proxy). 
+ This user may READ+WRITE the things (twins), this created policy and may also send and receive messages.&lt;/li&gt;
+      &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&quot;TTN&quot;&lt;/code&gt;: this Policy entry contains the authorization information of the connection to the TTN MQTT broker (the subject was configured as &lt;code class=&quot;highlighter-rouge&quot;&gt;&quot;authorizationContext&quot;&lt;/code&gt; when we created the connection. 
+ This connection may only WRITE (update) the things (twins).&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;create-digital-twins&quot;&gt;Create digital twins&lt;/h2&gt;
+
+&lt;p&gt;Now we have everything in place in order to create digital twins for our devices connected to TTN.&lt;/p&gt;
+
+&lt;p&gt;Please export all device ids you want to create digital twins for as comma separated environment variable:&lt;/p&gt;
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;export &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;TTN_DEVICE_IDS&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'&amp;lt;comma-separated-list-of-your-device-ids&amp;gt;'&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;After having done that, we can already create the twins in Ditto as the &lt;code class=&quot;highlighter-rouge&quot;&gt;ditto&lt;/code&gt; user:&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;for &lt;/span&gt;dev_id &lt;span class=&quot;k&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;TTN_DEVICE_IDS&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;//,/ &lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;do&lt;/span&gt;
+    &lt;span class=&quot;c&quot;&gt;# call your procedure/other scripts here below&lt;/span&gt;
+    &lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;Creating digital twin with Thing ID: org.eclipse.ditto.ttn.demo:&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$dev_id&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;
+    curl &lt;span class=&quot;nt&quot;&gt;-X&lt;/span&gt; PUT &lt;span class=&quot;nt&quot;&gt;-u&lt;/span&gt; ditto:ditto &lt;span class=&quot;nt&quot;&gt;-H&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'Content-Type: application/json'&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-d&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'{
+       &quot;policyId&quot;: &quot;org.eclipse.ditto.ttn.demo:twin-policy&quot;
+    }'&lt;/span&gt; http://localhost:&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;DITTO_EXTERNAL_PORT&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;/api/2/things/org.eclipse.ditto.ttn.demo:&lt;span class=&quot;nv&quot;&gt;$dev_id&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;done&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Explanation - what is done here:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;we split the passed in &lt;code class=&quot;highlighter-rouge&quot;&gt;TTN_DEVICE_IDS&lt;/code&gt; environment variable by &lt;code class=&quot;highlighter-rouge&quot;&gt;,&lt;/code&gt; and iterate over all contained device ids&lt;/li&gt;
+  &lt;li&gt;for each device ID we create a new Thing (twin) referencing the already previously created Policy&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;access-your-digital-twins-via-api&quot;&gt;Access your digital twins via API&lt;/h2&gt;
+
+&lt;p&gt;Congratulations, if you have done it so far your TTN devices do now have digital twin representations in Eclipse Ditto.&lt;/p&gt;
+
+&lt;div class=&quot;alert alert-success&quot; role=&quot;alert&quot;&gt;&lt;i class=&quot;fa fa-check-square-o&quot;&gt;&lt;/i&gt; &lt;b&gt;Tip:&lt;/b&gt; Install the command line tool &lt;code class=&quot;highlighter-rouge&quot;&gt;jq&lt;/code&gt; and pipe the output of the below &lt;code class=&quot;highlighter-rouge&quot;&gt;curl&lt;/code&gt; commands to it in order to get
+                             prettified and colored JSON&lt;/div&gt;
+
+&lt;div class=&quot;alert alert-info&quot; role=&quot;alert&quot;&gt;&lt;i class=&quot;fa fa-info-circle&quot;&gt;&lt;/i&gt; &lt;b&gt;Note:&lt;/b&gt; Alternatively to &lt;code class=&quot;highlighter-rouge&quot;&gt;curl&lt;/code&gt;, you may also use the locally deployed swagger-ui at http://localhost:${DITTO_EXTERNAL_PORT}/apidoc/ 
+                              in order to try out Ditto’s HTTP API - &lt;em&gt;make sure to select&lt;/em&gt; &lt;code class=&quot;highlighter-rouge&quot;&gt;/api/2 - local Ditto&lt;/code&gt; in the ‘Servers’ 
+                              section - when asked for credentials, use username ‘ditto’ and password ‘ditto’&lt;/div&gt;
+
+&lt;p&gt;You can now, for example, use Ditto’s HTTP APIs in order&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;to retrieve the latest reported values: &lt;code class=&quot;highlighter-rouge&quot;&gt;curl -u ditto:ditto http://localhost:${DITTO_EXTERNAL_PORT}/api/2/things/org.eclipse.ditto.ttn.demo:&amp;lt;dev_id&amp;gt;&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;to get a live stream of updates to the twins using SSE (Server Sent Events): &lt;code class=&quot;highlighter-rouge&quot;&gt;curl --http2 -u ditto:ditto -H 'Accept:text/event-stream' -N http://localhost:${DITTO_EXTERNAL_PORT}/api/2/things&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;to list all available twins via the search API: &lt;code class=&quot;highlighter-rouge&quot;&gt;curl -u ditto:ditto http://localhost:${DITTO_EXTERNAL_PORT}/api/2/search/things&lt;/code&gt;
+    &lt;ul&gt;
+      &lt;li&gt;alternatively, use your browser and open http://localhost:${DITTO_EXTERNAL_PORT}/api/2/search/things&lt;/li&gt;
+      &lt;li&gt;when asked for credentials, use username “ditto” and password “ditto”&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;formulate a search query, e.g. only searching for twins with a temperature above 24°, sorted by the last modification, the most recent first
+to get the most active twin as first result:
+    &lt;ul&gt;
+      &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;curl -u ditto:ditto &quot;http://localhost:${DITTO_EXTERNAL_PORT}/api/2/search/things?filter=gt(features/temperature/properties/value,24.0)&amp;amp;option=sort(-_modified),size(5)&amp;amp;fields=thingId,policyId,attributes,features,_modified,_revision&quot;&lt;/code&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;which-other-possibilities-do-we-now-have&quot;&gt;Which other possibilities do we now have?&lt;/h2&gt;
+
+&lt;p&gt;Now you have all the possibilities Eclipse Ditto as digital twin framework provides, e.g.:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;directly use your device’s data in a web application consuming Ditto’s HTTP API&lt;/li&gt;
+  &lt;li&gt;directly use your device’s data in a mobile app using Ditto’s bidirectional &lt;a href=&quot;httpapi-protocol-bindings-websocket.html&quot;&gt;WebSocket&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;make use of the &lt;a href=&quot;https://github.com/eclpise/ditto-clients/&quot;&gt;Eclipse Ditto Java or JavaScript clients&lt;/a&gt; which also use the WebSocket to integrate your device’s data&lt;/li&gt;
+  &lt;li&gt;create another connection (optionally also applying JavaScript based payload mapping)
+    &lt;ul&gt;
+      &lt;li&gt;to e.g. &lt;a href=&quot;connectivity-protocol-bindings-kafka2.html&quot;&gt;Apache Kafka&lt;/a&gt; and forward all the modifications made to your devices to there&lt;/li&gt;
+      &lt;li&gt;or using &lt;a href=&quot;connectivity-protocol-bindings-http.html&quot;&gt;HTTP push&lt;/a&gt; in order to call another HTTP API (e.g. insert time series data into an InfluxDB via its HTTP API)&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;br /&gt;
+&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;For time reasons we do not go deeper into additional topics, they are possible however, please consult the Ditto
+documentation:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;the WebSocket channel and subscribing for change notifications&lt;/li&gt;
+  &lt;li&gt;sending downward messages to devices&lt;/li&gt;
+  &lt;li&gt;live commands (not retrieving persisted data of devices, but live data)&lt;/li&gt;
+  &lt;li&gt;a more detailed introduction into authentication mechanisms (&lt;a href=&quot;installation-operating.html#openid-connect&quot;&gt;OpenID Connect with OAuth2.0 is possible&lt;/a&gt;)&lt;/li&gt;
+  &lt;li&gt;possibilities to configure your Policies on every resource level, e.g. allowing individuals to only access certain values of a twin&lt;/li&gt;
+  &lt;li&gt;and many other things..&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;additional-resources&quot;&gt;Additional resources&lt;/h2&gt;
+
+&lt;h3 id=&quot;cleanup-after-the-workshop&quot;&gt;Cleanup after the workshop&lt;/h3&gt;
+
+&lt;p&gt;Simply perform in the &lt;code class=&quot;highlighter-rouge&quot;&gt;ditto/deployment/docker&lt;/code&gt; folder:&lt;/p&gt;
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;docker-compose down
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;And unistall docker + docker-compose (for docker-compose, just remove the downloaded file) again, if you don’t need it.&lt;/p&gt;
+
+&lt;h3 id=&quot;javascript-payload-mapping-script-in-detail&quot;&gt;JavaScript payload mapping script in detail&lt;/h3&gt;
+
+&lt;p&gt;Similar to the TTN console’s decoding/converting capabilities of “Payload Formats” of an TTN application, Ditto is able
+to apply a custom JavaScript function for each consumed message.&lt;br /&gt;
+That is necessary in order to convert the received data into a &lt;a href=&quot;protocol-overview.html&quot;&gt;Ditto Protocol&lt;/a&gt; message 
+including the JSON hierarchy of a so called &lt;a href=&quot;basic-thing.html&quot;&gt;Thing&lt;/a&gt; being the representation of a digital twin.&lt;/p&gt;
+
+&lt;p&gt;As the above injected JavaScript payload mapping script is formatted in a single line, this is the script we used pretty
+ formatted, including the jsdoc of the provided function and some other inline comments.&lt;/p&gt;
+
+&lt;p&gt;If you need to adjust the script in order to use your own &lt;code class=&quot;highlighter-rouge&quot;&gt;payload_fields&lt;/code&gt;, please replace all newlines with &lt;code class=&quot;highlighter-rouge&quot;&gt;\n&lt;/code&gt; and
+escape the single quotes &lt;code class=&quot;highlighter-rouge&quot;&gt;'&lt;/code&gt; in the script with the following replacement: &lt;code class=&quot;highlighter-rouge&quot;&gt;'&quot;'&quot;'&lt;/code&gt;. Otherwise the single quotes won’t get
+correctly escaped in the bash. You can remove the comments before making a single line of the script.&lt;/p&gt;
+
+&lt;div class=&quot;language-javascript highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;cm&quot;&gt;/**
+ * Maps the passed parameters to a Ditto Protocol message.
+ * @param {Object.&amp;lt;string, string&amp;gt;} headers - The headers Object containing all received header values
+ * @param {string} [textPayload] - The String to be mapped
+ * @param {ArrayBuffer} [bytePayload] - The bytes to be mapped as ArrayBuffer
+ * @param {string} [contentType] - The received Content-Type, e.g. &quot;application/json&quot;
+ * @returns {(DittoProtocolMessage|Array&amp;lt;DittoProtocolMessage&amp;gt;)} dittoProtocolMessage(s) -
+ *  The mapped Ditto Protocol message,
+ *  an array of Ditto Protocol messages or
+ *  &amp;lt;code&amp;gt;null&amp;lt;/code&amp;gt; if the message could/should not be mapped
+ */&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;mapToDittoProtocolMsg&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;headers&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;textPayload&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;bytePayload&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;contentType&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+
+  &lt;span class=&quot;kd&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;ttnJson&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;JSON&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;parse&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;textPayload&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;          &lt;span class=&quot;c1&quot;&gt;// we simply parse the incoming TTN message as JSON&lt;/span&gt;
+  &lt;span class=&quot;kd&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;deviceId&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;ttnJson&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'dev_id'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;               &lt;span class=&quot;c1&quot;&gt;// and extract some fields we require&lt;/span&gt;
+  &lt;span class=&quot;kd&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;payloadFields&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;ttnJson&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'payload_fields'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;  &lt;span class=&quot;c1&quot;&gt;// the 'payload_fields' content is - obviously - different for your application&lt;/span&gt;
+  
+  &lt;span class=&quot;kd&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;attributesObj&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;                           &lt;span class=&quot;c1&quot;&gt;// the attributes of a Thing are meant for unstructured data &lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;hardwareSerial&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;ttnJson&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'hardware_serial'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;ttnCounter&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;ttnJson&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'counter'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
+  
+  &lt;span class=&quot;kd&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;featuresObj&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;                             &lt;span class=&quot;c1&quot;&gt;// the features of a Thing e.g. contain sensor data of devices&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;temperature&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+      &lt;span class=&quot;na&quot;&gt;properties&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;na&quot;&gt;value&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;payloadFields&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'temperature_7'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;pressure&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+      &lt;span class=&quot;na&quot;&gt;properties&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;na&quot;&gt;value&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;payloadFields&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'barometric_pressure_10'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;humidity&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+      &lt;span class=&quot;na&quot;&gt;properties&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;na&quot;&gt;value&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;payloadFields&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'relative_humidity_8'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
+  
+  &lt;span class=&quot;kd&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;thing&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;                                   &lt;span class=&quot;c1&quot;&gt;// a Thing can contain both attributes and features&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;attributes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;attributesObj&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;features&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;featuresObj&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
+  
+  &lt;span class=&quot;kd&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;dittoHeaders&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;s1&quot;&gt;'response-required'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;     &lt;span class=&quot;c1&quot;&gt;// we don't expect a response sent back to TTN&lt;/span&gt;
+    &lt;span class=&quot;s1&quot;&gt;'If-Match'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'*'&lt;/span&gt;                 &lt;span class=&quot;c1&quot;&gt;// we only want to update the thing if it already exists&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
+
+  &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;Ditto&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;buildDittoProtocolMsg&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
+    &lt;span class=&quot;s1&quot;&gt;'org.eclipse.ditto.ttn.demo'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;   &lt;span class=&quot;c1&quot;&gt;// this is the namespace used as prefix for Ditto Thing IDs&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;deviceId&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;                       &lt;span class=&quot;c1&quot;&gt;// the TTN device ID is used as &quot;name&quot; part of the Ditto Thing ID &lt;/span&gt;
+    &lt;span class=&quot;s1&quot;&gt;'things'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;s1&quot;&gt;'twin'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;s1&quot;&gt;'commands'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;s1&quot;&gt;'modify'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;s1&quot;&gt;'/'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;dittoHeaders&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;thing&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;An example message received from the TTN MQTT broker:&lt;/p&gt;
+&lt;div class=&quot;language-json highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;app_id&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;iot-campus-be12&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;dev_id&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;node0&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;hardware_serial&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;70B3D5499A2D3954&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;port&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;counter&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;9449&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;payload_raw&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;B2cA6AhoKwpzJ8oEAwH4&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;payload_fields&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;analog_out_4&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;5.04&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;barometric_pressure_10&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;1018.6&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;relative_humidity_8&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;21.5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;temperature_7&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;23.2&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;metadata&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;err&quot;&gt;...&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;would be transformed to the following Ditto Protocol message:&lt;/p&gt;
+&lt;div class=&quot;language-json highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;topic&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;org.eclipse.ditto/node0/things/twin/commands/modify&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;path&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;/&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;value&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;attributes&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+      &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;hardwareSerial&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;70B3D5499A2D3954&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+      &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;ttnCounter&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;9449&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;features&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+      &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;temperature&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+         &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;properties&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+          &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;value&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;23.2&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+      &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+      &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;pressure&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;properties&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+          &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;value&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;1018.6&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+      &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+      &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;humidity&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;properties&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+          &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;value&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;21.5&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+      &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;br /&gt;
+&lt;br /&gt;&lt;/p&gt;
+&lt;figure&gt;&lt;img class=&quot;docimage&quot; src=&quot;images/ditto.svg&quot; alt=&quot;Ditto&quot; style=&quot;max-width: 500px&quot; /&gt;&lt;/figure&gt;
+
+&lt;p&gt;–&lt;br /&gt;
+The Eclipse Ditto team&lt;/p&gt;
+</description>
+            <pubDate>Thu, 16 Apr 2020 00:00:00 +0000</pubDate>
+            <link>https://www.eclipse.org/ditto/2020-04-16-connecting-to-ttn-via-mqtt.html</link>
+            <guid isPermaLink="true">https://www.eclipse.org/ditto/2020-04-16-connecting-to-ttn-via-mqtt.html</guid>
+            
+            <category>blog</category>
+            
+            <category>connectivity</category>
+            
+            
+        </item>
+        
+        <item>
+            <title>Announcing Eclipse Ditto Release 1.0.0</title>
+            <description>&lt;p&gt;Today the Eclipse Ditto is thrilled to announce the availability of Eclipse Ditto’s first major release
+&lt;a href=&quot;https://projects.eclipse.org/projects/iot.ditto/releases/1.0.0&quot;&gt;1.0.0&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h2 id=&quot;maturity&quot;&gt;Maturity&lt;/h2&gt;
+
+&lt;p&gt;The initial code contribution was done in October 2017, 2 years later and 2 releases 
+(&lt;a href=&quot;2018-11-28-release-announcement-080.html&quot;&gt;0.8.0&lt;/a&gt; and &lt;a href=&quot;2019-07-10-release-announcement-090.html&quot;&gt;0.9.0&lt;/a&gt;) later, we 
+think its time to graduate from the Eclipse “incubation” phase and officially declare the project as mature.&lt;/p&gt;
+
+&lt;p&gt;Recent adoptions and contributions from our community show us that Eclipse Ditto solves problems which also other
+companies have. Adopters add Eclipse Ditto as a central part of their own IoT platforms.&lt;/p&gt;
+
+&lt;h3 id=&quot;api-stability&quot;&gt;API stability&lt;/h3&gt;
+
+&lt;p&gt;Having reached 1.0.0, some additional promises towards “API stability” do apply:&lt;/p&gt;
+
+&lt;h4 id=&quot;http-api-stability&quot;&gt;HTTP API stability&lt;/h4&gt;
+&lt;p&gt;Ditto uses schema versioning (currently schema version 1 and 2) at the HTTP API level in order to being able to 
+evolve APIs.
+It is backward compatible to the prior versions 0.8.0 and 0.9.0.&lt;/p&gt;
+
+&lt;h4 id=&quot;json-api-stability&quot;&gt;JSON API stability&lt;/h4&gt;
+&lt;p&gt;Ditto kept its main JSON APIs (regarding things, policies and search) backwards compatible to 0.8.0 and 0.9.0 releases.
+The JSON format of “connections” was changed since 0.9.0 and will from 1.0.0 on be kept backwards compatible as well.&lt;/p&gt;
+
+&lt;h4 id=&quot;java-api-stability&quot;&gt;Java API stability&lt;/h4&gt;
+&lt;p&gt;The Java APIs will for the 1.x release be kept backwards compatible, so only non-breaking additions to the APIs will be done. This is enforced by a Maven tooling.&lt;/p&gt;
+
+&lt;p&gt;The following Java modules are treated as API for which compatibility is enforced:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;ditto-json&lt;/li&gt;
+  &lt;li&gt;ditto-model-*&lt;/li&gt;
+  &lt;li&gt;ditto-signals-*&lt;/li&gt;
+  &lt;li&gt;ditto-protocol-adapter&lt;/li&gt;
+  &lt;li&gt;ditto-utils&lt;/li&gt;
+  &lt;li&gt;ditto-client&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;scalability&quot;&gt;Scalability&lt;/h3&gt;
+
+&lt;p&gt;The focus on the 0.9.0 and 1.0.0 releases regarding non-functionals were laid on horizontal scalability.&lt;/p&gt;
+
+&lt;p&gt;With Eclipse Ditto 1.0.0 we are confident to face production grade scalability requirements being capable of handling 
+millions of managed things.&lt;/p&gt;
+
+&lt;h2 id=&quot;changelog&quot;&gt;Changelog&lt;/h2&gt;
+
+&lt;p&gt;The main changes compared to the last release, &lt;a href=&quot;release_notes_090.html&quot;&gt;0.9.0&lt;/a&gt;, are:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;addition of a Java and a JavaScript client SDK in separate &lt;a href=&quot;https://github.com/eclipse/ditto-clients&quot;&gt;GitHub repo&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;configurable OpenID Connect authorization servers&lt;/li&gt;
+  &lt;li&gt;support for OpenID Connect / OAuth2.0 based authentication in Ditto Java Client&lt;/li&gt;
+  &lt;li&gt;invoking custom foreign HTTP endpoints as a result of events/messages&lt;/li&gt;
+  &lt;li&gt;ability to reflect Eclipse Hono’s device connection state in Ditto’s things&lt;/li&gt;
+  &lt;li&gt;configurable throttling of max. consumed WebSocket commands / time interval&lt;/li&gt;
+  &lt;li&gt;Addition of “definition” field in thing at model level containing the model ID a thing may follow&lt;/li&gt;
+  &lt;li&gt;Improved connection response handling/mapping&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Please have a look at the &lt;a href=&quot;release_notes_100.html&quot;&gt;1.0.0 release notes&lt;/a&gt; for a more detailed information on the release.&lt;/p&gt;
+
+&lt;h2 id=&quot;artifacts&quot;&gt;Artifacts&lt;/h2&gt;
+
+&lt;p&gt;The new Java artifacts have been published at the &lt;a href=&quot;https://repo.eclipse.org/content/repositories/ditto/&quot;&gt;Eclipse Maven repository&lt;/a&gt;
+as well as &lt;a href=&quot;https://repo1.maven.org/maven2/org/eclipse/ditto/&quot;&gt;Maven central&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;The Docker images have been pushed to Docker Hub:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://hub.docker.com/r/eclipse/ditto-policies/&quot;&gt;eclipse/ditto-policies&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://hub.docker.com/r/eclipse/ditto-things/&quot;&gt;eclipse/ditto-things&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://hub.docker.com/r/eclipse/ditto-things-search/&quot;&gt;eclipse/ditto-things-search&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://hub.docker.com/r/eclipse/ditto-gateway/&quot;&gt;eclipse/ditto-gateway&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://hub.docker.com/r/eclipse/ditto-connectivity/&quot;&gt;eclipse/ditto-connectivity&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://hub.docker.com/r/eclipse/ditto-concierge/&quot;&gt;eclipse/ditto-concierge&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;br /&gt;
+&lt;br /&gt;&lt;/p&gt;
+&lt;figure&gt;&lt;img class=&quot;docimage&quot; src=&quot;images/ditto.svg&quot; alt=&quot;Ditto&quot; style=&quot;max-width: 500px&quot; /&gt;&lt;/figure&gt;
+
+&lt;p&gt;–&lt;br /&gt;
+The Eclipse Ditto team&lt;/p&gt;
+</description>
+            <pubDate>Thu, 12 Dec 2019 00:00:00 +0000</pubDate>
+            <link>https://www.eclipse.org/ditto/2019-12-12-release-announcement-100.html</link>
+            <guid isPermaLink="true">https://www.eclipse.org/ditto/2019-12-12-release-announcement-100.html</guid>
+            
+            <category>blog</category>
+            
+            
+        </item>
+        
+        <item>
+            <title>Announcing Ditto Milestone 1.0.0-M2</title>
+            <description>&lt;p&gt;The second and last milestone of the upcoming release 
+&lt;a href=&quot;https://projects.eclipse.org/projects/iot.ditto/releases/1.0.0&quot;&gt;1.0.0&lt;/a&gt; was released today.&lt;/p&gt;
+
+&lt;p&gt;Have a look at the Milestone &lt;a href=&quot;release_notes_100-M2.html&quot;&gt;1.0.0-M2 release notes&lt;/a&gt; for what changed in detail.&lt;/p&gt;
+
+&lt;p&gt;The main changes and new features since the last release &lt;a href=&quot;release_notes_100-M1a.html&quot;&gt;1.0.0-M1a release notes&lt;/a&gt; are&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;invoking custom foreign HTTP endpoints as a result of events/messages&lt;/li&gt;
+  &lt;li&gt;ability to reflect Eclipse Hono’s device connection state in Ditto’s things&lt;/li&gt;
+  &lt;li&gt;support for OpenID Connect / OAuth2.0 based authentication in Ditto Java Client&lt;/li&gt;
+  &lt;li&gt;configurbale throttling of max. consumed WebSocket commands / time interval&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;artifacts&quot;&gt;Artifacts&lt;/h2&gt;
+
+&lt;p&gt;The new Java artifacts have been published at the &lt;a href=&quot;https://repo.eclipse.org/content/repositories/ditto/&quot;&gt;Eclipse Maven repository&lt;/a&gt;
+as well as &lt;a href=&quot;https://repo1.maven.org/maven2/org/eclipse/ditto/&quot;&gt;Maven central&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;The Docker images have been pushed to Docker Hub:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://hub.docker.com/r/eclipse/ditto-policies/&quot;&gt;eclipse/ditto-policies&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://hub.docker.com/r/eclipse/ditto-things/&quot;&gt;eclipse/ditto-things&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://hub.docker.com/r/eclipse/ditto-things-search/&quot;&gt;eclipse/ditto-things-search&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://hub.docker.com/r/eclipse/ditto-gateway/&quot;&gt;eclipse/ditto-gateway&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://hub.docker.com/r/eclipse/ditto-connectivity/&quot;&gt;eclipse/ditto-connectivity&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://hub.docker.com/r/eclipse/ditto-concierge/&quot;&gt;eclipse/ditto-concierge&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;br /&gt;
+&lt;br /&gt;&lt;/p&gt;
+&lt;figure&gt;&lt;img class=&quot;docimage&quot; src=&quot;images/ditto.svg&quot; alt=&quot;Ditto&quot; style=&quot;max-width: 500px&quot; /&gt;&lt;/figure&gt;
+
+&lt;p&gt;–&lt;br /&gt;
+The Eclipse Ditto team&lt;/p&gt;
+</description>
+            <pubDate>Mon, 04 Nov 2019 00:00:00 +0000</pubDate>
+            <link>https://www.eclipse.org/ditto/2019-11-04-milestone-announcement-100-M2.html</link>
+            <guid isPermaLink="true">https://www.eclipse.org/ditto/2019-11-04-milestone-announcement-100-M2.html</guid>
+            
+            <category>blog</category>
+            
+            
+        </item>
+        
+        <item>
+            <title>Integration of HTTP endpoints/webhooks</title>
+            <description>&lt;p&gt;By adding another connectivity type - &lt;a href=&quot;connectivity-protocol-bindings-http.html&quot;&gt;HTTP&lt;/a&gt; - to Ditto’s 
+ connectivity, it is now (to be released in the next Ditto milestone 1.0.0-M2) possible to to 
+ publish &lt;em&gt;twin events&lt;/em&gt;, &lt;em&gt;messages&lt;/em&gt;, &lt;em&gt;live commands and events&lt;/em&gt; to existing HTTP servers/endpoints.&lt;/p&gt;
+
+&lt;p&gt;That is especially useful for invoking existing APIs (which are most of the time HTTP based) whenever e.g.
+ a digital twin was modified.&lt;/p&gt;
+
+&lt;p&gt;One example on how to benefit from this new feature is to invoke a custom 
+ &lt;a href=&quot;https://ifttt.com&quot;&gt;IFTTT&lt;/a&gt; (if-this-than-that) &lt;a href=&quot;https://ifttt.com/maker_webhooks&quot;&gt;webhook&lt;/a&gt; via a HTTP &lt;code class=&quot;highlighter-rouge&quot;&gt;POST&lt;/code&gt; request
+ which then may trigger other IFTTT follow-up-actions (e.g. send a chat message to a &lt;a href=&quot;https://ifttt.com/slack&quot;&gt;Slack&lt;/a&gt; 
+ room).&lt;/p&gt;
+
+&lt;p&gt;For IFTTT “webhooks” the address would be &lt;code class=&quot;highlighter-rouge&quot;&gt;POST https://maker.ifttt.com/trigger/&amp;lt;your-event-name&amp;gt;/with/key/&amp;lt;your-key&amp;gt;&lt;/code&gt; 
+ and the expected JSON body:&lt;/p&gt;
+
+&lt;div class=&quot;language-json highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;value1&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;...&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;value2&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;...&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;value3&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;...&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;In combination with &lt;a href=&quot;connectivity-mapping.html&quot;&gt;payload mapping&lt;/a&gt;, the &lt;code class=&quot;highlighter-rouge&quot;&gt;value1&lt;/code&gt; to &lt;code class=&quot;highlighter-rouge&quot;&gt;value3&lt;/code&gt; fields requested by the IFTTT
+API can be extracted from the &lt;a href=&quot;protocol-specification.html&quot;&gt;Ditto Protocol&lt;/a&gt; and could contain the changed value.&lt;/p&gt;
+
+&lt;p&gt;In combination with &lt;a href=&quot;basic-connections.html#target-topics-and-filtering&quot;&gt;filters for targets&lt;/a&gt; you can even specify to
+only publish e.g. &lt;code class=&quot;highlighter-rouge&quot;&gt;twin events&lt;/code&gt;, where the temperature of a twin exceeded a certain threshold:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;{
+  &quot;address&quot;: &quot;POST:/trigger/&amp;lt;your-event-name&amp;gt;/with/key/&amp;lt;your-key&amp;gt;&quot;,
+  &quot;topics&quot;: [
+    &quot;_/_/things/twin/events?filter=gt(features/temperature/properties/value,25)&quot;
+  ],
+  ...
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Get creative on which HTTP APIs to trigger based on twin events. E.g. invoke a “function-as-a-service” API or invoke the 
+Twitter API and let your digital twin tweet whenever it detects, that it is getting too warm in your office.&lt;/p&gt;
+
+&lt;figure&gt;&lt;img class=&quot;docimage&quot; src=&quot;images/ditto.svg&quot; alt=&quot;Ditto&quot; style=&quot;max-width: 500px&quot; /&gt;&lt;/figure&gt;
+
+&lt;p&gt;–&lt;br /&gt;
+The Eclipse Ditto team&lt;/p&gt;
+</description>
+            <pubDate>Thu, 17 Oct 2019 00:00:00 +0000</pubDate>
+            <link>https://www.eclipse.org/ditto/2019-10-17-http-connectivity.html</link>
+            <guid isPermaLink="true">https://www.eclipse.org/ditto/2019-10-17-http-connectivity.html</guid>
+            
+            <category>blog</category>
+            
+            
+        </item>
+        
+        <item>
+            <title>Announcing Ditto Milestone 1.0.0-M1a</title>
+            <description>&lt;p&gt;Today the Ditto team is happy to announce the first milestone of the upcoming release 
+&lt;a href=&quot;https://projects.eclipse.org/projects/iot.ditto/releases/1.0.0&quot;&gt;1.0.0&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Have a look at the Milestone &lt;a href=&quot;release_notes_100-M1a.html&quot;&gt;1.0.0-M1a release notes&lt;/a&gt; for what changed in detail.&lt;/p&gt;
+
+&lt;p&gt;The main changes and new features since the last release &lt;a href=&quot;release_notes_090.html&quot;&gt;0.9.0&lt;/a&gt; are&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;initial contribution of Java client SDK&lt;/li&gt;
+  &lt;li&gt;configurable OpenID Connect authorization servers&lt;/li&gt;
+  &lt;li&gt;fine grained access for connections&lt;/li&gt;
+  &lt;li&gt;scalable event publishing&lt;/li&gt;
+  &lt;li&gt;typed entity IDs&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;artifacts&quot;&gt;Artifacts&lt;/h2&gt;
+
+&lt;p&gt;The new Java artifacts have been published at the &lt;a href=&quot;https://repo.eclipse.org/content/repositories/ditto/&quot;&gt;Eclipse Maven repository&lt;/a&gt;
+as well as &lt;a href=&quot;https://repo1.maven.org/maven2/org/eclipse/ditto/&quot;&gt;Maven central&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;The Docker images have been pushed to Docker Hub:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://hub.docker.com/r/eclipse/ditto-policies/&quot;&gt;eclipse/ditto-policies&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://hub.docker.com/r/eclipse/ditto-things/&quot;&gt;eclipse/ditto-things&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://hub.docker.com/r/eclipse/ditto-things-search/&quot;&gt;eclipse/ditto-things-search&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://hub.docker.com/r/eclipse/ditto-gateway/&quot;&gt;eclipse/ditto-gateway&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://hub.docker.com/r/eclipse/ditto-connectivity/&quot;&gt;eclipse/ditto-connectivity&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://hub.docker.com/r/eclipse/ditto-concierge/&quot;&gt;eclipse/ditto-concierge&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;br /&gt;
+&lt;br /&gt;&lt;/p&gt;
+&lt;figure&gt;&lt;img class=&quot;docimage&quot; src=&quot;images/ditto.svg&quot; alt=&quot;Ditto&quot; style=&quot;max-width: 500px&quot; /&gt;&lt;/figure&gt;
+
+&lt;p&gt;–&lt;br /&gt;
+The Eclipse Ditto team&lt;/p&gt;
+</description>
+            <pubDate>Tue, 17 Sep 2019 00:00:00 +0000</pubDate>
+            <link>https://www.eclipse.org/ditto/2019-09-17-milestone-announcement-100-M1a.html</link>
+            <guid isPermaLink="true">https://www.eclipse.org/ditto/2019-09-17-milestone-announcement-100-M1a.html</guid>
+            
+            <category>blog</category>
+            
+            
+        </item>
+        
+        <item>
+            <title>Eclipse Ditto now supports OpenID Connect</title>
+            <description>&lt;p&gt;Eclipse Ditto now supports all OAuth 2.0 providers which implement &lt;a href=&quot;https://openid.net/connect/&quot;&gt;OpenID Connect&lt;/a&gt; out-of-the-box.
+You can find a list of certified providers at &lt;a href=&quot;https://openid.net/developers/certified/&quot;&gt;OpenID Connect - Certified OpenID Provider Servers and Services&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;With this post, we want to give an example of this new feature using the open source provider &lt;a href=&quot;https://www.ory.sh&quot;&gt;ORY Hydra&lt;/a&gt;.
+Follow their &lt;a href=&quot;https://www.ory.sh/docs/next/hydra/configure-deploy#installing-ory-hydra&quot;&gt;installation guide&lt;/a&gt; for a
+ docker based setup on your development machine.&lt;/p&gt;
+
+&lt;h4 id=&quot;configuration&quot;&gt;Configuration&lt;/h4&gt;
+&lt;p&gt;Download the self-signed certificate form the ORY Hydra server: https://localhost:9000/.well-known/openid-configuration&lt;/p&gt;
+
+&lt;p&gt;Use the downloaded certificate for the akka-http ssl configuration.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&quot;language-hocon&quot;&gt;ssl-config {
+  trustManager = {
+    stores = [
+      { type = &quot;PEM&quot;, path = &quot;/path/to/cert/globalsign.crt&quot; }
+    ]
+  }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The authentication provider must be added to the ditto-gateway configuration.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&quot;language-hocon&quot;&gt;ditto.gateway.authentication {
+    oauth {
+      openid-connect-issuers = {
+        ory = &quot;https://localhost:9000/&quot;
+      }
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The configured subject-issuer will be used to prefix the value of the “sub” claim, e.g.&lt;/p&gt;
+&lt;div class=&quot;language-json highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;subjects&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;ory:foo@bar.com&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;type&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;generated&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h4 id=&quot;authenticate-ditto-api&quot;&gt;Authenticate Ditto API&lt;/h4&gt;
+&lt;p&gt;Create an OAuth client with hydra to be able to create ID Tokens.&lt;/p&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;docker run &lt;span class=&quot;nt&quot;&gt;--rm&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-it&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;-e&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;HYDRA_ADMIN_URL&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;https://ory-hydra-example--hydra:4445 &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;--network&lt;/span&gt; hydraguide &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+  oryd/hydra:v1.0.0 &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+  clients create &lt;span class=&quot;nt&quot;&gt;--skip-tls-verify&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;--id&lt;/span&gt; eclipse-ditto &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;--secret&lt;/span&gt; some-secret &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;--grant-types&lt;/span&gt; authorization_code,refresh_token,client_credentials,implicit &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;--response-types&lt;/span&gt; token,code,id_token &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;--scope&lt;/span&gt; openid,offline &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;--callbacks&lt;/span&gt; http://127.0.0.1:9010/callback
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Use the client to generate an ID Token.&lt;/p&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;docker run &lt;span class=&quot;nt&quot;&gt;--rm&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-it&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;--network&lt;/span&gt; hydraguide &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;-p&lt;/span&gt; 9010:9010 &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+  oryd/hydra:v1.0.0 &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+  token user &lt;span class=&quot;nt&quot;&gt;--skip-tls-verify&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;--port&lt;/span&gt; 9010 &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;--auth-url&lt;/span&gt; https://localhost:9000/oauth2/auth &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;--token-url&lt;/span&gt; https://ory-hydra-example--hydra:4444/oauth2/token &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;--client-id&lt;/span&gt; eclipse-ditto &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;--client-secret&lt;/span&gt; some-secret &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;--scope&lt;/span&gt; openid
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;After that perform the OAuth 2.0 Authorize Code Flow by opening the link, as prompted, 
+in your browser, and follow the steps shown there.&lt;/p&gt;
+
+&lt;p&gt;Use the generated token to authenticate Ditto API.&lt;/p&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;curl &lt;span class=&quot;nt&quot;&gt;-X&lt;/span&gt; POST &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+  http://localhost:8080/api/2/things &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;-H&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'Authorization: Bearer &amp;lt;JWT&amp;gt;'&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;-H&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'Content-Type: application/json'&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;-d&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'{}'&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;br /&gt;
+&lt;br /&gt;&lt;/p&gt;
+&lt;figure&gt;&lt;img class=&quot;docimage&quot; src=&quot;images/ditto.svg&quot; alt=&quot;Ditto&quot; style=&quot;max-width: 500px&quot; /&gt;&lt;/figure&gt;
+
+&lt;p&gt;–&lt;br /&gt;
+The Eclipse Ditto team&lt;/p&gt;
+</description>
+            <pubDate>Wed, 28 Aug 2019 00:00:00 +0000</pubDate>
+            <link>https://www.eclipse.org/ditto/2019-08-28-openid-connect.html</link>
+            <guid isPermaLink="true">https://www.eclipse.org/ditto/2019-08-28-openid-connect.html</guid>
+            
+            <category>blog</category>
+            
+            
+        </item>
+        
+        <item>
+            <title>Announcing Eclipse Ditto Release 0.9.0</title>
+            <description>&lt;p&gt;Today the Eclipse Ditto team proudly presents its second release 
+&lt;a href=&quot;https://projects.eclipse.org/projects/iot.ditto/releases/0.9.0&quot;&gt;0.9.0&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;The topics of this release in a nutshell were:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Memory improvements for huge amounts (multi million) of digital twins which are held in memory&lt;/li&gt;
+  &lt;li&gt;Adding metrics and logging around the connectivity feature in order to enable being able to operate connections to foreign systems/brokers via APIs&lt;/li&gt;
+  &lt;li&gt;Enhancing Ditto’s connectivity feature by additionally being able to connect to Apache Kafka&lt;/li&gt;
+  &lt;li&gt;Performance improvements of Ditto’s search functionality&lt;/li&gt;
+  &lt;li&gt;Stabilization of cluster bootstrapping&lt;/li&gt;
+  &lt;li&gt;Refactoring of how the services configurations are determined&lt;/li&gt;
+  &lt;li&gt;Addition of a Helm template in order to simplify Kubernetes based deployments&lt;/li&gt;
+  &lt;li&gt;Contributions from Microsoft in order to ease operating Eclipse Ditto on Microsoft Azure&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Please have a look at the &lt;a href=&quot;release_notes_090.html&quot;&gt;0.9.0 release notes&lt;/a&gt; for a more detailed information on the release.&lt;/p&gt;
+
+&lt;h2 id=&quot;artifacts&quot;&gt;Artifacts&lt;/h2&gt;
+
+&lt;p&gt;The new Java artifacts have been published at the &lt;a href=&quot;https://repo.eclipse.org/content/repositories/ditto/&quot;&gt;Eclipse Maven repository&lt;/a&gt;
+as well as &lt;a href=&quot;https://repo1.maven.org/maven2/org/eclipse/ditto/&quot;&gt;Maven central&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;The Docker images have been pushed to Docker Hub:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://hub.docker.com/r/eclipse/ditto-policies/&quot;&gt;eclipse/ditto-policies&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://hub.docker.com/r/eclipse/ditto-things/&quot;&gt;eclipse/ditto-things&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://hub.docker.com/r/eclipse/ditto-things-search/&quot;&gt;eclipse/ditto-things-search&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://hub.docker.com/r/eclipse/ditto-gateway/&quot;&gt;eclipse/ditto-gateway&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://hub.docker.com/r/eclipse/ditto-connectivity/&quot;&gt;eclipse/ditto-connectivity&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://hub.docker.com/r/eclipse/ditto-concierge/&quot;&gt;eclipse/ditto-concierge&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;br /&gt;
+&lt;br /&gt;&lt;/p&gt;
+&lt;figure&gt;&lt;img class=&quot;docimage&quot; src=&quot;images/ditto.svg&quot; alt=&quot;Ditto&quot; style=&quot;max-width: 500px&quot; /&gt;&lt;/figure&gt;
+
+&lt;p&gt;–&lt;br /&gt;
+The Eclipse Ditto team&lt;/p&gt;
+</description>
+            <pubDate>Wed, 10 Jul 2019 00:00:00 +0000</pubDate>
+            <link>https://www.eclipse.org/ditto/2019-07-10-release-announcement-090.html</link>
+            <guid isPermaLink="true">https://www.eclipse.org/ditto/2019-07-10-release-announcement-090.html</guid>
+            
+            <category>blog</category>
+            
+            
+        </item>
+        
+        <item>
+            <title>Announcing Ditto Milestone 0.9.0-M2</title>
+            <description>&lt;p&gt;The second milestone of the upcoming release 
+&lt;a href=&quot;https://projects.eclipse.org/projects/iot.ditto/releases/0.9.0&quot;&gt;0.9.0&lt;/a&gt; was released today.&lt;/p&gt;
+
+&lt;p&gt;Have a look at the Milestone &lt;a href=&quot;release_notes_090-M2.html&quot;&gt;0.9.0-M2 release notes&lt;/a&gt; for what changed in detail.&lt;/p&gt;
+
+&lt;p&gt;The main changes and new features since the last milestone &lt;a href=&quot;release_notes_090-M1.html&quot;&gt;0.9.0-M1&lt;/a&gt; are&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;rewrite of Ditto’s “search” service in order to use the same index and have the same query performance for API v1 and v2&lt;/li&gt;
+  &lt;li&gt;several contributions in order to operate Eclipse Ditto on Microsoft Azure&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;artifacts&quot;&gt;Artifacts&lt;/h2&gt;
+
+&lt;p&gt;The new Java artifacts have been published at the &lt;a href=&quot;https://repo.eclipse.org/content/repositories/ditto/&quot;&gt;Eclipse Maven repository&lt;/a&gt;
+as well as &lt;a href=&quot;https://repo1.maven.org/maven2/org/eclipse/ditto/&quot;&gt;Maven central&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;The Docker images have been pushed to Docker Hub:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://hub.docker.com/r/eclipse/ditto-policies/&quot;&gt;eclipse/ditto-policies&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://hub.docker.com/r/eclipse/ditto-things/&quot;&gt;eclipse/ditto-things&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://hub.docker.com/r/eclipse/ditto-things-search/&quot;&gt;eclipse/ditto-things-search&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://hub.docker.com/r/eclipse/ditto-gateway/&quot;&gt;eclipse/ditto-gateway&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://hub.docker.com/r/eclipse/ditto-connectivity/&quot;&gt;eclipse/ditto-connectivity&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://hub.docker.com/r/eclipse/ditto-concierge/&quot;&gt;eclipse/ditto-concierge&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;br /&gt;
+&lt;br /&gt;&lt;/p&gt;
+&lt;figure&gt;&lt;img class=&quot;docimage&quot; src=&quot;images/ditto.svg&quot; alt=&quot;Ditto&quot; style=&quot;max-width: 500px&quot; /&gt;&lt;/figure&gt;
+
+&lt;p&gt;–&lt;br /&gt;
+The Eclipse Ditto team&lt;/p&gt;
+</description>
+            <pubDate>Mon, 29 Apr 2019 00:00:00 +0000</pubDate>
+            <link>https://www.eclipse.org/ditto/2019-04-29-milestone-announcement-090-M2.html</link>
+            <guid isPermaLink="true">https://www.eclipse.org/ditto/2019-04-29-milestone-announcement-090-M2.html</guid>
+            
+            <category>blog</category>
+            
+            
+        </item>
+        
+        <item>
+            <title>Announcing Ditto Milestone 0.9.0-M1</title>
+            <description>&lt;p&gt;Today the Ditto team is happy to announce the first milestone of the upcoming release 
+&lt;a href=&quot;https://projects.eclipse.org/projects/iot.ditto/releases/0.9.0&quot;&gt;0.9.0&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Have a look at the Milestone &lt;a href=&quot;release_notes_090-M1.html&quot;&gt;0.9.0-M1 release notes&lt;/a&gt; for what changed in detail.&lt;/p&gt;
+
+&lt;p&gt;The main changes and new features since the last release &lt;a href=&quot;release_notes_080.html&quot;&gt;0.8.0&lt;/a&gt; are&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;memory optimizations when working with millions of digital twins&lt;/li&gt;
+  &lt;li&gt;enhance connectivity to also be able to establish connections to Apache Kafka&lt;/li&gt;
+  &lt;li&gt;providing more detailed metrics for connections&lt;/li&gt;
+  &lt;li&gt;cluster bootstrapping stability improvements&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;artifacts&quot;&gt;Artifacts&lt;/h2&gt;
+
+&lt;p&gt;The new Java artifacts have been published at the &lt;a href=&quot;https://repo.eclipse.org/content/repositories/ditto/&quot;&gt;Eclipse Maven repository&lt;/a&gt;
+as well as &lt;a href=&quot;https://repo1.maven.org/maven2/org/eclipse/ditto/&quot;&gt;Maven central&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;The Docker images have been pushed to Docker Hub:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://hub.docker.com/r/eclipse/ditto-policies/&quot;&gt;eclipse/ditto-policies&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://hub.docker.com/r/eclipse/ditto-things/&quot;&gt;eclipse/ditto-things&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://hub.docker.com/r/eclipse/ditto-things-search/&quot;&gt;eclipse/ditto-things-search&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://hub.docker.com/r/eclipse/ditto-gateway/&quot;&gt;eclipse/ditto-gateway&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://hub.docker.com/r/eclipse/ditto-connectivity/&quot;&gt;eclipse/ditto-connectivity&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://hub.docker.com/r/eclipse/ditto-concierge/&quot;&gt;eclipse/ditto-concierge&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;br /&gt;
+&lt;br /&gt;&lt;/p&gt;
+&lt;figure&gt;&lt;img class=&quot;docimage&quot; src=&quot;images/ditto.svg&quot; alt=&quot;Ditto&quot; style=&quot;max-width: 500px&quot; /&gt;&lt;/figure&gt;
+
+&lt;p&gt;–&lt;br /&gt;
+The Eclipse Ditto team&lt;/p&gt;
+</description>
+            <pubDate>Thu, 28 Mar 2019 00:00:00 +0000</pubDate>
+            <link>https://www.eclipse.org/ditto/2019-03-28-milestone-announcement-090-M1.html</link>
+            <guid isPermaLink="true">https://www.eclipse.org/ditto/2019-03-28-milestone-announcement-090-M1.html</guid>
+            
+            <category>blog</category>
+            
+            
+        </item>
+        
+    </channel>
+</rss>
