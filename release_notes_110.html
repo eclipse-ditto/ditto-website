@@ -252,6 +252,13 @@
               
               
               
+              <li><a href="release_notes_112.html">1.1.2</a></li>
+              
+              
+              
+              
+              
+              
               <li><a href="release_notes_111.html">1.1.1</a></li>
               
               
@@ -1483,16 +1490,14 @@ $('#toc').on('click', 'a', function() {
 <p>It is API and <a href="https://github.com/eclipse/ditto/blob/master/documentation/src/main/resources/architecture/DADR-0005-semantic-versioning.md">binary compatible</a>
 to Eclipse Ditto 1.0.0.</p>
 
-<h2 id="whats-in-this-release">What’s in this release?</h2>
-
-<h3 id="changelog">Changelog</h3>
+<h2 id="changelog">Changelog</h2>
 
 <p>Compared to the latest release <a href="release_notes_100.html">1.0.0</a>, the following changes, new features and
 bugfixes were added.</p>
 
-<h4 id="changes">Changes</h4>
+<h3 id="changes">Changes</h3>
 
-<h5 id="java-11-as-runtime-environment"><a href="https://github.com/eclipse/ditto/issues/308">Java 11 as runtime environment</a></h5>
+<h4 id="java-11-as-runtime-environment"><a href="https://github.com/eclipse/ditto/issues/308">Java 11 as runtime environment</a></h4>
 
 <p>The default Java runtime for Ditto’s Docker containers was switched from Java 8 to Java 11 which should have some 
 benefits in storing Strings in memory (this was already added in Java 9).</p>
@@ -1501,7 +1506,7 @@ benefits in storing Strings in memory (this was already added in Java 9).</p>
 for <a href="https://github.com/eclipse/ditto/blob/master/documentation/src/main/resources/architecture/DADR-0005-semantic-versioning.md">semantic versioning</a> 
 are still compatible to Java 8.</p>
 
-<h5 id="cbor-as-ditto-internal-serialization-provider"><a href="https://github.com/eclipse/ditto/pull/598">CBOR as Ditto internal serialization provider</a></h5>
+<h4 id="cbor-as-ditto-internal-serialization-provider"><a href="https://github.com/eclipse/ditto/pull/598">CBOR as Ditto internal serialization provider</a></h4>
 
 <p>As a bachelor thesis, <a href="https://github.com/erikescher">Erik Escher</a> evaluated mechanisms to improve the serialization 
 overhead done in Ditto clusters.</p>
@@ -1510,15 +1515,15 @@ overhead done in Ditto clusters.</p>
 roundtrip times and throughput.
 The Ditto team was happy to accept his pull request, again improving overall performance in Ditto.</p>
 
-<h5 id="more-strict-content-type-parsing-for-http-request-payload"><a href="https://github.com/eclipse/ditto/pull/650">More strict Content-Type parsing for HTTP request payload</a></h5>
+<h4 id="more-strict-content-type-parsing-for-http-request-payload"><a href="https://github.com/eclipse/ditto/pull/650">More strict Content-Type parsing for HTTP request payload</a></h4>
 
 <p>In the past, Ditto did not evaluate the HTTP <code class="highlighter-rouge">Content-Type</code> header of HTTP requests sending along payload. As this 
 can be a potential security issue (e.g. in scope of CORS requests), the <code class="highlighter-rouge">Content-Type</code> is now strictly enforced to
 be of <code class="highlighter-rouge">application/json</code> wherever Ditto only accepts JSON request payload.</p>
 
-<h4 id="new-features">New features</h4>
+<h3 id="new-features">New features</h3>
 
-<h5 id="management-of-policies-via-ditto-protocol-and-in-java-client"><a href="https://github.com/eclipse/ditto/issues/554">Management of policies via Ditto Protocol and in Java client</a></h5>
+<h4 id="management-of-policies-via-ditto-protocol-and-in-java-client"><a href="https://github.com/eclipse/ditto/issues/554">Management of policies via Ditto Protocol and in Java client</a></h4>
 
 <p>The <a href="basic-policy.html">policy</a> entities can now - in addition to their HTTP API - be managed via the 
 <a href="protocol-specification-policies.html">Ditto Protocol</a>. That means also via 
@@ -1527,7 +1532,7 @@ be of <code class="highlighter-rouge">application/json</code> wherever Ditto onl
 <p>APIs for <a href="client-sdk-java.html#manage-policies">policy management</a> were also added to the 
 <a href="https://github.com/eclipse/ditto-clients/pull/46">Ditto Java Client</a>.</p>
 
-<h5 id="searching-things-via-ditto-protocol-and-in-java-client"><a href="https://github.com/eclipse/ditto/issues/575">Searching things via Ditto Protocol and in Java client</a></h5>
+<h4 id="searching-things-via-ditto-protocol-and-in-java-client"><a href="https://github.com/eclipse/ditto/issues/575">Searching things via Ditto Protocol and in Java client</a></h4>
 
 <p>New <a href="protocol-specification-things-search.html">Ditto Protocol for search</a> was added in order to define a search query
 via the Ditto Protocol and also get results via an asynchronous channel. As a result, searching for things is now also
@@ -1537,7 +1542,7 @@ possible via <a href="httpapi-protocol-bindings-websocket.html">WebSocket</a> an
 <p>APIs for <a href="client-sdk-java.html#search-for-things">searching things</a> were also added to the 
 <a href="https://github.com/eclipse/ditto-clients/pull/53">Ditto Java Client</a>.</p>
 
-<h5 id="enriching-messages-and-events-before-publishing-to-external-subscribers"><a href="https://github.com/eclipse/ditto/issues/561">Enriching messages and events before publishing to external subscribers</a></h5>
+<h4 id="enriching-messages-and-events-before-publishing-to-external-subscribers"><a href="https://github.com/eclipse/ditto/issues/561">Enriching messages and events before publishing to external subscribers</a></h4>
 
 <p>When subscribing <a href="basic-changenotifications.html">change notifications</a> or for messages to publish to external system or
 deliver via <a href="httpapi-protocol-bindings-websocket.html">WebSocket</a> it is now possible to <a href="basic-enrichment.html">enrich</a> 
@@ -1549,7 +1554,7 @@ additional context of the affected thing (e.g. a location which does not change 
 <p>APIs for <a href="client-sdk-java.html#subscribe-to-enriched-change-notifications">enriching changes</a> were also added to the 
 <a href="https://github.com/eclipse/ditto-clients/pull/43">Ditto Java Client</a>.</p>
 
-<h5 id="establish-connections-to-mqtt-5-brokers"><a href="https://github.com/eclipse/ditto/issues/561">Establish connections to MQTT 5 brokers</a></h5>
+<h4 id="establish-connections-to-mqtt-5-brokers"><a href="https://github.com/eclipse/ditto/issues/561">Establish connections to MQTT 5 brokers</a></h4>
 
 <p>The Ditto community (namely <a href="https://github.com/w4tsn">Alexander Wellbrock (w4tsn)</a> from 
 <a href="https://www.othermo.de">othermo GmbH</a>) contributed MQTT 5 support to Ditto’s connectivity capabilities.<br />
@@ -1558,7 +1563,7 @@ With that is is possible to also establish connections to MQTT 5 brokers and eve
 
 <p>Thank you very much for this great contribution.</p>
 
-<h5 id="end-2-end-acknowledgements"><a href="https://github.com/eclipse/ditto/issues/611">End-2-end acknowledgements</a></h5>
+<h4 id="end-2-end-acknowledgements"><a href="https://github.com/eclipse/ditto/issues/611">End-2-end acknowledgements</a></h4>
 
 <p>Until now, messages consumed by Eclipse Ditto were processed without a guarantee. That is being addressed with this
 first feature addition, the model and logic in order to request and emit <a href="basic-acknowledgements.html">acknowledgements</a>.</p>
@@ -1570,15 +1575,15 @@ for message processing in Ditto via connections.</p>
 <p>APIs for <a href="client-sdk-java.html#request-and-issue-acknowledgements">requesting and issuing acknowledgements</a> were also 
 added to the <a href="https://github.com/eclipse/ditto-clients/pull/56">Ditto Java Client</a>.</p>
 
-<h5 id="pre-authenticated-authentication-mechanism"><a href="https://github.com/eclipse/ditto/issues/560">Pre-authenticated authentication mechanism</a></h5>
+<h4 id="pre-authenticated-authentication-mechanism"><a href="https://github.com/eclipse/ditto/issues/560">Pre-authenticated authentication mechanism</a></h4>
 
 <p>Officially added+<a href="installation-operating.html#pre-authentication">documented</a> support of how Ditto external 
 authentication providers may be configured to authenticate users in Ditto by adding them as an HTTP reverse proxy in 
 front of Ditto.</p>
 
-<h4 id="deprecations">Deprecations</h4>
+<h3 id="deprecations">Deprecations</h3>
 
-<h5 id="api-version-1-deprecation"><a href="https://github.com/eclipse/ditto/pull/608">API version 1 deprecation</a></h5>
+<h4 id="api-version-1-deprecation"><a href="https://github.com/eclipse/ditto/pull/608">API version 1 deprecation</a></h4>
 
 <p>Now that Ditto has a full replacement for <a href="basic-acl.html">ACLs</a>, namely <a href="basic-policy.html">policies</a> which now can 
 also be managed via the <a href="protocol-specification-policies.html">Ditto Protocol</a> and the 
@@ -1591,13 +1596,13 @@ API version 1 and ACLs will very likely be removed in Ditto <code class="highlig
 <p>So when you start using Ditto, please make sure to use API version <code class="highlighter-rouge">2</code> (using policies as 
 <a href="basic-auth.html#authorization">authorization mechanism</a>) from the very beginning.</p>
 
-<h4 id="bugfixes">Bugfixes</h4>
+<h3 id="bugfixes">Bugfixes</h3>
 
 <p>Several bugs in Ditto 1.0.0 were fixed for 1.1.0.<br />
 This is a complete list of the 
 <a href="https://github.com/eclipse/ditto/pulls?q=is%3Apr+milestone%3A1.1.0">merged pull requests</a>, including the fixed bugs.</p>
 
-<h3 id="migration-notes">Migration notes</h3>
+<h2 id="migration-notes">Migration notes</h2>
 
 <p>Do not apply when updating from Eclipse Ditto 1.0.0 to 1.1.0.</p>
 
@@ -1626,7 +1631,7 @@ This is a complete list of the
                     </div>
                     <p class="notice">
                         &copy;2020 Eclipse Ditto.
-                         Site last generated: Jun 9, 2020 <br />
+                         Site last generated: Jul 1, 2020 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

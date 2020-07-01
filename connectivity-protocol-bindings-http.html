@@ -252,6 +252,13 @@
               
               
               
+              <li><a href="release_notes_112.html">1.1.2</a></li>
+              
+              
+              
+              
+              
+              
               <li><a href="release_notes_111.html">1.1.1</a></li>
               
               
@@ -1577,6 +1584,49 @@ existing connections.</p>
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
+<h2 id="client-certificate-authentication">Client-certificate authentication</h2>
+
+<p>Ditto supports certificate-based authentication for HTTP connections. Consult 
+<a href="connectivity-tls-certificates.html">Certificates for Transport Layer Security</a>
+for how to set it up.</p>
+
+<p>Here is an example HTTP connection that checks the server certificate and authenticates by a client certificate.</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"connection"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http-example-connection-123"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"connectionType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http-push"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"connectionStatus"</span><span class="p">:</span><span class="w"> </span><span class="s2">"open"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"failoverEnabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"uri"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://localhost:80"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"validateCertificates"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"ca"</span><span class="p">:</span><span class="w"> </span><span class="s2">"-----BEGIN CERTIFICATE-----</span><span class="se">\n</span><span class="s2">&lt;localhost certificate&gt;</span><span class="se">\n</span><span class="s2">-----END CERTIFICATE-----"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"credentials"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"client-cert"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"cert"</span><span class="p">:</span><span class="w"> </span><span class="s2">"-----BEGIN CERTIFICATE-----</span><span class="se">\n</span><span class="s2">&lt;signed client certificate&gt;</span><span class="se">\n</span><span class="s2">-----END CERTIFICATE-----"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"key"</span><span class="p">:</span><span class="w"> </span><span class="s2">"-----BEGIN PRIVATE KEY-----</span><span class="se">\n</span><span class="s2">&lt;client private key&gt;</span><span class="se">\n</span><span class="s2">-----END PRIVATE KEY-----"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="s2">"specificConfig"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"parallelism"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="s2">"sources"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+    </span><span class="s2">"targets"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+      </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"PUT:/api/2/some-entity/{{ thing:id }}"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"topics"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+          </span><span class="s2">"_/_/things/twin/events"</span><span class="w">
+        </span><span class="p">],</span><span class="w">
+        </span><span class="s2">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"ditto:outbound-auth-subject"</span><span class="p">,</span><span class="w"> </span><span class="s2">"..."</span><span class="p">],</span><span class="w">
+        </span><span class="s2">"headerMapping"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="s2">"content-type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{{ header:content-type }}"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"api-key"</span><span class="p">:</span><span class="w"> </span><span class="s2">"this-is-a-secret-api-key-to-send-along"</span><span class="w">
+         </span><span class="p">}</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
 
     <div class="tags">
         
@@ -1610,7 +1660,7 @@ existing connections.</p>
                     </div>
                     <p class="notice">
                         &copy;2020 Eclipse Ditto.
-                         Site last generated: Jun 9, 2020 <br />
+                         Site last generated: Jul 1, 2020 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">
