@@ -580,7 +580,7 @@
               
               
               
-              <li><a href="basic-acknowledgements.html">Acknowledgements</a></li>
+              <li><a href="basic-acknowledgements.html">Acknowledgements / QoS</a></li>
               
               
               
@@ -1513,7 +1513,7 @@ the <code class="highlighter-rouge">content-type</code> of AMQP 1.0 messages mus
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>application/vnd.eclipse.ditto+json
 </code></pre></div></div>
 
-<p>If messages which are not in Ditto Protocol should be processed, a <a href="connectivity-mapping.html">payload mapping</a> must
+<p>If messages, which are not in Ditto Protocol, should be processed, a <a href="connectivity-mapping.html">payload mapping</a> must
 be configured for the AMQP 1.0 connection in order to transform the messages.</p>
 
 <h2 id="amqp-10-properties-and-application-properties">AMQP 1.0 properties and application properties</h2>
@@ -1569,8 +1569,8 @@ Following are some specifics for AMQP 1.0 connections:</p>
 <h3 id="source-format">Source format</h3>
 
 <p>Any <code class="highlighter-rouge">source</code> item defines an <code class="highlighter-rouge">addresses</code> array of source identifiers (e.g. Eclipse Hono’s 
-Telemetry API) to consume messages from
-and <code class="highlighter-rouge">authorizationContext</code> array that contains the authorization subjects in whose context
+Telemetry API) to consume messages from,
+and <code class="highlighter-rouge">authorizationContext</code> array that contains the authorization subjects, in whose context
 inbound messages are processed. These subjects may contain placeholders, see 
 <a href="basic-connections.html#placeholder-for-source-authorization-subjects">placeholders</a> section for more information.</p>
 
@@ -1583,6 +1583,31 @@ inbound messages are processed. These subjects may contain placeholders, see
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
+<h4 id="source-acknowledgement-handling">Source acknowledgement handling</h4>
+
+<p>For AMQP 1.0 sources, when configuring 
+<a href="basic-connections.html#source-acknowledgement-requests">acknowledgement requests</a>, consumed messages from the AMQP 1.0
+endpoint are treated in the following way:</p>
+
+<p>For Ditto acknowledgements with successful <a href="protocol-specification-acks.html#combined-status-code">status</a>:</p>
+<ul>
+  <li>Acknowledges the AMQP 1.0 message with <code class="highlighter-rouge">accepted</code> outcome (see <a href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-messaging-v1.0-os.html#type-accepted">AMQP 1.0 spec: 3.4.2 Accepted</a>)</li>
+</ul>
+
+<p>For Ditto acknowledgements with mixed successful/failed <a href="protocol-specification-acks.html#combined-status-code">status</a>:</p>
+<ul>
+  <li>If some of the aggregated <a href="basic-acknowledgements.html#acknowledgements">acknowledgements</a> require redelivery (e.g. based on a timeout):
+    <ul>
+      <li>Negatively acknowledges the AMQP 1.0 message with <code class="highlighter-rouge">modified[delivery-failed]</code> outcome (see <a href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-messaging-v1.0-os.html#type-modified">AMQP 1.0 spec: 3.4.5 Modified</a>)</li>
+    </ul>
+  </li>
+  <li>If none of the aggregated <a href="basic-acknowledgements.html#acknowledgements">acknowledgements</a> require redelivery:
+    <ul>
+      <li>Negatively acknowledges the AMQP 1.0 message with <code class="highlighter-rouge">modified[undeliverable-here]</code> outcome (see <a href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-messaging-v1.0-os.html#type-modified">AMQP 1.0 spec: 3.4.5 Modified</a>) preventing redelivery by the AMQP 1.0 endpoint</li>
+    </ul>
+  </li>
+</ul>
+
 <h3 id="target-format">Target format</h3>
 
 <p>An AMQP 1.0 connection requires the protocol configuration target object to have an <code class="highlighter-rouge">address</code> property with a source
@@ -1591,7 +1616,7 @@ identifier. The target address may contain placeholders; see
 information.</p>
 
 <p>Target addresses for AMQP 1.0 are by default handled as AMQP 1.0 “queues”. There is however the possibility to also 
-configure AMQP 1.0 “topics” as well. In order to be more specific, the following formats for the <code class="highlighter-rouge">address</code> are 
+configure AMQP 1.0 “topics” as well. In fact, the following formats for the <code class="highlighter-rouge">address</code> are 
 supported:</p>
 <ul>
   <li><code class="highlighter-rouge">the-queue-name</code> (when configuring w/o prefix, the <code class="highlighter-rouge">address</code> is handled as “queue”)</li>
@@ -1604,7 +1629,7 @@ supported:</p>
 <a href="basic-connections.html#target-topics-and-filtering">target topics and filtering</a> for more information on that.</p>
 
 <p>Outbound messages are published to the configured target address if one of the subjects in <code class="highlighter-rouge">"authorizationContext"</code>
-has READ permission on the Thing, that is associated with a message.</p>
+has READ permission on the thing, which is associated with a message.</p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
   </span><span class="s2">"address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;target&gt;"</span><span class="p">,</span><span class="w">
@@ -1615,6 +1640,30 @@ has READ permission on the Thing, that is associated with a message.</p>
   </span><span class="s2">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"ditto:outbound-auth-subject"</span><span class="p">,</span><span class="w"> </span><span class="s2">"..."</span><span class="p">]</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
+
+<h4 id="target-acknowledgement-handling">Target acknowledgement handling</h4>
+
+<p>For AMQP 1.0 targets, when configuring 
+<a href="basic-connections.html#target-issued-acknowledgement-label">automatically issued acknowledgement labels</a>, requested 
+acknowledgements are produced in the following way:</p>
+
+<p>Once the AMQP 1.0 client signals that the message was acknowledged by the AMQP 1.0 endpoint, the following information 
+is mapped to the automatically created <a href="protocol-specification-acks.html#acknowledgement">acknowledgement</a>:</p>
+
+<ul>
+  <li>Acknowledgement.status:
+    <ul>
+      <li>will be <code class="highlighter-rouge">200</code>, if the message was successfully consumed by the AMQP 1.0 endpoint</li>
+      <li>will be <code class="highlighter-rouge">5xx</code>, if the AMQP 1.0 endpoint failed in consuming the message, retrying sending the message is feasible</li>
+    </ul>
+  </li>
+  <li>Acknowledgement.value:
+    <ul>
+      <li>will be missing, for status <code class="highlighter-rouge">200</code></li>
+      <li>will contain more information, in case that an error <code class="highlighter-rouge">status</code> was set</li>
+    </ul>
+  </li>
+</ul>
 
 <h3 id="specific-configuration-properties">Specific configuration properties</h3>
 

@@ -580,7 +580,7 @@
               
               
               
-              <li><a href="basic-acknowledgements.html">Acknowledgements</a></li>
+              <li><a href="basic-acknowledgements.html">Acknowledgements / QoS</a></li>
               
               
               
@@ -1513,7 +1513,7 @@ the <code class="highlighter-rouge">content-type</code> of AMQP 0.9.1 messages m
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>application/vnd.eclipse.ditto+json
 </code></pre></div></div>
 
-<p>If messages which are not in Ditto Protocol should be processed, a <a href="connectivity-mapping.html">payload mapping</a> must
+<p>If messages, which are not in Ditto Protocol, should be processed, a <a href="connectivity-mapping.html">payload mapping</a> must
 be configured for the AMQP 0.9.1 connection in order to transform the messages.</p>
 
 <h2 id="amqp-091-properties">AMQP 0.9.1 properties</h2>
@@ -1534,7 +1534,7 @@ Following are some specifics for AMQP 0.9.1 connections:</p>
 <h3 id="source-format">Source format</h3>
 
 <p>An AMQP 0.9.1 connection requires the protocol configuration source object to have an <code class="highlighter-rouge">addresses</code> property with a list
-of queue names and <code class="highlighter-rouge">authorizationContext</code> array that contains the authorization subjects in whose context 
+of queue names, and <code class="highlighter-rouge">authorizationContext</code> array that contains the authorization subjects, in whose context 
 incoming messages are processed. These subjects may contain placeholders, see 
 <a href="basic-connections.html#placeholder-for-source-authorization-subjects">placeholders</a> section for more information.</p>
 
@@ -1547,6 +1547,31 @@ incoming messages are processed. These subjects may contain placeholders, see
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
+<h4 id="source-acknowledgement-handling">Source acknowledgement handling</h4>
+
+<p>For AMQP 0.9.1 sources, when configuring 
+<a href="basic-connections.html#source-acknowledgement-requests">acknowledgement requests</a>, consumed messages from the AMQP 0.9.1
+broker are treated in the following way:</p>
+
+<p>For Ditto acknowledgements with successful <a href="protocol-specification-acks.html#combined-status-code">status</a>:</p>
+<ul>
+  <li>Acknowledges a single AMQP 0.9.1 message with an <code class="highlighter-rouge">Ack</code> message for the received <code class="highlighter-rouge">deliveryTag</code></li>
+</ul>
+
+<p>For Ditto acknowledgements with mixed successful/failed <a href="protocol-specification-acks.html#combined-status-code">status</a>:</p>
+<ul>
+  <li>If some of the aggregated <a href="basic-acknowledgements.html#acknowledgements">acknowledgements</a> require redelivery (e.g. based on a timeout):
+    <ul>
+      <li>Negatively acknowledges the AMQP 0.9.1 message with a <code class="highlighter-rouge">Nack</code> message for the received <code class="highlighter-rouge">deliveryTag</code> and setting <code class="highlighter-rouge">requeue</code> to <code class="highlighter-rouge">true</code></li>
+    </ul>
+  </li>
+  <li>If none of the aggregated <a href="basic-acknowledgements.html#acknowledgements">acknowledgements</a> require redelivery:
+    <ul>
+      <li>Negatively acknowledges the AMQP 0.9.1 message with a <code class="highlighter-rouge">Nack</code> message for the received <code class="highlighter-rouge">deliveryTag</code> and setting <code class="highlighter-rouge">requeue</code> to <code class="highlighter-rouge">false</code> preventing redelivery by the AMQP 0.9.1 broker</li>
+    </ul>
+  </li>
+</ul>
+
 <h3 id="target-format">Target format</h3>
 
 <p>An AMQP 0.9.1 connection requires the protocol configuration target object to have an <code class="highlighter-rouge">address</code> property with a combined
@@ -1557,7 +1582,7 @@ value of the <code class="highlighter-rouge">exchange_name</code> and <code clas
 <a href="protocol-specification-topic.html">Ditto protocol topics</a>.</p>
 
 <p>Outbound messages are published to the configured target address if one of the subjects in <code class="highlighter-rouge">"authorizationContext"</code>
-has READ permission on the Thing, that is associated with a message.</p>
+has READ permission on the thing, which is associated with a message.</p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
   </span><span class="s2">"address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;exchange_name&gt;/&lt;routing_key&gt;"</span><span class="p">,</span><span class="w">
@@ -1568,6 +1593,30 @@ has READ permission on the Thing, that is associated with a message.</p>
   </span><span class="s2">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"ditto:outbound-auth-subject"</span><span class="p">]</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
+
+<h4 id="target-acknowledgement-handling">Target acknowledgement handling</h4>
+
+<p>For AMQP 0.9.1 targets, when configuring 
+<a href="basic-connections.html#target-issued-acknowledgement-label">automatically issued acknowledgement labels</a>, requested 
+acknowledgements are produced in the following way:</p>
+
+<p>Once the AMQP 0.9.1 client signals that the message was acknowledged by the AMQP 0.9.1 broker, the following information 
+is mapped to the automatically created <a href="protocol-specification-acks.html#acknowledgement">acknowledgement</a>:</p>
+<ul>
+  <li>Acknowledgement.status:
+    <ul>
+      <li>will be <code class="highlighter-rouge">200</code>, if the message was successfully ACKed by the AMQP 0.9.1 broker</li>
+      <li>will be <code class="highlighter-rouge">400</code>, if the AMQP 0.9.1 broker does not support publisher confirms</li>
+      <li>will be <code class="highlighter-rouge">503</code>, if the AMQP 0.9.1 broker negatively confirmed receiving a message</li>
+    </ul>
+  </li>
+  <li>Acknowledgement.value:
+    <ul>
+      <li>will be missing, for status <code class="highlighter-rouge">200</code></li>
+      <li>will contain more information, in case that an error <code class="highlighter-rouge">status</code> was set</li>
+    </ul>
+  </li>
+</ul>
 
 <h3 id="specific-configuration-properties">Specific configuration properties</h3>
 

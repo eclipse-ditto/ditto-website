@@ -580,7 +580,7 @@
               
               
               
-              <li><a href="basic-acknowledgements.html">Acknowledgements</a></li>
+              <li><a href="basic-acknowledgements.html">Acknowledgements / QoS</a></li>
               
               
               
@@ -1542,7 +1542,7 @@ send along with the performed HTTP requests.</p>
 <a href="basic-connections.html#target-topics-and-filtering">target topics and filtering</a> for more information on that.</p>
 
 <p>Outbound messages are published to the configured target address if one of the subjects in <code class="highlighter-rouge">"authorizationContext"</code>
-has READ permission on the Thing, that is associated with a message.</p>
+has READ permission on the thing, which is associated with a message.</p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
   </span><span class="s2">"address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;http_verb&gt;:&lt;http_path&gt;"</span><span class="p">,</span><span class="w">
@@ -1557,11 +1557,25 @@ has READ permission on the Thing, that is associated with a message.</p>
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
+<h4 id="target-acknowledgement-handling">Target acknowledgement handling</h4>
+
+<p>For HTTP targets, when configuring 
+<a href="basic-connections.html#target-issued-acknowledgement-label">automatically issued acknowledgement labels</a>, requested 
+acknowledgements are produced in the following way:</p>
+
+<p>The HTTP response for the HTTP target URL is consumed and following HTTP response information is mapped to the 
+automatically created <a href="protocol-specification-acks.html#acknowledgement">acknowledement</a>:</p>
+<ul>
+  <li>Acknowledgement.status: the HTTP response status code is used as acknowledgement status.</li>
+  <li>Acknowledgement.value: the HTTP response body is used as acknowledgement value - if the response body was of 
+<code class="highlighter-rouge">content-type: application/json</code>, the JSON is inlined into the acknowledgment, otherwise the payload is added as JSON string.</li>
+</ul>
+
 <h3 id="specific-configuration-properties">Specific configuration properties</h3>
 
 <p>The specific configuration properties contain the following optional keys:</p>
 <ul>
-  <li><code class="highlighter-rouge">parallelism</code> (optional): Configures how many parallel requests per connection to perform, each takes up one outgoing 
+  <li><code class="highlighter-rouge">parallelism</code> (optional): Configures how many parallel requests per connection to perform, each takes one outgoing 
 TCP connection. Default (if not provided): 1</li>
 </ul>
 

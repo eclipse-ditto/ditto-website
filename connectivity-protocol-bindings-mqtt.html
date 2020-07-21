@@ -580,7 +580,7 @@
               
               
               
-              <li><a href="basic-acknowledgements.html">Acknowledgements</a></li>
+              <li><a href="basic-acknowledgements.html">Acknowledgements / QoS</a></li>
               
               
               
@@ -1510,7 +1510,7 @@ $('#toc').on('click', 'a', function() {
 <p>When MQTT messages are sent in <a href="protocol-overview.html">Ditto Protocol</a>,
 the payload should be <code class="highlighter-rouge">UTF-8</code> encoded strings.</p>
 
-<p>If messages which are not in Ditto Protocol should be processed, a <a href="connectivity-mapping.html">payload mapping</a> must
+<p>If messages, which are not in Ditto Protocol, should be processed, a <a href="connectivity-mapping.html">payload mapping</a> must
 be configured for the connection in order to transform the messages.</p>
 
 <h2 id="mqtt-311-properties">MQTT 3.1.1 properties</h2>
@@ -1529,8 +1529,9 @@ payload.</p>
 <h2 id="specific-connection-configuration">Specific connection configuration</h2>
 
 <p>The common configuration for connections in <a href="basic-connections.html#sources">Connections &gt; Sources</a> and 
-<a href="basic-connections.html#targets">Connections &gt; Targets</a> applies here as well. 
-Following are some specifics for MQTT connections:</p>
+<a href="basic-connections.html#targets">Connections &gt; Targets</a> applies here as well.</p>
+
+<p>Following are some specifics for MQTT connections:</p>
 
 <h3 id="source-format">Source format</h3>
 
@@ -1561,13 +1562,53 @@ acknowledge subscriptions with <code class="highlighter-rouge">qos=2</code>.</li
 If you want to use a user for the basic auth (from the <a href="connectivity-protocol-bindings-http.html">HTTP API</a>) use the prefix <code class="highlighter-rouge">nginx:</code>, e.g. <code class="highlighter-rouge">nginx:ditto</code>.
 See <a href="basic-auth.html#authorization-context-in-devops-commands">Basic Authentication</a> for more information.</p>
 
-<h4 id="enforcement">Enforcement</h4>
-
-<p>As MQTT 3.1.1 does not support headers in its protocol, headers may not be used during <a href="basic-connections.html#source-enforcement">source enforcement</a>.</p>
-
 <h4 id="source-header-mapping">Source header mapping</h4>
 
-<p>As MQTT 3.1.1 does not support headers in its protocol, it is not possible to configure a <a href="connectivity-header-mapping.html">header mapping</a> here.</p>
+<p>MQTT 3.1.1 does not support headers in its protocol, however Ditto extracts the following headers from each consumed message:</p>
+<ul>
+  <li><code class="highlighter-rouge">mqtt.topic</code>: contains the MQTT topic on which a message was received</li>
+  <li><code class="highlighter-rouge">mqtt.qos</code>: contains the MQTT QoS value of a received message</li>
+  <li><code class="highlighter-rouge">mqtt.retain</code>: contains the MQTT retain flag of a received message</li>
+</ul>
+
+<p>These headers may be used in a source header mapping, e.g.:</p>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"headerMapping"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"topic"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{{ header:mqtt.topic }}"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"the-qos"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{{ header:mqtt.qos }}"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h4 id="source-acknowledgement-handling">Source acknowledgement handling</h4>
+
+<p>For MQTT 3.1.1 sources, when configuring 
+<a href="basic-connections.html#source-acknowledgement-requests">acknowledgement requests</a>, consumed messages from the MQTT 3.1.1
+broker are treated in the following way:</p>
+
+<p>For Ditto acknowledgements with successful <a href="protocol-specification-acks.html#combined-status-code">status</a>:</p>
+<ul>
+  <li>Acknowledges the received MQTT 3.1.1 message</li>
+</ul>
+
+<p>For Ditto acknowledgements with mixed successful/failed <a href="protocol-specification-acks.html#combined-status-code">status</a>:</p>
+<ul>
+  <li>If some of the aggregated <a href="basic-acknowledgements.html#acknowledgements">acknowledgements</a> require redelivery (e.g. based on a timeout):
+    <ul>
+      <li>based on the <a href="#specific-configuration">specificConfig</a> <a href="#reconnectforredelivery">reconnectForDelivery</a> either
+        <ul>
+          <li>closes and reconnects the MQTT connection in order to receive unACKed QoS 1/2 messages again</li>
+          <li>or simply acknowledges the received MQTT 3.1.1 message</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li>If none of the aggregated <a href="basic-acknowledgements.html#acknowledgements">acknowledgements</a> require redelivery:
+    <ul>
+      <li>acknowledges the received MQTT 3.1.1 message as redelivery does not make sense</li>
+    </ul>
+  </li>
+</ul>
 
 <h3 id="target-format">Target format</h3>
 
@@ -1579,7 +1620,7 @@ The target address may contain placeholders; see
 <a href="protocol-specification-topic.html">Ditto protocol topics</a>.</p>
 
 <p>Outbound messages are published to the configured target address if one of the subjects in <code class="highlighter-rouge">"authorizationContext"</code>
-has READ permission on the Thing, that is associated with a message.</p>
+has READ permission on the thing, which is associated with a message.</p>
 
 <p>The additional field <code class="highlighter-rouge">"qos"</code> sets the Quality of Service with which messages are published.
 Its value can be <code class="highlighter-rouge">0</code> for at-most-once delivery, <code class="highlighter-rouge">1</code> for at-least-once delivery and <code class="highlighter-rouge">2</code> for exactly-once delivery.
@@ -1601,16 +1642,35 @@ The default value is <code class="highlighter-rouge">0</code> (at-most-once).</p
 
 <p>As MQTT 3.1.1 does not support headers in its protocol, a <a href="connectivity-header-mapping.html">header mapping</a> is not possible to configure here.</p>
 
-<h3 id="specific-config">Specific Config</h3>
+<h4 id="target-acknowledgement-handling">Target acknowledgement handling</h4>
 
-<p>The MQTT binding offers an additional <a href="basic-connections.html#specific-config">specific configuration</a> for the mqtt client id. If the 
-<code class="highlighter-rouge">clientId</code> is not configured as a <a href="basic-connections.html#specific-config">specific config</a> Ditto will use the <code class="highlighter-rouge">connection-id</code> as <code class="highlighter-rouge">clientId</code> 
-for the outgoing mqtt connection.</p>
+<p>For MQTT 3.1.1 targets, when configuring 
+<a href="basic-connections.html#target-issued-acknowledgement-label">automatically issued acknowledgement labels</a>, requested 
+acknowledgements are produced in the following way:</p>
 
-<p>Example</p>
+<p>Once the MQTT 3.1.1 client signals that the message was acknowledged by the MQTT 3.1.1 broker, the following information 
+is mapped to the automatically created <a href="protocol-specification-acks.html#acknowledgement">acknowledgement</a>:</p>
+<ul>
+  <li>Acknowledgement.status:
+    <ul>
+      <li>will be <code class="highlighter-rouge">200</code>, if the message was successfully ACKed by the MQTT 3.1.1 broker or when the target has QoS 0</li>
+      <li>will be <code class="highlighter-rouge">503</code>, if the MQTT 3.1.1 broker ran into an error before an acknowledgement message was received</li>
+    </ul>
+  </li>
+  <li>Acknowledgement.value:
+    <ul>
+      <li>will be missing, for status <code class="highlighter-rouge">200</code></li>
+      <li>will contain more information, in case that an error <code class="highlighter-rouge">status</code> was set</li>
+    </ul>
+  </li>
+</ul>
 
-<p>Defining the client id <code class="highlighter-rouge">my-awesome-mqtt-client-id</code>:</p>
+<h3 id="specific-configuration">Specific Configuration</h3>
 
+<p>The MQTT 3.1.1 binding offers additional <a href="basic-connections.html#specific-configuration">specific configurations</a> 
+to apply for the used MQTT client.</p>
+
+<p>Overall example JSON of the MQTT <code class="highlighter-rouge">"specificConfig"</code>:</p>
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
   </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"mqtt-example-connection-123"</span><span class="p">,</span><span class="w">
   </span><span class="s2">"connectionType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"mqtt"</span><span class="p">,</span><span class="w">
@@ -1618,12 +1678,77 @@ for the outgoing mqtt connection.</p>
   </span><span class="s2">"failoverEnabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
   </span><span class="s2">"uri"</span><span class="p">:</span><span class="w"> </span><span class="s2">"tcp://test.mosquitto.org:1883"</span><span class="p">,</span><span class="w">
   </span><span class="s2">"specificConfig"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"clientId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"my-awesome-mqtt-client-id"</span><span class="w">
+    </span><span class="s2">"clientId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"my-awesome-mqtt-client-id"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"reconnectForRedelivery"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"cleanSession"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"separatePublisherClient"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"publisherId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"my-awesome-mqtt-publisher-client-id"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"reconnectForRedeliveryDelay"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5s"</span><span class="w">
   </span><span class="p">},</span><span class="w">
   </span><span class="s2">"sources"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"..."</span><span class="p">],</span><span class="w">
   </span><span class="s2">"targets"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"..."</span><span class="p">]</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
+
+<h4 id="clientid">clientId</h4>
+
+<p>Overwrites the default MQTT client id.</p>
+
+<p>Default: not set - the ID of the Ditto <a href="basic-connections.html">connection</a> is used as MQTT client ID.</p>
+
+<h4 id="reconnectforredelivery">reconnectForRedelivery</h4>
+
+<p>Configures that the MQTT connection re-connects whenever a consumed message (via a connection source) with QoS 1 
+(“at least once”) or 2 (“exactly once”)
+is processed but cannot be <a href="#source-acknowledgement-handling">acknowledged</a> successfully.<br />
+That causes that the MQTT broker will re-publish the message once the connection reconnected. <br />
+If configured to <code class="highlighter-rouge">false</code>, the MQTT message is simply acknowledged (<code class="highlighter-rouge">PUBACK</code> or <code class="highlighter-rouge">PUBREC</code>, <code class="highlighter-rouge">PUBREL</code>).</p>
+
+<p>Default: <code class="highlighter-rouge">true</code></p>
+
+<p>Handle with care:</p>
+<ul>
+  <li>when set to <code class="highlighter-rouge">true</code>, incoming QoS 0 messages are lost during the reconnection phase</li>
+  <li>when set to <code class="highlighter-rouge">true</code> and there is also an MQTT target configured to publish messages,
+the messages to be published during the reconnection phase are lost
+    <ul>
+      <li>to fix that, configure <code class="highlighter-rouge">"separatePublisherClient"</code> also to <code class="highlighter-rouge">true</code> in order to publish via another MQTT connection</li>
+    </ul>
+  </li>
+  <li>when set to <code class="highlighter-rouge">false</code>, MQTT messages with QoS 1 and 2 could get lost (e.g. during downtime or connection issues)</li>
+</ul>
+
+<h4 id="cleansession">cleanSession</h4>
+
+<p>Configure the MQTT client’s <code class="highlighter-rouge">cleanSession</code> flag.</p>
+
+<p>Default: the negation of <code class="highlighter-rouge">"reconnectForRedelivery"</code></p>
+
+<h4 id="separatepublisherclient">separatePublisherClient</h4>
+
+<p>Configures whether to create a separate physical client and connection to the MQTT broker for publishing messages, or not. 
+By default (configured true), a single Ditto connection would open 2 MQTT connections/sessions: one for subscribing and one for publishing.
+If configured to <code class="highlighter-rouge">false</code>, the same MQTT connection/session is used both: for subscribing to messages, and for
+publishing messages.</p>
+
+<p>Default: <code class="highlighter-rouge">true</code></p>
+
+<h4 id="publisherid">publisherId</h4>
+
+<p>Configures a specific MQTT client ID for the case that <code class="highlighter-rouge">"separatePublisherClient"</code> is enabled.</p>
+
+<p>Default:</p>
+<ul>
+  <li>if client ID is configured, <code class="highlighter-rouge">clientId</code> + <code class="highlighter-rouge">"p"</code></li>
+  <li>if no client ID is configured, <code class="highlighter-rouge">connectionId</code> + <code class="highlighter-rouge">"p"</code></li>
+</ul>
+
+<h4 id="reconnectforredeliverydelay">reconnectForRedeliveryDelay</h4>
+
+<p>Configures how long to wait before reconnecting a consumer client for redelivery when <code class="highlighter-rouge">"reconnectForRedelivery"</code>
+and <code class="highlighter-rouge">separatePublisherClient</code> are both enabled. The minimum value is <code class="highlighter-rouge">1s</code>.</p>
+
+<p>Default: <code class="highlighter-rouge">2s</code></p>
 
 <h2 id="establishing-a-connection-to-an-mqtt-311-endpoint">Establishing a connection to an MQTT 3.1.1 endpoint</h2>
 
@@ -1633,7 +1758,7 @@ existing connections.</p>
 <p>This can be done dynamically at runtime without the need to restart any microservice using a
 <a href="installation-operating.html#devops-commands">Ditto DevOps command</a>.</p>
 
-<p>Example</p>
+<p>Example:</p>
 
 <p>Connection configuration to create a new MQTT connection:</p>
 
@@ -1672,7 +1797,7 @@ existing connections.</p>
 <a href="connectivity-tls-certificates.html">Certificates for Transport Layer Security</a>
 for how to set it up.</p>
 
-<p>Here is an example MQTT connection that checks the broker certificate and authenticates by a client certificate.</p>
+<p>Here is an example MQTT connection, which checks the broker certificate and authenticates by a client certificate.</p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
   </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"mqtt-example-connection-124"</span><span class="p">,</span><span class="w">

@@ -580,7 +580,7 @@
               
               
               
-              <li><a href="basic-acknowledgements.html">Acknowledgements</a></li>
+              <li><a href="basic-acknowledgements.html">Acknowledgements / QoS</a></li>
               
               
               
@@ -1508,7 +1508,7 @@ $('#toc').on('click', 'a', function() {
 
 <p>When Kafka messages are sent in <a href="protocol-overview.html">Ditto Protocol</a>, the payload should be <code class="highlighter-rouge">UTF-8</code> encoded strings.</p>
 
-<p>If messages which are not in Ditto Protocol should be processed, a <a href="connectivity-mapping.html">payload mapping</a> must
+<p>If messages, which are not in Ditto Protocol, should be processed, a <a href="connectivity-mapping.html">payload mapping</a> must
 be configured for the connection in order to transform the messages.</p>
 
 <h2 id="specific-connection-configuration">Specific connection configuration</h2>
@@ -1539,7 +1539,7 @@ This property may have different formats:</p>
 <a href="basic-connections.html#target-topics-and-filtering">target topics and filtering</a> for more information on that.</p>
 
 <p>Outbound messages are published to the configured target address if one of the subjects in <code class="highlighter-rouge">"authorizationContext"</code>
-has READ permission on the Thing, that is associated with a message.</p>
+has READ permission on the thing, which is associated with a message.</p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
   </span><span class="s2">"address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;kafka_topic&gt;/&lt;kafka_key&gt;"</span><span class="p">,</span><span class="w">
@@ -1550,6 +1550,40 @@ has READ permission on the Thing, that is associated with a message.</p>
   </span><span class="s2">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"ditto:outbound-auth-subject"</span><span class="p">]</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
+
+<h4 id="target-acknowledgement-handling">Target acknowledgement handling</h4>
+
+<p>For Kafka targets, when configuring 
+<a href="basic-connections.html#target-issued-acknowledgement-label">automatically issued acknowledgement labels</a>, requested 
+acknowledgements are produced in the following way:</p>
+
+<p>Once the Kafka client signals that the message was acknowledged by the Kafka broker, the following information is mapped
+to the automatically created <a href="protocol-specification-acks.html#acknowledgement">acknowledement</a>:</p>
+<ul>
+  <li>Acknowledgement.status:
+    <ul>
+      <li>will be <code class="highlighter-rouge">204</code>, if Kafka debug mode was disabled and the message was successfully consumed by Kafka</li>
+      <li>will be <code class="highlighter-rouge">200</code>, if Kafka debug mode was enabled (see <a href="#specific-configuration-properties">specific config</a> <code class="highlighter-rouge">"debugEnabled"</code>) and the message was successfully consumed by Kafka</li>
+      <li>will be <code class="highlighter-rouge">4xx</code>, if Kafka failed to consume the message but retrying sending the message does not make sense</li>
+      <li>will be <code class="highlighter-rouge">5xx</code>, if Kafka failed to consume the message but retrying sending the message is feasible</li>
+    </ul>
+  </li>
+  <li>Acknowledgement.value:
+    <ul>
+      <li>will be missing, if Kafka debug mode (see <a href="#specific-configuration-properties">specific config</a> <code class="highlighter-rouge">"debugEnabled"</code>) was disabled</li>
+      <li>will include the Kafka <code class="highlighter-rouge">RecordMetadata</code> as JsonObject:
+        <ul>
+          <li><code class="highlighter-rouge">timestamp</code> (if present)</li>
+          <li><code class="highlighter-rouge">serializedKeySize</code></li>
+          <li><code class="highlighter-rouge">serializedValueSize</code></li>
+          <li><code class="highlighter-rouge">topic</code></li>
+          <li><code class="highlighter-rouge">partition</code></li>
+          <li><code class="highlighter-rouge">offset</code> (if present)</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
 
 <h3 id="specific-configuration-properties">Specific configuration properties</h3>
 
@@ -1564,6 +1598,9 @@ has READ permission on the Thing, that is associated with a message.</p>
       <li><code class="highlighter-rouge">scram-sha-512</code></li>
     </ul>
   </li>
+  <li><code class="highlighter-rouge">debugEnabled</code>: determines whether for acknowledgements 
+<a href="#target-acknowledgement-handling">automatically issued by Kafka targets</a> additional debug information should be 
+included as payload or not - default: <code class="highlighter-rouge">false</code></li>
 </ul>
 
 <h2 id="establishing-connecting-to-an-apache-kafka-endpoint">Establishing connecting to an Apache Kafka endpoint</h2>

@@ -5,8 +5,8 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="">
-<meta name="keywords" content="model,  acks, acknowledgement, acknowledgements, qos, at least once">
-<title>  Acknowledgements • Eclipse Ditto • a digital twin framework</title>
+<meta name="keywords" content="model,  acks, acknowledgement, acknowledgements, qos, at least once, delivery, guarantee">
+<title>  Acknowledgements / Quality of Service • Eclipse Ditto • a digital twin framework</title>
 
 <link rel="stylesheet" href="css/syntax.css">
 <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" crossorigin="anonymous">
@@ -167,7 +167,7 @@
                                 searchInput: document.getElementById('search-input'),
                                 resultsContainer: document.getElementById('results-container'),
                                 dataSource: 'search.json',
-                                searchResultTemplate: '<li><a href="{url}" title="Acknowledgements">{title}</a></li>',
+                                searchResultTemplate: '<li><a href="{url}" title="Acknowledgements / Quality of Service">{title}</a></li>',
                                 noResultsText: 'No results found.',
                                 limit: 10,
                                 fuzzy: true,
@@ -580,7 +580,7 @@
               
               
               
-              <li class="active"><a href="basic-acknowledgements.html">Acknowledgements</a></li>
+              <li class="active"><a href="basic-acknowledgements.html">Acknowledgements / QoS</a></li>
               
               
               
@@ -1462,7 +1462,7 @@ function changeSelectedDocVersion() {
         <!-- Content Column -->
         <div class="col-md-9" id="tg-sb-content">
             <div class="post-header">
-   <h1 class="post-title-main">Acknowledgements</h1>
+   <h1 class="post-title-main">Acknowledgements / Quality of Service</h1>
 </div>
 
 
@@ -1502,20 +1502,19 @@ $('#toc').on('click', 'a', function() {
 
     
 
-  <div class="bs-callout bs-callout-primary">Available since Ditto <strong>1.1.0</strong></div>
-
-<p>Acknowledgements are a concept in Ditto used to signal that an <a href="basic-signals-event.html">event</a> was successfully 
+  <p>Acknowledgements are a concept in Ditto used to signal that an <a href="basic-signals-event.html">event</a> was successfully 
 received/processed by either an internal Ditto functionality or an external subscriber of that event.</p>
 
 <p>They can be seen as (potentially multiple) responses to a single event (e.g. after a Thing was modified).</p>
 
 <p>Acknowledgements can be used in order to solve the following cases:</p>
+
 <ul>
   <li>postpone a response to an API request (e.g. block an HTTP request) until one or more specific actions were performed in 
 Ditto (e.g. a modification was successfully persisted).</li>
   <li>postpone a response until an external subscriber connected to Ditto reports that he successfully processed an 
 <a href="basic-signals-event.html">event</a> which e.g. resulted by a persistence change of Ditto.</li>
-  <li><em>Outlook</em> (to come in Ditto 1.2.0): provide a QoS (quality of service) guarantee of “at least once” when processing 
+  <li>provide a QoS (quality of service) guarantee of “at least once” when processing 
 messages in an end-2-end manner by e.g. technically acknowledging/settling a processed message from a message broker 
 (e.g. <a href="connectivity-protocol-bindings-amqp10.html">AMQP 1.0</a> or <a href="connectivity-protocol-bindings-mqtt.html">MQTT</a>) only
 after it was successfully applied to Ditto and potentially also to 3rd parties.</li>
@@ -1523,7 +1522,7 @@ after it was successfully applied to Ditto and potentially also to 3rd parties.<
 
 <h2 id="acknowledgement-requests">Acknowledgement requests</h2>
 
-<p>For each Ditto API invocation <em>modifying the state of a twin</em> with a <a href="basic-signals-command.html">command</a> it is 
+<p>For each Ditto API invocation <em>modifying the state of a twin</em> with a <a href="basic-signals-command.html">command</a>, it is 
 possible to define that certain “acknowledgements” are <em>requested</em>.<br />
 This means that the Ditto collects all of those requested acknowledgements until the message is handled as successfully 
 processed, applying a specified timeout interval.</p>
@@ -1553,8 +1552,7 @@ updated the digital twin in Ditto’s persistence.</li>
 a received <a href="basic-signals-event.html">event</a> can contain
 custom acknowledgement labels. 
 The event subscriber can detect that an acknowledgement was requested 
-(via the <code class="highlighter-rouge">"requested-acks"</code> header), and - as far as it feels responsible for handling it - it<br />
-<a href="#issuing-acknowledgements">issues an acknowledgement</a>.</p>
+(via the <code class="highlighter-rouge">"requested-acks"</code> header), and - as far as it feels responsible for handling it - it <a href="#issuing-acknowledgements">issues an acknowledgement</a>.</p>
 
 <h2 id="acknowledgements">Acknowledgements</h2>
 
@@ -1577,9 +1575,9 @@ An example of how acknowledgements in Ditto Protocol look like can be found at t
 
 <h2 id="requesting-acknowledgements">Requesting acknowledgements</h2>
 
-<p>With every API call <em>modifying the state of a twin</em> there is the option to provide requested acknowledgements.</p>
+<p>With every API call <em>modifying the state of a twin</em>, there is the option to provide requested acknowledgements.</p>
 
-<h3 id="via-http">Via HTTP</h3>
+<h3 id="requesting-acks-via-http">Requesting acks via HTTP</h3>
 
 <p>Either specify the following HTTP header fields:</p>
 <ul>
@@ -1657,27 +1655,144 @@ where an HTTP request was not requesting acknowledgements.</p>
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
-<h3 id="via-websocket">Via WebSocket</h3>
+<h3 id="requesting-acks-via-websocket">Requesting acks via WebSocket</h3>
 
-<p>Put the <code class="highlighter-rouge">"requested-acks"</code> (as JsonArray of strings) and the <code class="highlighter-rouge">"timeout"</code> headers in the 
-<a href="protocol-specification.html#headers">Ditto Protocol headers</a> section of Ditto Protocol JSON.</p>
-
-<p>The response will be an <a href="protocol-specification-acks.html">acknowledgements</a> message.</p>
-
-<h3 id="via-connections">Via Connections</h3>
-
-<p>For messages received by connections via AMQP, MQTT, etc. put the <code class="highlighter-rouge">"requested-acks"</code> (as JsonArray of strings) and the 
-<code class="highlighter-rouge">"timeout"</code> headers in the <a href="protocol-specification.html#headers">Ditto Protocol headers</a> section of Ditto Protocol JSON.</p>
+<p>Together with a received Ditto <a href="basic-signals-command.html">command</a> in <a href="protocol-specification.html">Ditto Protocol</a>,
+<code class="highlighter-rouge">"requested-acks"</code> (as JsonArray of strings) and <code class="highlighter-rouge">"timeout"</code> headers in the 
+<a href="protocol-specification.html#headers">Ditto Protocol headers</a> can be included in order to request acknowledgements
+via WebSocket.</p>
 
 <p>The response will be an (aggregating) <a href="protocol-specification-acks.html#acknowledgements-aggregating">acknowledgements</a> 
 message.</p>
 
+<h3 id="requesting-acks-via-connections">Requesting acks via connections</h3>
+
+<p>Acknowledgements for Ditto managed <a href="basic-connections.html#sources">connection sources</a> can be requested in 2 ways:</p>
+
+<ul>
+  <li>specifically for each consumed message as part of the <a href="protocol-specification.html#headers">Ditto Protocol headers</a> <code class="highlighter-rouge">"requested-acks"</code> (as JsonArray of strings)</li>
+  <li>by configuring the managed connection source to <a href="basic-connections.html#source-acknowledgement-requests">request acknowledgements for all consumed messages</a></li>
+</ul>
+
+<h4 id="requesting-acks-via-ditto-protocol-message">Requesting acks via Ditto Protocol message</h4>
+
+<p>Together with a received Ditto <a href="basic-signals-command.html">command</a> in <a href="protocol-specification.html">Ditto Protocol</a>,
+<code class="highlighter-rouge">"requested-acks"</code> (as JsonArray of strings) and <code class="highlighter-rouge">"timeout"</code> headers in the 
+<a href="protocol-specification.html#headers">Ditto Protocol headers</a> can be included in order to request acknowledgements
+via established connections consuming messages from <a href="basic-connections.html#sources">sources</a>.</p>
+
+<p>The response will be an (aggregating) <a href="protocol-specification-acks.html#acknowledgements-aggregating">acknowledgements</a> 
+message.</p>
+
+<h4 id="requesting-acks-via-connection-source-configuration">Requesting acks via connection source configuration</h4>
+
+<p><a href="basic-connections.html#sources">Connection sources</a> can be 
+<a href="basic-connections.html#source-acknowledgement-requests">configured to add specific acknowledgement requests</a> for each
+consumed message of the underlying physical connection (e.g. to a message broker).</p>
+
+<p>This can be used in order to ensure that e.g. all messages consumed from a single source should be processed in an 
+“at least once” mode (QoS 1). E.g. if configured that the <a href="#built-in-acknowledgement-labels">built-in</a> <code class="highlighter-rouge">twin-persisted</code>
+acknowledgement is requested, a received message (e.g. a <a href="basic-signals-command.html">Ditto command</a>) will only be 
+technically acknowledged to the connection channel if Ditto successfully applied and persisted the command.</p>
+
+<div class="alert alert-info" role="alert"><i class="fa fa-info-circle"></i> <b>Note:</b> These requested acknowledgements will be appended after payload mapping is applied.<br /> 
+                              This means, that in case you decided to split your message into multiple messages, all of these messages will request the same acknowledgements.<br />
+                              If this is not what you want to achieve, have a look at <a href="#requesting-acks-via-ditto-protocol-message-in-payload-mapping">how to add acknowledgement requests during payload mapping</a>.</div>
+
+<h4 id="requesting-acks-via-ditto-protocol-message-in-payload-mapping">Requesting acks via Ditto Protocol message in payload mapping</h4>
+
+<p>During inbound payload mapping, you can create one or more Ditto Protocol messages.</p>
+
+<p>If you configured your connection source to add requested acknowledgements to your commands, this will cause all 
+produced messages to request the same acknowledgements.<br />
+If you however want to add requested acknowledges only to some of those created messages, you need to set the 
+<code class="highlighter-rouge">"requested-acks"</code> header (as described in 
+<a href="#requesting-acks-via-ditto-protocol-message">Requesting acks via Ditto Protocol message</a> section) during payload mapping for 
+those commands you like to request an acknowledgement.</p>
+
 <h2 id="issuing-acknowledgements">Issuing acknowledgements</h2>
 
-<p>In order to issue a single acknowledgement when requested by a published event, an 
+<p>In order to issue a single acknowledgement when requested by a published event, a 
 <a href="protocol-specification-acks.html#acknowledgement">Ditto Protocol acknowledgement</a> message has to be built and sent 
 back, using the same <code class="highlighter-rouge">"correlation-id"</code> in the <a href="protocol-specification.html#headers">protocol headers</a> as the event
 contained.</p>
+
+<h3 id="issuing-acks-via-http">Issuing acks via HTTP</h3>
+<p>The response of an HTTP request, which requested several acknowledgements, will differ from the response, where an HTTP request was not requesting acknowledgements.
+See examples above at <a href="#requesting-acks-via-http">Requesting acks via HTTP</a></p>
+
+<h3 id="issuing-acks-via-websocket">Issuing acks via WebSocket</h3>
+
+<p>Create and send the <a href="protocol-specification-acks.html#acknowledgement">Ditto Protocol acknowledgement</a> message over the
+established WebSocket in response to an event, which contained a <code class="highlighter-rouge">"requested-acks"</code> header.</p>
+
+<h3 id="issuing-acks-via-connections">Issuing acks via connections</h3>
+
+<p>Requested acknowledgements for Ditto managed <a href="basic-connections.html#targets">connection targets</a> can be issued in 2 
+ways:</p>
+
+<ul>
+  <li>specifically for each published message/event as a response to the event by sending a
+<a href="protocol-specification-acks.html#acknowledgement">Ditto Protocol acknowledgement</a> back via a source of the connection</li>
+  <li>by configuring the managed connection target to automatically
+<a href="basic-connections.html#target-issued-acknowledgement-label">issue acknowledgements for all successfully published messages</a></li>
+</ul>
+
+<h4 id="issuing-acks-via-ditto-protocol-acknowledgement-message">Issuing acks via Ditto Protocol acknowledgement message</h4>
+
+<p>Create and send the <a href="protocol-specification-acks.html#acknowledgement">Ditto Protocol acknowledgement</a> message over a<br />
+source of the connection, in response to an event, which contained an <code class="highlighter-rouge">"requested-acks"</code> header.</p>
+
+<h4 id="issuing-acks-via-connection-target-configuration">Issuing acks via connection target configuration</h4>
+
+<p><a href="basic-connections.html#targets">Connection targets</a> can be configured to 
+<a href="basic-connections.html#target-issued-acknowledgement-label">issue certain acknowledgements automatically</a>
+for each published message of the underlying physical connection (e.g. to a message broker).</p>
+
+<p>This can be used in order to automatically issue technical acknowledgements once an <a href="basic-signals-event.html">event</a>
+was published to an HTTP endpoint or into a message broker. When this target guarantees having processed the event
+via its protocol (for HTTP for example when a status code <code class="highlighter-rouge">2xx</code> is returned), a successful acknowledgement is created
+and returned to the requester.</p>
+
+<h2 id="quality-of-service">Quality of Service</h2>
+
+<h3 id="qos-0---at-most-once">QoS 0 - at most once</h3>
+
+<p>By default, all messages/commands processed by Ditto are processed in an “at most once” (or QoS 0) semantic. 
+For many of the use cases in the IoT QoS 0 is sufficient, e.g. when processing telemetry data of a sensor. 
+If one sensor value is not applied to the digital twin there will soon follow the next sensor reading, and the twin will 
+be eventually up to date again.</p>
+
+<h3 id="qos-1---at-least-once">QoS 1 - at least once</h3>
+<p>However, there are IoT use cases where it is of upmost importance that a message is processed “at least once” (or QoS 1), 
+e.g. in order to guarantee that it was persisted in the digital twin or that an <a href="basic-signals-event.html">event</a> consumer 
+connected to Ditto did successfully receive a <a href="basic-changenotifications.html">notification</a> which resulted from a 
+<a href="basic-signals-command.html">command</a> which Ditto received and processed.</p>
+
+<p>The “acknowledgements” concept documented on this page provides means by which messages (e.g. commands) consumed and 
+processed by Ditto are treated with an “at least once” (or QoS 1) semantic.</p>
+
+<p><a href="protocol-specification-things-create-or-modify.html">Create/modify commands</a> will technically be acknowledged on the 
+sent channel (e.g. HTTP or WebSocket or any <a href="basic-connections.html#connection-types">connection type</a>) 
+when it was a success.<br />
+When it could not be applied successfully, the command will be negatively acknowledged, which will reflect in the 
+<a href="protocol-specification-acks.html#combined-status-code">status of the acknowledgement</a>.</p>
+
+<p>Based on the used channel, the acknowledgement will be translated to the capabilities of the channel, e.g. for HTTP
+an HTTP response will be sent with the outcome as HTTP status (<code class="highlighter-rouge">2xx</code> for a successful acknowledgement, and <code class="highlighter-rouge">4xx</code> for a 
+non-successful one) together with additional details as HTTP response.</p>
+
+<h3 id="assure-qos-until-persisted-in-ditto---twin-persited-label">Assure QoS until persisted in Ditto - twin-persited label</h3>
+
+<p>In order to ensure that a <a href="protocol-specification-things-create-or-modify.html">create/modify command</a> resulted in a 
+successful update of twin in Ditto’s managed database, <a href="#requesting-acknowledgements">request the acknowledgement</a> for
+the <a href="#built-in-acknowledgement-labels">built-in “twin-persisted”</a> acknowledgement label.</p>
+
+<h3 id="assure-qos-until-an-event-was-published---custom-label">Assure QoS until an event was published - custom label</h3>
+
+<p>In order to ensure that a <a href="protocol-specification-things-create-or-modify.html">create/modify command</a> resulted in an 
+event which was consumed by an application integrating with Ditto, 
+<a href="#requesting-acknowledgements">request the acknowledgement</a> for a <a href="#custom-acknowledgement-labels">custom acknowledgement label</a>.</p>
 
 
     <div class="tags">
