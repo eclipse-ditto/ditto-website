@@ -1814,9 +1814,8 @@ successful update of twin in Ditto’s managed database, <a href="#requesting-ac
 the <a href="#built-in-acknowledgement-labels">built-in “twin-persisted”</a> acknowledgement label.</p>
 
 <h3 id="assure-qos-until-processing-of-a-live-commandmessage-by-a-subscriber---live-response">Assure QoS until processing of a live command/message by a subscriber - live-response</h3>
-<p>In order to ensure that a live command or live message is processed by a subscriber,
-<a href="#requesting-acks">request the acknowledgement</a> for
-the <a href="#built-in-acknowledgement-labels">built-in “live-response”</a> acknowledgement label.
+<p>In order to ensure that a live command or live message is processed by a subscriber, set <code class="highlighter-rouge">response-required</code> to true.
+This way the <a href="#built-in-acknowledgement-labels">built-in “live-response” acknowledgement label</a> is <a href="#requesting-acks">automatically requested</a> for the live command/message.
 This acknowledgement request is fulfilled when the subscriber sends a live response or message response.</p>
 
 <h3 id="assure-qos-until-processing-of-a-twin-event-or-live-commandmessage-by-subscribers---custom-label">Assure QoS until processing of a twin event or live command/message by subscribers - custom label</h3>
@@ -1829,7 +1828,7 @@ without any live or message response, <a href="#requesting-acks">request the ack
 <p>Three headers control how Ditto responds to a command: <code class="highlighter-rouge">response-required</code>, <code class="highlighter-rouge">requested-acks</code>, <code class="highlighter-rouge">timeout</code>.</p>
 <ul>
   <li><code class="highlighter-rouge">response-required</code>: <code class="highlighter-rouge">true</code> or <code class="highlighter-rouge">false</code>.
- It governs whether the user gets a (detailed) reply.</li>
+ It governs whether the user gets a (detailed) reply. In case of a live message or a live command it also has impact on the <code class="highlighter-rouge">requested-acks</code>. If <code class="highlighter-rouge">response-required</code> is <code class="highlighter-rouge">true</code>, the acknowledgement label <code class="highlighter-rouge">live-response</code> will be added to <code class="highlighter-rouge">requested-acks</code> if not present. If it is <code class="highlighter-rouge">false</code>, the acknowledgement label <code class="highlighter-rouge">live-response</code> will be removed from <code class="highlighter-rouge">requested-acks</code> if present.</li>
   <li><code class="highlighter-rouge">requested-acks</code>: JSON array of acknowledgement requests.
  It determines the content of the response and transport-layer message settlement.</li>
   <li><code class="highlighter-rouge">timeout</code>: Duration.
@@ -2135,7 +2134,7 @@ set by the user already cause a client error.</p>
                     </div>
                     <p class="notice">
                         &copy;2020 Eclipse Ditto.
-                         Site last generated: Sep 8, 2020 <br />
+                         Site last generated: Sep 21, 2020 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

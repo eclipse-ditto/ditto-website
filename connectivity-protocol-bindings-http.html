@@ -1582,16 +1582,70 @@ has READ permission on the thing, which is associated with a message.</p>
 
 <h4 id="target-acknowledgement-handling">Target acknowledgement handling</h4>
 
-<p>For HTTP targets, when configuring 
-<a href="basic-connections.html#target-issued-acknowledgement-label">automatically issued acknowledgement labels</a>, requested 
-acknowledgements are produced in the following way:</p>
+<p>For HTTP targets, whenever a message is published to the HTTP endpoint, you have two different options in order to 
+acknowledge receiving the message:</p>
 
-<p>The HTTP response for the HTTP target URL is consumed and following HTTP response information is mapped to the 
-automatically created <a href="protocol-specification-acks.html#acknowledgement">acknowledement</a>:</p>
+<h5 id="explicitly-responding-with-ditto-protocol-acknowledgement-message">Explicitly responding with Ditto Protocol acknowledgement message</h5>
+
+<p>Whenever an HTTP endpoint, which received a message 
+<a href="basic-acknowledgements.html#requesting-acks">requesting acknowledgements</a>,
+responds with a <a href="protocol-specification-acks.html#acknowledgement">Ditto Protocol Acknowledgement</a> and sets the 
+<code class="highlighter-rouge">Content-Type</code> header of the HTTP response to <code class="highlighter-rouge">application/vnd.eclipse.ditto+json</code>, this received message is treated
+as custom <a href="basic-acknowledgements.html">acknowledgement</a>.</p>
+
+<p>This however is only the case if no 
+<a href="basic-connections.html#target-issued-acknowledgement-label">automatically issued acknowledgement label</a> was configured
+for that target (see section below). If such an issued acknowledgement label was configured, this one always gets
+issued instead of a custom sent back Ditto Protocol Acknowledgement.</p>
+
+<h5 id="implicitly-create-acknowledgement-from-http-response">Implicitly create acknowledgement from HTTP response</h5>
+
+<p>When for the target an 
+<a href="basic-connections.html#target-issued-acknowledgement-label">automatically issued acknowledgement label</a> was configured 
+and the HTTP response was not a Ditto Protocol message (with Content-Type header <code class="highlighter-rouge">application/vnd.eclipse.ditto+json</code>), 
+an acknowledgement is produced automatically in the following way:</p>
+
+<p>The HTTP response and following HTTP response information is mapped to the 
+automatically created <a href="protocol-specification-acks.html#acknowledgement">acknowledgement</a>:</p>
 <ul>
-  <li>Acknowledgement.status: the HTTP response status code is used as acknowledgement status.</li>
-  <li>Acknowledgement.value: the HTTP response body is used as acknowledgement value - if the response body was of 
-<code class="highlighter-rouge">content-type: application/json</code>, the JSON is inlined into the acknowledgment, otherwise the payload is added as JSON string.</li>
+  <li><code class="highlighter-rouge">Acknowledgement.headers</code>: the HTTP response headers are added.</li>
+  <li><code class="highlighter-rouge">Acknowledgement.status</code>: the HTTP response status code is used.</li>
+  <li><code class="highlighter-rouge">Acknowledgement.value</code>: the HTTP response body is used - if the response body was of 
+<code class="highlighter-rouge">content-type: application/json</code>, the JSON is inlined into the acknowledgement, otherwise the payload is added as 
+JSON string.</li>
+</ul>
+
+<h4 id="responding-to-messages">Responding to messages</h4>
+
+<p>For <a href="basic-messages.html">live messages</a> that are published via an HTTP target you have two different options to 
+respond to that message:</p>
+
+<h5 id="explicitly-responding-with-ditto-protocol-message-response">Explicitly responding with Ditto Protocol message response</h5>
+
+<p>Whenever an HTTP endpoint, which received a <a href="basic-messages.html">live message</a>,
+responds with a <a href="protocol-specification-things-messages.html#responding-to-a-message">Ditto Protocol Message Response</a> 
+and sets the <code class="highlighter-rouge">Content-Type</code> header of the HTTP response to <code class="highlighter-rouge">application/vnd.eclipse.ditto+json</code>, this received message 
+is treated as custom <a href="basic-messages.html#responding-to-messages">live message response</a>.</p>
+
+<p>In this case, the <code class="highlighter-rouge">correlation-id</code>, <code class="highlighter-rouge">thing-id</code> and potentially <code class="highlighter-rouge">feature-id</code> of the response have to match the 
+message properties to respond to.</p>
+
+<h5 id="implicitly-responding-via-http-response">Implicitly responding via HTTP response</h5>
+
+<p>When for the target an 
+<a href="basic-connections.html#target-issued-acknowledgement-label">automatically issued acknowledgement label</a> with the label 
+<code class="highlighter-rouge">live-response</code> was configured and the HTTP response was not a Ditto Protocol message 
+(with Content-Type header <code class="highlighter-rouge">application/vnd.eclipse.ditto+json</code>), a message response is produced automatically in the 
+following way:</p>
+
+<p>The HTTP response and following HTTP response information is mapped to the 
+automatically created <a href="protocol-specification-things-messages.html#responding-to-a-message">message response</a>:</p>
+<ul>
+  <li><code class="highlighter-rouge">Message.headers</code>: the HTTP response headers are added.</li>
+  <li><code class="highlighter-rouge">Message.status</code>: the HTTP response status code is used.</li>
+  <li><code class="highlighter-rouge">Message.value</code>: the HTTP response body is used - if the response body was of 
+<code class="highlighter-rouge">content-type: application/json</code>, the JSON is inlined into the acknowledgement, otherwise the payload is added as 
+JSON string.</li>
 </ul>
 
 <h3 id="specific-configuration-properties">Specific configuration properties</h3>
@@ -1602,7 +1656,7 @@ automatically created <a href="protocol-specification-acks.html#acknowledgement"
 TCP connection. Default (if not provided): 1</li>
 </ul>
 
-<h1 id="establishing-connecting-to-an-http-endpoint">Establishing connecting to an HTTP endpoint</h1>
+<h2 id="establishing-connecting-to-an-http-endpoint">Establishing connecting to an HTTP endpoint</h2>
 
 <p>Ditto’s <a href="architecture-services-connectivity.html">Connectivity service</a> is responsible for creating new and managing 
 existing connections.</p>
@@ -1640,7 +1694,7 @@ existing connections.</p>
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
-<h2 id="client-certificate-authentication">Client-certificate authentication</h2>
+<h3 id="client-certificate-authentication">Client-certificate authentication</h3>
 
 <p>Ditto supports certificate-based authentication for HTTP connections. Consult 
 <a href="connectivity-tls-certificates.html">Certificates for Transport Layer Security</a>
@@ -1716,7 +1770,7 @@ for how to set it up.</p>
                     </div>
                     <p class="notice">
                         &copy;2020 Eclipse Ditto.
-                         Site last generated: Sep 8, 2020 <br />
+                         Site last generated: Sep 21, 2020 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

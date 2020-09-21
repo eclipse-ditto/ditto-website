@@ -1577,12 +1577,12 @@ fits your solution.</p>
   <li><strong>Subject</strong>: the custom subject/topic.</li>
 </ul>
 
-<p>Additionally they can contain more information:</p>
+<p>Additionally, they can contain more information:</p>
 <ul>
   <li><strong>Feature ID</strong>: if a message should be addressed to the <a href="basic-feature.html">Feature</a> of a Thing, this specifies 
 its ID.</li>
   <li><strong>content-type</strong>: defines which content-type the optional payload has.</li>
-  <li><strong>correlation-id</strong>: Ditto can route message responses back to the issuer of a message. Therefore a correlation-id has
+  <li><strong>correlation-id</strong>: Ditto can route message responses back to the issuer of a message. Therefore, a correlation-id has
 to be present in the message.</li>
 </ul>
 
@@ -1606,27 +1606,26 @@ blocking way at the <a href="http-api-doc.html#/Messages">Messages HTTP API endp
 <h2 id="receiving-messages">Receiving Messages</h2>
 
 <p>To be able to receive Messages for a Thing, you need to have <code class="highlighter-rouge">READ</code> access on that Thing.
-When a Message is sent to or from a Thing, <strong>every</strong> connected WebSocket with the correct
-access rights will receive the Message. If there is more than one response, only the
-first one will be routed back to the initial issuer of a Message.</p>
+When a Message is sent to or from a Thing, <strong>every</strong> connected WebSocket or 
+<a href="basic-connections.html#targets">connection target</a> with the correct
+access rights will receive the Message.</p>
 
-<div class="alert alert-info" role="alert"><i class="fa fa-info-circle"></i> <b>Note:</b> Currently, Messages can only be received using the
- Ditto Protocol WebSocket binding</div>
+<p>If there is more than one response to a message received by multiple consumers, only the
+first response will be routed back to the initial issuer of a Message.</p>
 
 <h2 id="sending-messages">Sending Messages</h2>
 
 <p>If you want to send a Message to or from a Thing, you need <code class="highlighter-rouge">WRITE</code> permissions on that Thing.
-Every WebSocket that is able to receive Messages for the Thing (<code class="highlighter-rouge">READ</code> permission), will receive your message.</p>
+Every WebSocket or <a href="basic-connections.html#targets">connection target</a> that is able to receive Messages for the 
+Thing (<code class="highlighter-rouge">READ</code> permission), will receive your message.</p>
 
 <h2 id="responding-to-messages">Responding to Messages</h2>
 
-<p>Since WebSocket messages are stateless there is no <em>direct</em> response to a Message.<br />
-For Ditto to be able to route the response of a Message back to the issuer, the
+<p>Since messages are stateless there is no <em>direct</em> response to a Message.</p>
+
+<p>For Ditto to be able to route the response of a Message back to the issuer, the
 correlation-ids need to match. E.g. when the sender uses correlation-id <code class="highlighter-rouge">random-aa98s</code>,
 any receiver can reply by using the same correlation-id <code class="highlighter-rouge">random-aa98s</code>.</p>
-
-<div class="alert alert-info" role="alert"><i class="fa fa-info-circle"></i> <b>Note:</b> Currently, you can only respond to Messages using the
- Ditto Protocol WebSocket binding</div>
 
 <h2 id="permissions">Permissions</h2>
 
@@ -1637,7 +1636,7 @@ you need <code class="highlighter-rouge">READ</code> access on the Thing. To be 
 you need to have <code class="highlighter-rouge">WRITE</code> permissions.</p>
 
 <p>There is one sole exception, which are <a href="#claim-messages">Claim Messages</a>. You do
-not need access rights for sending them.</p>
+not need the access rights for sending them.</p>
 
 <h3 id="api-version-2">API version 2</h3>
 
@@ -1649,7 +1648,7 @@ The same applies for being able to send Messages, here a <code class="highlighte
 all messages via the <code class="highlighter-rouge">message:/</code> resource or only for specific ones.</p>
 
 <p>There is one sole exception, which are <a href="#claim-messages">Claim Messages</a>. You do
-not need access rights for sending them.</p>
+not need the access rights for sending them.</p>
 
 <h2 id="claim-messages">Claim Messages</h2>
 
@@ -1688,7 +1687,7 @@ is completely up to the receiver of the Claim Message e.g. after verifying the p
                     </div>
                     <p class="notice">
                         &copy;2020 Eclipse Ditto.
-                         Site last generated: Sep 8, 2020 <br />
+                         Site last generated: Sep 21, 2020 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">
