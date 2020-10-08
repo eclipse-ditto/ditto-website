@@ -1575,7 +1575,8 @@ in <a href="https://www.eclipse.org/ditto/protocol-overview.html">Ditto Protocol
 <p>To configure your Ditto client instance, use the <code class="highlighter-rouge">org.eclipse.ditto.client.configuration</code> package in order to</p>
 <ul>
   <li>create instances of <code class="highlighter-rouge">AuthenticationProvider</code> and <code class="highlighter-rouge">MessagingProvider</code></li>
-  <li>create a <code class="highlighter-rouge">DittoClient</code> instance</li>
+  <li>create a <code class="highlighter-rouge">DisconnectedDittoClient</code> instance</li>
+  <li>obtain a <code class="highlighter-rouge">DittoClient</code> instance asynchronously by calling <code class="highlighter-rouge">.connect()</code></li>
 </ul>
 
 <p>For example:</p>
@@ -1608,7 +1609,12 @@ in <a href="https://www.eclipse.org/ditto/protocol-overview.html">Ditto Protocol
             <span class="o">.</span><span class="na">build</span><span class="o">())</span>
         <span class="o">.</span><span class="na">build</span><span class="o">(),</span> <span class="n">authenticationProvider</span><span class="o">);</span>
 
-<span class="n">DittoClient</span> <span class="n">client</span> <span class="o">=</span> <span class="n">DittoClients</span><span class="o">.</span><span class="na">newInstance</span><span class="o">(</span><span class="n">messagingProvider</span><span class="o">);</span>
+<span class="n">DisconnectedDittoClient</span> <span class="n">disconnectedDittoClient</span> <span class="o">=</span> <span class="n">DittoClients</span><span class="o">.</span><span class="na">newDisconnectedInstance</span><span class="o">(</span><span class="n">messagingProvider</span><span class="o">);</span>
+
+<span class="n">disconnectedDittoClient</span><span class="o">.</span><span class="na">connect</span><span class="o">()</span>
+    <span class="o">.</span><span class="na">thenAccept</span><span class="o">(</span><span class="k">this</span><span class="o">::</span><span class="n">startUsingDittoClient</span><span class="o">)</span>
+    <span class="o">.</span><span class="na">exceptionally</span><span class="o">(</span><span class="n">error</span> <span class="o">-&gt;</span> <span class="n">disconnectedDittoClient</span><span class="o">.</span><span class="na">destroy</span><span class="o">());</span>
+
 </code></pre></div></div>
 
 <h3 id="use-the-ditto-client">Use the Ditto client</h3>
@@ -1818,7 +1824,7 @@ whenever a <code class="highlighter-rouge">Change</code> callback is invoked wit
                     </div>
                     <p class="notice">
                         &copy;2020 Eclipse Ditto.
-                         Site last generated: Sep 30, 2020 <br />
+                         Site last generated: Oct 8, 2020 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

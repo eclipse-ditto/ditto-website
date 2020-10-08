@@ -1842,11 +1842,18 @@ without any live or message response, <a href="#requesting-acks">request the ack
 <h2 id="interaction-between-headers">Interaction between headers</h2>
 <p>Three headers control how Ditto responds to a command: <code class="highlighter-rouge">response-required</code>, <code class="highlighter-rouge">requested-acks</code>, <code class="highlighter-rouge">timeout</code>.</p>
 <ul>
-  <li><code class="highlighter-rouge">response-required</code>: <code class="highlighter-rouge">true</code> or <code class="highlighter-rouge">false</code>.
- It governs whether the user gets a (detailed) reply. In case of a live message or a live command it also has impact on the <code class="highlighter-rouge">requested-acks</code>. If <code class="highlighter-rouge">response-required</code> is <code class="highlighter-rouge">true</code>, the acknowledgement label <code class="highlighter-rouge">live-response</code> will be added to <code class="highlighter-rouge">requested-acks</code> if not present. If it is <code class="highlighter-rouge">false</code>, the acknowledgement label <code class="highlighter-rouge">live-response</code> will be removed from <code class="highlighter-rouge">requested-acks</code> if present.</li>
-  <li><code class="highlighter-rouge">requested-acks</code>: JSON array of acknowledgement requests.
+  <li><code class="highlighter-rouge">response-required</code>: <code class="highlighter-rouge">true</code> or <code class="highlighter-rouge">false</code>.<br />
+ It governs whether the user gets a (detailed) reply.<br />
+ In case of a live message or a live command it also has impact on the <code class="highlighter-rouge">requested-acks</code>:
+    <ul>
+      <li>If <code class="highlighter-rouge">response-required</code> is <code class="highlighter-rouge">true</code>, the acknowledgement label <code class="highlighter-rouge">live-response</code> will be added to <code class="highlighter-rouge">requested-acks</code> if not 
+present and <code class="highlighter-rouge">requested-acks</code> was not explicitly set to an empty JSON array.<br /></li>
+      <li>If it is <code class="highlighter-rouge">false</code>, the acknowledgement label <code class="highlighter-rouge">live-response</code> will be removed from <code class="highlighter-rouge">requested-acks</code> if present.</li>
+    </ul>
+  </li>
+  <li><code class="highlighter-rouge">requested-acks</code>: JSON array of acknowledgement requests.<br />
  It determines the content of the response and transport-layer message settlement.</li>
-  <li><code class="highlighter-rouge">timeout</code>: Duration.
+  <li><code class="highlighter-rouge">timeout</code>: Duration.<br />
  It governs how long Ditto waits for responses and acknowledgements.</li>
 </ul>
 
@@ -2108,7 +2115,7 @@ set by the user already cause a client error.</p>
   <tbody>
     <tr>
       <td>response-required</td>
-      <td><code class="highlighter-rouge">false</code> if <code class="highlighter-rouge">timeout</code> is zero or <code class="highlighter-rouge">requested-acks</code> is empty, <code class="highlighter-rouge">true</code> otherwise</td>
+      <td><code class="highlighter-rouge">false</code> if <code class="highlighter-rouge">timeout</code> is zero, <code class="highlighter-rouge">true</code> otherwise</td>
       <td><code class="highlighter-rouge">true</code></td>
     </tr>
     <tr>
@@ -2149,7 +2156,7 @@ set by the user already cause a client error.</p>
                     </div>
                     <p class="notice">
                         &copy;2020 Eclipse Ditto.
-                         Site last generated: Sep 30, 2020 <br />
+                         Site last generated: Oct 8, 2020 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

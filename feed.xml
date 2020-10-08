@@ -5,9 +5,98 @@
         <description>Announcements, tutorials and examples around Eclipse Ditto and Digital Twins</description>
         <link>https://www.eclipse.org/ditto/</link>
         <atom:link href="https://www.eclipse.org/ditto/feed.xml" rel="self" type="application/rss+xml"/>
-        <pubDate>Wed, 30 Sep 2020 17:28:20 +0000</pubDate>
-        <lastBuildDate>Wed, 30 Sep 2020 17:28:20 +0000</lastBuildDate>
+        <pubDate>Thu, 08 Oct 2020 16:33:56 +0000</pubDate>
+        <lastBuildDate>Thu, 08 Oct 2020 16:33:56 +0000</lastBuildDate>
         <generator>Jekyll v3.6.2</generator>
+        
+        <item>
+            <title>Asynchronous Client Creation in Ditto Java Client 1.3.0</title>
+            <description>&lt;p&gt;Before &lt;a href=&quot;https://github.com/eclipse/ditto-clients/tree/master/java&quot;&gt;Ditto Java Client&lt;/a&gt; 1.3.0,
+a client object connects to a configured Ditto back-end during its creation.&lt;/p&gt;
+
+&lt;div class=&quot;language-java highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;// create a client object and block until it connects to the Ditto back-end.&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;final&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;DittoClient&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;client&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;DittoClients&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;newInstance&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;messagingProvider&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;There are several problems with the approach.&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;The calling thread blocks waiting for IO, namely the authentication process
+and establishment of a websocket.&lt;/li&gt;
+  &lt;li&gt;If the client is configured to reconnect, then an incorrect end-ponit configuration
+makes the factory method block forever.&lt;/li&gt;
+  &lt;li&gt;If the client is not configured to reconnect, then the factory method will throw
+an exception. But it is not possible to give the client reference to the exception
+handler, since the client creation did not complete. Consequently the exception handler
+has no simple way to free all resources allocated for the client.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;1.3.0 addresses these problems by introducing an asynchronous client creation interface.&lt;/p&gt;
+
+&lt;div class=&quot;language-java highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;final&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;DittoClients&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+
+    &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;DisconnectedDittoClient&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;newDisconnectedInstance&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;MessagingProvider&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;mp&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;interface&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;DisconnectedDittoClient&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+
+    &lt;span class=&quot;n&quot;&gt;CompletionStage&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;DittoClient&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;connect&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
+
+    &lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;destroy&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;The method &lt;code class=&quot;highlighter-rouge&quot;&gt;DittoClients.newDisconnectedInstance(MessagingProvider)&lt;/code&gt; creates a &lt;code class=&quot;highlighter-rouge&quot;&gt;DisconnectedDittoClient&lt;/code&gt;
+object. The &lt;code class=&quot;highlighter-rouge&quot;&gt;DisconnectedDittoClient&lt;/code&gt; has references to all resources allocated for the client and
+can free them via the &lt;code class=&quot;highlighter-rouge&quot;&gt;destroy()&lt;/code&gt; method. The &lt;code class=&quot;highlighter-rouge&quot;&gt;DisconnectedDittoClient&lt;/code&gt; object offers no method to
+interact with the Ditto API. By calling &lt;code class=&quot;highlighter-rouge&quot;&gt;connect()&lt;/code&gt;, one obtains a future that yields a familiar
+&lt;code class=&quot;highlighter-rouge&quot;&gt;DittoClient&lt;/code&gt; object upon completion. One might use the asynchronous client creation interface thus:&lt;/p&gt;
+
+&lt;div class=&quot;language-java highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;final&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;DisconnectedDittoClient&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;disconnectedClient&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;DittoClients&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;newDisconnectedInstance&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;messagingProvider&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;disconnectedClient&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;connect&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;thenAccept&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;startUsingDittoClient&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;exceptionally&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;exception&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;handleConnectionFailure&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;exception&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;disconnectedClient&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;destroy&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;});&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;The asynchronous client creation interface has the following advantages.&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;
+    &lt;p&gt;The calling thread does not block.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Even if configured to reconnect, the user can receive connection errors via
+the connection error handler in &lt;code class=&quot;highlighter-rouge&quot;&gt;MessagingConfiguration&lt;/code&gt; and shut down the client
+at will.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;When initial reconnection is disabled, the method &lt;code class=&quot;highlighter-rouge&quot;&gt;DisconnectedDittoClient.connect()&lt;/code&gt;
+returns a failed future on connection error. It is possible to reference the
+&lt;code class=&quot;highlighter-rouge&quot;&gt;DittoDisconnectedClient&lt;/code&gt; object in the future’s error handler, where the client can
+be destroyed.&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;&lt;br /&gt;
+&lt;br /&gt;&lt;/p&gt;
+&lt;figure&gt;&lt;img class=&quot;docimage&quot; src=&quot;images/ditto.svg&quot; alt=&quot;Ditto&quot; style=&quot;max-width: 500px&quot; /&gt;&lt;/figure&gt;
+
+&lt;p&gt;–&lt;br /&gt;
+The Eclipse Ditto team&lt;/p&gt;
+</description>
+            <pubDate>Thu, 08 Oct 2020 00:00:00 +0000</pubDate>
+            <link>https://www.eclipse.org/ditto/2020-10-08-asynchronous-client-creation.html</link>
+            <guid isPermaLink="true">https://www.eclipse.org/ditto/2020-10-08-asynchronous-client-creation.html</guid>
+            
+            <category>blog</category>
+            
+            
+        </item>
         
         <item>
             <title>Announcing Eclipse Ditto Release 1.3.0</title>
@@ -1052,57 +1141,6 @@ The Eclipse Ditto team&lt;/p&gt;
             <pubDate>Wed, 28 Aug 2019 00:00:00 +0000</pubDate>
             <link>https://www.eclipse.org/ditto/2019-08-28-openid-connect.html</link>
             <guid isPermaLink="true">https://www.eclipse.org/ditto/2019-08-28-openid-connect.html</guid>
-            
-            <category>blog</category>
-            
-            
-        </item>
-        
-        <item>
-            <title>Announcing Eclipse Ditto Release 0.9.0</title>
-            <description>&lt;p&gt;Today the Eclipse Ditto team proudly presents its second release 
-&lt;a href=&quot;https://projects.eclipse.org/projects/iot.ditto/releases/0.9.0&quot;&gt;0.9.0&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;The topics of this release in a nutshell were:&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;Memory improvements for huge amounts (multi million) of digital twins which are held in memory&lt;/li&gt;
-  &lt;li&gt;Adding metrics and logging around the connectivity feature in order to enable being able to operate connections to foreign systems/brokers via APIs&lt;/li&gt;
-  &lt;li&gt;Enhancing Ditto’s connectivity feature by additionally being able to connect to Apache Kafka&lt;/li&gt;
-  &lt;li&gt;Performance improvements of Ditto’s search functionality&lt;/li&gt;
-  &lt;li&gt;Stabilization of cluster bootstrapping&lt;/li&gt;
-  &lt;li&gt;Refactoring of how the services configurations are determined&lt;/li&gt;
-  &lt;li&gt;Addition of a Helm template in order to simplify Kubernetes based deployments&lt;/li&gt;
-  &lt;li&gt;Contributions from Microsoft in order to ease operating Eclipse Ditto on Microsoft Azure&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Please have a look at the &lt;a href=&quot;release_notes_090.html&quot;&gt;0.9.0 release notes&lt;/a&gt; for a more detailed information on the release.&lt;/p&gt;
-
-&lt;h2 id=&quot;artifacts&quot;&gt;Artifacts&lt;/h2&gt;
-
-&lt;p&gt;The new Java artifacts have been published at the &lt;a href=&quot;https://repo.eclipse.org/content/repositories/ditto/&quot;&gt;Eclipse Maven repository&lt;/a&gt;
-as well as &lt;a href=&quot;https://repo1.maven.org/maven2/org/eclipse/ditto/&quot;&gt;Maven central&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;The Docker images have been pushed to Docker Hub:&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://hub.docker.com/r/eclipse/ditto-policies/&quot;&gt;eclipse/ditto-policies&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://hub.docker.com/r/eclipse/ditto-things/&quot;&gt;eclipse/ditto-things&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://hub.docker.com/r/eclipse/ditto-things-search/&quot;&gt;eclipse/ditto-things-search&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://hub.docker.com/r/eclipse/ditto-gateway/&quot;&gt;eclipse/ditto-gateway&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://hub.docker.com/r/eclipse/ditto-connectivity/&quot;&gt;eclipse/ditto-connectivity&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://hub.docker.com/r/eclipse/ditto-concierge/&quot;&gt;eclipse/ditto-concierge&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;br /&gt;
-&lt;br /&gt;&lt;/p&gt;
-&lt;figure&gt;&lt;img class=&quot;docimage&quot; src=&quot;images/ditto.svg&quot; alt=&quot;Ditto&quot; style=&quot;max-width: 500px&quot; /&gt;&lt;/figure&gt;
-
-&lt;p&gt;–&lt;br /&gt;
-The Eclipse Ditto team&lt;/p&gt;
-</description>
-            <pubDate>Wed, 10 Jul 2019 00:00:00 +0000</pubDate>
-            <link>https://www.eclipse.org/ditto/2019-07-10-release-announcement-090.html</link>
-            <guid isPermaLink="true">https://www.eclipse.org/ditto/2019-07-10-release-announcement-090.html</guid>
             
             <category>blog</category>
             
