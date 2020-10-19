@@ -1673,11 +1673,15 @@ parameter with an <a href="basic-rql.html">RQL expression</a>, e.g.:</p>
 event to the console. This one tracks only changes to the thing with ID <code class="highlighter-rouge">org.eclipse.ditto:fancy-thing</code> and only watches
 for changes on the feature <code class="highlighter-rouge">lamp</code>:</p>
 <div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// the javascript must be served from the same domain as Ditto is running in order to avoid CORS problems</span>
-<span class="kd">let</span> <span class="nx">source</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">EventSource</span><span class="p">(</span><span class="s1">'/api/2/things?ids=org.eclipse.ditto:fancy-thing&amp;fields=thingId,features/lamp'</span><span class="p">);</span>
+<span class="kd">let</span> <span class="nx">source</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">EventSource</span><span class="p">(</span><span class="s1">'/api/2/things?ids=org.eclipse.ditto:fancy-thing&amp;fields=thingId,features/lamp'</span><span class="p">,</span> <span class="p">{</span> <span class="na">withCredentials</span><span class="p">:</span> <span class="kc">true</span> <span class="p">});</span>
 <span class="nx">source</span><span class="p">.</span><span class="nx">onmessage</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
     <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">event</span><span class="p">.</span><span class="nx">data</span><span class="p">);</span>
 <span class="p">};</span>
 </code></pre></div></div>
+
+<p>By defining <code class="highlighter-rouge">{ withCredentials: true }</code> at the <code class="highlighter-rouge">new EventSource()</code>, the browser credentials (<code class="highlighter-rouge">Authorization</code> header) of 
+the already authenticated browser against that domain are sent along, this works for Basic Auth as well as for JWT based
+authentication using a <code class="highlighter-rouge">Bearer</code> token.</p>
 
 <p>This would log the changed content of each thing the authenticated subject is allowed to <code class="highlighter-rouge">READ</code>.</p>
 
@@ -1814,7 +1818,7 @@ id:ditto:device7155
                     </div>
                     <p class="notice">
                         &copy;2020 Eclipse Ditto.
-                         Site last generated: Oct 8, 2020 <br />
+                         Site last generated: Oct 19, 2020 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

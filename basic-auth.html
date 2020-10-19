@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="">
-<meta name="keywords" content="model,  auth, authentication, authorization, policies, policy">
+<meta name="keywords" content="model,  auth, authentication, authorization, policies, policy, sso, single sign on">
 <title>  Authentication and authorization • Eclipse Ditto • a digital twin framework</title>
 
 <link rel="stylesheet" href="css/syntax.css">
@@ -1567,6 +1567,31 @@ username and password as <a href="installation-operating.html#pre-authentication
 OpenID Connect providers as <a href="installation-operating.html#openid-connect">documented in the installation/operation guide</a>.</li>
 </ul>
 
+<h3 id="single-sign-on-sso">Single sign-on (SSO)</h3>
+
+<p>By configuring an arbitrary OpenID Connect provider (as mentioned above) it is possible for Ditto to participate in SSO
+for the following browser based requests:</p>
+<ul>
+  <li><a href="httpapi-overview.html">HTTP API</a> invocations
+    <ul>
+      <li>sending along a JWT token as <code class="highlighter-rouge">Authorization</code> header with <code class="highlighter-rouge">Bearer</code> value</li>
+    </ul>
+  </li>
+  <li>Establishing a <a href="httpapi-protocol-bindings-websocket.html">WebSocket</a> connection for bidirectional communication with 
+Ditto via <a href="protocol-overview.html">Ditto Protocol</a> JSON messages
+    <ul>
+      <li>open: sending along the <code class="highlighter-rouge">Authorization</code> header containing the <code class="highlighter-rouge">Bearer</code> JWT token is not possible in the plain 
+WebSocket API in the browser - Watch issue <a href="https://github.com/eclipse/ditto/issues/667">#661</a> for fixing that</li>
+    </ul>
+  </li>
+  <li>Opening a <a href="httpapi-sse.html">Server sent event</a> connection in order to receive change notifications of twins in the 
+browser
+    <ul>
+      <li>passing the <code class="highlighter-rouge">withCredentials: true</code> option when creating the SSE in the browser</li>
+    </ul>
+  </li>
+</ul>
+
 <h2 id="authorization">Authorization</h2>
 
 <p>Authorization is implemented with an <a href="#" data-toggle="tooltip" data-original-title="An access control list (ACL) holds the current status on who (subject) is permitted to which extent (read, write, administrate) to manage a Thing.">ACL</a>
@@ -1610,7 +1635,7 @@ were issued via HTTP from the user <code class="highlighter-rouge">ditto</code>.
                     </div>
                     <p class="notice">
                         &copy;2020 Eclipse Ditto.
-                         Site last generated: Oct 8, 2020 <br />
+                         Site last generated: Oct 19, 2020 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">
