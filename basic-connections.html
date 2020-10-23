@@ -1591,6 +1591,7 @@ specific limitations. Those are documented with the corresponding protocol bindi
   <li><a href="basic-signals-command.html">commands</a></li>
   <li><a href="basic-messages.html">messages</a></li>
   <li><a href="protocol-twinlive.html">live commands/responses/events</a></li>
+  <li><a href="protocol-specification-acks.html">acknowledgements</a></li>
 </ul>
 
 <p>Sources contain:</p>
@@ -1600,6 +1601,7 @@ specific limitations. Those are documented with the corresponding protocol bindi
   <li>an authorization context (see <a href="#authorization">authorization</a>) specifying which <a href="basic-acl.html#authorization-subject">authorization subject</a> is used to authorize messages from the source,</li>
   <li>enforcement information that allows filtering the messages that are consumed in this source,</li>
   <li><a href="basic-acknowledgements.html#requesting-acks">acknowledgement requests</a> this source requires in order to ensure QoS 1 (“at least once”) processing of consumed messages before technically acknowledging them to the channel,</li>
+  <li>declared labels of <a href="protocol-specification-acks.html">acknowledgements</a> the source is allowed to send,</li>
   <li><a href="connectivity-header-mapping.html">header mapping</a> for mapping headers of source messages to internal headers, and</li>
   <li>a reply-target to configure publication of any responses of incoming commands.</li>
 </ul>
@@ -1734,11 +1736,30 @@ acknowledgements are only requested if the “qos” header was either not prese
   </span><span class="s2">"acknowledgementRequests"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
     </span><span class="s2">"includes"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
       </span><span class="s2">"twin-persisted"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"my-custom-ack"</span><span class="w">
+      </span><span class="s2">"receiver-connection-id:my-custom-ack"</span><span class="w">
     </span><span class="p">],</span><span class="w">
     </span><span class="s2">"filter"</span><span class="p">:</span><span class="w"> </span><span class="s2">"fn:filter(header:qos,'ne',0)"</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h4 id="source-declared-acknowledgement-labels">Source declared acknowledgement labels</h4>
+
+<p>The acknowledgements sent via a source must have their labels declared in the field <code class="highlighter-rouge">declardAcks</code> as a JSON array.<br />
+If the label of an acknowledgement is not in the <code class="highlighter-rouge">declaredAcks</code> array, then the acknowledgement is rejected with
+an error. The declared labels must be prefixed by the connection ID followed by a colon or the 
+<code class="highlighter-rouge">{{connection:id}}</code> placeholder followed by a colon. For example:</p>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="w">
+</span><span class="p">{</span><span class="w">
+  </span><span class="s2">"addresses"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="s2">"&lt;source&gt;"</span><span class="w">
+  </span><span class="p">],</span><span class="w">
+  </span><span class="s2">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"ditto:inbound-auth-subject"</span><span class="p">],</span><span class="w">
+  </span><span class="s2">"declaredAcks"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="s2">"{{connection:id}}:my-custom-ack"</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+
 </span></code></pre></div></div>
 
 <h4 id="source-header-mapping">Source header mapping</h4>
@@ -1893,8 +1914,6 @@ would match an attribute “counter” to be greater than 42. Additionally it wo
 
 <h4 id="target-topics-and-enrichment">Target topics and enrichment</h4>
 
-<div class="bs-callout bs-callout-primary">Available since Ditto <strong>1.1.0</strong></div>
-
 <p>When extra fields should be added to outgoing messages on a connection, an <code class="highlighter-rouge">extraFields</code> parameter can be added
 to the topic. This is supported for all topics:</p>
 
@@ -1956,15 +1975,19 @@ forwarded into another system.</p>
 <p>Whether an outgoing message is treated as successfully sent or not is specific for the used 
 <a href="#connection-types">connection type</a> and documented in scope of that connection type.</p>
 
-<p>The JSON for a target with issued acknowledgement labels could look like this:</p>
-<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+<p>The issued acknowledgement label must be prefixed by the connection ID followed by a colon or the 
+<code class="highlighter-rouge">{{connection:id}}</code> placeholder followed by a colon.<br />
+The JSON for a target with issued acknowledgement labels could look like this:</p>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="w">
+</span><span class="p">{</span><span class="w">
   </span><span class="s2">"address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;target&gt;"</span><span class="p">,</span><span class="w">
   </span><span class="s2">"topics"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
     </span><span class="s2">"_/_/things/twin/events"</span><span class="w">
   </span><span class="p">],</span><span class="w">
   </span><span class="s2">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"ditto:inbound-auth-subject"</span><span class="p">],</span><span class="w">
-  </span><span class="s2">"issuedAcknowledgementLabel"</span><span class="p">:</span><span class="w"> </span><span class="s2">"my-custom-ack"</span><span class="w">
+  </span><span class="s2">"issuedAcknowledgementLabel"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{{connection:id}}:my-custom-ack"</span><span class="w">
 </span><span class="p">}</span><span class="w">
+
 </span></code></pre></div></div>
 
 <h4 id="target-header-mapping">Target header mapping</h4>
@@ -2128,7 +2151,7 @@ dropped.</p>
                     </div>
                     <p class="notice">
                         &copy;2020 Eclipse Ditto.
-                         Site last generated: Oct 19, 2020 <br />
+                         Site last generated: Oct 23, 2020 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">
