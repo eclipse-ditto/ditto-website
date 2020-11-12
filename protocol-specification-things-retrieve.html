@@ -1255,6 +1255,54 @@
                       
                       
                       
+                      <li><a href="protocol-examples-createdesiredproperties.html">Create desired Feature Properties</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-deletedesiredproperties.html">Delete desired Feature Properties</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-modifydesiredproperties.html">Modify desired Feature Properties</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-retrievedesiredproperties.html">Retrieve desired Feature Properties</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-createdesiredproperty.html">Create a single desired Property</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-deletedesiredproperty.html">Delete a single desired Property</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-modifydesiredproperty.html">Modify a single desired Property</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-retrievedesiredproperty.html">Retrieve a single desired Property</a></li>
+                      
+                      
+                      
+                      
+                      
                       <li><a href="protocol-examples-errorresponses.html">Error responses</a></li>
                       
                       
@@ -2225,12 +2273,90 @@ The Attribute (JSON) can be referenced hierarchically by applying <a href="https
 <p><strong>Example:</strong> 
 <a href="protocol-examples-retrieveproperties.html">Retrieve Feature Properties</a></p>
 
+<h2 id="retrieve-all-desired-properties-of-a-feature">Retrieve all desired Properties of a Feature</h2>
+
+<p>Retrieve all desired Properties of a Feature (identified by the <code class="highlighter-rouge">&lt;featureId&gt;</code> in the <code class="highlighter-rouge">path</code>) of the Thing 
+(identified by the <code class="highlighter-rouge">&lt;namespace&gt;</code> and the <code class="highlighter-rouge">&lt;thingId&gt;</code> in the <code class="highlighter-rouge">topic</code>).</p>
+
+<h3 id="command-9">Command</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Field</th>
+      <th>Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>topic</strong></td>
+      <td><code class="highlighter-rouge">&lt;namespace&gt;/&lt;thingName&gt;/things/&lt;channel&gt;/commands/retrieve</code></td>
+    </tr>
+    <tr>
+      <td><strong>path</strong></td>
+      <td><code class="highlighter-rouge">/features/&lt;featureId&gt;/desiredProperties</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="response-9">Response</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Field</th>
+      <th> </th>
+      <th>Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>topic</strong></td>
+      <td> </td>
+      <td><code class="highlighter-rouge">&lt;namespace&gt;/&lt;thingName&gt;/things/&lt;channel&gt;/commands/retrieve</code></td>
+    </tr>
+    <tr>
+      <td><strong>path</strong></td>
+      <td> </td>
+      <td><code class="highlighter-rouge">/features/&lt;featureId&gt;/desiredProperties</code></td>
+    </tr>
+    <tr>
+      <td><strong>value</strong></td>
+      <td> </td>
+      <td>The desired Properties of the Feature as JSON, see property desiredProperties of Things JSON schema. See <a href="protocol-specification.html#dittoProtocolPayload">Ditto protocol payload (JSON).</a></td>
+    </tr>
+    <tr>
+      <td><strong>status</strong></td>
+      <td><em>code</em></td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td><code class="highlighter-rouge">200</code></td>
+      <td>Success.</td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td><code class="highlighter-rouge">404</code></td>
+      <td>Not Found - the requested desired Properties do not exist or the requesting user does not have enough permission to retrieve it.</td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td> </td>
+      <td>See <a href="protocol-examples-errorresponses.html">Thing Error Responses</a> for examples of other error responses.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>Example:</strong> 
+<a href="protocol-examples-retrieveproperties.html">Retrieve Feature Properties</a></p>
+
 <h2 id="retrieve-a-single-property-of-a-feature">Retrieve a single Property of a Feature</h2>
 
 <p>Retrieve the Property of the Feature identified by the <code class="highlighter-rouge">&lt;featureId&gt;</code> in the path.
 The Property (JSON) can be referenced hierarchically by applying <a href="https://tools.ietf.org/html/rfc6901">JSON Pointer notation (RFC-6901)</a>.</p>
 
-<h3 id="command-9">Command</h3>
+<h3 id="command-10">Command</h3>
 
 <table>
   <thead>
@@ -2251,7 +2377,7 @@ The Property (JSON) can be referenced hierarchically by applying <a href="https:
   </tbody>
 </table>
 
-<h3 id="response-9">Response</h3>
+<h3 id="response-10">Response</h3>
 
 <table>
   <thead>
@@ -2303,6 +2429,85 @@ The Property (JSON) can be referenced hierarchically by applying <a href="https:
 <p><strong>Example:</strong> 
 <a href="protocol-examples-retrieveproperty.html">Retrieve a single Feature Property</a></p>
 
+<h2 id="retrieve-a-single-desired-property-of-a-feature">Retrieve a single desired Property of a Feature</h2>
+
+<p>Retrieve the desired Property of the Feature identified by the <code class="highlighter-rouge">&lt;featureId&gt;</code> in the path.
+The Property (JSON) can be referenced hierarchically by applying <a href="https://tools.ietf.org/html/rfc6901">JSON Pointer notation (RFC-6901)</a>.</p>
+
+<h3 id="command-11">Command</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Field</th>
+      <th>Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>topic</strong></td>
+      <td><code class="highlighter-rouge">&lt;namespace&gt;/&lt;thingName&gt;/things/&lt;channel&gt;/commands/retrieve</code></td>
+    </tr>
+    <tr>
+      <td><strong>path</strong></td>
+      <td><code class="highlighter-rouge">/features/&lt;featureId&gt;/desiredProperties/&lt;desiredPropertyPath&gt;</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="response-11">Response</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Field</th>
+      <th> </th>
+      <th>Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>topic</strong></td>
+      <td> </td>
+      <td><code class="highlighter-rouge">&lt;namespace&gt;/&lt;thingName&gt;/things/&lt;channel&gt;/commands/retrieve</code></td>
+    </tr>
+    <tr>
+      <td><strong>path</strong></td>
+      <td> </td>
+      <td><code class="highlighter-rouge">/features/&lt;featureId&gt;/desiredProperties/&lt;desiredPropertyPath&gt;</code></td>
+    </tr>
+    <tr>
+      <td><strong>value</strong></td>
+      <td> </td>
+      <td>The specific desired Property of the Feature as JSON.</td>
+    </tr>
+    <tr>
+      <td><strong>status</strong></td>
+      <td><em>code</em></td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td><code class="highlighter-rouge">200</code></td>
+      <td>Success.</td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td><code class="highlighter-rouge">404</code></td>
+      <td>Not Found - the requested desired Property does not exist or the requesting user does not have enough permission to retrieve it.</td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td> </td>
+      <td>See <a href="protocol-examples-errorresponses.html">Thing Error Responses</a> for examples of other error responses.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>Example:</strong> 
+<a href="protocol-examples-retrievedesiredproperty.html">Retrieve a single Feature Property</a></p>
+
+
 
     <div class="tags">
         
@@ -2328,7 +2533,7 @@ The Property (JSON) can be referenced hierarchically by applying <a href="https:
                     </div>
                     <p class="notice">
                         &copy;2020 Eclipse Ditto.
-                         Site last generated: Nov 2, 2020 <br />
+                         Site last generated: Nov 12, 2020 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

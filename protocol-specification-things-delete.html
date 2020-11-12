@@ -1255,6 +1255,54 @@
                       
                       
                       
+                      <li><a href="protocol-examples-createdesiredproperties.html">Create desired Feature Properties</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-deletedesiredproperties.html">Delete desired Feature Properties</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-modifydesiredproperties.html">Modify desired Feature Properties</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-retrievedesiredproperties.html">Retrieve desired Feature Properties</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-createdesiredproperty.html">Create a single desired Property</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-deletedesiredproperty.html">Delete a single desired Property</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-modifydesiredproperty.html">Modify a single desired Property</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-retrievedesiredproperty.html">Retrieve a single desired Property</a></li>
+                      
+                      
+                      
+                      
+                      
                       <li><a href="protocol-examples-errorresponses.html">Error responses</a></li>
                       
                       
@@ -2312,11 +2360,112 @@ For the meaning of those two channels see <a href="protocol-specification.html">
 <p><strong>Example:</strong> 
 <a href="protocol-examples-deleteproperties.html">Delete Feature Properties</a></p>
 
+<h2 id="delete-all-desired-properties-of-a-feature">Delete all desired Properties of a Feature</h2>
+
+<p>Delete all desired Properties of a Feature (identified by the <code class="highlighter-rouge">&lt;featureId&gt;</code> in the <code class="highlighter-rouge">path</code>) of the Thing 
+(identified by the <code class="highlighter-rouge">&lt;namespace&gt;</code> and the <code class="highlighter-rouge">&lt;thingId&gt;</code> in the <code class="highlighter-rouge">topic</code>).</p>
+
+<h3 id="command-8">Command</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Field</th>
+      <th>Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>topic</strong></td>
+      <td><code class="highlighter-rouge">&lt;namespace&gt;/&lt;thingName&gt;/things/&lt;channel&gt;/commands/delete</code></td>
+    </tr>
+    <tr>
+      <td><strong>path</strong></td>
+      <td><code class="highlighter-rouge">/features/&lt;featureId&gt;/desiredProperties</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="response-8">Response</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Field</th>
+      <th> </th>
+      <th>Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>topic</strong></td>
+      <td> </td>
+      <td><code class="highlighter-rouge">&lt;namespace&gt;/&lt;thingName&gt;/things/&lt;channel&gt;/commands/delete</code></td>
+    </tr>
+    <tr>
+      <td><strong>path</strong></td>
+      <td> </td>
+      <td><code class="highlighter-rouge">/features/&lt;featureId&gt;/desiredProperties</code></td>
+    </tr>
+    <tr>
+      <td><strong>status</strong></td>
+      <td><em>code</em></td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td><code class="highlighter-rouge">204</code></td>
+      <td>Success - the desired Properties were deleted successfully.</td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td><code class="highlighter-rouge">403</code></td>
+      <td>Not Modifiable - The desired Properties could not be deleted as the requester had insufficient permissions (‘WRITE’ is required).</td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td><code class="highlighter-rouge">404</code></td>
+      <td>Not Found - The desired Properties were not found or requester had insufficient permissions.</td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td> </td>
+      <td>See <a href="protocol-examples-errorresponses.html">Thing Error Responses</a> for examples of other error responses.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="event-8">Event</h3>
+
+<p>The event emitted by Ditto after the Feature desired Properties of a Thing were deleted.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Field</th>
+      <th>Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>topic</strong></td>
+      <td><code class="highlighter-rouge">&lt;namespace&gt;/&lt;thingName&gt;/things/&lt;channel&gt;/events/deleted</code></td>
+    </tr>
+    <tr>
+      <td><strong>path</strong></td>
+      <td><code class="highlighter-rouge">/features/&lt;featureId&gt;/desiredProperties</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>Example:</strong> 
+<a href="protocol-examples-deletedesiredproperties.html">Delete Feature Desired Properties</a></p>
+
 <h2 id="delete-a-single-property-of-a-feature">Delete a single Property of a Feature</h2>
 
 <p>Delete a specific Property (identified by <code class="highlighter-rouge">&lt;propertyPath&gt;</code>) of a Feature (identified by the <code class="highlighter-rouge">&lt;featureId&gt;</code> in the <code class="highlighter-rouge">path</code>).</p>
 
-<h3 id="command-8">Command</h3>
+<h3 id="command-9">Command</h3>
 
 <table>
   <thead>
@@ -2337,7 +2486,7 @@ For the meaning of those two channels see <a href="protocol-specification.html">
   </tbody>
 </table>
 
-<h3 id="response-8">Response</h3>
+<h3 id="response-9">Response</h3>
 
 <table>
   <thead>
@@ -2386,7 +2535,7 @@ For the meaning of those two channels see <a href="protocol-specification.html">
   </tbody>
 </table>
 
-<h3 id="event-8">Event</h3>
+<h3 id="event-9">Event</h3>
 
 <p>The event emitted by Ditto after a Feature Property of a Thing was deleted.</p>
 
@@ -2411,6 +2560,106 @@ For the meaning of those two channels see <a href="protocol-specification.html">
 
 <p><strong>Example:</strong> 
 <a href="protocol-examples-deleteproperty.html">Delete a single Feature Property</a></p>
+
+<h2 id="delete-a-single-desired-property-of-a-feature">Delete a single desired Property of a Feature</h2>
+
+<p>Delete a specific Property (identified by <code class="highlighter-rouge">&lt;desiredPropertyPath&gt;</code>) of a Feature (identified by the <code class="highlighter-rouge">&lt;featureId&gt;</code> in the <code class="highlighter-rouge">path</code>).</p>
+
+<h3 id="command-10">Command</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Field</th>
+      <th>Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>topic</strong></td>
+      <td><code class="highlighter-rouge">&lt;namespace&gt;/&lt;thingName&gt;/things/&lt;channel&gt;/commands/delete</code></td>
+    </tr>
+    <tr>
+      <td><strong>path</strong></td>
+      <td><code class="highlighter-rouge">/features/&lt;featureId&gt;/desiredProperties/&lt;desiredPropertyPath&gt;</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="response-10">Response</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Field</th>
+      <th> </th>
+      <th>Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>topic</strong></td>
+      <td> </td>
+      <td><code class="highlighter-rouge">&lt;namespace&gt;/&lt;thingName&gt;/things/&lt;channel&gt;/commands/delete</code></td>
+    </tr>
+    <tr>
+      <td><strong>path</strong></td>
+      <td> </td>
+      <td><code class="highlighter-rouge">/features/&lt;featureId&gt;/desiredProperties/&lt;desiredPropertyPath&gt;</code></td>
+    </tr>
+    <tr>
+      <td><strong>status</strong></td>
+      <td><em>code</em></td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td><code class="highlighter-rouge">204</code></td>
+      <td>Success - the desired Property was deleted successfully.</td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td><code class="highlighter-rouge">403</code></td>
+      <td>Not Modifiable - The desired Property could not be deleted as the requester had insufficient permissions (‘WRITE’ is required).</td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td><code class="highlighter-rouge">404</code></td>
+      <td>Not Found - The Thing or desired Property was not found or requester had insufficient permissions.</td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td> </td>
+      <td>See <a href="protocol-examples-errorresponses.html">Thing Error Responses</a> for examples of other error responses.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="event-10">Event</h3>
+
+<p>The event emitted by Ditto after a Feature desired Property of a Thing was deleted.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Field</th>
+      <th>Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>topic</strong></td>
+      <td><code class="highlighter-rouge">&lt;namespace&gt;/&lt;thingName&gt;/things/&lt;channel&gt;/events/deleted</code></td>
+    </tr>
+    <tr>
+      <td><strong>path</strong></td>
+      <td><code class="highlighter-rouge">/features/&lt;featureId&gt;/desiredProperties/&lt;desiredPropertyPath&gt;</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>Example:</strong> 
+<a href="protocol-examples-deletedesiredproperty.html">Delete a single Feature Desired Property</a></p>
 
 
     <div class="tags">
@@ -2437,7 +2686,7 @@ For the meaning of those two channels see <a href="protocol-specification.html">
                     </div>
                     <p class="notice">
                         &copy;2020 Eclipse Ditto.
-                         Site last generated: Nov 2, 2020 <br />
+                         Site last generated: Nov 12, 2020 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

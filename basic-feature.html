@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="">
-<meta name="keywords" content="model,  definition, properties, entity, feature, functionblock, informationmodel, model, vorto">
+<meta name="keywords" content="model,  definition, properties, desiredProperties, entity, feature, functionblock, informationmodel, model, vorto">
 <title>  Feature • Eclipse Ditto • a digital twin framework</title>
 
 <link rel="stylesheet" href="css/syntax.css">
@@ -1255,6 +1255,54 @@
                       
                       
                       
+                      <li><a href="protocol-examples-createdesiredproperties.html">Create desired Feature Properties</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-deletedesiredproperties.html">Delete desired Feature Properties</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-modifydesiredproperties.html">Modify desired Feature Properties</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-retrievedesiredproperties.html">Retrieve desired Feature Properties</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-createdesiredproperty.html">Create a single desired Property</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-deletedesiredproperty.html">Delete a single desired Property</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-modifydesiredproperty.html">Modify a single desired Property</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-retrievedesiredproperty.html">Retrieve a single desired Property</a></li>
+                      
+                      
+                      
+                      
+                      
                       <li><a href="protocol-examples-errorresponses.html">Error responses</a></li>
                       
                       
@@ -1529,6 +1577,16 @@ Feature properties are represented as one JSON object.</p>
 
 <p>Each property itself can be either a simple/scalar value or a complex object; allowed is any JSON value.</p>
 
+<h3 id="feature-desired-properties">Feature desired properties</h3>
+
+<p>Desired properties represent the desired state of the properties. They are a tool to represent the desired target state of the properties. The <strong>desiredProperties</strong> related to Features are managed in form of a <strong>list of properties</strong>. These desired properties can be categorized,
+e.g. to manage the status, the configuration or any fault information.
+Feature desired properties are represented as one JSON object.</p>
+
+<p>Each desired property itself can be either a simple/scalar value or a complex object; allowed is any JSON value.</p>
+
+<p>Please note however, that besides persisting the desired properties, and indexing the fields for search requests, filtering etc. for the time being, Ditto does not implement their further processing. Such functionality will come with future releases.</p>
+
 <h3 id="feature-definition">Feature definition</h3>
 
 <p>Ditto supports specifying a definition for a feature in order to document how a feature’s state is structured
@@ -1548,7 +1606,8 @@ described in the <code class="highlighter-rouge">lamp</code> type of namespace <
 <p>Ditto aims to support contract-based development - by using feature definitions  - to ensure validity and 
 integrity of <strong>digital twins</strong>.</p>
 
-<div class="alert alert-danger" role="alert"><i class="fa fa-exclamation-circle"></i> <b>Warning:</b> Currently Ditto <strong>does not</strong> ensure that the properties of a feature or its supported
+<div class="alert alert-danger" role="alert"><i class="fa fa-exclamation-circle"></i> <b>Warning:</b> Currently Ditto <strong>does not</strong> ensure that the <code class="highlighter-rouge">properties</code> or 
+ <code class="highlighter-rouge">desiredProperties</code> of a feature or its supported
    messages follow the type defined in the definition.</div>
 
 <h2 id="example">Example</h2>
@@ -1567,6 +1626,11 @@ integrity of <strong>digital twins</strong>.</p>
           </span><span class="s2">"house no"</span><span class="p">:</span><span class="w"> </span><span class="mi">42</span><span class="w">
         </span><span class="p">}</span><span class="w">
       </span><span class="p">}</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="s2">"desiredProperties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"connected"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+      </span><span class="p">}</span><span class="w">
     </span><span class="p">}</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
@@ -1574,9 +1638,13 @@ integrity of <strong>digital twins</strong>.</p>
 
 <h2 id="model-specification">Model specification</h2>
 
-<p>The feature model is the same for API version 1 and 2:</p>
+<p>The feature model differs for API version 1 and 2:</p>
 
+<h3 id="v1">V1</h3>
 <script src="docson/widget.js" data-schema="../jsonschema/feature.json"></script>
+
+<h3 id="v2">V2</h3>
+<script src="docson/widget.js" data-schema="../jsonschema/feature_v2.json"></script>
 
 <h2 id="the-link-to-eclipse-vorto">The link to Eclipse Vorto</h2>
 
@@ -1761,7 +1829,7 @@ smoke .</p>
                     </div>
                     <p class="notice">
                         &copy;2020 Eclipse Ditto.
-                         Site last generated: Nov 2, 2020 <br />
+                         Site last generated: Nov 12, 2020 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">
