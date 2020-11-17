@@ -197,12 +197,20 @@
 <!-- Output author details if some exist. -->
 <!-- Output author details if some exist. -->
 <!---->
+<!--<span>-->
+    <!--&lt;!&ndash; Mugshot. &ndash;&gt;-->
+    <!--<img src="https://www.gravatar.com/avatar/3c657b46dc4d006056091942068f6ad7?s=135" alt="A photo of David Schwilk" />-->
+
+<!--&lt;!&ndash; Personal Info. &ndash;&gt;-->
+    <!--Written by <a href="https://github.com/derschwilk" target="_blank">David Schwilk</a>-->
+<!--</span>-->
+<!---->
 
 <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
 
     <header class="post-header">
         <h1 class="post-title" itemprop="name headline">Desired Feature Properties</h1>
-        <p class="post-meta">Published by <img src="https://www.gravatar.com/avatar/d41d8cd98f00b204e9800998ecf8427e?s=135" alt="A photo of " style="width:50px;border-radius:50%;display:inline-block;margin-right:5px;" /><span itemprop="author" itemscope itemtype="http://schema.org/Person"><span itemprop="name"><a href="" target="_blank"></a> </span></span> on <time datetime="2020-11-11T00:00:00+00:00" itemprop="datePublished">Nov 11, 2020</time> - Tags:
+        <p class="post-meta">Published by <img src="https://www.gravatar.com/avatar/3c657b46dc4d006056091942068f6ad7?s=135" alt="A photo of David Schwilk" style="width:50px;border-radius:50%;display:inline-block;margin-right:5px;" /><span itemprop="author" itemscope itemtype="http://schema.org/Person"><span itemprop="name"><a href="https://github.com/derschwilk" target="_blank">David Schwilk</a> </span></span> on <time datetime="2020-11-11T00:00:00+00:00" itemprop="datePublished">Nov 11, 2020</time> - Tags:
             
             
             
@@ -246,12 +254,13 @@ $('#toc').on('click', 'a', function() {
         
 
         <h2 id="desired-feature-properties-added-to-things-model">Desired feature properties added to things model</h2>
-<p>With the release of Eclipse Ditto <b>version 1.5.0</b>
-<a href="basic-feature.htlm#feature-desired-properties">desired feature properties</a> are introduced to the things model for 
-<b>API versions later than 1</b>. The <i>desired properties</i> for features are added on the same level of the model as
+<p>With the upcoming release of Eclipse Ditto <strong>version 1.5.0</strong> 
+<a href="basic-feature.html#feature-desired-properties">desired feature properties</a> are introduced to the things model for 
+<strong>API versions later than 1</strong>. The <em>desired properties</em> for features are added on the same level of the model as 
 the feature properties and can reflect for example feature property updates ,which are intended, but not yet applied.</p>
 
-<p><i>Further logics for desired feature properties might be implemented in future Ditto versions.</i></p>
+<div class="alert alert-info" role="alert"><i class="fa fa-info-circle"></i> <b>Note:</b> Further logics for desired feature properties might be implemented in future Ditto 
+                              versions.</div>
 
 <p>A fully-fledged JSON representation of a feature with desired properties is shown below:</p>
 
@@ -287,7 +296,7 @@ the feature properties and can reflect for example feature property updates ,whi
 <h2 id="operations-on-desired-feature-properties">Operations on desired feature properties</h2>
 
 <ul>
-  <li><b>CRUD operations</b>
+  <li><strong>CRUD operations</strong>
     <ul>
       <li>You can create multiple desired properties of a feature or just single ones.</li>
       <li>You can retrieve all desired properties of a feature or just single ones.</li>
@@ -295,27 +304,27 @@ the feature properties and can reflect for example feature property updates ,whi
       <li>You can delete all desired properties of a feature or just single ones.</li>
     </ul>
   </li>
-  <li><b>Search</b>
+  <li><strong>Search</strong>
     <ul>
       <li>You can <a href="httpapi-search.html">search</a> for things with specific desired properties with <a href="basic-rql.html">RQL-functions</a>.</li>
       <li>You can search for things, which have <a href="basic-rql.html#exists">existent</a> desired properties for a feature.</li>
     </ul>
   </li>
-  <li><b>Get notified on changes</b>
+  <li><strong>Get notified on changes</strong>
     <ul>
-      <li>You can <a href="basic-signals-event.html">receive events</a> for changes done to the desired properties of things
+      <li>You can <a href="basic-signals-event.html">receive events</a> for changes done to the desired properties of things 
 you’re authorized to read.</li>
-      <li>You can <a href="basic-enrichment.html">enrich</a> and <a href="basic-changenotifications.html#filtering">filter</a> the
+      <li>You can <a href="basic-enrichment.html">enrich</a> and <a href="basic-changenotifications.html#filtering">filter</a> the 
   events you want to receive, for changes done to the desired properties.</li>
     </ul>
   </li>
 </ul>
 
 <h3 id="executing-crud-operations-on-desired-feature-properties">Executing CRUD operations on desired feature properties</h3>
-<p>CRUD operations can be executed either via the <a href="httpapi-concepts.html">Ditto HTTP API</a> <b>versions later than 1</b> or via
+<p>CRUD operations can be executed either via the <a href="httpapi-concepts.html">Ditto HTTP API</a> <strong>versions later than 1</strong> or via 
 <a href="protocol-overview.html">ditto-protocol</a> messages.</p>
 
-<p><i>Possible CRUD operations for desired feature properties via ditto-protocol</i>:</p>
+<p><em>Possible CRUD operations for desired feature properties via ditto-protocol</em>:</p>
 
 <ul>
   <li><a href="protocol-examples-retrievedesiredproperties.html">Retrieve all desired properties of a feature via ditto-protocol</a></li>
@@ -327,10 +336,10 @@ you’re authorized to read.</li>
 </ul>
 
 <h3 id="using-the-ditto-client-to-manage-desired-feature-properties">Using the ditto-client to manage desired feature properties</h3>
-<p>The desired feature properties can also be retrieved, modified and deleted via the <a href="client-sdk-java.html">Ditto Java Client</a>.
-At the time of publishing of this blog post (<b>Ditto Java Client version 1.5.0</b>), no special CRUD operations for
-desired feature properties are implemented in the client. Thus, the operations have to be executed via creating
-<b>ditto-protocol messages</b> manually in the client.</p>
+<p>The desired feature properties can also be retrieved, modified and deleted via the <a href="client-sdk-java.html">Ditto Java Client</a>. 
+With the upcoming (<strong>Ditto Java Client version 1.5.0</strong>), no special CRUD operations for 
+desired feature properties are implemented in the client. Thus, the operations have to be executed via creating 
+<strong>ditto-protocol messages</strong> manually in the client.</p>
 
 <p>Example for creating/modifying desired feature properties of a thing via the ditto-client:</p>
 
@@ -356,6 +365,12 @@ desired feature properties are implemented in the client. Thus, the operations h
         <span class="o">}));</span>
 </code></pre></div></div>
 
+<h2 id="feedback">Feedback?</h2>
+
+<p>Please <a href="feedback.html">get in touch</a> if you have feedback or questions towards this new concept of desired properties.</p>
+
+<p><br />
+<br /></p>
 <figure><img class="docimage" src="images/ditto.svg" alt="Ditto" style="max-width: 500px" /></figure>
 
 <p>–<br />
@@ -377,7 +392,7 @@ The Eclipse Ditto team</p>
                     </div>
                     <p class="notice">
                         &copy;2020 Eclipse Ditto.
-                         Site last generated: Nov 12, 2020 <br />
+                         Site last generated: Nov 17, 2020 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

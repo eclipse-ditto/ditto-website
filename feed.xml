@@ -5,19 +5,111 @@
         <description>Announcements, tutorials and examples around Eclipse Ditto and Digital Twins</description>
         <link>https://www.eclipse.org/ditto/</link>
         <atom:link href="https://www.eclipse.org/ditto/feed.xml" rel="self" type="application/rss+xml"/>
-        <pubDate>Thu, 12 Nov 2020 08:28:32 +0000</pubDate>
-        <lastBuildDate>Thu, 12 Nov 2020 08:28:32 +0000</lastBuildDate>
+        <pubDate>Tue, 17 Nov 2020 14:43:31 +0000</pubDate>
+        <lastBuildDate>Tue, 17 Nov 2020 14:43:31 +0000</lastBuildDate>
         <generator>Jekyll v3.6.2</generator>
+        
+        <item>
+            <title>Weak acknowledgments to decouple signal publishers and subscribers</title>
+            <description>&lt;h2 id=&quot;motivation&quot;&gt;Motivation&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&quot;2020-08-31-release-announcement-120.html&quot;&gt;Ditto 1.2.0&lt;/a&gt; introduced at-least-once delivery via
+&lt;a href=&quot;basic-acknowledgements.html&quot;&gt;acknowledgement requests&lt;/a&gt;.&lt;br /&gt;
+It increased coupling between the publisher and the subscriber of signals in that the subscriber is no longer at the
+liberty to filter for signals it is interested in. Instead, the subscriber must consume all signals in order to
+fulfill acknowledgement requests and prevent endless redelivery.&lt;/p&gt;
+
+&lt;p&gt;To combat the problem,
+&lt;a href=&quot;2020-10-28-release-announcement-140.html&quot;&gt;Ditto 1.4.0&lt;/a&gt; made acknowledgement labels unique and introduced the requirement
+to manage &lt;a href=&quot;basic-acknowledgements.html#issuing-acknowledgements&quot;&gt;&lt;em&gt;declared acknowledgements&lt;/em&gt;&lt;/a&gt;, identifying of each
+subscriber.&lt;br /&gt;
+It is now possible for Ditto to issue
+&lt;a href=&quot;basic-acknowledgements.html#weak-acknowledgements-wacks&quot;&gt;&lt;em&gt;weak acknowledgements&lt;/em&gt;&lt;/a&gt; on behalf of the subscriber
+whenever it decides to not consume a signal. That allows subscribers to configure RQL and namespace filters freely
+without causing any futile redelivery.&lt;/p&gt;
+
+&lt;div class=&quot;alert alert-info&quot; role=&quot;alert&quot;&gt;&lt;i class=&quot;fa fa-info-circle&quot;&gt;&lt;/i&gt; &lt;b&gt;Note:&lt;/b&gt; Weak acknowledgements are available since Ditto 1.5.0.&lt;/div&gt;
+
+&lt;h2 id=&quot;what-it-is&quot;&gt;What it is&lt;/h2&gt;
+
+&lt;p&gt;A  &lt;a href=&quot;basic-acknowledgements.html#weak-acknowledgements-wacks&quot;&gt;&lt;em&gt;weak acknowledgement&lt;/em&gt;&lt;/a&gt; is issued by Ditto for any
+&lt;a href=&quot;basic-acknowledgements.html#requesting-acks&quot;&gt;acknowledgement request&lt;/a&gt; that will not be fulfilled now or ever without
+configuration change.&lt;br /&gt; 
+A weak acknowledgement is identified by the header &lt;code class=&quot;highlighter-rouge&quot;&gt;ditto-weak-ack: true&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;The status code of weak acknowledgements is &lt;code class=&quot;highlighter-rouge&quot;&gt;200 OK&lt;/code&gt;; it signifies that any redelivery is not to be made on their 
+account.&lt;/p&gt;
+
+&lt;p&gt;A weak acknowledgement may look like this in Ditto protocol:&lt;/p&gt;
+&lt;div class=&quot;language-json highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;topic&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;com.acme/xdk_53/things/twin/acks/my-mqtt-connection:my-mqtt-topic&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;headers&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;ditto-weak-ack&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;kc&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;path&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;/&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;value&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;Acknowledgement was issued automatically, because the subscriber is not authorized to receive the signal.&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;status&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;200&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;how-it-works&quot;&gt;How it works&lt;/h2&gt;
+
+&lt;p&gt;Since Ditto 1.4.0, subscribers of &lt;em&gt;twin events&lt;/em&gt; or &lt;em&gt;live signals&lt;/em&gt; are required to declare unique acknowledgement labels
+they are allowed to send. The labels of acknowledgement requests are then identifying the intended subscribers.&lt;br /&gt;
+If the intended subscriber exists but does not receive the signal for non-transient reasons, Ditto issues
+a weak acknowledgement for that subscriber.&lt;br /&gt;
+Such reasons may be:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;The intended subscriber &lt;strong&gt;is not authorized&lt;/strong&gt; to receive the signal by policy;&lt;/li&gt;
+  &lt;li&gt;The intended subscriber did not subscribe for the signal type (&lt;em&gt;twin event, live command, live event or live message&lt;/em&gt;);&lt;/li&gt;
+  &lt;li&gt;The intended subscriber filtered the signal out by its &lt;a href=&quot;basic-changenotifications.html#filtering&quot;&gt;namespace or RQL filter&lt;/a&gt;;&lt;/li&gt;
+  &lt;li&gt;The intended subscriber dropped the signal because its &lt;a href=&quot;connectivity-mapping.html&quot;&gt;payload mapper&lt;/a&gt; produced nothing.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;limitation&quot;&gt;Limitation&lt;/h2&gt;
+
+&lt;p&gt;The distributed nature of cluster pub/sub means that weak acknowledgements are not always issued correctly.&lt;br /&gt;
+They are only &lt;em&gt;eventually correct&lt;/em&gt; in the sense that some time after a change to the publisher-subscriber pair,
+the issued weak acknowledgements will reflect the change.&lt;br /&gt;
+Such changes include:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Opening and closing of Websocket or other connections acting as the subscriber;&lt;/li&gt;
+  &lt;li&gt;Subscribing and unsubscribing for different signal types via Websocket;&lt;/li&gt;
+  &lt;li&gt;Modification of connections via the &lt;a href=&quot;connectivity-manage-connections.html&quot;&gt;connectivity API&lt;/a&gt;;&lt;/li&gt;
+  &lt;li&gt;Migration of a connection from one Ditto cluster member to another due to load balancing.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;feedback&quot;&gt;Feedback?&lt;/h2&gt;
+
+&lt;p&gt;Please &lt;a href=&quot;feedback.html&quot;&gt;get in touch&lt;/a&gt; if you have feedback or questions towards this new concept of weak 
+acknowledgements.&lt;/p&gt;
+
+&lt;p&gt;&lt;br /&gt;
+&lt;br /&gt;&lt;/p&gt;
+&lt;figure&gt;&lt;img class=&quot;docimage&quot; src=&quot;images/ditto.svg&quot; alt=&quot;Ditto&quot; style=&quot;max-width: 500px&quot; /&gt;&lt;/figure&gt;
+
+&lt;p&gt;–&lt;br /&gt;
+The Eclipse Ditto team&lt;/p&gt;
+</description>
+            <pubDate>Mon, 16 Nov 2020 00:00:00 +0000</pubDate>
+            <link>https://www.eclipse.org/ditto/2020-11-16-weak-acknowledgements.html</link>
+            <guid isPermaLink="true">https://www.eclipse.org/ditto/2020-11-16-weak-acknowledgements.html</guid>
+            
+            <category>blog</category>
+            
+            
+        </item>
         
         <item>
             <title>Desired Feature Properties</title>
             <description>&lt;h2 id=&quot;desired-feature-properties-added-to-things-model&quot;&gt;Desired feature properties added to things model&lt;/h2&gt;
-&lt;p&gt;With the release of Eclipse Ditto &lt;b&gt;version 1.5.0&lt;/b&gt;
-&lt;a href=&quot;basic-feature.htlm#feature-desired-properties&quot;&gt;desired feature properties&lt;/a&gt; are introduced to the things model for 
-&lt;b&gt;API versions later than 1&lt;/b&gt;. The &lt;i&gt;desired properties&lt;/i&gt; for features are added on the same level of the model as
+&lt;p&gt;With the upcoming release of Eclipse Ditto &lt;strong&gt;version 1.5.0&lt;/strong&gt; 
+&lt;a href=&quot;basic-feature.html#feature-desired-properties&quot;&gt;desired feature properties&lt;/a&gt; are introduced to the things model for 
+&lt;strong&gt;API versions later than 1&lt;/strong&gt;. The &lt;em&gt;desired properties&lt;/em&gt; for features are added on the same level of the model as 
 the feature properties and can reflect for example feature property updates ,which are intended, but not yet applied.&lt;/p&gt;
 
-&lt;p&gt;&lt;i&gt;Further logics for desired feature properties might be implemented in future Ditto versions.&lt;/i&gt;&lt;/p&gt;
+&lt;div class=&quot;alert alert-info&quot; role=&quot;alert&quot;&gt;&lt;i class=&quot;fa fa-info-circle&quot;&gt;&lt;/i&gt; &lt;b&gt;Note:&lt;/b&gt; Further logics for desired feature properties might be implemented in future Ditto 
+                              versions.&lt;/div&gt;
 
 &lt;p&gt;A fully-fledged JSON representation of a feature with desired properties is shown below:&lt;/p&gt;
 
@@ -53,7 +145,7 @@ the feature properties and can reflect for example feature property updates ,whi
 &lt;h2 id=&quot;operations-on-desired-feature-properties&quot;&gt;Operations on desired feature properties&lt;/h2&gt;
 
 &lt;ul&gt;
-  &lt;li&gt;&lt;b&gt;CRUD operations&lt;/b&gt;
+  &lt;li&gt;&lt;strong&gt;CRUD operations&lt;/strong&gt;
     &lt;ul&gt;
       &lt;li&gt;You can create multiple desired properties of a feature or just single ones.&lt;/li&gt;
       &lt;li&gt;You can retrieve all desired properties of a feature or just single ones.&lt;/li&gt;
@@ -61,27 +153,27 @@ the feature properties and can reflect for example feature property updates ,whi
       &lt;li&gt;You can delete all desired properties of a feature or just single ones.&lt;/li&gt;
     &lt;/ul&gt;
   &lt;/li&gt;
-  &lt;li&gt;&lt;b&gt;Search&lt;/b&gt;
+  &lt;li&gt;&lt;strong&gt;Search&lt;/strong&gt;
     &lt;ul&gt;
       &lt;li&gt;You can &lt;a href=&quot;httpapi-search.html&quot;&gt;search&lt;/a&gt; for things with specific desired properties with &lt;a href=&quot;basic-rql.html&quot;&gt;RQL-functions&lt;/a&gt;.&lt;/li&gt;
       &lt;li&gt;You can search for things, which have &lt;a href=&quot;basic-rql.html#exists&quot;&gt;existent&lt;/a&gt; desired properties for a feature.&lt;/li&gt;
     &lt;/ul&gt;
   &lt;/li&gt;
-  &lt;li&gt;&lt;b&gt;Get notified on changes&lt;/b&gt;
+  &lt;li&gt;&lt;strong&gt;Get notified on changes&lt;/strong&gt;
     &lt;ul&gt;
-      &lt;li&gt;You can &lt;a href=&quot;basic-signals-event.html&quot;&gt;receive events&lt;/a&gt; for changes done to the desired properties of things
+      &lt;li&gt;You can &lt;a href=&quot;basic-signals-event.html&quot;&gt;receive events&lt;/a&gt; for changes done to the desired properties of things 
 you’re authorized to read.&lt;/li&gt;
-      &lt;li&gt;You can &lt;a href=&quot;basic-enrichment.html&quot;&gt;enrich&lt;/a&gt; and &lt;a href=&quot;basic-changenotifications.html#filtering&quot;&gt;filter&lt;/a&gt; the
+      &lt;li&gt;You can &lt;a href=&quot;basic-enrichment.html&quot;&gt;enrich&lt;/a&gt; and &lt;a href=&quot;basic-changenotifications.html#filtering&quot;&gt;filter&lt;/a&gt; the 
   events you want to receive, for changes done to the desired properties.&lt;/li&gt;
     &lt;/ul&gt;
   &lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;h3 id=&quot;executing-crud-operations-on-desired-feature-properties&quot;&gt;Executing CRUD operations on desired feature properties&lt;/h3&gt;
-&lt;p&gt;CRUD operations can be executed either via the &lt;a href=&quot;httpapi-concepts.html&quot;&gt;Ditto HTTP API&lt;/a&gt; &lt;b&gt;versions later than 1&lt;/b&gt; or via
+&lt;p&gt;CRUD operations can be executed either via the &lt;a href=&quot;httpapi-concepts.html&quot;&gt;Ditto HTTP API&lt;/a&gt; &lt;strong&gt;versions later than 1&lt;/strong&gt; or via 
 &lt;a href=&quot;protocol-overview.html&quot;&gt;ditto-protocol&lt;/a&gt; messages.&lt;/p&gt;
 
-&lt;p&gt;&lt;i&gt;Possible CRUD operations for desired feature properties via ditto-protocol&lt;/i&gt;:&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Possible CRUD operations for desired feature properties via ditto-protocol&lt;/em&gt;:&lt;/p&gt;
 
 &lt;ul&gt;
   &lt;li&gt;&lt;a href=&quot;protocol-examples-retrievedesiredproperties.html&quot;&gt;Retrieve all desired properties of a feature via ditto-protocol&lt;/a&gt;&lt;/li&gt;
@@ -93,10 +185,10 @@ you’re authorized to read.&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;h3 id=&quot;using-the-ditto-client-to-manage-desired-feature-properties&quot;&gt;Using the ditto-client to manage desired feature properties&lt;/h3&gt;
-&lt;p&gt;The desired feature properties can also be retrieved, modified and deleted via the &lt;a href=&quot;client-sdk-java.html&quot;&gt;Ditto Java Client&lt;/a&gt;.
-At the time of publishing of this blog post (&lt;b&gt;Ditto Java Client version 1.5.0&lt;/b&gt;), no special CRUD operations for
-desired feature properties are implemented in the client. Thus, the operations have to be executed via creating
-&lt;b&gt;ditto-protocol messages&lt;/b&gt; manually in the client.&lt;/p&gt;
+&lt;p&gt;The desired feature properties can also be retrieved, modified and deleted via the &lt;a href=&quot;client-sdk-java.html&quot;&gt;Ditto Java Client&lt;/a&gt;. 
+With the upcoming (&lt;strong&gt;Ditto Java Client version 1.5.0&lt;/strong&gt;), no special CRUD operations for 
+desired feature properties are implemented in the client. Thus, the operations have to be executed via creating 
+&lt;strong&gt;ditto-protocol messages&lt;/strong&gt; manually in the client.&lt;/p&gt;
 
 &lt;p&gt;Example for creating/modifying desired feature properties of a thing via the ditto-client:&lt;/p&gt;
 
@@ -122,6 +214,12 @@ desired feature properties are implemented in the client. Thus, the operations h
         &lt;span class=&quot;o&quot;&gt;}));&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
+&lt;h2 id=&quot;feedback&quot;&gt;Feedback?&lt;/h2&gt;
+
+&lt;p&gt;Please &lt;a href=&quot;feedback.html&quot;&gt;get in touch&lt;/a&gt; if you have feedback or questions towards this new concept of desired properties.&lt;/p&gt;
+
+&lt;p&gt;&lt;br /&gt;
+&lt;br /&gt;&lt;/p&gt;
 &lt;figure&gt;&lt;img class=&quot;docimage&quot; src=&quot;images/ditto.svg&quot; alt=&quot;Ditto&quot; style=&quot;max-width: 500px&quot; /&gt;&lt;/figure&gt;
 
 &lt;p&gt;–&lt;br /&gt;
@@ -478,8 +576,10 @@ So the device can provide its alternative options to open the barrier after 5 se
 &lt;p&gt;I hope I could demonstrate the power of the new acknowledgement feature properly and could make it clear how it can be used.
 Maybe you did recognize some of your use cases in the given examples or maybe you have another use case which can or cannot be solved by this feature.&lt;/p&gt;
 
-&lt;p&gt;We would love to get your feedback.&lt;/p&gt;
+&lt;p&gt;We would love to get your &lt;a href=&quot;feedback.html&quot;&gt;feedback&lt;/a&gt;.&lt;/p&gt;
 
+&lt;p&gt;&lt;br /&gt;
+&lt;br /&gt;&lt;/p&gt;
 &lt;figure&gt;&lt;img class=&quot;docimage&quot; src=&quot;images/ditto.svg&quot; alt=&quot;Ditto&quot; style=&quot;max-width: 500px&quot; /&gt;&lt;/figure&gt;
 
 &lt;p&gt;–&lt;br /&gt;
@@ -1378,53 +1478,6 @@ The Eclipse Ditto team&lt;/p&gt;
             <pubDate>Thu, 12 Dec 2019 00:00:00 +0000</pubDate>
             <link>https://www.eclipse.org/ditto/2019-12-12-release-announcement-100.html</link>
             <guid isPermaLink="true">https://www.eclipse.org/ditto/2019-12-12-release-announcement-100.html</guid>
-            
-            <category>blog</category>
-            
-            
-        </item>
-        
-        <item>
-            <title>Announcing Ditto Milestone 1.0.0-M2</title>
-            <description>&lt;p&gt;The second and last milestone of the upcoming release 
-&lt;a href=&quot;https://projects.eclipse.org/projects/iot.ditto/releases/1.0.0&quot;&gt;1.0.0&lt;/a&gt; was released today.&lt;/p&gt;
-
-&lt;p&gt;Have a look at the Milestone &lt;a href=&quot;release_notes_100-M2.html&quot;&gt;1.0.0-M2 release notes&lt;/a&gt; for what changed in detail.&lt;/p&gt;
-
-&lt;p&gt;The main changes and new features since the last release &lt;a href=&quot;release_notes_100-M1a.html&quot;&gt;1.0.0-M1a release notes&lt;/a&gt; are&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;invoking custom foreign HTTP endpoints as a result of events/messages&lt;/li&gt;
-  &lt;li&gt;ability to reflect Eclipse Hono’s device connection state in Ditto’s things&lt;/li&gt;
-  &lt;li&gt;support for OpenID Connect / OAuth2.0 based authentication in Ditto Java Client&lt;/li&gt;
-  &lt;li&gt;configurbale throttling of max. consumed WebSocket commands / time interval&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;artifacts&quot;&gt;Artifacts&lt;/h2&gt;
-
-&lt;p&gt;The new Java artifacts have been published at the &lt;a href=&quot;https://repo.eclipse.org/content/repositories/ditto/&quot;&gt;Eclipse Maven repository&lt;/a&gt;
-as well as &lt;a href=&quot;https://repo1.maven.org/maven2/org/eclipse/ditto/&quot;&gt;Maven central&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;The Docker images have been pushed to Docker Hub:&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://hub.docker.com/r/eclipse/ditto-policies/&quot;&gt;eclipse/ditto-policies&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://hub.docker.com/r/eclipse/ditto-things/&quot;&gt;eclipse/ditto-things&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://hub.docker.com/r/eclipse/ditto-things-search/&quot;&gt;eclipse/ditto-things-search&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://hub.docker.com/r/eclipse/ditto-gateway/&quot;&gt;eclipse/ditto-gateway&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://hub.docker.com/r/eclipse/ditto-connectivity/&quot;&gt;eclipse/ditto-connectivity&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://hub.docker.com/r/eclipse/ditto-concierge/&quot;&gt;eclipse/ditto-concierge&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;br /&gt;
-&lt;br /&gt;&lt;/p&gt;
-&lt;figure&gt;&lt;img class=&quot;docimage&quot; src=&quot;images/ditto.svg&quot; alt=&quot;Ditto&quot; style=&quot;max-width: 500px&quot; /&gt;&lt;/figure&gt;
-
-&lt;p&gt;–&lt;br /&gt;
-The Eclipse Ditto team&lt;/p&gt;
-</description>
-            <pubDate>Mon, 04 Nov 2019 00:00:00 +0000</pubDate>
-            <link>https://www.eclipse.org/ditto/2019-11-04-milestone-announcement-100-M2.html</link>
-            <guid isPermaLink="true">https://www.eclipse.org/ditto/2019-11-04-milestone-announcement-100-M2.html</guid>
             
             <category>blog</category>
             

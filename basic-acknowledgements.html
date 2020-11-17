@@ -1880,6 +1880,17 @@ event which was consumed by an application integrating with Ditto, or that a liv
 without any live or message response, <a href="#requesting-acks">request the acknowledgement</a> for a
 <a href="#custom-acknowledgement-labels">custom acknowledgement label</a>.</p>
 
+<h2 id="weak-acknowledgements-wacks">Weak Acknowledgements (WACKs)</h2>
+
+<p>Since there are scenarios where the subscriber of events or live messages has defined an RQL filter or is not allowed to receive an event by a policy, it is not always possible that an acknowledgement can be provided.
+To avoid that a command fails because of a missing acknowledgement for those reasons, we introduced weak acknowledgements.</p>
+
+<p>These weak acknowledgements are issued automatically by ditto, in case a message or an event is filtered by a subscriber which declared to provide one or more of the requested acknowledgements for the command.
+A weak acknowledgement can be identified by checking the header with value <code class="highlighter-rouge">ditto-weak-ack</code>.
+Weak acknowledgements have this header set to <code class="highlighter-rouge">true</code>.</p>
+
+<p>These weak acknowledgements do not cause redelivery of messages consumed by a Connection.</p>
+
 <h2 id="interaction-between-headers">Interaction between headers</h2>
 <p>Three headers control how Ditto responds to a command: <code class="highlighter-rouge">response-required</code>, <code class="highlighter-rouge">requested-acks</code>, <code class="highlighter-rouge">timeout</code>.</p>
 <ul>
@@ -2231,7 +2242,7 @@ set by the user already cause a client error.</p>
                     </div>
                     <p class="notice">
                         &copy;2020 Eclipse Ditto.
-                         Site last generated: Nov 12, 2020 <br />
+                         Site last generated: Nov 17, 2020 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">
