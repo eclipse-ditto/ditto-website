@@ -1581,6 +1581,9 @@ to prior Eclipse Ditto 1.x versions.</p>
 <p>Compared to the latest release <a href="release_notes_140.html">1.4.0</a>, the following changes, new features and
 bugfixes were added.</p>
 
+<div class="alert alert-danger" role="alert"><i class="fa fa-exclamation-circle"></i> <b>Warning:</b> If you want to upgrade an existing Ditto installation to 1.5.0, the migration has to be 
+    done before upgrading: <strong>Follow the steps documented in <a href="#migration-notes">the migration notes</a></strong>.</div>
+
 <h3 id="changes">Changes</h3>
 
 <h4 id="negatively-settling-processed-amqp-10-messages-changed-to-rejected"><a href="https://github.com/eclipse/ditto/pull/907">Negatively settling processed AMQP 1.0 messages changed to <code class="highlighter-rouge">rejected</code></a></h4>
@@ -1681,7 +1684,17 @@ when only a single subpath exists in the feature (i.e. feature with only propert
 
 <h2 id="migration-notes">Migration notes</h2>
 
-<p>None</p>
+<h3 id="mongodb-hostname-configuration">MongoDB hostname configuration</h3>
+
+<p>Due to the <a href="https://github.com/eclipse/ditto/pull/888">consolidation of config files</a>, it is now <strong>required to configure
+the MongoDB <code class="highlighter-rouge">hostname</code> explicitly</strong> as the default hostname was changed to <code class="highlighter-rouge">localhost</code>.<br />
+Previously, this hostname was automatically set to <code class="highlighter-rouge">mongodb</code> (which is the hostname of the MongoDB when e.g. the 
+<code class="highlighter-rouge">docker-compose.yaml</code> deployment is used) in Docker based environments.</p>
+
+<p>This now has to be manually done via the environment variable <code class="highlighter-rouge">MONGO_DB_HOSTNAME</code>.</p>
+
+<p>The default <code class="highlighter-rouge">docker-compose.yaml</code> was also adjusted accordingly: 
+<a href="https://github.com/eclipse/ditto/blob/master/deployment/docker/docker-compose.yml">docker-compose.yml</a></p>
 
 
     <div class="tags">
@@ -1708,7 +1721,7 @@ when only a single subpath exists in the feature (i.e. feature with only propert
                     </div>
                     <p class="notice">
                         &copy;2020 Eclipse Ditto.
-                         Site last generated: Dec 10, 2020 <br />
+                         Site last generated: Dec 11, 2020 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">
