@@ -260,6 +260,13 @@
               
               
               
+              <li><a href="release_notes_151.html">1.5.1</a></li>
+              
+              
+              
+              
+              
+              
               <li><a href="release_notes_150.html">1.5.0</a></li>
               
               
@@ -1728,6 +1735,11 @@ WebSocket session, the following text message has to be sent to the backend: <co
   </thead>
   <tbody>
     <tr>
+      <td>Refresh JWT based authentication</td>
+      <td><code class="highlighter-rouge">JWT-TOKEN</code></td>
+      <td><code class="highlighter-rouge">-</code></td>
+    </tr>
+    <tr>
       <td>Subscribe for <a href="basic-changenotifications.html">events/change notifications</a></td>
       <td><code class="highlighter-rouge">START-SEND-EVENTS</code></td>
       <td><code class="highlighter-rouge">START-SEND-EVENTS:ACK</code></td>
@@ -1769,6 +1781,16 @@ WebSocket session, the following text message has to be sent to the backend: <co
     </tr>
   </tbody>
 </table>
+
+<h3 id="authentication-1">Authentication</h3>
+
+<p>Ditto closes Websocket connections when the JWT provided with the initial connect expires. To keep the connection 
+open,  one can send a valid JWT via <code class="highlighter-rouge">JWT-TOKEN</code> protocol message. The <code class="highlighter-rouge">sub</code> of the new token must match the one from 
+the initial connect, otherwise Ditto will close the connection.</p>
+
+<p>Ditto expects the message with the JWT as a base64 encoded string provided with the paramter <code class="highlighter-rouge">?jwtToken=&lt;token&gt;</code>, e.g.:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>JWT-TOKEN?jwtToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+</code></pre></div></div>
 
 <h3 id="enrichment">Enrichment</h3>
 
@@ -1898,8 +1920,8 @@ would match an attribute “counter” to be greater than 42:</p>
                         <a href="https://eclipse.org"><img src="images/eclipse_foundation_logo.svg" alt="Eclipse logo"/></a>
                     </div>
                     <p class="notice">
-                        &copy;2020 Eclipse Ditto.
-                         Site last generated: Dec 11, 2020 <br />
+                        &copy;2021 Eclipse Ditto.
+                         Site last generated: Jan 12, 2021 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

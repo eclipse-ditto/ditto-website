@@ -260,6 +260,13 @@
               
               
               
+              <li><a href="release_notes_151.html">1.5.1</a></li>
+              
+              
+              
+              
+              
+              
               <li><a href="release_notes_150.html">1.5.0</a></li>
               
               
@@ -1632,7 +1639,19 @@ which information.</p>
 <h2 id="headers">Headers</h2>
 
 <p>Protocol messages contain headers as JSON object with arbitrary content.
-There are some pre-defined headers, which have a special meaning for Ditto:</p>
+The keys of the JSON object are the header names; the values are the header values.</p>
+
+<p>The header names are <em>case-insensitive</em> and <em>case-preserving</em> in the following sense:</p>
+<ul>
+  <li><strong>Case-insensitive</strong>: Capitalization of header names does not affect evaluation of the headers by Ditto;
+setting <code class="highlighter-rouge">correlation-id</code> or <code class="highlighter-rouge">CORRELATION-ID</code> has the same effect. If 2 headers differing only in capitalization
+are set, Ditto’s behavior is <strong>not defined</strong>.</li>
+  <li><strong>Case-preserving</strong>: Capitalization of headers by the sender of a Ditto protocol message is visible to the receiver.
+An exception to case-preservation are the headers of HTTP requests and responses,
+since they are themselves not case-sensitive.</li>
+</ul>
+
+<p>There are some pre-defined headers, which have a special meaning for Ditto:</p>
 
 <table>
   <thead>
@@ -1659,12 +1678,12 @@ There are some pre-defined headers, which have a special meaning for Ditto:</p>
       <td><code class="highlighter-rouge">String</code></td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge">If-Match</code></td>
+      <td><code class="highlighter-rouge">if-match</code></td>
       <td>Has the same semantics as defined for the <a href="httpapi-concepts.html#conditional-requests">HTTP API</a>.</td>
       <td><code class="highlighter-rouge">String</code></td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge">If-None-Match</code></td>
+      <td><code class="highlighter-rouge">if-none-match</code></td>
       <td>Has the same semantics as defined for the <a href="httpapi-concepts.html#conditional-requests">HTTP API</a>.</td>
       <td><code class="highlighter-rouge">String</code></td>
     </tr>
@@ -1764,8 +1783,8 @@ Ditto Protocol message contains a field <code class="highlighter-rouge">extra</c
                         <a href="https://eclipse.org"><img src="images/eclipse_foundation_logo.svg" alt="Eclipse logo"/></a>
                     </div>
                     <p class="notice">
-                        &copy;2020 Eclipse Ditto.
-                         Site last generated: Dec 11, 2020 <br />
+                        &copy;2021 Eclipse Ditto.
+                         Site last generated: Jan 12, 2021 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

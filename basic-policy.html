@@ -260,6 +260,13 @@
               
               
               
+              <li><a href="release_notes_151.html">1.5.1</a></li>
+              
+              
+              
+              
+              
+              
               <li><a href="release_notes_150.html">1.5.0</a></li>
               
               
@@ -1581,10 +1588,16 @@ $('#toc').on('click', 'a', function() {
 <p>A specific policy provides someone (called subject), permission to read and/or write a given resource.</p>
 
 <div class="alert alert-success" role="alert"><i class="fa fa-check-square-o"></i> <b>Tip:</b> The write permission at the policy root resource (i.e. <code class="highlighter-rouge">policy:/</code>) allows to manage the
-  policy itself.<br />Find an <a href="basic-policy.html#example">example</a> at the end of the page.</div>
+  policy itself.<br />Find an <a href="#example">example</a> at the end of the page.</div>
 
 <p>Please note, that in most cases it makes sense to grant read permission in addition to a write permission, because
 <em>write does not imply read.</em></p>
+
+<h2 id="model-specification">Model specification</h2>
+
+<h3 id="api-version-2">API version 2</h3>
+
+<script src="docson/widget.js" data-schema="../jsonschema/policy.json"></script>
 
 <h2 id="who-can-be-addressed">Who can be addressed?</h2>
 
@@ -1613,6 +1626,31 @@ $('#toc').on('click', 'a', function() {
   </tbody>
 </table>
 
+<h3 id="expiring-policy-subjects">Expiring Policy subjects</h3>
+
+<p>When a Policy subject contains an <code class="highlighter-rouge">"expiry"</code> timestamp (formatted as ISO-8601 string), this subject will get 
+automatically deleted once this timestamp was reached.</p>
+
+<p>When providing an <code class="highlighter-rouge">"expiry"</code> for a Policy subject, this timestamp is rounded up:</p>
+<ul>
+  <li>by default to the next full hour</li>
+  <li>this is configurable via the environment variable <code class="highlighter-rouge">POLICY_SUBJECT_EXPIRY_GRANULARITY</code> of the 
+<a href="architecture-services-policies.html">policies</a> service which takes a 
+<a href="https://github.com/lightbend/config/blob/master/HOCON.md#duration-format">HOCON duration</a>, e.g.:
+    <ul>
+      <li>configured to “1s”: a received “expiry” is rounded up to the next full second</li>
+      <li>configured to “30s”: a received “expiry” is rounded up to the next half minute</li>
+      <li>configured to “1h”: a received “expiry” is rounded up to the next full hour (<strong>default</strong>)</li>
+      <li>configured to “12h”: a received “expiry” is rounded up to the next half day</li>
+      <li>configured to “1d”: a received “expiry” is rounded up to the next full day</li>
+      <li>configured to “15d”: a received “expiry” is rounded up to the next half month</li>
+    </ul>
+  </li>
+</ul>
+
+<p>Once an expired subject is deleted, it will immediately no longer have access to the resources protected by the policy
+it was deleted from.</p>
+
 <h2 id="which-resources-can-be-controlled">Which Resources can be controlled?</h2>
 
 <p>A Policy can contain access control definitions for several resources:</p>
@@ -1632,7 +1670,7 @@ part only (and the Thing ID).</li>
   </li>
 </ul>
 
-<h2 id="policy">Policy</h2>
+<h3 id="policy">Policy</h3>
 
 <p>The Policy resource (addressable as <code class="highlighter-rouge">policy:/</code>) defines the access control for the Policy itself.</p>
 
@@ -1685,7 +1723,7 @@ part only (and the Thing ID).</li>
 <p>The <a href="basic-policy.html#example">Things example at the end of the page</a> also defines access control on the policy 
 resource.</p>
 
-<h2 id="thing">Thing</h2>
+<h3 id="thing">Thing</h3>
 
 <p>The Thing resource (addressable as <code class="highlighter-rouge">thing:/</code>) defines the access control for Things.</p>
 
@@ -1728,7 +1766,7 @@ Policy.</p>
 
 <p>Find a <a href="basic-policy.html#example">Things example at the end of the page.</a></p>
 
-<h2 id="feature">Feature</h2>
+<h3 id="feature">Feature</h3>
 
 <table>
   <thead>
@@ -1767,7 +1805,7 @@ Policy.</p>
 
 <p>Find a <a href="basic-policy.html#example">Things example at the end of the page.</a></p>
 
-<h2 id="message">Message</h2>
+<h3 id="message">Message</h3>
 
 <p>The Message resource (addressable as <code class="highlighter-rouge">message:/</code>) defines the access control for Messages.</p>
 
@@ -2010,8 +2048,8 @@ It is however not included by default, but can be retrieved by specifying the <c
                         <a href="https://eclipse.org"><img src="images/eclipse_foundation_logo.svg" alt="Eclipse logo"/></a>
                     </div>
                     <p class="notice">
-                        &copy;2020 Eclipse Ditto.
-                         Site last generated: Dec 11, 2020 <br />
+                        &copy;2021 Eclipse Ditto.
+                         Site last generated: Jan 12, 2021 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">
