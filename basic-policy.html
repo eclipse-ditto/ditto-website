@@ -1595,36 +1595,53 @@ $('#toc').on('click', 'a', function() {
 
 <h2 id="model-specification">Model specification</h2>
 
-<h3 id="api-version-2">API version 2</h3>
-
 <script src="docson/widget.js" data-schema="../jsonschema/policy.json"></script>
 
-<h2 id="who-can-be-addressed">Who can be addressed?</h2>
+<h2 id="subjects">Subjects</h2>
 
-<p>A Subject ID must conform to one of the following rules:</p>
+<p>Subjects in a policy define <strong>who</strong> gets permissions granted/revoked on the <a href="#which-resources-can-be-controlled">resources</a>
+of a policy entry.<br />
+Each subject ID contains a prefix defining the subject “issuer” (so which party issued the authentication) and an actual 
+subject, separated with a colon:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;subject-issuer&gt;:&lt;subject&gt;
+</code></pre></div></div>
 
+<p>The subject can be one of the following ones:</p>
 <ul>
-  <li>The ID of a User defined in the nginx reverse proxy prefixed with <code class="highlighter-rouge">nginx</code>.</li>
-  <li>Different JWT providers with their JWT “iss” fields - the currently supported are listed in the table below.</li>
-  <li>OpenID Connect compliant providers - supported providers are listed at <a href="https://openid.net/developers/certified/">OpenID Connect - Certified OpenID Provider Servers and Services</a> The <code class="highlighter-rouge">sub</code> claim and configured provider name are used in the form <code class="highlighter-rouge">&lt;provider&gt;:&lt;sub-claim&gt;</code>.</li>
-</ul>
+  <li><code class="highlighter-rouge">nginx:&lt;nginx-username&gt;</code> - when using nginx as 
+<a href="installation-operating.html#pre-authentication">pre-authentication provider</a> - by default enabled in the Ditto 
+installation’s nginx</li>
+  <li><code class="highlighter-rouge">&lt;other-pre-auth-provider&gt;:&lt;username&gt;</code> - when using another custom provider as 
+<a href="installation-operating.html#pre-authentication">pre-authentication provider</a> which sets the 
+<code class="highlighter-rouge">x-ditto-pre-authenticated</code> HTTP header</li>
+  <li>
+    <p><code class="highlighter-rouge">google:&lt;google-user-id&gt;</code> - in general different 
+<a href="#" data-toggle="tooltip" data-original-title="JSON Web Token (JWT)">JWT</a> - the currently supported 
+are listed in the table:</p>
 
-<table>
-  <thead>
-    <tr>
-      <th>Prefix</th>
-      <th>Type</th>
-      <th>Description</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>google</td>
-      <td>jwt</td>
-      <td>A <a href="#" data-toggle="tooltip" data-original-title="JSON Web Token (JWT)">JWT</a> issued by Google</td>
-    </tr>
-  </tbody>
-</table>
+    <table>
+      <thead>
+        <tr>
+          <th>Prefix</th>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>google</td>
+          <td>jwt</td>
+          <td>A <a href="#" data-toggle="tooltip" data-original-title="JSON Web Token (JWT)">JWT</a> issued by Google</td>
+        </tr>
+      </tbody>
+    </table>
+  </li>
+  <li><code class="highlighter-rouge">&lt;custom-openid-connect-provider&gt;:&lt;jwt-sub-claim&gt;</code> -
+custom OpenID Connect compliant providers - supported providers are listed at
+<a href="https://openid.net/developers/certified/">OpenID Connect - Certified OpenID Provider Servers and Services</a> -
+<a href="installation-operating.html#openid-connect">can be configured</a> in Ditto defining the prefix in Ditto’s config file.<br />
+The <code class="highlighter-rouge">sub</code> claim from the JWT and the configured provider name are used in the form <code class="highlighter-rouge">&lt;provider&gt;:&lt;jwt-sub-claim&gt;</code>.</li>
+</ul>
 
 <h3 id="expiring-policy-subjects">Expiring Policy subjects</h3>
 
@@ -1650,6 +1667,111 @@ automatically deleted once this timestamp was reached.</p>
 
 <p>Once an expired subject is deleted, it will immediately no longer have access to the resources protected by the policy
 it was deleted from.</p>
+
+<h2 id="actions">Actions</h2>
+
+<p>Policy actions are available via Ditto’s <a href="httpapi-overview.html">HTTP API</a> and can be invoked for certain 
+<a href="#model-specification">policy entries</a> or for complete policies.</p>
+
+<p>They require neither <code class="highlighter-rouge">READ</code> nor <code class="highlighter-rouge">WRITE</code> permission, but instead a granted <code class="highlighter-rouge">EXECUTE</code> permission on the specific action
+name, e.g. for a single policy entry:</p>
+<ul>
+  <li><code class="highlighter-rouge">policy:/entries/{label}/actions/{actionName}</code></li>
+</ul>
+
+<h3 id="action-activatetokenintegration">Action activateTokenIntegration</h3>
+
+<div class="alert alert-success" role="alert"><i class="fa fa-check-square-o"></i> <b>Tip:</b> 
+  Make use of this action in order to copy your existing permissions for a pre-configured connection 
+  (e.g. invoking an HTTP webhook) until the expiration time of the JWT the user authenticated 
+  with passes.
+</div>
+
+<p>When authenticated using OpenID Connect, it is possible to inject a subject into policies that expires when
+the <a href="#" data-toggle="tooltip" data-original-title="JSON Web Token (JWT)">JWT</a> expires. 
+The form of the injected subject (the token integration subject) is configurable globally in the Ditto installation.</p>
+
+<p>A user is authorized to inject the token integration subject when granted the <code class="highlighter-rouge">EXECUTE</code> permission on a policy entry.<br />
+The <code class="highlighter-rouge">WRITE</code> permission is not necessary. To activate or deactivate a token integration subject, send a <code class="highlighter-rouge">POST</code> 
+request to the following HTTP routes:</p>
+
+<ul>
+  <li><a href="/http-api-doc.html#/Policies/post_policies__policyId__actions_activateTokenIntegration">POST /api/2/policies/{policyId}/actions/activateTokenIntegration</a><br />
+Injects a new subject <strong>into all matched policy entries</strong> calculated with information extracted from the authenticated 
+JWT.
+    <ul>
+      <li>the authenticated token must be granted the <code class="highlighter-rouge">EXECUTE</code> permission to perform the <code class="highlighter-rouge">activateTokenIntegration</code> action</li>
+      <li>one of the subject IDs must be contained in the authenticated token</li>
+      <li>at least one <code class="highlighter-rouge">READ</code> permission to a <code class="highlighter-rouge">thing:/</code> resource path must be granted</li>
+    </ul>
+  </li>
+  <li><a href="/http-api-doc.html#/Policies/post_policies__policyId__actions_deactivateTokenIntegration">POST /api/2/policies/{policyId}/actions/deactivateTokenIntegration</a><br />
+Removes the calculated subject with information extracted from the authenticated JWT <strong>from all matched policy entries</strong>.
+    <ul>
+      <li>the authenticated token must be granted the <code class="highlighter-rouge">EXECUTE</code> permission to perform the <code class="highlighter-rouge">deactivateTokenIntegration</code> action</li>
+      <li>one of the subject IDs must be contained in the authenticated token</li>
+    </ul>
+  </li>
+  <li><a href="/http-api-doc.html#/Policies/post_policies__policyId__entries__label__actions_activateTokenIntegration">POST /api/2/policies/{policyId}/entries/{label}/actions/activateTokenIntegration</a><br />
+Injects the calculated subject <strong>into the policy entry</strong> calculated with information extracted from the authenticated JWT.
+    <ul>
+      <li>the authenticated token must be granted the <code class="highlighter-rouge">EXECUTE</code> permission to perform the <code class="highlighter-rouge">activateTokenIntegration</code> action</li>
+      <li>one of the subject IDs must be contained in the authenticated token</li>
+      <li>at least one <code class="highlighter-rouge">READ</code> permission to a <code class="highlighter-rouge">thing:/</code> resource path must be granted</li>
+    </ul>
+  </li>
+  <li><a href="/http-api-doc.html#/Policies/post_policies__policyId__entries__label__actions_deactivateTokenIntegration">POST /api/2/policies/{policyId}/entries/{label}/actions/deactivateTokenIntegration</a><br />
+Removes the calculated subject with information extracted from the authenticated JWT <strong>from the policy entry</strong>.
+    <ul>
+      <li>the authenticated token must be granted the <code class="highlighter-rouge">EXECUTE</code> permission to perform the <code class="highlighter-rouge">deactivateTokenIntegration</code> action</li>
+      <li>one of the subject IDs must be contained in the authenticated token</li>
+    </ul>
+  </li>
+</ul>
+
+<p>The injected subject pattern is configurable in Ditto and is by default:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+integration:{{policy-entry:label}}:{{jwt:aud}}
+
+</code></pre></div></div>
+
+<p>To configure the token integration subject, set the path</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ditto.gateway.authentication.oauth.token-integration-subject
+</code></pre></div></div>
+<p>in <code class="highlighter-rouge">gateway-extension.conf</code>, or set the environment variable <code class="highlighter-rouge">OAUTH_TOKEN_INTEGRATION_SUBJECT</code> for Gateway Service.</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+ditto.gateway.authentication.oauth.token-integration-subject =
+  "my-token-integration-issuer:{{policy-entry:label}}:{{jwt:sub}}"
+
+ditto.gateway.authentication.oauth.token-integration-subject =
+  ${?OAUTH_TOKEN_INTEGRATION_SUBJECT}
+
+</code></pre></div></div>
+
+<p>The <a href="basic-placeholders.html">placeholders</a> below are usable as a part of the <code class="highlighter-rouge">activateTokenIntegration</code> configuration:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Placeholder</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="highlighter-rouge">{{ header:&lt;header-name&gt; }}</code></td>
+      <td>HTTP header values passed along the HTTP action request</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">{{ jwt:&lt;jwt-body-claim&gt; }}</code></td>
+      <td>any standard or custom claims in the body of the JWT - e.g., <code class="highlighter-rouge">jwt:sub</code> for the JWT “subject”</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">{{ policy-entry:label }}</code></td>
+      <td>label of the policy entry in which the token integration subject is injected</td>
+    </tr>
+  </tbody>
+</table>
 
 <h2 id="which-resources-can-be-controlled">Which Resources can be controlled?</h2>
 
@@ -1900,6 +2022,11 @@ For providing access to feature-related messages, you have to either grant top-l
       <td>All subjects named in the section are granted <em>write</em> permission on the resources specified in the path, and all nested paths, except they are revoked at a deeper level, or another policy entry (label).</td>
     </tr>
     <tr>
+      <td>grant</td>
+      <td>EXECUTE</td>
+      <td>All subjects named in the section are granted <em>execute</em> permission on the resources specified in the path, and all nested paths, except they are revoked at a deeper level, or another policy entry (label).</td>
+    </tr>
+    <tr>
       <td>revoke</td>
       <td>READ</td>
       <td>All subjects named in the section are <em>prohibited to read</em> on the resources specified in the path, and all nested paths, except they are granted again such permission at a deeper level, or another policy entry (label).</td>
@@ -1908,6 +2035,11 @@ For providing access to feature-related messages, you have to either grant top-l
       <td>revoke</td>
       <td>WRITE</td>
       <td>All subjects named in the section are <em>prohibited to write</em> on the resources specified in the path, and all nested paths, except they are granted again such permission at a deeper level, or another policy entry (label).</td>
+    </tr>
+    <tr>
+      <td>revoke</td>
+      <td>EXECUTE</td>
+      <td>All subjects named in the section are <em>prohibited to execute</em> on the resources specified in the path, and all nested paths, except they are granted again such permission at a deeper level, or another policy entry (label).</td>
     </tr>
   </tbody>
 </table>
@@ -1952,65 +2084,65 @@ users.</li>
 
 <p>The correct Policy JSON object notation would be as shown in the following code block.</p>
 
-<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="w">  </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"policyId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"my.namespace:policy-a"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"entries"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"owner"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"subjects"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-          </span><span class="s2">"nginx:ditto"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"nginx basic auth user"</span><span class="w">
-          </span><span class="p">}</span><span class="w">
-        </span><span class="p">},</span><span class="w">
-        </span><span class="s2">"resources"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-          </span><span class="s2">"thing:/"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-            </span><span class="s2">"grant"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"READ"</span><span class="p">,</span><span class="w"> </span><span class="s2">"WRITE"</span><span class="p">],</span><span class="w">
-            </span><span class="s2">"revoke"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
-          </span><span class="p">},</span><span class="w">
-          </span><span class="s2">"policy:/"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-            </span><span class="s2">"grant"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"READ"</span><span class="p">,</span><span class="w"> </span><span class="s2">"WRITE"</span><span class="p">],</span><span class="w">
-            </span><span class="s2">"revoke"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
-          </span><span class="p">},</span><span class="w">
-          </span><span class="s2">"message:/"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-            </span><span class="s2">"grant"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"READ"</span><span class="p">,</span><span class="w"> </span><span class="s2">"WRITE"</span><span class="p">],</span><span class="w">
-            </span><span class="s2">"revoke"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
-          </span><span class="p">}</span><span class="w">
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"policyId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"my.namespace:policy-a"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"entries"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"owner"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"subjects"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"nginx:ditto"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"nginx basic auth user"</span><span class="w">
         </span><span class="p">}</span><span class="w">
       </span><span class="p">},</span><span class="w">
-      </span><span class="s2">"observer"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"subjects"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-          </span><span class="s2">"nginx:observer-client"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"technical client"</span><span class="w">
-          </span><span class="p">},</span><span class="w">
-          </span><span class="s2">"nginx:some-users"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"a group of users"</span><span class="w">
-          </span><span class="p">}</span><span class="w">
+      </span><span class="s2">"resources"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"thing:/"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="s2">"grant"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"READ"</span><span class="p">,</span><span class="w"> </span><span class="s2">"WRITE"</span><span class="p">],</span><span class="w">
+          </span><span class="s2">"revoke"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
         </span><span class="p">},</span><span class="w">
-        </span><span class="s2">"resources"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-          </span><span class="s2">"thing:/features/featureX"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-            </span><span class="s2">"grant"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"READ"</span><span class="p">],</span><span class="w">
-            </span><span class="s2">"revoke"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
-          </span><span class="p">},</span><span class="w">
-          </span><span class="s2">"thing:/features/featureY"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-            </span><span class="s2">"grant"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"READ"</span><span class="p">],</span><span class="w">
-            </span><span class="s2">"revoke"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
-          </span><span class="p">}</span><span class="w">
+        </span><span class="s2">"policy:/"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="s2">"grant"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"READ"</span><span class="p">,</span><span class="w"> </span><span class="s2">"WRITE"</span><span class="p">],</span><span class="w">
+          </span><span class="s2">"revoke"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="s2">"message:/"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="s2">"grant"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"READ"</span><span class="p">,</span><span class="w"> </span><span class="s2">"WRITE"</span><span class="p">],</span><span class="w">
+          </span><span class="s2">"revoke"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="s2">"observer"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"subjects"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"nginx:observer-client"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"technical client"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="s2">"nginx:some-users"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"a group of users"</span><span class="w">
         </span><span class="p">}</span><span class="w">
       </span><span class="p">},</span><span class="w">
-      </span><span class="s2">"private"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"subjects"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-          </span><span class="s2">"nginx:some-users"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"a group of users"</span><span class="w">
-          </span><span class="p">},</span><span class="w">
-          </span><span class="s2">"resources"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-            </span><span class="s2">"thing:/features/featureX/properties/location/city"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-              </span><span class="s2">"grant"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
-              </span><span class="s2">"revoke"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"READ"</span><span class="p">]</span><span class="w">
-            </span><span class="p">}</span><span class="w">
+      </span><span class="s2">"resources"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"thing:/features/featureX"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="s2">"grant"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"READ"</span><span class="p">],</span><span class="w">
+          </span><span class="s2">"revoke"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="s2">"thing:/features/featureY"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="s2">"grant"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"READ"</span><span class="p">],</span><span class="w">
+          </span><span class="s2">"revoke"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="s2">"private"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"subjects"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"nginx:some-users"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"a group of users"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="s2">"resources"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="s2">"thing:/features/featureX/properties/location/city"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"grant"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+            </span><span class="s2">"revoke"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"READ"</span><span class="p">]</span><span class="w">
           </span><span class="p">}</span><span class="w">
         </span><span class="p">}</span><span class="w">
       </span><span class="p">}</span><span class="w">
     </span><span class="p">}</span><span class="w">
   </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
 <p>The Policy can be found:</p>
@@ -2049,7 +2181,7 @@ It is however not included by default, but can be retrieved by specifying the <c
                     </div>
                     <p class="notice">
                         &copy;2021 Eclipse Ditto.
-                         Site last generated: Jan 12, 2021 <br />
+                         Site last generated: Jan 25, 2021 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="">
+<meta name="keywords" content="blog,  ">
+<title>  Policy actions: token based subject activation </title>
+
+<link rel="stylesheet" href="css/syntax.css">
+<link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" crossorigin="anonymous">
+<link rel="stylesheet" href="css/modern-business.css">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" crossorigin="anonymous">
+<link rel="stylesheet" href="css/customstyles.css">
+<link rel="stylesheet" href="css/boxshadowproperties.css">
+<link rel="stylesheet" href="css/theme-ditto.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,700|Source+Code+Pro:300,600|Titillium+Web:400,600,700">
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js" crossorigin="anonymous"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" crossorigin="anonymous"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/anchor-js/2.0.0/anchor.min.js" crossorigin="anonymous"></script>
+<script src="js/toc.js"></script>
+<script src="js/customscripts.js"></script>
+
+<script type="application/ld+json">
+{
+  "@context": "http://schema.org",
+  "@type": "Organization",
+  "url": "https://eclipse.org/ditto/",
+  "logo": "https://eclipse.org/ditto/images/ditto.svg"
+}
+</script>
+
+<link rel="icon" type="image/png" href="images/favicon-16x16.png" sizes="16x16">
+<link rel="icon" type="image/png" href="images/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="images/favicon-96x96.png" sizes="96x96">
+
+<link rel="alternate" type="application/rss+xml" title="Eclipse Ditto Blog" href="https://www.eclipse.org/ditto/feed.xml">
+
+<!-- Eclipse Foundation cookie consent: -->
+<link rel="stylesheet" type="text/css" href="//www.eclipse.org/eclipse.org-common/themes/solstice/public/stylesheets/vendor/cookieconsent/cookieconsent.min.css" />
+<script src="//www.eclipse.org/eclipse.org-common/themes/solstice/public/javascript/vendor/cookieconsent/default.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            $("#tg-sb-link").click(function() {
+                $("#tg-sb-sidebar").toggle();
+                $("#tg-sb-content").toggleClass('col-md-9');
+                $("#tg-sb-content").toggleClass('col-md-12');
+                $("#tg-sb-icon").toggleClass('fa-toggle-on');
+                $("#tg-sb-icon").toggleClass('fa-toggle-off');
+            });
+        });
+    </script>
+</head>
+
+
+<script>
+    (function(w,d,s,l,i){
+        w[l]=w[l]||[];
+        w[l].push({'gtm.start':
+            new Date().getTime(),event:'gtm.js'});
+        var f=d.getElementsByTagName(s)[0],
+            j=d.createElement(s),
+            dl=l!='dataLayer'?'&l='+l:'';
+        j.async=true;
+        j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;
+        f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-5WLCZXC');
+</script>
+
+
+
+<body>
+<!-- Navigation -->
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container topnavlinks">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-ditto-home" href="index.html">&nbsp;<img src="images/ditto_allwhite_symbolonly.svg" class="ditto-navbar-symbol" alt="Home"> <img src="images/ditto_allwhite_textonly.svg" class="ditto-navbar-symbol-text" alt="Ditto"></a>
+        </div>
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <!-- toggle sidebar button -->
+                <!--<li><a id="tg-sb-link" href="#"><i id="tg-sb-icon" class="fa fa-toggle-on"></i> Nav</a></li>-->
+                <!-- entries without drop-downs appear here -->
+
+
+
+
+                
+                
+                
+                <li><a href="blog.html">Blog</a></li>
+                
+                
+                
+                <li><a href="intro-overview.html">Documentation</a></li>
+                
+                
+                
+                <li><a href="http-api-doc.html">HTTP API</a></li>
+                
+                
+                
+                <li><a href="sandbox.html">Sandbox</a></li>
+                
+                
+                
+                <li><a href="https://github.com/eclipse/ditto" target="_blank">GitHub</a></li>
+                
+                
+                
+                <li><a href="https://github.com/eclipse/ditto-examples" target="_blank">GitHub examples</a></li>
+                
+                
+                
+                <!-- entries with drop-downs appear here -->
+                <!-- conditional logic to control which topnav appears for the audience defined in the configuration file.-->
+                
+                
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Links<b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        
+                        
+                        <li><a href="https://projects.eclipse.org/projects/iot.ditto" target="_blank">Eclipse Ditto Project</a></li>
+                        
+                        
+                        
+                        <li><a href="https://www.eclipse.org/forums/index.php/f/364/" target="_blank">Forum</a></li>
+                        
+                        
+                        
+                        <li><a href="https://ci.eclipse.org/ditto/" target="_blank">Jenkins</a></li>
+                        
+                        
+                        
+                        <li><a href="https://dev.eclipse.org/mhonarc/lists/ditto-dev/" target="_blank">Mailing list archives</a></li>
+                        
+                        
+                        
+                        <li><a href="https://gitter.im/eclipse/ditto" target="_blank">Gitter.im chat</a></li>
+                        
+                        
+                    </ul>
+                </li>
+                
+                
+                
+                <!--comment out this block if you want to hide search-->
+                <li>
+                    <!--start search-->
+                    <div id="search-demo-container">
+                        <input type="text" id="search-input" placeholder="search...">
+                        <ul id="results-container"></ul>
+                    </div>
+                    <script src="//cdnjs.cloudflare.com/ajax/libs/simple-jekyll-search/0.0.9/jekyll-search.js" type="text/javascript"></script>
+                    <script type="text/javascript">
+                            SimpleJekyllSearch.init({
+                                searchInput: document.getElementById('search-input'),
+                                resultsContainer: document.getElementById('results-container'),
+                                dataSource: 'search.json',
+                                searchResultTemplate: '<li><a href="{url}" title="Policy actions: token based subject activation">{title}</a></li>',
+                                noResultsText: 'No results found.',
+                                limit: 10,
+                                fuzzy: true,
+                    })
+                    </script>
+                    <!--end search-->
+                </li>
+            </ul>
+        </div>
+    </div>
+    <!-- /.container -->
+</nav>
+
+<!-- Page Content -->
+<div class="container">
+  <div id="main">
+    <!-- Content Row -->
+    <div class="row">
+        
+        
+
+        <!-- Content Column -->
+        <div class="col-md-12" id="tg-sb-content">
+            <!-- Look the author details up from the site config. -->
+
+
+<!-- Output author details if some exist. -->
+<!-- Output author details if some exist. -->
+<!---->
+<!--<span>-->
+    <!--&lt;!&ndash; Mugshot. &ndash;&gt;-->
+    <!--<img src="https://www.gravatar.com/avatar/19a9fd49b6778aef898249fb4f11bd24?s=135" alt="A photo of Thomas Jäckle" />-->
+
+<!--&lt;!&ndash; Personal Info. &ndash;&gt;-->
+    <!--Written by <a href="https://github.com/thjaeckle" target="_blank">Thomas Jäckle</a>-->
+<!--</span>-->
+<!---->
+
+<article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+    <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">Policy actions: token based subject activation</h1>
+        <p class="post-meta">Published by <img src="https://www.gravatar.com/avatar/19a9fd49b6778aef898249fb4f11bd24?s=135" alt="A photo of Thomas Jäckle" style="width:50px;border-radius:50%;display:inline-block;margin-right:5px;" /><span itemprop="author" itemscope itemtype="http://schema.org/Person"><span itemprop="name"><a href="https://github.com/thjaeckle" target="_blank">Thomas Jäckle</a> </span></span> on <time datetime="2021-01-22T00:00:00+00:00" itemprop="datePublished">Jan 22, 2021</time> - Tags:
+            
+            
+            
+            <a href="tag_blog.html">blog</a>
+            
+            
+            
+
+        </p>
+
+
+    </header>
+
+    <div class="post-content" itemprop="articleBody">
+
+        
+
+        
+        
+<!-- this handles the automatic toc. use ## for subheads to auto-generate the on-page minitoc. if you use html tags, you must supply an ID for the heading element in order for it to appear in the minitoc. -->
+<script>
+$( document ).ready(function() {
+  // Handler for .ready() called.
+
+$('#toc').toc({ minimumHeaders: 0, listType: 'ul', showSpeed: 0, headers: 'h2,h3,h4' });
+
+/* this offset helps account for the space taken up by the floating toolbar. */
+$('#toc').on('click', 'a', function() {
+  var target = $(this.getAttribute('href'))
+    , scroll_target = target.offset().top
+
+  $(window).scrollTop(scroll_target - 10);
+  return false
+})
+  
+});
+</script>
+
+<div id="toc"></div>
+
+        
+
+        <p>The upcoming version of Eclipse Ditto <strong>2.0.0</strong> will be enhanced with the ability to 
+<a href="basic-policy.html#actions">alter policies based on policy actions</a>.</p>
+
+<h2 id="policy-actions">Policy actions</h2>
+
+<p>This new concept of <a href="basic-policy.html#actions">Policy actions</a> allows upfront defined modifications to policies without 
+the need for the one invoking the action to have “WRITE” permissions granted on the policy.</p>
+
+<h2 id="token-based-activation-of-subject">Token based activation of subject</h2>
+
+<p>Together with the concept of actions, a first action named 
+<a href="basic-policy.html#action-activatetokenintegration"><code class="highlighter-rouge">activateTokenIntegration</code></a> is added.<br />
+This action</p>
+<ul>
+  <li>only works when using <a href="#" data-toggle="tooltip" data-original-title="JSON Web Token (JWT)">JWT</a> 
+based authentication issued by Google or other OpenID Connect providers as 
+<a href="installation-operating.html#openid-connect">documented in the installation/operation guide</a></li>
+  <li>checks whether the <a href="basic-auth.html#authenticated-subjects">authenticated subjects</a> which invoked the action have the 
+permission to <code class="highlighter-rouge">EXECUTE</code> the action on a policy entry</li>
+  <li>checks whether the <a href="basic-auth.html#authenticated-subjects">authenticated subjects</a> which invoked the action have at 
+least some kind of <code class="highlighter-rouge">READ</code> permission to any <code class="highlighter-rouge">thing:/</code> resource in a policy entry</li>
+</ul>
+
+<p>When all the conditions were met for a policy entry, the action will inject a new <a href="basic-policy.html#subjects">subject</a> 
+into the matched policy entry which by default (the 
+<a href="basic-policy.html#action-activatetokenintegration">pattern is configurable</a>) is the following.
+This syntax uses <a href="basic-placeholders.html">placeholders</a> in order to extract information from the authenticated JWT and 
+the policy entry:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+integration:{{policy-entry:label}}:{{jwt:aud}}
+
+</code></pre></div></div>
+
+<p>The value of the injected subject will contain the <a href="basic-policy.html#expiring-policy-subjects">expiry</a> timestamp 
+copied from the JWT <code class="highlighter-rouge">"exp"</code> (the expiration time of the token) claim.</p>
+
+<h2 id="example-use-case">Example use case</h2>
+
+<p>Assuming that you have configured a custom OpenID Connect provider <code class="highlighter-rouge">some-openid-connect-provider</code> as
+<a href="installation-operating.html#openid-connect">documented in the installation/operation guide</a>:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ditto.gateway.authentication {
+  oauth {
+    openid-connect-issuers = {
+      some-openid-connect-provider = "https://some-openid-connect-provider.com"
+    }
+  }
+}
+</code></pre></div></div>
+
+<p>Let’s describe our scenario:</p>
+<ul>
+  <li>It is required to enable that a Ditto <a href="basic-connections.html">connection</a> (e.g. an 
+<a href="connectivity-protocol-bindings-http.html">HTTP connection</a> invoking an HTTP webhook) shall receive events whenever 
+the temperature of a twin is modified</li>
+  <li>For security reasons however, the webhook shall not receive events longer than the expiration time of the JWT which 
+was used in order to activate the webhook</li>
+  <li>The webhook can be extended by invoking the action again before the “expiry” time was reached</li>
+</ul>
+
+<p>The underlying <a href="basic-policy.html">policy</a> shall be the following one:</p>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"policyId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"my.namespace:policy-a"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"entries"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"owner"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"subjects"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"some-openid-connect-provider:some-admin-id"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"authenticated via OpenID connect provider &lt;some-openid-connect-provider&gt;"</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="s2">"resources"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"thing:/"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="s2">"grant"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"READ"</span><span class="p">,</span><span class="w"> </span><span class="s2">"WRITE"</span><span class="p">],</span><span class="w">
+          </span><span class="s2">"revoke"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="s2">"policy:/"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="s2">"grant"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"READ"</span><span class="p">,</span><span class="w"> </span><span class="s2">"WRITE"</span><span class="p">],</span><span class="w">
+          </span><span class="s2">"revoke"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="s2">"temperature-observer"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"subjects"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"some-openid-connect-provider:some-user-id"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"authenticated via OpenID connect provider &lt;some-openid-connect-provider&gt;"</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="s2">"resources"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"thing:/features/temperature"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="s2">"grant"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"READ"</span><span class="p">],</span><span class="w">
+          </span><span class="s2">"revoke"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="s2">"policy:/entries/temperature-observer/actions/activateTokenIntegration"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="s2">"grant"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"EXECUTE"</span><span class="p">],</span><span class="w">
+          </span><span class="s2">"revoke"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>The policy entry <code class="highlighter-rouge">"temperature-observer"</code> above describes that:</p>
+<ul>
+  <li>the user “some-user-id” may <code class="highlighter-rouge">READ</code> the <code class="highlighter-rouge">"temperature"</code> feature of things using this policy</li>
+  <li>is allowed to <code class="highlighter-rouge">EXECUTE</code> the <code class="highlighter-rouge">activateTokenIntegration</code> action in order to inject a subject derived from his provided 
+JWT</li>
+</ul>
+
+<p>Let’s assume that the authenticated JWT used for executing the action contained the following claims:</p>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"iss"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://some-openid-connect-provider.com"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"sub"</span><span class="p">:</span><span class="w"> </span><span class="s2">"some-user-id"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"exp"</span><span class="p">:</span><span class="w"> </span><span class="mi">1622802633</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"aud"</span><span class="p">:</span><span class="w"> </span><span class="s2">"some-specific-audience-0815"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>The “exp” field contains the token expiry timestamp (seconds since epoch) and resolves to: 
+<code class="highlighter-rouge">Friday, June 4, 2021 10:30:33 AM</code>.</p>
+
+<p>Once the HTTP API 
+<a href="/http-api-doc.html#/Policies/post_policies__policyId__entries__label__actions_activateTokenIntegration">POST /api/2/policies/{policyId}/entries/{label}/actions/activateTokenIntegration</a>, with <code class="highlighter-rouge">policyId=my.namespace:policy-a</code> and <code class="highlighter-rouge">label=temperature-observer</code>,<br />
+is invoked (without any payload), a new subject will be injected when the 
+<a href="basic-policy.html#action-activatetokenintegration">described prerequisites</a> were enforced successfully.</p>
+
+<p>As a simplification, all possible policy entries may be injected with the subject by invoking the top level action<br />
+<a href="/http-api-doc.html#/Policies/post_policies__policyId__actions_activateTokenIntegration">POST /api/2/policies/{policyId}/actions/activateTokenIntegration</a>, with <code class="highlighter-rouge">policyId=my.namespace:policy-a</code>.</p>
+
+<p>The value of the injected subject will contain the expiration timestamp from the JWT, so the injected policy subject 
+<code class="highlighter-rouge">integration:temperature-observer:some-specific-audience-0815</code> will result in a modified policy:</p>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"policyId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"my.namespace:policy-a"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"entries"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"owner"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="err">//</span><span class="w"> </span><span class="err">unchanged</span><span class="w"> </span><span class="err">...</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="s2">"temperature-observer"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"subjects"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"some-openid-connect-provider:some-user-id"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"authenticated via OpenID connect provider &lt;some-openid-connect-provider&gt;"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="s2">"integration:temperature-observer:some-specific-audience-0815"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"added via action &lt;activateTokenIntegration&gt;"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"expiry"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2021-06-04T10:30:33Z"</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="s2">"resources"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"thing:/features/temperature"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="s2">"grant"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"READ"</span><span class="p">],</span><span class="w">
+          </span><span class="s2">"revoke"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="s2">"policy:/entries/temperature-observer/actions/activateTokenIntegration"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="s2">"grant"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"EXECUTE"</span><span class="p">],</span><span class="w">
+          </span><span class="s2">"revoke"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>When we now have a 
+managed HTTP connection which <a href="basic-connections.html#authorization">configures the <code class="highlighter-rouge">authorizationContext</code></a> to include
+the subject <code class="highlighter-rouge">integration:temperature-observer:some-specific-audience-0815</code> for a 
+<a href="basic-connections.html#targets">connection target</a>, this connection is allowed to publish changes to the temperature of 
+all things using the above policy until the <code class="highlighter-rouge">"expiry"</code> timestamp was reached.<br />
+Afterwards, publishing changes automatically stops, unless the action is invoked again with a JWT having a longer “exp”
+time prolonging the injected policy subject.</p>
+
+<h2 id="feedback">Feedback?</h2>
+
+<p>Please <a href="feedback.html">get in touch</a> if you have feedback or questions towards this new token based subject activation
+for policies.<br />
+Or do you have other use cases in mind you might be able to solve with this feature? Please let us know.</p>
+
+<p><br />
+<br /></p>
+<figure><img class="docimage" src="images/ditto.svg" alt="Ditto" style="max-width: 500px" /></figure>
+
+<p>–<br />
+The Eclipse Ditto team</p>
+
+    </div>
+
+
+
+</article>
+
+<hr class="shaded"/>
+
+<footer>
+            <div class="row">
+                <div class="col-lg-12 footer">
+                    <div class="logo">
+                        <a href="https://eclipse.org"><img src="images/eclipse_foundation_logo.svg" alt="Eclipse logo"/></a>
+                    </div>
+                    <p class="notice">
+                        &copy;2021 Eclipse Ditto.
+                         Site last generated: Jan 25, 2021 <br />
+                    </p>
+                    <div class="quickLinks">
+                        <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">
+                            &gt; Privacy Policy
+                        </a>
+                        <a href="https://www.eclipse.org/legal/termsofuse.php" target="_blank">
+                            &gt; Terms of Use
+                        </a>
+                        <a href="https://www.eclipse.org/legal/copyright.php" target="_blank">
+                            &gt; Copyright Agent
+                        </a>
+                        <a href="https://www.eclipse.org/legal" target="_blank">
+                            &gt; Legal
+                        </a>
+                        <a href="https://www.eclipse.org/legal/epl-2.0/" target="_blank">
+                            &gt; License
+                        </a>
+                        <a href="https://eclipse.org/security" target="_blank">
+                            &gt; Report a Vulnerability
+                        </a>
+                    </div>
+                </div>
+            </div>
+</footer>
+
+
+        </div>
+    <!-- /.row -->
+</div>
+<!-- /.container -->
+</div>
+<!-- /#main -->
+    </div>
+
+</body>
+</html>
