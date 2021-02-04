@@ -260,6 +260,13 @@
               
               
               
+              <li><a href="release_notes_200.html">2.0.0</a></li>
+              
+              
+              
+              
+              
+              
               <li><a href="release_notes_151.html">1.5.1</a></li>
               
               
@@ -966,6 +973,12 @@
                       
                       
                       
+                      <li><a href="protocol-specification-things-merge.html">Merge</a></li>
+                      
+                      
+                      
+                      
+                      
                       <li><a href="protocol-specification-things-retrieve.html">Retrieve</a></li>
                       
                       
@@ -1354,6 +1367,93 @@
               
               
               <li class="subfolders">
+                  <a href="#"><span></span>→ Things merge examples</a>
+                  <ul>
+                      
+                      
+                      
+                      <li><a href="protocol-examples-mergething.html">Merge a Thing</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-mergepolicyid.html">Merge the Policy ID of a Thing</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-mergeattributes.html">Merge Attributes</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-mergeattribute.html">Merge a single Attribute</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-mergethingdefinition.html">Merge a Definition</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-mergefeatures.html">Merge Features</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-mergefeature.html">Merge a single Feature</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-mergefeaturedefinition.html">Merge Feature Definition</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-mergeproperties.html">Merge Feature Properties</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-mergeproperty.html">Merge a single Property</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-mergedesiredproperties.html">Merge desired Feature Properties</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-mergedesiredproperty.html">Merge a single desired Property</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-errorresponses.html">Error responses</a></li>
+                      
+                      
+                      
+                  </ul>
+              </li>
+              
+              
+              
+              <li class="subfolders">
                   <a href="#"><span></span>→ Policies examples</a>
                   <ul>
                       
@@ -1604,22 +1704,22 @@ $('#toc').on('click', 'a', function() {
 
 <h2 id="api-versioning">API versioning</h2>
 
-<p>Ditto’s HTTP API is versioned in the URL: <code class="highlighter-rouge">/api/&lt;apiVersion&gt;</code>. Currently Ditto distinguishes between deprecated API version <code class="highlighter-rouge">1</code> and
-API version <code class="highlighter-rouge">2</code>.</p>
+<p>Ditto’s HTTP API is versioned in the URL: <code class="highlighter-rouge">/api/&lt;apiVersion&gt;</code>. Currently Ditto distinguishes between deprecated API
+version <code class="highlighter-rouge">1</code> and API version <code class="highlighter-rouge">2</code>.</p>
 
-<p>The API version is a promise that no HTTP resources (the static ones defined by Ditto itself) are modified in an 
+<p>The API version is a promise that no HTTP resources (the static ones defined by Ditto itself) are modified in an
 incompatible/breaking way. As the HTTP resources reflect the JSON structure of the <code class="highlighter-rouge">Thing</code> entity, that also applies for
-this entity. In API version 1, the JSON structure of the <code class="highlighter-rouge">Thing</code> entity won’t be changed in a breaking way 
+this entity. In API version 1, the JSON structure of the <code class="highlighter-rouge">Thing</code> entity won’t be changed in a breaking way
 (e.g. by removing or renaming a JSON field).</p>
 
 <p>That is also the reason for Ditto having already 2 API versions. In API 2 the <code class="highlighter-rouge">Thing</code> structure was changed to no longer
-contain the <a href="basic-acl.html">ACL</a> inline as payload of the Thing. Instead, the authorization information in API 2 is 
-managed by <a href="basic-policy.html">Policies</a>. The <code class="highlighter-rouge">acl</code> field was removed from the structure of the <code class="highlighter-rouge">Thing</code> and the 
+contain the <a href="basic-acl.html">ACL</a> inline as payload of the Thing. Instead, the authorization information in API 2 is
+managed by <a href="basic-policy.html">Policies</a>. The <code class="highlighter-rouge">acl</code> field was removed from the structure of the <code class="highlighter-rouge">Thing</code> and the
 <code class="highlighter-rouge">policyId</code> was added - that’s why Ditto had to make this change in an API version 2.</p>
 
 <h2 id="endpoints">Endpoints</h2>
 
-<p>In the HTTP API, some endpoints are static and can be seen as the “schema” of Ditto. They are in sync with the JSON 
+<p>In the HTTP API, some endpoints are static and can be seen as the “schema” of Ditto. They are in sync with the JSON
 representation of the model classes, e.g. <a href="basic-thing.html#model-specification">Thing</a> for the layout of the <code class="highlighter-rouge">/things</code>
 endpoint and <a href="basic-policy.html">Policy</a> for the layout of the <code class="highlighter-rouge">/policies</code> endpoint.</p>
 
@@ -1629,19 +1729,21 @@ endpoint and <a href="basic-policy.html">Policy</a> for the layout of the <code 
 
 <h4 id="migration-from-api-1-to-api-2">Migration from API 1 to API 2</h4>
 
-<p>In case you need to migrate a thing which was created via API 1 to API 2, 
-please note that you need to migrate the access control list entries (ACL) into a <strong>policy</strong>, and to assign your thing to such a policy.</p>
+<p>In case you need to migrate a thing which was created via API 1 to API 2, please note that you need to migrate the
+access control list entries (ACL) into a <strong>policy</strong>, and to assign your thing to such a policy.</p>
 
 <ol>
   <li>
-    <p>Request the thing to be migrated, via API 2 and use the field-selector to specify that the inline policy (i.e. <code class="highlighter-rouge">_policy</code>) should also be retrieved.</p>
+    <p>Request the thing to be migrated, via API 2 and use the field-selector to specify that the inline policy (
+i.e. <code class="highlighter-rouge">_policy</code>) should also be retrieved.</p>
 
     <p><code class="highlighter-rouge">GET /api/2/things/{$thingId}?fields=_policy</code></p>
 
     <p><a href="https://www.eclipse.org/ditto/http-api-doc.html#/Things/get_things__thingId_">Retrieve a specific Thing</a></p>
   </li>
   <li>
-    <p>Create a new policy from the content of the requested inline policy, with a <code class="highlighter-rouge">policyId</code> of your choice (e.g. same as the <code class="highlighter-rouge">thingId</code>).</p>
+    <p>Create a new policy from the content of the requested inline policy, with a <code class="highlighter-rouge">policyId</code> of your choice (e.g. same as
+the <code class="highlighter-rouge">thingId</code>).</p>
 
     <p><code class="highlighter-rouge">PUT /api/2/policies/{$policyId}</code></p>
 
@@ -1662,21 +1764,20 @@ please note that you need to migrate the access control list entries (ACL) into 
 
 <p>The base endpoint for accessing and working with <code class="highlighter-rouge">Things</code>.<br />
 A <code class="highlighter-rouge">Thing</code> in API 1 has the following JSON structure:</p>
+
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
   </span><span class="s2">"thingId"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
   </span><span class="s2">"acl"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-  
   </span><span class="p">},</span><span class="w">
   </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-  
   </span><span class="p">},</span><span class="w">
   </span><span class="s2">"features"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-  
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
 <p>This maps to the following HTTP API endpoints:</p>
+
 <ul>
   <li><code class="highlighter-rouge">/things/{thingId}</code>: accessing complete <code class="highlighter-rouge">Thing</code></li>
   <li><code class="highlighter-rouge">/things/{thingId}/acl</code>: accessing the ACL of the <code class="highlighter-rouge">Thing</code></li>
@@ -1686,12 +1787,13 @@ A <code class="highlighter-rouge">Thing</code> in API 1 has the following JSON s
 
 <h4 id="things-in-api-1---dynamic-part"><code class="highlighter-rouge">/things</code> in API 1 - dynamic part</h4>
 
-<p>Additionally to that “static part” of the HTTP API which is defined by Ditto, the API is dynamically enhanced by the JSON 
-structure of the Thing.<br /></p>
+<p>Additionally to that “static part” of the HTTP API which is defined by Ditto, the API is dynamically enhanced by the
+JSON structure of the Thing.<br /></p>
 
 <div class="alert alert-info" role="alert"><i class="fa fa-info-circle"></i> <b>Note:</b> This automatically turns each small aspect of a <strong>digital twin</strong> into an API endpoint.</div>
 
 <p>For example for a <code class="highlighter-rouge">Thing</code> with following content:</p>
+
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
   </span><span class="s2">"thingId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{thingId}"</span><span class="p">,</span><span class="w">
   </span><span class="s2">"acl"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
@@ -1720,6 +1822,7 @@ structure of the Thing.<br /></p>
 </span></code></pre></div></div>
 
 <p>The following additional API endpoints are automatically available:</p>
+
 <ul>
   <li><code class="highlighter-rouge">/things/{thingId}/acl/userId</code>: accessing the ACL entry for user <code class="highlighter-rouge">userId</code> of the specific thing</li>
   <li><code class="highlighter-rouge">/things/{thingId}/attributes/manufacturer</code>: accessing the attribute <code class="highlighter-rouge">manufacturer</code> of the specific thing</li>
@@ -1728,33 +1831,36 @@ structure of the Thing.<br /></p>
   <li><code class="highlighter-rouge">/things/{thingId}/attributes/complex/serialNo</code>: accessing the attribute <code class="highlighter-rouge">complex/serialNo</code> of the specific thing</li>
   <li><code class="highlighter-rouge">/things/{thingId}/features/lamp</code>: accessing the feature <code class="highlighter-rouge">lamp</code> of the specific thing</li>
   <li><code class="highlighter-rouge">/things/{thingId}/features/lamp/properties</code>: accessing all properties of the feature <code class="highlighter-rouge">lamp</code> of the specific thing</li>
-  <li><code class="highlighter-rouge">/things/{thingId}/features/lamp/properties/on</code>: accessing the <code class="highlighter-rouge">on</code> property of the feature <code class="highlighter-rouge">lamp</code> of the specific thing</li>
-  <li><code class="highlighter-rouge">/things/{thingId}/features/lamp/properties/color</code>: accessing the <code class="highlighter-rouge">color</code> properties of the feature <code class="highlighter-rouge">lamp</code> of the specific thing</li>
+  <li><code class="highlighter-rouge">/things/{thingId}/features/lamp/properties/on</code>: accessing the <code class="highlighter-rouge">on</code> property of the feature <code class="highlighter-rouge">lamp</code> of the specific
+thing</li>
+  <li><code class="highlighter-rouge">/things/{thingId}/features/lamp/properties/color</code>: accessing the <code class="highlighter-rouge">color</code> properties of the feature <code class="highlighter-rouge">lamp</code> of the
+specific thing</li>
 </ul>
 
 <h3 id="api-version-2">API version 2</h3>
 
-<p>In API version 2, a <code class="highlighter-rouge">Thing</code> does no longer contain information about the authorization in an inlined <a href="basic-acl.html">ACL</a>,
-but contains a <code class="highlighter-rouge">policyId</code>, which points to a <code class="highlighter-rouge">Policy</code> managed as another entity. Its API endpoint is <code class="highlighter-rouge">/policies</code>.</p>
+<p>In API version 2, a <code class="highlighter-rouge">Thing</code> does no longer contain information about the authorization in an
+inlined <a href="basic-acl.html">ACL</a>, but contains a <code class="highlighter-rouge">policyId</code>, which points to a <code class="highlighter-rouge">Policy</code> managed as another entity. Its API
+endpoint is <code class="highlighter-rouge">/policies</code>.</p>
 
 <h4 id="things-in-api-2"><code class="highlighter-rouge">/things</code> in API 2</h4>
 
 <p>The base endpoint for accessing and working with <code class="highlighter-rouge">Things</code>.<br />
 A <code class="highlighter-rouge">Thing</code> in API 2 has the following JSON structure:</p>
+
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
   </span><span class="s2">"thingId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{thingId}"</span><span class="p">,</span><span class="w">
   </span><span class="s2">"policyId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{policyId}"</span><span class="p">,</span><span class="w">
   </span><span class="s2">"definition"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{definition}"</span><span class="p">,</span><span class="w">
   </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-  
   </span><span class="p">},</span><span class="w">
   </span><span class="s2">"features"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-  
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
 <p>This maps to the following HTTP API endpoints:</p>
+
 <ul>
   <li><code class="highlighter-rouge">/things/{thingId}</code>: accessing a complete specific thing</li>
   <li><code class="highlighter-rouge">/things/{thingId}/policyId</code>: accessing the policy ID of the specific thing</li>
@@ -1765,12 +1871,13 @@ A <code class="highlighter-rouge">Thing</code> in API 2 has the following JSON s
 
 <h4 id="things-in-api-2---dynamic-part"><code class="highlighter-rouge">/things</code> in API 2 - dynamic part</h4>
 
-<p>Additionally to that “static part” of the HTTP API which is defined by Ditto, the API is dynamically enhanced by the JSON 
-structure of the Thing.<br /></p>
+<p>Additionally to that “static part” of the HTTP API which is defined by Ditto, the API is dynamically enhanced by the
+JSON structure of the Thing.<br /></p>
 
 <div class="alert alert-info" role="alert"><i class="fa fa-info-circle"></i> <b>Note:</b> This automatically turns each small aspect of a <strong>digital twin</strong> into an API endpoint.</div>
 
 <p>For example for a <code class="highlighter-rouge">Thing</code> with following content:</p>
+
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
   </span><span class="s2">"thingId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{thingId}"</span><span class="p">,</span><span class="w">
   </span><span class="s2">"policyId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{policyId}"</span><span class="p">,</span><span class="w">
@@ -1794,6 +1901,7 @@ structure of the Thing.<br /></p>
 </span></code></pre></div></div>
 
 <p>The following additional API endpoints are automatically available:</p>
+
 <ul>
   <li><code class="highlighter-rouge">/things/{thingId}/attributes/manufacturer</code>: accessing the attribute <code class="highlighter-rouge">manufacturer</code> of the specific thing</li>
   <li><code class="highlighter-rouge">/things/{thingId}/attributes/complex</code>: accessing the attribute <code class="highlighter-rouge">complex</code> of the specific thing</li>
@@ -1801,49 +1909,53 @@ structure of the Thing.<br /></p>
   <li><code class="highlighter-rouge">/things/{thingId}/attributes/complex/serialNo</code>: accessing the attribute <code class="highlighter-rouge">complex/serialNo</code> of the specific thing</li>
   <li><code class="highlighter-rouge">/things/{thingId}/features/lamp</code>: accessing the feature <code class="highlighter-rouge">lamp</code> of the specific thing</li>
   <li><code class="highlighter-rouge">/things/{thingId}/features/lamp/properties</code>: accessing all properties of the feature <code class="highlighter-rouge">lamp</code> of the specific thing</li>
-  <li><code class="highlighter-rouge">/things/{thingId}/features/lamp/properties/on</code>: accessing the <code class="highlighter-rouge">on</code> property of the feature <code class="highlighter-rouge">lamp</code> of the specific thing</li>
-  <li><code class="highlighter-rouge">/things/{thingId}/features/lamp/properties/color</code>: accessing the <code class="highlighter-rouge">color</code> properties of the feature <code class="highlighter-rouge">lamp</code> of the specific thing</li>
+  <li><code class="highlighter-rouge">/things/{thingId}/features/lamp/properties/on</code>: accessing the <code class="highlighter-rouge">on</code> property of the feature <code class="highlighter-rouge">lamp</code> of the specific
+thing</li>
+  <li><code class="highlighter-rouge">/things/{thingId}/features/lamp/properties/color</code>: accessing the <code class="highlighter-rouge">color</code> properties of the feature <code class="highlighter-rouge">lamp</code> of the
+specific thing</li>
 </ul>
 
 <h4 id="policies-in-api-2"><code class="highlighter-rouge">/policies</code> in API 2</h4>
 
 <p>The base endpoint for accessing and working with <code class="highlighter-rouge">Policies</code>.<br />
 A <code class="highlighter-rouge">Policy</code> in API 2 has the following JSON structure:</p>
+
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
   </span><span class="s2">"policyId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{policyId}"</span><span class="p">,</span><span class="w">
   </span><span class="s2">"entries"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
     </span><span class="s2">"{entryLabel-1}"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
       </span><span class="s2">"subjects"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
         </span><span class="s2">"{subjectId1}"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        
         </span><span class="p">}</span><span class="w">
       </span><span class="p">},</span><span class="w">
       </span><span class="s2">"resources"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
         </span><span class="s2">"{resource1}"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-          
         </span><span class="p">}</span><span class="w">
       </span><span class="p">}</span><span class="w">
-    </span><span class="p">}</span><span class="w">    
+    </span><span class="p">}</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
 <p>This maps to the following HTTP API endpoints:</p>
+
 <ul>
   <li><code class="highlighter-rouge">/policies/{policyId}</code>: accessing complete <code class="highlighter-rouge">Policy</code></li>
   <li><code class="highlighter-rouge">/policies/{policyId}/entries</code>: accessing the <code class="highlighter-rouge">Policy</code> entries</li>
   <li><code class="highlighter-rouge">/policies/{policyId}/entries/{entryLabel-1}</code>: accessing a single <code class="highlighter-rouge">Policy</code> entry with the label <code class="highlighter-rouge">{entryLabel-1}</code></li>
-  <li><code class="highlighter-rouge">/policies/{policyId}/entries/{entryLabel-1}/subjects</code>: accessing the subjects of a single <code class="highlighter-rouge">Policy</code> entry with the label <code class="highlighter-rouge">{entryLabel-1}</code></li>
-  <li><code class="highlighter-rouge">/policies/{policyId}/entries/{entryLabel-1}/resources</code>: accessing the resources of a single <code class="highlighter-rouge">Policy</code> entry with the label <code class="highlighter-rouge">{entryLabel-1}</code></li>
+  <li><code class="highlighter-rouge">/policies/{policyId}/entries/{entryLabel-1}/subjects</code>: accessing the subjects of a single <code class="highlighter-rouge">Policy</code> entry with the
+label <code class="highlighter-rouge">{entryLabel-1}</code></li>
+  <li><code class="highlighter-rouge">/policies/{policyId}/entries/{entryLabel-1}/resources</code>: accessing the resources of a single <code class="highlighter-rouge">Policy</code> entry with the
+label <code class="highlighter-rouge">{entryLabel-1}</code></li>
 </ul>
 
 <h2 id="partial-updates">Partial updates</h2>
 
-<p>As a benefit of the above mentioned mechanism that an API is automatically available based on the JSON structure, the 
+<p>As a benefit of the above mentioned mechanism that an API is automatically available based on the JSON structure, the
 “partial update” pattern can be applied when modifying data.</p>
 
 <p>The benefit of this is a reduction in payload to be transferred. Further, it is beneficial because other parts of the
- <code class="highlighter-rouge">Thing</code> are not overwritten with a potentially outdated value - only the actually changed data part can be modified.</p>
+<code class="highlighter-rouge">Thing</code> are not overwritten with a potentially outdated value - only the actually changed data part can be modified.</p>
 
 <p>So instead of modifying a complete <code class="highlighter-rouge">Thing</code> only a specific part is affected.</p>
 
@@ -1852,6 +1964,7 @@ A <code class="highlighter-rouge">Policy</code> in API 2 has the following JSON 
 <p>Instead of<br />
 <br />
 <code class="highlighter-rouge">PUT .../things/{thingId}</code> with the complete payload:</p>
+
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
   </span><span class="s2">"thingId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{thingId}"</span><span class="p">,</span><span class="w">
   </span><span class="s2">"policyId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{policyId}"</span><span class="p">,</span><span class="w">
@@ -1875,18 +1988,20 @@ A <code class="highlighter-rouge">Policy</code> in API 2 has the following JSON 
 </span></code></pre></div></div>
 
 <p>we can use a smarter request<br /><code class="highlighter-rouge">PUT .../things/{thingId}/features/lamp/properties/on</code> with a minimal payload:</p>
+
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kc">true</span><span class="w">
 </span></code></pre></div></div>
 
 <h2 id="partial-requests">Partial requests</h2>
 
-<p>Similar to the partial updates from above, the HTTP API can also be used to retrieve a single value instead of a 
+<p>Similar to the partial updates from above, the HTTP API can also be used to retrieve a single value instead of a
 complete <code class="highlighter-rouge">Thing</code>.</p>
 
-<p>Again, the benefit is a reduction in response payload and that the caller can directly use the returned data value 
+<p>Again, the benefit is a reduction in response payload and that the caller can directly use the returned data value
 (for example expect it to be a <code class="highlighter-rouge">boolean</code> and treat it accordingly).</p>
 
 <p>For example, we can request<br /><code class="highlighter-rouge">GET .../things/{thingId}/features/lamp/properties/on</code> and get as response:</p>
+
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kc">true</span><span class="w">
 </span></code></pre></div></div>
 
@@ -1899,6 +2014,7 @@ structure of the <code class="highlighter-rouge">Thing</code> or other entity sh
 in the response.</p>
 
 <p>Given, you have the following Thing:</p>
+
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
   </span><span class="s2">"thingId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{thingId}"</span><span class="p">,</span><span class="w">
   </span><span class="s2">"policyId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{policyId}"</span><span class="p">,</span><span class="w">
@@ -1924,11 +2040,12 @@ in the response.</p>
 
 <h4 id="field-selector-examples">Field selector examples</h4>
 
-<p>The following <code class="highlighter-rouge">GET</code> request examples with field selectors show how you can retrieve only the parts of a thing which 
-you are interested in:</p>
+<p>The following <code class="highlighter-rouge">GET</code> request examples with field selectors show how you can retrieve only the parts of a thing which you
+are interested in:</p>
 
 <p><code class="highlighter-rouge">GET .../things/{thingId}?fields=attributes</code><br />
 Response:</p>
+
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
   </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
     </span><span class="s2">"manufacturer"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ACME corp"</span><span class="p">,</span><span class="w">
@@ -1943,6 +2060,7 @@ Response:</p>
 
 <p><code class="highlighter-rouge">GET .../things/{thingId}?fields=attributes/manufacturer</code><br />
 Response:</p>
+
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
   </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
     </span><span class="s2">"manufacturer"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ACME corp"</span><span class="w">
@@ -1952,6 +2070,7 @@ Response:</p>
 
 <p><code class="highlighter-rouge">GET .../things/{thingId}?fields=attributes/complex/serialNo</code><br />
 Response:</p>
+
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
   </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
     </span><span class="s2">"complex"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
@@ -1963,6 +2082,7 @@ Response:</p>
 
 <p><code class="highlighter-rouge">GET .../things/{thingId}?fields=attributes/complex/some,attributes/complex/serialNo</code><br />
 Response:</p>
+
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
   </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
     </span><span class="s2">"complex"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
@@ -1975,6 +2095,7 @@ Response:</p>
 
 <p><code class="highlighter-rouge">GET .../things/{thingId}?fields=attributes/complex(some,serialNo)</code><br />
 Response:</p>
+
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
   </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
     </span><span class="s2">"complex"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
@@ -1987,6 +2108,7 @@ Response:</p>
 
 <p><code class="highlighter-rouge">GET .../things/{thingId}?fields=attributes/complex/misc,features/lamp/properties/on</code><br />
 Response:</p>
+
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
   </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
     </span><span class="s2">"complex"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
@@ -2003,30 +2125,166 @@ Response:</p>
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
+<h2 id="merge-updates">Merge updates</h2>
+
+<p>Merge updates can be used to update multiple parts of a Thing <em>in a single request</em> e.g. multiple properties of
+different features or a feature property and an attribute value. Merge updates are applied by using the HTTP
+<code class="highlighter-rouge">PATCH</code> method with the payload in <a href="https://tools.ietf.org/html/rfc7396">JSON merge patch (RFC-7396)</a> format. The
+content-type of the request must be set to <code class="highlighter-rouge">application/merge-patch+json</code>.</p>
+
+<p><a href="https://tools.ietf.org/html/rfc7396">RFC-7396</a> specifies how a set of modifications is applied to an existing JSON
+document:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>A JSON merge patch document describes changes to be made to a target JSON document using a syntax that closely 
+mimics the document being modified. Recipients of a merge patch document determine the exact set of changes being  
+requested by comparing the content of the provided patch against the current content of the target document.
+If the provided merge patch contains members that do not appear within the target, those members are added. If the 
+target does contain the member, the value is replaced.  Null values in the merge patch are given special meaning to 
+indicate the removal of existing values in the target.
+</code></pre></div></div>
+
+<div class="alert alert-info" role="alert"><i class="fa fa-info-circle"></i> <b>Note:</b> Please note the special meaning of <code class="highlighter-rouge">null</code> values. When using <code class="highlighter-rouge">PATCH</code> a <code class="highlighter-rouge">null</code> value is
+interpreted as delete in contrast to <code class="highlighter-rouge">PUT</code> requests where <code class="highlighter-rouge">null</code> values have no special meaning. </div>
+
+<p>Like <code class="highlighter-rouge">PUT</code> requests, <code class="highlighter-rouge">PATCH</code> requests can be applied at any level of the JSON structure of a thing, e.g. patching a
+complete thing at root level or patching a single property value at property level.</p>
+
+<h3 id="permissions-required-for-merge-update">Permissions required for merge update</h3>
+
+<p>To successfully execute merge update the authorized subject needs to have <em>WRITE</em> permission on <em>all</em> resources 
+affected by the provided JSON merge patch. If the permission is missing for one of the affected resources the whole 
+merge patch is <em>rejected</em>, i.e. the merge update is executed as a whole or not at all.</p>
+
+<h3 id="merge-update-example">Merge update example</h3>
+
+<p>Given an existing thing with the JSON structure:</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"thingId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{thingId}"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"policyId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{policyId}"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"location"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"longitude"</span><span class="p">:</span><span class="w"> </span><span class="mf">47.682170</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"latitude"</span><span class="p">:</span><span class="w"> </span><span class="mf">9.386372</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="s2">"serialNo"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0000000"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="s2">"features"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"temperature"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"value"</span><span class="p">:</span><span class="w"> </span><span class="mf">25.43</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"unit"</span><span class="p">:</span><span class="w"> </span><span class="s2">"°C"</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="s2">"pressure"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"value"</span><span class="p">:</span><span class="w"> </span><span class="mf">1013.25</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"unit"</span><span class="p">:</span><span class="w"> </span><span class="s2">"hPa"</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>Assuming a single request should:</p>
+
+<ul>
+  <li>add the <code class="highlighter-rouge">manufacturer</code> attribute</li>
+  <li>update the existing <code class="highlighter-rouge">serialNo</code> attribute to the value of <code class="highlighter-rouge">23091861</code></li>
+  <li>remove the existing <code class="highlighter-rouge">location</code> attribute</li>
+  <li>set the existing property <code class="highlighter-rouge">value</code> of feature <code class="highlighter-rouge">temperature</code> to the value of <code class="highlighter-rouge">26.89</code></li>
+  <li>remove the existing property <code class="highlighter-rouge">unit</code> of feature <code class="highlighter-rouge">pressure</code></li>
+  <li>add a new feature <code class="highlighter-rouge">humidity</code></li>
+</ul>
+
+<p>This can be achieved using a <code class="highlighter-rouge">PATCH .../things/{thingId}</code> with the request payload of</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"location"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"manufacturer"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Bosch"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"serialNo"</span><span class="p">:</span><span class="w"> </span><span class="s2">"23091861"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="s2">"features"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"temperature"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"value"</span><span class="p">:</span><span class="w"> </span><span class="mf">26.89</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="s2">"pressure"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"unit"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="s2">"humidity"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"value"</span><span class="p">:</span><span class="w"> </span><span class="mi">55</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"unit"</span><span class="p">:</span><span class="w"> </span><span class="s2">"%"</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>The resulting JSON representation of the updated thing after applying the <code class="highlighter-rouge">PATCH</code> is:</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"thingId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{thingId}"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"policyId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{policyId}"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"manufacturer"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Bosch"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"serialNo"</span><span class="p">:</span><span class="w"> </span><span class="s2">"23091861"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="s2">"features"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"temperature"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"value"</span><span class="p">:</span><span class="w"> </span><span class="mf">26.89</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"unit"</span><span class="p">:</span><span class="w"> </span><span class="s2">"°C"</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="s2">"pressure"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"value"</span><span class="p">:</span><span class="w"> </span><span class="mi">1015</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="s2">"humidity"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"value"</span><span class="p">:</span><span class="w"> </span><span class="mi">55</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"unit"</span><span class="p">:</span><span class="w"> </span><span class="s2">"%"</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
 <h2 id="conditional-requests">Conditional Requests</h2>
 
-<p>The HTTP API for <code class="highlighter-rouge">Things</code> and <code class="highlighter-rouge">Policies</code> partially supports <code class="highlighter-rouge">Conditional Requests</code> as defined in <a href="https://tools.ietf.org/html/rfc7232">RFC-7232</a>.</p>
+<p>The HTTP API for <code class="highlighter-rouge">Things</code> and <code class="highlighter-rouge">Policies</code> partially supports <code class="highlighter-rouge">Conditional Requests</code> as defined
+in <a href="https://tools.ietf.org/html/rfc7232">RFC-7232</a>.</p>
 
 <h3 id="etag">ETag</h3>
 
 <p>A successful response on a <code class="highlighter-rouge">thing</code> or <code class="highlighter-rouge">policy</code> resource provides an <code class="highlighter-rouge">ETag</code> header.</p>
+
 <ul>
   <li>For read responses, it contains the current entity-tag of the resource.</li>
   <li>For write responses, it contains the entity-tag after successful write.</li>
 </ul>
 
 <p>The <code class="highlighter-rouge">ETag</code> has a different format for top-level resources and sub-resources.</p>
+
 <ul>
-  <li>Top-level resources (e.g. <code class="highlighter-rouge">.../things/{thingId}</code>): The entity-tag contains the revision of the 
-entity which is addressed by the resource in the format <code class="highlighter-rouge">"rev:&lt;revision&gt;"</code>, e.g. <code class="highlighter-rouge">"rev:2"</code>.</li>
-  <li>Sub-resources (e.g. <code class="highlighter-rouge">.../things/{thingId}/features/{featureId}</code>): The entity-tag contains a hash 
-of the current value of the addressed sub-resource in the format <code class="highlighter-rouge">"hash:&lt;calculated-hash&gt;"</code>, e.g. 
+  <li>Top-level resources (e.g. <code class="highlighter-rouge">.../things/{thingId}</code>): The entity-tag contains the revision of the entity which is
+addressed by the resource in the format <code class="highlighter-rouge">"rev:&lt;revision&gt;"</code>, e.g. <code class="highlighter-rouge">"rev:2"</code>.</li>
+  <li>Sub-resources (e.g. <code class="highlighter-rouge">.../things/{thingId}/features/{featureId}</code>): The entity-tag contains a hash of the current value
+of the addressed sub-resource in the format <code class="highlighter-rouge">"hash:&lt;calculated-hash&gt;"</code>, e.g.
 <code class="highlighter-rouge">"hash:87192253740"</code>. Note that this format may change in the future.</li>
 </ul>
 
 <h3 id="conditional-headers">Conditional Headers</h3>
 
 <p>The following request headers can be used to issue a conditional request:</p>
+
 <ul>
   <li><code class="highlighter-rouge">If-Match</code>:
     <ul>
@@ -2039,7 +2297,7 @@ of the current value of the addressed sub-resource in the format <code class="hi
       <li>The response will be:
         <ul>
           <li>in case of a match, the same response as if the header wouldn’t have been specified</li>
-          <li>in case of no match, status <code class="highlighter-rouge">412 (Precondition Failed)</code> with an error response containing detail information 
+          <li>in case of no match, status <code class="highlighter-rouge">412 (Precondition Failed)</code> with an error response containing detail information
 and the current entity-tag of the resource as <code class="highlighter-rouge">ETag</code> header</li>
         </ul>
       </li>
@@ -2058,9 +2316,9 @@ and the current entity-tag of the resource as <code class="highlighter-rouge">ET
           <li>in case of no match, the same response as if the header wouldn’t have been specified</li>
           <li>in case of a match:
             <ul>
-              <li>for write requests, status <code class="highlighter-rouge">412 (Precondition Failed)</code> with an error response containing detail information and 
-the current entity-tag of the resource as <code class="highlighter-rouge">ETag</code> header</li>
-              <li>for read requests, status <code class="highlighter-rouge">304 (Not Modified)</code> without response body, with the current entity-tag of the 
+              <li>for write requests, status <code class="highlighter-rouge">412 (Precondition Failed)</code> with an error response containing detail
+information and the current entity-tag of the resource as <code class="highlighter-rouge">ETag</code> header</li>
+              <li>for read requests, status <code class="highlighter-rouge">304 (Not Modified)</code> without response body, with the current entity-tag of the
 resource as <code class="highlighter-rouge">ETag</code> header</li>
             </ul>
           </li>
@@ -2070,10 +2328,10 @@ resource as <code class="highlighter-rouge">ETag</code> header</li>
   </li>
 </ul>
 
-<p>Note that the Ditto HTTP API always provides a <code class="highlighter-rouge">strong</code> entity-tag in the <code class="highlighter-rouge">ETag</code> header, thus you will never receive a 
-<code class="highlighter-rouge">weak</code> entity-tag (see <a href="https://tools.ietf.org/html/rfc7232#section-2.1">RFC-7232 Section 2.1</a>). If you convert this 
-strong entity-tag to a weak entity-tag and use it in a Conditional Header, Ditto will handle it according to RFC-7232. 
-However, we discourage the usage of weak entity-tags, because in the context of Ditto they only add unnecessary 
+<p>Note that the Ditto HTTP API always provides a <code class="highlighter-rouge">strong</code> entity-tag in the <code class="highlighter-rouge">ETag</code> header, thus you will never receive a
+<code class="highlighter-rouge">weak</code> entity-tag (see <a href="https://tools.ietf.org/html/rfc7232#section-2.1">RFC-7232 Section 2.1</a>). If you convert this
+strong entity-tag to a weak entity-tag and use it in a Conditional Header, Ditto will handle it according to RFC-7232.
+However, we discourage the usage of weak entity-tags, because in the context of Ditto they only add unnecessary
 complexity.</p>
 
 <h3 id="exempted-fields">Exempted fields</h3>
@@ -2085,11 +2343,12 @@ complexity.</p>
 
 <p>you will get the thing containing its revision and associated policy.</p>
 
-<p>If you now modify the associated policy, the revision of the thing will not change! This could lead to an
-inconsistent state if the thing is getting refetched by using the <code class="highlighter-rouge">If-None-Match</code> header, 
-because this would return a <code class="highlighter-rouge">304 Not Modified</code>, even if the policy has changed.</p>
+<p>If you now modify the associated policy, the revision of the thing will not change! This could lead to an inconsistent
+state if the thing is getting refetched by using the <code class="highlighter-rouge">If-None-Match</code> header, because this would return
+a <code class="highlighter-rouge">304 Not Modified</code>, even if the policy has changed.</p>
 
-<p>To tackle this, Ditto has the following list of exempted fields which automatically bypass the precondition header check:</p>
+<p>To tackle this, Ditto has the following list of exempted fields which automatically bypass the precondition header
+check:</p>
 
 <ul>
   <li><code class="highlighter-rouge">_policy</code></li>
@@ -2097,17 +2356,18 @@ because this would return a <code class="highlighter-rouge">304 Not Modified</co
 
 <h3 id="examples">Examples</h3>
 
-<p>The following examples show several scenarios on a top-level (Thing) resource. Nevertheless, these scenarios can 
-also be applied on any sub-resource in the same way.</p>
+<p>The following examples show several scenarios on a top-level (Thing) resource. Nevertheless, these scenarios can also be
+applied on any sub-resource in the same way.</p>
 
 <h4 id="create-write-only-if-the-resource-does-not-exist">Create: Write only if the resource does not exist</h4>
 
 <p>The following example request shows, how you can make sure that a <code class="highlighter-rouge">PUT</code> request does not overwrite existing data, i.e.
- how you can enforce that the Thing can only be created by the request.</p>
+how you can enforce that the Thing can only be created by the request.</p>
 
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>PUT .../things/{thingId}
 If-None-Match: *
 </code></pre></div></div>
+
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
   </span><span class="s2">"policyId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{policyId}"</span><span class="p">,</span><span class="w">
   </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
@@ -2118,20 +2378,22 @@ If-None-Match: *
 </span></code></pre></div></div>
 
 <p>You will get one of the following responses:</p>
+
 <ul>
   <li><code class="highlighter-rouge">201 (Created)</code> in case the creation was successful, i.e. the Thing did not yet exist.</li>
-  <li><code class="highlighter-rouge">412 (Precondition Failed)</code> in case the creation failed, i.e. a Thing with the exactly same <code class="highlighter-rouge">{thingId}</code> already 
+  <li><code class="highlighter-rouge">412 (Precondition Failed)</code> in case the creation failed, i.e. a Thing with the exactly same <code class="highlighter-rouge">{thingId}</code> already
 exists.</li>
 </ul>
 
 <h4 id="update-write-only-if-the-resource-already-exists">Update: Write only if the resource already exists</h4>
 
 <p>The following example request shows how you can make sure that a <code class="highlighter-rouge">PUT</code> request does not create the resource, i.e. how
- you can enforce that the Thing can only be updated by the request, but you do not generate a duplicate by mistake.</p>
+you can enforce that the Thing can only be updated by the request, but you do not generate a duplicate by mistake.</p>
 
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>PUT .../things/{thingId}
 If-Match: *
 </code></pre></div></div>
+
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
   </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
     </span><span class="s2">"manufacturer"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ACME crop"</span><span class="p">,</span><span class="w">
@@ -2141,6 +2403,7 @@ If-Match: *
 </span></code></pre></div></div>
 
 <p>You will get one of the following responses:</p>
+
 <ul>
   <li><code class="highlighter-rouge">204 (No Content)</code> in case the update was successful, i.e. the Thing already existed.</li>
   <li><code class="highlighter-rouge">412 (Precondition Failed)</code> in case the update failed, i.e. the Thing does not yet exist.</li>
@@ -2155,6 +2418,7 @@ If-Match: *
 <p>Response:</p>
 
 <p><code class="highlighter-rouge">ETag: "rev:2"</code></p>
+
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
   </span><span class="s2">"thingId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{thingId}"</span><span class="p">,</span><span class="w">
   </span><span class="s2">"policyId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{policyId}"</span><span class="p">,</span><span class="w">
@@ -2166,16 +2430,17 @@ If-Match: *
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
-<p>Assume that you have detected the typo in the manufacturer attribute (“ACME crop”) and want to fix this with a 
-top-level Thing PUT. You want to make sure, that no one else has modified the Thing in the meantime, because 
-otherwise his changes would be lost. (You could also achieve this with a PUT on the concrete attribute, but for this 
-example we assume that you want to use a top-level Thing PUT.)</p>
+<p>Assume that you have detected the typo in the manufacturer attribute (“ACME crop”) and want to fix this with a top-level
+Thing PUT. You want to make sure, that no one else has modified the Thing in the meantime, because otherwise his changes
+would be lost. (You could also achieve this with a PUT on the concrete attribute, but for this example we assume that
+you want to use a top-level Thing PUT.)</p>
 
 <p><code class="highlighter-rouge">PUT</code> the Thing with the changed data and the entity-tag from the preceding <code class="highlighter-rouge">GET</code> response in the <code class="highlighter-rouge">If-Match</code> header.</p>
 
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>PUT .../things/{thingId}
 If-Match: "rev:2"
 </code></pre></div></div>
+
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
   </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
     </span><span class="s2">"manufacturer"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ACME corp"</span><span class="p">,</span><span class="w">
@@ -2185,10 +2450,11 @@ If-Match: "rev:2"
 </span></code></pre></div></div>
 
 <p>You will get one of the following responses:</p>
+
 <ul>
   <li><code class="highlighter-rouge">204 (No Content)</code> in case the update was successful, i.e. no one else has changed the Thing in the meantime.</li>
-  <li><code class="highlighter-rouge">412 (Precondition Failed)</code> in case the update was not successful, i.e. the Thing has been changed by someone else 
-in the meantime.</li>
+  <li><code class="highlighter-rouge">412 (Precondition Failed)</code> in case the update was not successful, i.e. the Thing has been changed by someone else in
+the meantime.</li>
 </ul>
 
 
@@ -2216,7 +2482,7 @@ in the meantime.</li>
                     </div>
                     <p class="notice">
                         &copy;2021 Eclipse Ditto.
-                         Site last generated: Jan 28, 2021 <br />
+                         Site last generated: Feb 4, 2021 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

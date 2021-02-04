@@ -260,6 +260,13 @@
               
               
               
+              <li><a href="release_notes_200.html">2.0.0</a></li>
+              
+              
+              
+              
+              
+              
               <li><a href="release_notes_151.html">1.5.1</a></li>
               
               
@@ -966,6 +973,12 @@
                       
                       
                       
+                      <li><a href="protocol-specification-things-merge.html">Merge</a></li>
+                      
+                      
+                      
+                      
+                      
                       <li><a href="protocol-specification-things-retrieve.html">Retrieve</a></li>
                       
                       
@@ -1354,6 +1367,93 @@
               
               
               <li class="subfolders">
+                  <a href="#"><span></span>→ Things merge examples</a>
+                  <ul>
+                      
+                      
+                      
+                      <li><a href="protocol-examples-mergething.html">Merge a Thing</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-mergepolicyid.html">Merge the Policy ID of a Thing</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-mergeattributes.html">Merge Attributes</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-mergeattribute.html">Merge a single Attribute</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-mergethingdefinition.html">Merge a Definition</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-mergefeatures.html">Merge Features</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-mergefeature.html">Merge a single Feature</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-mergefeaturedefinition.html">Merge Feature Definition</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-mergeproperties.html">Merge Feature Properties</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-mergeproperty.html">Merge a single Property</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-mergedesiredproperties.html">Merge desired Feature Properties</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-mergedesiredproperty.html">Merge a single desired Property</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-errorresponses.html">Error responses</a></li>
+                      
+                      
+                      
+                  </ul>
+              </li>
+              
+              
+              
+              <li class="subfolders">
                   <a href="#"><span></span>→ Policies examples</a>
                   <ul>
                       
@@ -1604,11 +1704,19 @@ $('#toc').on('click', 'a', function() {
 
 <h4 id="removed-content-type-header-mapping-for-connection-targets"><a href="https://github.com/eclipse/ditto/pull/934">Removed content-type header mapping for connection targets</a></h4>
 
-<p>Removed the default header mapping of <code class="highlighter-rouge">content-type</code> for new connection targets. The header mapping led to irritating results,
-when payload mapping and header mapping disagreed on the actual <code class="highlighter-rouge">content-type</code>. Existing connections will still keep
-the “old” default and map the <code class="highlighter-rouge">content-type</code> header.</p>
+<p>Removed the default header mapping of <code class="highlighter-rouge">content-type</code> for new connection targets. The header mapping led to irritating
+results, when payload mapping and header mapping disagreed on the actual <code class="highlighter-rouge">content-type</code>. Existing connections will still
+keep the “old” default and map the <code class="highlighter-rouge">content-type</code> header.</p>
 
 <h3 id="new-features">New features</h3>
+
+<h4 id="merge-updates"><a href="https://github.com/eclipse/ditto/issues/288">Merge updates</a></h4>
+
+<p>This new feature allows updating parts of a thing without affecting existing parts. You may now for example update an
+attribute, add a new property to a feature and delete a property of a different feature in a <em>single request</em>. The new
+merge functionality is available via the HTTP API and the all channels using the Ditto Protocol. See
+<a href="httpapi-concepts.html#merge-updates">Merge updates via HTTP</a>
+or the <a href="protocol-specification-things-merge.html">Merge protocol specification</a> for more details and examples.</p>
 
 <h3 id="bugfixes">Bugfixes</h3>
 
@@ -1616,8 +1724,10 @@ the “old” default and map the <code class="highlighter-rouge">content-type</
 
 <h3 id="content-type-header-mapping-in-connection-targets">content-type header mapping in connection targets</h3>
 
-<p>Due to the <a href="https://github.com/eclipse/ditto/pull/934">removed default content-type header mapping for connection targets</a>,
-it might be necessary to update the way connection targets are created in case you create connection targets without explicit
+<p>Due to
+the <a href="https://github.com/eclipse/ditto/pull/934">removed default content-type header mapping for connection targets</a>, it
+might be necessary to update the way connection targets are created in case you create connection targets without
+explicit
 <code class="highlighter-rouge">headerMapping</code> and rely on a specific content-type on the receiving side. The request to create connection targets
 can be updated to contain the “old” default in this case:</p>
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
@@ -1667,7 +1777,7 @@ can be updated to contain the “old” default in this case:</p>
                     </div>
                     <p class="notice">
                         &copy;2021 Eclipse Ditto.
-                         Site last generated: Jan 28, 2021 <br />
+                         Site last generated: Feb 4, 2021 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="">
+<meta name="keywords" content="bloghttpprotocol,  ">
+<title>  Support merge functionality for things resources </title>
+
+<link rel="stylesheet" href="css/syntax.css">
+<link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" crossorigin="anonymous">
+<link rel="stylesheet" href="css/modern-business.css">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" crossorigin="anonymous">
+<link rel="stylesheet" href="css/customstyles.css">
+<link rel="stylesheet" href="css/boxshadowproperties.css">
+<link rel="stylesheet" href="css/theme-ditto.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,700|Source+Code+Pro:300,600|Titillium+Web:400,600,700">
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js" crossorigin="anonymous"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" crossorigin="anonymous"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/anchor-js/2.0.0/anchor.min.js" crossorigin="anonymous"></script>
+<script src="js/toc.js"></script>
+<script src="js/customscripts.js"></script>
+
+<script type="application/ld+json">
+{
+  "@context": "http://schema.org",
+  "@type": "Organization",
+  "url": "https://eclipse.org/ditto/",
+  "logo": "https://eclipse.org/ditto/images/ditto.svg"
+}
+</script>
+
+<link rel="icon" type="image/png" href="images/favicon-16x16.png" sizes="16x16">
+<link rel="icon" type="image/png" href="images/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="images/favicon-96x96.png" sizes="96x96">
+
+<link rel="alternate" type="application/rss+xml" title="Eclipse Ditto Blog" href="https://www.eclipse.org/ditto/feed.xml">
+
+<!-- Eclipse Foundation cookie consent: -->
+<link rel="stylesheet" type="text/css" href="//www.eclipse.org/eclipse.org-common/themes/solstice/public/stylesheets/vendor/cookieconsent/cookieconsent.min.css" />
+<script src="//www.eclipse.org/eclipse.org-common/themes/solstice/public/javascript/vendor/cookieconsent/default.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            $("#tg-sb-link").click(function() {
+                $("#tg-sb-sidebar").toggle();
+                $("#tg-sb-content").toggleClass('col-md-9');
+                $("#tg-sb-content").toggleClass('col-md-12');
+                $("#tg-sb-icon").toggleClass('fa-toggle-on');
+                $("#tg-sb-icon").toggleClass('fa-toggle-off');
+            });
+        });
+    </script>
+</head>
+
+
+<script>
+    (function(w,d,s,l,i){
+        w[l]=w[l]||[];
+        w[l].push({'gtm.start':
+            new Date().getTime(),event:'gtm.js'});
+        var f=d.getElementsByTagName(s)[0],
+            j=d.createElement(s),
+            dl=l!='dataLayer'?'&l='+l:'';
+        j.async=true;
+        j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;
+        f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-5WLCZXC');
+</script>
+
+
+
+<body>
+<!-- Navigation -->
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container topnavlinks">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-ditto-home" href="index.html">&nbsp;<img src="images/ditto_allwhite_symbolonly.svg" class="ditto-navbar-symbol" alt="Home"> <img src="images/ditto_allwhite_textonly.svg" class="ditto-navbar-symbol-text" alt="Ditto"></a>
+        </div>
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <!-- toggle sidebar button -->
+                <!--<li><a id="tg-sb-link" href="#"><i id="tg-sb-icon" class="fa fa-toggle-on"></i> Nav</a></li>-->
+                <!-- entries without drop-downs appear here -->
+
+
+
+
+                
+                
+                
+                <li><a href="blog.html">Blog</a></li>
+                
+                
+                
+                <li><a href="intro-overview.html">Documentation</a></li>
+                
+                
+                
+                <li><a href="http-api-doc.html">HTTP API</a></li>
+                
+                
+                
+                <li><a href="sandbox.html">Sandbox</a></li>
+                
+                
+                
+                <li><a href="https://github.com/eclipse/ditto" target="_blank">GitHub</a></li>
+                
+                
+                
+                <li><a href="https://github.com/eclipse/ditto-examples" target="_blank">GitHub examples</a></li>
+                
+                
+                
+                <!-- entries with drop-downs appear here -->
+                <!-- conditional logic to control which topnav appears for the audience defined in the configuration file.-->
+                
+                
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Links<b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        
+                        
+                        <li><a href="https://projects.eclipse.org/projects/iot.ditto" target="_blank">Eclipse Ditto Project</a></li>
+                        
+                        
+                        
+                        <li><a href="https://www.eclipse.org/forums/index.php/f/364/" target="_blank">Forum</a></li>
+                        
+                        
+                        
+                        <li><a href="https://ci.eclipse.org/ditto/" target="_blank">Jenkins</a></li>
+                        
+                        
+                        
+                        <li><a href="https://dev.eclipse.org/mhonarc/lists/ditto-dev/" target="_blank">Mailing list archives</a></li>
+                        
+                        
+                        
+                        <li><a href="https://gitter.im/eclipse/ditto" target="_blank">Gitter.im chat</a></li>
+                        
+                        
+                    </ul>
+                </li>
+                
+                
+                
+                <!--comment out this block if you want to hide search-->
+                <li>
+                    <!--start search-->
+                    <div id="search-demo-container">
+                        <input type="text" id="search-input" placeholder="search...">
+                        <ul id="results-container"></ul>
+                    </div>
+                    <script src="//cdnjs.cloudflare.com/ajax/libs/simple-jekyll-search/0.0.9/jekyll-search.js" type="text/javascript"></script>
+                    <script type="text/javascript">
+                            SimpleJekyllSearch.init({
+                                searchInput: document.getElementById('search-input'),
+                                resultsContainer: document.getElementById('results-container'),
+                                dataSource: 'search.json',
+                                searchResultTemplate: '<li><a href="{url}" title="Support merge functionality for things resources">{title}</a></li>',
+                                noResultsText: 'No results found.',
+                                limit: 10,
+                                fuzzy: true,
+                    })
+                    </script>
+                    <!--end search-->
+                </li>
+            </ul>
+        </div>
+    </div>
+    <!-- /.container -->
+</nav>
+
+<!-- Page Content -->
+<div class="container">
+  <div id="main">
+    <!-- Content Row -->
+    <div class="row">
+        
+        
+
+        <!-- Content Column -->
+        <div class="col-md-12" id="tg-sb-content">
+            <!-- Look the author details up from the site config. -->
+
+
+<!-- Output author details if some exist. -->
+<!-- Output author details if some exist. -->
+<!---->
+<!--<span>-->
+    <!--&lt;!&ndash; Mugshot. &ndash;&gt;-->
+    <!--<img src="https://www.gravatar.com/avatar/4125883975796a6f81e380b371438549?s=135" alt="A photo of Stefan Maute" />-->
+
+<!--&lt;!&ndash; Personal Info. &ndash;&gt;-->
+    <!--Written by <a href="https://github.com/stmaute" target="_blank">Stefan Maute</a>-->
+<!--</span>-->
+<!---->
+
+<article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+    <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">Support merge functionality for things resources</h1>
+        <p class="post-meta">Published by <img src="https://www.gravatar.com/avatar/4125883975796a6f81e380b371438549?s=135" alt="A photo of Stefan Maute" style="width:50px;border-radius:50%;display:inline-block;margin-right:5px;" /><span itemprop="author" itemscope itemtype="http://schema.org/Person"><span itemprop="name"><a href="https://github.com/stmaute" target="_blank">Stefan Maute</a> </span></span> on <time datetime="2021-02-04T00:00:00+00:00" itemprop="datePublished">Feb 4, 2021</time> - Tags:
+            
+            
+            
+            <a href="tag_blog.html">blog</a>, 
+            
+            
+            
+            <a href="tag_http.html">http</a>, 
+            
+            
+            
+            <a href="tag_protocol.html">protocol</a>
+            
+            
+            
+
+        </p>
+
+
+    </header>
+
+    <div class="post-content" itemprop="articleBody">
+
+        
+
+        
+        
+<!-- this handles the automatic toc. use ## for subheads to auto-generate the on-page minitoc. if you use html tags, you must supply an ID for the heading element in order for it to appear in the minitoc. -->
+<script>
+$( document ).ready(function() {
+  // Handler for .ready() called.
+
+$('#toc').toc({ minimumHeaders: 0, listType: 'ul', showSpeed: 0, headers: 'h2,h3,h4' });
+
+/* this offset helps account for the space taken up by the floating toolbar. */
+$('#toc').on('click', 'a', function() {
+  var target = $(this.getAttribute('href'))
+    , scroll_target = target.offset().top
+
+  $(window).scrollTop(scroll_target - 10);
+  return false
+})
+  
+});
+</script>
+
+<div id="toc"></div>
+
+        
+
+        <p>With the upcoming release of Eclipse Ditto <strong>version 2.0.0</strong> it will be possible to merge existing things and their subresources.</p>
+
+<h2 id="merge-functionality-for-things-resources">Merge functionality for things resources</h2>
+<p>Ditto now supports merging of existing things and all of its subresources with the provided payload in the request.
+This can be done by using the HTTP API with the PATCH method, via the Ditto protocol, and also by using the Ditto Java Client. 
+For all three ways there is an example provided in this blog post.</p>
+
+<p>In contrast to the already existing PUT resource, this new functionality <strong>allows partial updates</strong> on a thing and all its subresources. 
+To get more into detail, from now on it is possible to add or update attributes, and a feature property at the same time,
+without overwriting the complete thing. Another use case might be to update several feature properties within a single request
+and let all other parts of the thing untouched.</p>
+
+<p>Ditto uses the <a href="https://tools.ietf.org/html/rfc7396">JSON Merge Patch</a> semantics to merge the request body 
+with the existing thing. In short, a JSON merge patch resembles the original JSON structure of a thing, and 
+the fields provided in the patch are added, updated, or deleted in the existing thing.</p>
+
+<p>Please be aware that <code class="highlighter-rouge">null</code> values have a special meaning when applying a merge patch. A <code class="highlighter-rouge">null</code> value indicates 
+the removal of existing fields in the updated thing. 
+For more details and examples, please refer to <a href="https://tools.ietf.org/html/rfc7396">RFC-7396</a>.</p>
+
+<h3 id="permissions-to-merge-things-and-things-subresources">Permissions to merge things and things subresources</h3>
+<p>In order to execute such a merge operation, the authorized subject needs to have WRITE permission at all resources
+that should change by the merge. Consequently, if the permission is missing for some part of the merge,
+the merge is rejected and <strong>not</strong> applied at all.</p>
+
+<h2 id="examples">Examples</h2>
+
+<p>To demonstrate the new merge feature, we assume that the following thing already exists:</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"thingId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"com.acme:coffeebrewer"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"policyId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"com.acme:coffeebrewer-policy"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"definition"</span><span class="p">:</span><span class="w"> </span><span class="s2">"com.acme:coffeebrewer:0.1.0"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"manufacturer"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ACME demo corp."</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"location"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Berlin, main floor"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"serialno"</span><span class="p">:</span><span class="w"> </span><span class="s2">"42"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"model"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Speaking coffee machine"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="s2">"features"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"coffee-brewer"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"definition"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"com.acme:coffeebrewer:0.1.0"</span><span class="p">],</span><span class="w">
+      </span><span class="s2">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"brewed-coffees"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="s2">"water-tank"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"configuration"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="s2">"smartMode"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"brewingTemp"</span><span class="p">:</span><span class="w"> </span><span class="mi">87</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"tempToHold"</span><span class="p">:</span><span class="w"> </span><span class="mi">44</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"timeoutSeconds"</span><span class="p">:</span><span class="w"> </span><span class="mi">6000</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="s2">"waterAmount"</span><span class="p">:</span><span class="w"> </span><span class="mi">731</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"temperature"</span><span class="p">:</span><span class="w"> </span><span class="mi">44</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h3 id="permissions-to-execute-the-example">Permissions to execute the example</h3>
+<p>For this example, the authorized subject needs to have unrestricted WRITE permissions on all affected paths 
+of the JSON merge patch: <em>attributes/manufacturingYear</em>, <em>features/water-tank/properties/configuration/smartMode</em>, and
+<em>features/water-tank/properties/configuration/tempToHold</em>.
+The WRITE permission must not be revoked on any level further down the hierarchy.
+Consequently, it is also sufficient for the authorized subject to have unrestricted WRITE permission at root level or
+unrestricted WRITE permission at /attributes and /features etc.</p>
+
+<p>The following subparts will show how to use the merge feature via the HTTP API, the Ditto protocol 
+and the Ditto Java Client.</p>
+
+<h3 id="merge-via-http-api">Merge via HTTP API</h3>
+<p>An existing thing can be merged via the HTTP API using the <em>PATCH</em> method with the following request body.
+Notice that this request will add the “manufacturingYear” to the attributes, update the “tempToHold” to 50 and 
+delete the “smartMode” key from  the feature property “water-tank”.</p>
+
+<p>The <code class="highlighter-rouge">Content-Type</code> header for this request must be <em>application/merge-patch+json</em>.</p>
+
+<p>PATCH /things/com.acme:coffeebrewer</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"manufacturingYear"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2020"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="s2">"features"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"water-tank"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"configuration"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="s2">"smartMode"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"tempToHold"</span><span class="p">:</span><span class="w"> </span><span class="mi">50</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>After the request was successfully performed the thing will look like this:</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"thingId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"com.acme:coffeebrewer"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"policyId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"com.acme:coffeebrewer-policy"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"definition"</span><span class="p">:</span><span class="w"> </span><span class="s2">"com.acme:coffeebrewer:0.1.0"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"manufacturer"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ACME demo corp."</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"manufacturingYear"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2020"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"location"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Berlin, main floor"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"serialno"</span><span class="p">:</span><span class="w"> </span><span class="s2">"42"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"model"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Speaking coffee machine"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="s2">"features"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"coffee-brewer"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"definition"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"com.acme:coffeebrewer:0.1.0"</span><span class="p">],</span><span class="w">
+      </span><span class="s2">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"brewed-coffees"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="s2">"water-tank"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"configuration"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="s2">"brewingTemp"</span><span class="p">:</span><span class="w"> </span><span class="mi">87</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"tempToHold"</span><span class="p">:</span><span class="w"> </span><span class="mi">50</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"timeoutSeconds"</span><span class="p">:</span><span class="w"> </span><span class="mi">6000</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="s2">"waterAmount"</span><span class="p">:</span><span class="w"> </span><span class="mi">731</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"temperature"</span><span class="p">:</span><span class="w"> </span><span class="mi">44</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>It is also possible to apply the <em>PATCH</em> method to all subresources of a thing, e.g. merging only the attributes of a thing.  <br />
+Check out the newly added <em>PATCH</em> resources in our <a href="http-api-doc.html">HTTP API</a>.</p>
+
+<h3 id="merge-via-ditto-protocol">Merge via Ditto protocol</h3>
+<p>It is also possible to merge the existing thing via the Ditto protocol.
+Applying the following Ditto merge command to the existing thing will lead to the same result as in the above HTTP example.</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"topic"</span><span class="p">:</span><span class="w"> </span><span class="s2">"com.acme/coffeebrewer/things/twin/commands/merge"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"content-type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"application/vnd.eclipse.ditto+json"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="s2">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"value"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"thingId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"com.acme:coffeebrewer"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"manufacturingYear"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2020"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="s2">"features"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"water-tank"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="s2">"configuration"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"smartMode"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"tempToHold"</span><span class="p">:</span><span class="w"> </span><span class="mi">50</span><span class="w">
+          </span><span class="p">}</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>Another Ditto protocol example to merge a feature property:</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"topic"</span><span class="p">:</span><span class="w"> </span><span class="s2">"com.acme/coffeebrewer/things/twin/commands/merge"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"content-type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"application/vnd.eclipse.ditto+json"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="s2">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/features/coffee-brewer/properties/brewed-coffees"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"value"</span><span class="p">:</span><span class="w"> </span><span class="mi">42</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h3 id="using-the-ditto-client-to-merge-things">Using the ditto-client to merge things</h3>
+<p>The merge functionality is also supported via the <a href="client-sdk-java.html">Ditto Java Client</a> 
+with the upcoming (<strong>Ditto Java Client version 2.0.0</strong>).</p>
+
+<p>Example for merging a thing with the Ditto Java Client:</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">final</span> <span class="n">String</span> <span class="n">THING_ID</span> <span class="o">=</span> <span class="s">"com.acme:coffeebrewer"</span><span class="o">;</span>
+<span class="kd">final</span> <span class="n">String</span> <span class="n">FEATURE_ID</span> <span class="o">=</span> <span class="s">"water-tank"</span><span class="o">;</span>
+<span class="kd">final</span> <span class="n">JsonPointer</span> <span class="n">ATTRIBUTE_KEY</span> <span class="o">=</span> <span class="n">JsonFactory</span><span class="o">.</span><span class="na">newPointer</span><span class="o">(</span><span class="s">"manufacturingYear"</span><span class="o">);</span>
+<span class="kd">final</span> <span class="n">String</span> <span class="n">ATTRIBUTE_VALUE</span> <span class="o">=</span> <span class="s">"2020"</span><span class="o">;</span>
+<span class="kd">final</span> <span class="n">Feature</span> <span class="n">FEATURE</span> <span class="o">=</span> <span class="n">ThingsModelFactory</span><span class="o">.</span><span class="na">newFeatureBuilder</span><span class="o">()</span>
+        <span class="o">.</span><span class="na">withId</span><span class="o">(</span><span class="n">FEATURE_ID</span><span class="o">)</span>
+        <span class="o">.</span><span class="na">properties</span><span class="o">(</span><span class="n">ThingsModelFactory</span><span class="o">.</span><span class="na">newFeaturePropertiesBuilder</span><span class="o">()</span>
+                        <span class="o">.</span><span class="na">set</span><span class="o">(</span><span class="s">"smartMode"</span><span class="o">,</span> <span class="kc">false</span><span class="o">)</span>
+                        <span class="o">.</span><span class="na">set</span><span class="o">(</span><span class="s">"tempToHold"</span><span class="o">,</span> <span class="mi">50</span><span class="o">)</span>
+                        <span class="o">.</span><span class="na">build</span><span class="o">())</span>
+        <span class="o">.</span><span class="na">build</span><span class="o">();</span>
+
+<span class="kd">final</span> <span class="n">Thing</span> <span class="n">THING</span> <span class="o">=</span> <span class="n">ThingsModelFactory</span><span class="o">.</span><span class="na">newThingBuilder</span><span class="o">()</span>
+        <span class="o">.</span><span class="na">setId</span><span class="o">(</span><span class="n">THING_ID</span><span class="o">)</span>
+        <span class="o">.</span><span class="na">setAttribute</span><span class="o">(</span><span class="n">ATTRIBUTE_KEY_NEW</span><span class="o">,</span> <span class="n">JsonFactory</span><span class="o">.</span><span class="na">newValue</span><span class="o">(</span><span class="n">ATTRIBUTE_VALUE</span><span class="o">))</span>
+        <span class="o">.</span><span class="na">setFeature</span><span class="o">(</span><span class="n">FEATURE</span><span class="o">)</span>
+        <span class="o">.</span><span class="na">build</span><span class="o">();</span>
+
+<span class="c1">// initialize the ditto-client</span>
+<span class="kd">final</span> <span class="n">DittoClient</span> <span class="n">dittoClient</span> <span class="o">=</span> <span class="o">...</span> <span class="o">;</span>
+
+<span class="n">dittoClient</span><span class="o">.</span><span class="na">twin</span><span class="o">().</span><span class="na">merge</span><span class="o">(</span><span class="n">THING_ID</span><span class="o">,</span> <span class="n">THING</span><span class="o">)</span>
+        <span class="o">.</span><span class="na">whenComplete</span><span class="o">(((</span><span class="n">adaptable</span><span class="o">,</span> <span class="n">throwable</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="o">{</span>
+            <span class="k">if</span> <span class="o">(</span><span class="n">throwable</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+                <span class="n">LOGGER</span><span class="o">.</span><span class="na">error</span><span class="o">(</span><span class="s">"Received error while sending MergeThing: '{}' "</span><span class="o">,</span> <span class="n">throwable</span><span class="o">.</span><span class="na">toString</span><span class="o">());</span>
+            <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+                <span class="n">LOGGER</span><span class="o">.</span><span class="na">info</span><span class="o">(</span><span class="s">"Received response for MergeThing: '{}'"</span><span class="o">,</span> <span class="n">adaptable</span><span class="o">);</span>
+            <span class="o">}</span>
+        <span class="o">}));</span>
+</code></pre></div></div>
+
+<p>After running this code snippet, the existing thing should look like the above result for the HTTP example.</p>
+
+<p>More examples for merging an attribute, all attributes and a feature property via Ditto Java Client.</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// initialize the ditto-client</span>
+<span class="kd">final</span> <span class="n">DittoClient</span> <span class="n">dittoClient</span> <span class="o">=</span> <span class="o">...</span> <span class="o">;</span>
+
+    <span class="c1">// merge attribute</span>
+    <span class="n">dittoClient</span><span class="o">.</span><span class="na">twin</span><span class="o">()</span>
+        <span class="o">.</span><span class="na">forId</span><span class="o">(</span><span class="s">"com.acme:coffeebrewer"</span><span class="o">)</span>
+        <span class="o">.</span><span class="na">mergeAttribute</span><span class="o">(</span><span class="s">"manufacturingYear"</span><span class="o">,</span> <span class="s">"2021"</span><span class="o">)</span>
+        <span class="o">.</span><span class="na">whenComplete</span><span class="o">(...);</span>
+        
+    <span class="c1">// merge attributes</span>
+    <span class="n">dittoClient</span><span class="o">.</span><span class="na">twin</span><span class="o">()</span>
+        <span class="o">.</span><span class="na">forId</span><span class="o">(</span><span class="s">"com.acme:coffeebrewer"</span><span class="o">)</span>
+        <span class="o">.</span><span class="na">mergeAttributes</span><span class="o">(</span><span class="n">JsonObject</span><span class="o">.</span><span class="na">newBuilder</span><span class="o">().</span><span class="na">set</span><span class="o">(</span><span class="s">"manufacturingYear"</span><span class="o">,</span> <span class="s">"2021"</span><span class="o">).</span><span class="na">build</span><span class="o">())</span>
+        <span class="o">.</span><span class="na">whenComplete</span><span class="o">(...);</span>
+    
+    <span class="c1">// merge feature property</span>
+    <span class="n">dittoClient</span><span class="o">.</span><span class="na">twin</span><span class="o">()</span>
+        <span class="o">.</span><span class="na">forFeature</span><span class="o">(</span><span class="s">"com.acme:coffeebrewer"</span><span class="o">,</span> <span class="s">"water-tank"</span><span class="o">)</span>
+        <span class="o">.</span><span class="na">mergeProperty</span><span class="o">(</span><span class="s">"configuration/smartMode"</span><span class="o">,</span> <span class="kc">false</span><span class="o">)</span>
+        <span class="o">.</span><span class="na">whenComplete</span><span class="o">(...);</span>
+</code></pre></div></div>
+
+<h2 id="feedback">Feedback?</h2>
+
+<p>Please <a href="feedback.html">get in touch</a> if you have feedback or questions towards this new functionality.</p>
+
+<p><br />
+<br /></p>
+<figure><img class="docimage" src="images/ditto.svg" alt="Ditto" style="max-width: 500px" /></figure>
+
+<p>–<br /> 
+The Eclipse Ditto team</p>
+
+
+    </div>
+
+
+
+</article>
+
+<hr class="shaded"/>
+
+<footer>
+            <div class="row">
+                <div class="col-lg-12 footer">
+                    <div class="logo">
+                        <a href="https://eclipse.org"><img src="images/eclipse_foundation_logo.svg" alt="Eclipse logo"/></a>
+                    </div>
+                    <p class="notice">
+                        &copy;2021 Eclipse Ditto.
+                         Site last generated: Feb 4, 2021 <br />
+                    </p>
+                    <div class="quickLinks">
+                        <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">
+                            &gt; Privacy Policy
+                        </a>
+                        <a href="https://www.eclipse.org/legal/termsofuse.php" target="_blank">
+                            &gt; Terms of Use
+                        </a>
+                        <a href="https://www.eclipse.org/legal/copyright.php" target="_blank">
+                            &gt; Copyright Agent
+                        </a>
+                        <a href="https://www.eclipse.org/legal" target="_blank">
+                            &gt; Legal
+                        </a>
+                        <a href="https://www.eclipse.org/legal/epl-2.0/" target="_blank">
+                            &gt; License
+                        </a>
+                        <a href="https://eclipse.org/security" target="_blank">
+                            &gt; Report a Vulnerability
+                        </a>
+                    </div>
+                </div>
+            </div>
+</footer>
+
+
+        </div>
+    <!-- /.row -->
+</div>
+<!-- /.container -->
+</div>
+<!-- /#main -->
+    </div>
+
+</body>
+</html>
