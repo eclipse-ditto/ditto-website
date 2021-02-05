@@ -505,6 +505,61 @@ with the upcoming (<strong>Ditto Java Client version 2.0.0</strong>).</p>
         <span class="o">.</span><span class="na">whenComplete</span><span class="o">(...);</span>
 </code></pre></div></div>
 
+<h2 id="merge-events">Merge events</h2>
+<p>In this section we want to cover the new <code class="highlighter-rouge">ThingMerged</code> event which will be emitted after successfully applying an <code class="highlighter-rouge">MergeThing</code> command.
+For every HTTP request or Ditto protocol message which performs a merge operation on a thing there will be sent out 
+exactly one <code class="highlighter-rouge">ThingMerged</code> event. This event contains the <strong>path</strong> and the <strong>value</strong> of the merge operation.
+The <strong>path</strong> describes on which level of the thing the <strong>value</strong> was merged.</p>
+
+<h3 id="merge-event-example">Merge event example</h3>
+<p>Let’s assume we want to patch/merge multiple feature properties at once.
+PATCH /things/com.acme:coffeebrewer/features</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"coffee-brewer"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"brewed-coffees"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="s2">"water-tank"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"configuration"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"smartMode"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"tempToHold"</span><span class="p">:</span><span class="w"> </span><span class="mi">30</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>The following <code class="highlighter-rouge">ThingMerged</code> event is emitted:</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"topic"</span><span class="p">:</span><span class="w"> </span><span class="s2">"com.acme/coffeebrewer/things/twin/events/merged"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"content-type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"application/merge-patch+json"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="s2">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/features"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"value"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"coffee-brewer"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"brewed-coffees"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="s2">"water-tank"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"configuration"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="s2">"smartMode"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"tempToHold"</span><span class="p">:</span><span class="w"> </span><span class="mi">30</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="s2">"revision"</span><span class="p">:</span><span class="w"> </span><span class="mi">42</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"timestamp"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2021-02-04T09:42:39Z"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
 <h2 id="feedback">Feedback?</h2>
 
 <p>Please <a href="feedback.html">get in touch</a> if you have feedback or questions towards this new functionality.</p>
@@ -533,7 +588,7 @@ The Eclipse Ditto team</p>
                     </div>
                     <p class="notice">
                         &copy;2021 Eclipse Ditto.
-                         Site last generated: Feb 4, 2021 <br />
+                         Site last generated: Feb 5, 2021 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">
