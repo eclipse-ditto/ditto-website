@@ -1718,6 +1718,12 @@ merge functionality is available via the HTTP API and the all channels using the
 <a href="httpapi-concepts.html#merge-updates">Merge updates via HTTP</a>
 or the <a href="protocol-specification-things-merge.html">Merge protocol specification</a> for more details and examples.</p>
 
+<h4 id="oidc-added-support-for-arbitrary-claims-for-authorization-subjects"><a href="https://github.com/eclipse/ditto/issues/512">OIDC: Added support for arbitrary claims for authorization subjects</a></h4>
+
+<p>OpenID Connect support has been extended; Previously, only the <code class="highlighter-rouge">sub</code> field from a JWT was injected as an authorization subject.
+This is now configurable: The Ditto Gateway config takes a list of placeholder strings that are used to construct authorization subjects.
+See <a href="installation-operating.html#openid-connect">OpenID Connect</a></p>
+
 <h3 id="bugfixes">Bugfixes</h3>
 
 <h2 id="migration-notes">Migration notes</h2>
@@ -1752,6 +1758,36 @@ can be updated to contain the “old” default in this case:</p>
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
+<h3 id="openid-connect-configuration-for-gateway">OpenID Connect configuration for gateway</h3>
+
+<p>The oauth configuration section of the Gateway service has been altered to support
+<a href="https://github.com/eclipse/ditto/issues/512">arbitrary claims for authorization subjects</a>. The <code class="highlighter-rouge">openid-connect-issuers</code> map now takes
+key-object pairs rather than key-string pairs:</p>
+
+<p>old:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>oauth = {
+  openid-connect-issuers = {
+    someissuer = "https://example.com"
+  }
+}
+</code></pre></div></div>
+
+<p>new:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+oauth = {
+  openid-connect-issuers = {
+    someissuer = {
+      issuer = "https://example.com"
+    }
+  }
+}
+
+</code></pre></div></div>
+
+<p>The <code class="highlighter-rouge">auth-subjects</code> field is optional. When not supplied, the ‘old’ behaviour (using the JWT <code class="highlighter-rouge">sub</code> field) remains.</p>
+
 
     <div class="tags">
         
@@ -1777,7 +1813,7 @@ can be updated to contain the “old” default in this case:</p>
                     </div>
                     <p class="notice">
                         &copy;2021 Eclipse Ditto.
-                         Site last generated: Feb 5, 2021 <br />
+                         Site last generated: Feb 22, 2021 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="">
-<meta name="keywords" content="getting_startedinstallation,  running, docker, docker-compose, start, run">
+<meta name="keywords" content="getting_startedinstallation,  running, start, run, docker, docker-compose, k3s, helm, openshift, kubernetes">
 <title>  Running Ditto • Eclipse Ditto • a digital twin framework</title>
 
 <link rel="stylesheet" href="css/syntax.css">
@@ -1700,61 +1700,42 @@ $('#toc').on('click', 'a', function() {
 
 <p>In order to start Ditto, you’ll need:</p>
 <ul>
-  <li>a running Docker daemon (at least version 18.06 CE),</li>
-  <li>Docker Compose installed (at least version 1.22),</li>
   <li>the built Docker images of Ditto
     <ul>
       <li>either by building them as described in <a href="installation-building.html">Building Ditto</a>,</li>
       <li>or by using the pre-built <a href="https://hub.docker.com/u/eclipse/">Ditto images on Docker Hub</a>.</li>
     </ul>
   </li>
+  <li>some other tools like docker-compose, helm, k3s, minikube or openshift to run Ditto.</li>
 </ul>
 
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># switch to the deployment/docker/ directory:</span>
-<span class="nb">cd </span>deployment/docker/
-docker-compose up <span class="nt">-d</span>
-</code></pre></div></div>
+<p>You can choose from several options to deploy Ditto.
+A good starting point here is <a href="https://github.com/eclipse/ditto/blob/master/deployment/README.md">Ditto Deployment</a>.
+After completing the deployment of your choice Ditto should be up &amp; running.</p>
 
-<p>Check the logs after starting up:</p>
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker-compose logs <span class="nt">-f</span>
-</code></pre></div></div>
-
-<p>You have now running:</p>
+<p>Now you have running:</p>
 <ul>
-  <li>a MongoDB as backing datastore of Ditto (not part of Ditto but started via Docker),</li>
+  <li>a MongoDB as backing datastore of Ditto (not part of Ditto but started to get Ditto running),</li>
   <li>Ditto microservices:
     <ul>
+      <li>Concierge,</li>
+      <li>Connectivity,</li>
       <li>Policies,</li>
       <li>Things,</li>
       <li>Thing-Search,</li>
       <li>Gateway,</li>
     </ul>
   </li>
-  <li>an instance of nginx acting as a reverse proxy performing a simple “basic authentication” listening on port <code class="highlighter-rouge">8080</code>
+  <li>an instance of nginx acting as a reverse proxy performing a simple “basic authentication” listening on a local port
     <ul>
-      <li>including some static HTTP + API documentation on <a href="http://localhost:8080">http://localhost:8080</a>.</li>
+      <li>including some static HTTP + API documentation</li>
     </ul>
   </li>
 </ul>
 
-<h2 id="stop-ditto">Stop Ditto</h2>
+<p>The running port on which Ditto can be accessed is described in the Readme of the respective deployment section.</p>
 
-<p>This command stops the Ditto stack without removing the data from MongoDB database.</p>
-
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker-compose stop
-</code></pre></div></div>
-
-<p>After executing this command, Ditto can be started again:</p>
-
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker-compose start
-</code></pre></div></div>
-
-<h2 id="destroy-ditto-stack">Destroy Ditto stack</h2>
-
-<p>For removing the stack and clearing the MongoDB completely, execute:</p>
-
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker-compose down
-</code></pre></div></div>
+<p>If you want to change the MongoDB config or Ditto config please have a look here: <a href="installation-operating.html">Operating Ditto</a></p>
 
 
     <div class="tags">
@@ -1785,7 +1766,7 @@ docker-compose up <span class="nt">-d</span>
                     </div>
                     <p class="notice">
                         &copy;2021 Eclipse Ditto.
-                         Site last generated: Feb 5, 2021 <br />
+                         Site last generated: Feb 22, 2021 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">
