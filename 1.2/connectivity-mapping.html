@@ -1,0 +1,2348 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="">
+<meta name="keywords" content="connectivity,  mapping, transformation, payload, javascript">
+<title>  Payload mapping in connectivity service • Eclipse Ditto • a digital twin framework</title>
+
+<link rel="stylesheet" href="css/syntax.css">
+<link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" crossorigin="anonymous">
+<link rel="stylesheet" href="css/modern-business.css">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" crossorigin="anonymous">
+<link rel="stylesheet" href="css/customstyles.css">
+<link rel="stylesheet" href="css/boxshadowproperties.css">
+<link rel="stylesheet" href="css/theme-ditto.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,700|Source+Code+Pro:300,600|Titillium+Web:400,600,700">
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js" crossorigin="anonymous"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" crossorigin="anonymous"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/anchor-js/2.0.0/anchor.min.js" crossorigin="anonymous"></script>
+<script src="js/toc.js"></script>
+<script src="js/customscripts.js"></script>
+
+<script type="application/ld+json">
+{
+  "@context": "http://schema.org",
+  "@type": "Organization",
+  "url": "https://eclipse.org/ditto/",
+  "logo": "https://eclipse.org/ditto/images/ditto.svg"
+}
+</script>
+
+<link rel="icon" type="image/png" href="images/favicon-16x16.png" sizes="16x16">
+<link rel="icon" type="image/png" href="images/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="images/favicon-96x96.png" sizes="96x96">
+
+<link rel="alternate" type="application/rss+xml" title="Eclipse Ditto Blog" href="https://www.eclipse.org/ditto/feed.xml">
+
+<!-- Eclipse Foundation cookie consent: -->
+<link rel="stylesheet" type="text/css" href="//www.eclipse.org/eclipse.org-common/themes/solstice/public/stylesheets/vendor/cookieconsent/cookieconsent.min.css" />
+<script src="//www.eclipse.org/eclipse.org-common/themes/solstice/public/javascript/vendor/cookieconsent/default.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            $("#tg-sb-link").click(function() {
+                $("#tg-sb-sidebar").toggle();
+                $("#tg-sb-content").toggleClass('col-md-9');
+                $("#tg-sb-content").toggleClass('col-md-12');
+                $("#tg-sb-icon").toggleClass('fa-toggle-on');
+                $("#tg-sb-icon").toggleClass('fa-toggle-off');
+            });
+        });
+    </script>
+</head>
+
+
+<script>
+    (function(w,d,s,l,i){
+        w[l]=w[l]||[];
+        w[l].push({'gtm.start':
+            new Date().getTime(),event:'gtm.js'});
+        var f=d.getElementsByTagName(s)[0],
+            j=d.createElement(s),
+            dl=l!='dataLayer'?'&l='+l:'';
+        j.async=true;
+        j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;
+        f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-5WLCZXC');
+</script>
+
+
+
+<body>
+<!-- Navigation -->
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container topnavlinks">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-ditto-home" href="index.html">&nbsp;<img src="images/ditto_allwhite_symbolonly.svg" class="ditto-navbar-symbol" alt="Home"> <img src="images/ditto_allwhite_textonly.svg" class="ditto-navbar-symbol-text" alt="Ditto"></a>
+        </div>
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <!-- toggle sidebar button -->
+                <!--<li><a id="tg-sb-link" href="#"><i id="tg-sb-icon" class="fa fa-toggle-on"></i> Nav</a></li>-->
+                <!-- entries without drop-downs appear here -->
+
+
+
+
+                
+                
+                
+                <li><a href="blog.html">Blog</a></li>
+                
+                
+                
+                <li><a href="intro-overview.html">Documentation</a></li>
+                
+                
+                
+                <li><a href="http-api-doc.html">HTTP API</a></li>
+                
+                
+                
+                <li><a href="sandbox.html">Sandbox</a></li>
+                
+                
+                
+                <li><a href="https://github.com/eclipse/ditto" target="_blank">GitHub</a></li>
+                
+                
+                
+                <li><a href="https://github.com/eclipse/ditto-examples" target="_blank">GitHub examples</a></li>
+                
+                
+                
+                <!-- entries with drop-downs appear here -->
+                <!-- conditional logic to control which topnav appears for the audience defined in the configuration file.-->
+                
+                
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Links<b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        
+                        
+                        <li><a href="https://projects.eclipse.org/projects/iot.ditto" target="_blank">Eclipse Ditto Project</a></li>
+                        
+                        
+                        
+                        <li><a href="https://www.eclipse.org/forums/index.php/f/364/" target="_blank">Forum</a></li>
+                        
+                        
+                        
+                        <li><a href="https://ci.eclipse.org/ditto/" target="_blank">Jenkins</a></li>
+                        
+                        
+                        
+                        <li><a href="https://dev.eclipse.org/mhonarc/lists/ditto-dev/" target="_blank">Mailing list archives</a></li>
+                        
+                        
+                        
+                        <li><a href="https://gitter.im/eclipse/ditto" target="_blank">Gitter.im chat</a></li>
+                        
+                        
+                    </ul>
+                </li>
+                
+                
+                
+                <!--comment out this block if you want to hide search-->
+                <li>
+                    <!--start search-->
+                    <div id="search-demo-container">
+                        <input type="text" id="search-input" placeholder="search...">
+                        <ul id="results-container"></ul>
+                    </div>
+                    <script src="//cdnjs.cloudflare.com/ajax/libs/simple-jekyll-search/0.0.9/jekyll-search.js" type="text/javascript"></script>
+                    <script type="text/javascript">
+                            SimpleJekyllSearch.init({
+                                searchInput: document.getElementById('search-input'),
+                                resultsContainer: document.getElementById('results-container'),
+                                dataSource: 'search.json',
+                                searchResultTemplate: '<li><a href="{url}" title="Payload mapping in connectivity service">{title}</a></li>',
+                                noResultsText: 'No results found.',
+                                limit: 10,
+                                fuzzy: true,
+                    })
+                    </script>
+                    <!--end search-->
+                </li>
+            </ul>
+        </div>
+    </div>
+    <!-- /.container -->
+</nav>
+
+<!-- Page Content -->
+<div class="container">
+  <div id="main">
+    <!-- Content Row -->
+    <div class="row">
+        
+        
+            <!-- Sidebar Column -->
+            <div class="col-md-3" id="tg-sb-sidebar">
+                
+
+<ul id="mysidebar" class="nav">
+  <li class="sidebarTitle">
+    <label for="docVersion">Eclipse Ditto  version:</label>
+    <div class="select-wrapper">
+      <select id="docVersion" name="docVersion">
+        
+        <option value="">development</option>
+        
+        <option value="1.0">1.0</option>
+        
+        <option value="1.1">1.1</option>
+        
+        <option value="1.2">1.2</option>
+        
+        <option value="1.3">1.3</option>
+        
+        <option value="1.4">1.4</option>
+        
+        <option value="1.5">1.5</option>
+        
+      </select>
+    </div>
+    <div id="dev-warning">
+      <div markdown="span" class="alert alert-warning" role="alert" style="font-size:0.6em"><i class="fa fa-warning"></i> <b>Important:</b> This documentation reflects the latest 'development'. You might want to choose a released version.</div>
+    </div>
+  </li>
+  
+  
+  
+    
+        <li class="subfolders">
+          <a href="#"><span></span>Introduction</a>
+          <ul>
+              
+              
+              
+              <li><a href="intro-overview.html">Overview</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="intro-digitaltwins.html">Digital twins</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="intro-hello-world.html">Hello world</a></li>
+              
+              
+              
+              
+          </ul>
+        </li>
+    
+  
+  
+  
+    
+        <li class="subfolders">
+          <a href="#"><span></span>Release Notes</a>
+          <ul>
+              
+              
+              
+              <li><a href="release_notes_121.html">1.2.1</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="release_notes_120.html">1.2.0</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="release_notes_115.html">1.1.5</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="release_notes_113.html">1.1.3</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="release_notes_112.html">1.1.2</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="release_notes_111.html">1.1.1</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="release_notes_110.html">1.1.0</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="release_notes_100.html">1.0.0</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="release_notes_090.html">0.9.0</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="release_notes_080.html">0.8.0</a></li>
+              
+              
+              
+              <li class="subfolders">
+                  <a href="#"><span></span>Milestone releases</a>
+                  <ul>
+                      
+                      
+                      
+                      <li><a href="release_notes_100-M2.html">1.0.0-M2</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_100-M1a.html">1.0.0-M1a</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_090-M2.html">0.9.0-M2</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_090-M1.html">0.9.0-M1</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_080-M3.html">0.8.0-M3</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_080-M2.html">0.8.0-M2</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_080-M1.html">0.8.0-M1</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_030-M2.html">0.3.0-M2</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_030-M1.html">0.3.0-M1</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_020-M1.html">0.2.0-M1</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_010-M3.html">0.1.0-M3</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_010-M1.html">0.1.0-M1</a></li>
+                      
+                      
+                      
+                  </ul>
+              </li>
+              
+              
+              
+              
+          </ul>
+        </li>
+    
+  
+  
+  
+    
+        <li class="subfolders">
+          <a href="#"><span></span>Installation</a>
+          <ul>
+              
+              
+              
+              <li><a href="installation-building.html">Building Ditto</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="installation-running.html">Running Ditto</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="installation-operating.html">Operating Ditto</a></li>
+              
+              
+              
+              
+          </ul>
+        </li>
+    
+  
+  
+  
+    
+        <li class="subfolders">
+          <a href="#"><span></span>Basic concepts</a>
+          <ul>
+              
+              
+              
+              <li><a href="basic-overview.html">Overview</a></li>
+              
+              
+              
+              <li class="subfolders">
+                  <a href="#"><span></span>Model entities</a>
+                  <ul>
+                      
+                      
+                      
+                      <li><a href="basic-thing.html">Thing</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="basic-acl.html">Access Control List (ACL)</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="basic-feature.html">Feature</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="basic-policy.html">Policy</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="basic-namespaces-and-names.html">Namespaces and Names</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="basic-metadata.html">Thing Metadata</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="basic-errors.html">Errors</a></li>
+                      
+                      
+                      
+                  </ul>
+              </li>
+              
+              
+              
+              
+              
+              
+              <li><a href="basic-auth.html">Authentication and Authorization</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="basic-messages.html">Messages</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="basic-signals.html">Signals</a></li>
+              
+              
+              
+              <li class="subfolders">
+                  <a href="#"><span></span>Signal types</a>
+                  <ul>
+                      
+                      
+                      
+                      <li><a href="basic-signals-command.html">Command</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="basic-signals-commandresponse.html">Command response</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="basic-signals-errorresponse.html">Error response</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="basic-signals-event.html">Event</a></li>
+                      
+                      
+                      
+                  </ul>
+              </li>
+              
+              
+              
+              
+              
+              
+              <li><a href="basic-apis.html">APIs</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="basic-connections.html">Connections</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="basic-placeholders.html">Placeholders</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="basic-changenotifications.html">Change notifications</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="basic-rql.html">RQL expressions</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="basic-enrichment.html">Signal enrichment</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="basic-search.html">Search</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="basic-acknowledgements.html">Acknowledgements / QoS</a></li>
+              
+              
+              
+              
+          </ul>
+        </li>
+    
+  
+  
+  
+    
+        <li class="subfolders">
+          <a href="#"><span></span>Architecture</a>
+          <ul>
+              
+              
+              
+              <li><a href="architecture-overview.html">Overview</a></li>
+              
+              
+              
+              <li class="subfolders">
+                  <a href="#"><span></span>Services</a>
+                  <ul>
+                      
+                      
+                      
+                      <li><a href="architecture-services-policies.html">Policies</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="architecture-services-things.html">Things</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="architecture-services-things-search.html">Things-Search</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="architecture-services-connectivity.html">Connectivity</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="architecture-services-concierge.html">Concierge</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="architecture-services-gateway.html">Gateway</a></li>
+                      
+                      
+                      
+                  </ul>
+              </li>
+              
+              
+              
+              
+          </ul>
+        </li>
+    
+  
+  
+  
+    
+        <li class="subfolders">
+          <a href="#"><span></span>HTTP API</a>
+          <ul>
+              
+              
+              
+              <li><a href="httpapi-overview.html">Overview</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="httpapi-concepts.html">Concepts</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="httpapi-search.html">Search</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="httpapi-messages.html">Messages</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="httpapi-protocol-bindings-websocket.html">WebSocket protocol binding</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="httpapi-sse.html">Server sent events</a></li>
+              
+              
+              
+              
+          </ul>
+        </li>
+    
+  
+  
+  
+    
+        <li class="subfolders">
+          <a href="#"><span></span>Connectivity API</a>
+          <ul>
+              
+              
+              
+              <li><a href="connectivity-overview.html">Overview</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="connectivity-manage-connections.html">Manage connections</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="connectivity-protocol-bindings-amqp091.html">AMQP 0.9.1 protocol binding</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="connectivity-protocol-bindings-amqp10.html">AMQP 1.0 protocol binding</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="connectivity-protocol-bindings-mqtt.html">MQTT 3.1.1 protocol binding</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="connectivity-protocol-bindings-mqtt5.html">MQTT 5 protocol binding</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="connectivity-protocol-bindings-http.html">HTTP 1.1 protocol binding</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="connectivity-protocol-bindings-kafka2.html">Kafka 2.x protocol binding</a></li>
+              
+              
+              
+              
+              
+              
+              <li class="active"><a href="connectivity-mapping.html">Payload mapping</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="connectivity-header-mapping.html">Header mapping</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="connectivity-tls-certificates.html">TLS certificates</a></li>
+              
+              
+              
+              
+          </ul>
+        </li>
+    
+  
+  
+  
+    
+        <li class="subfolders">
+          <a href="#"><span></span>Client SDK</a>
+          <ul>
+              
+              
+              
+              <li><a href="client-sdk-overview.html">Overview</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="client-sdk-java.html">Java</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="client-sdk-javascript.html">JavaScript</a></li>
+              
+              
+              
+              
+          </ul>
+        </li>
+    
+  
+  
+  
+    
+        <li class="subfolders">
+          <a href="#"><span></span>Ditto Protocol</a>
+          <ul>
+              
+              
+              
+              <li><a href="protocol-overview.html">Overview</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="protocol-twinlive.html">Twin/live channel</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="protocol-specification.html">Specification</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="protocol-specification-topic.html">Protocol topic</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="protocol-specification-things.html">Things group</a></li>
+              
+              
+              
+              <li class="subfolders">
+                  <a href="#"><span></span>→ commands/events</a>
+                  <ul>
+                      
+                      
+                      
+                      <li><a href="protocol-specification-things-create-or-modify.html">Create/Modify</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-specification-things-retrieve.html">Retrieve</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-specification-things-delete.html">Delete</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-specification-acks.html">Acknowledgements</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-specification-errors.html">Errors</a></li>
+                      
+                      
+                      
+                  </ul>
+              </li>
+              
+              
+              
+              <li class="subfolders">
+                  <a href="#"><span></span>→ search/messages</a>
+                  <ul>
+                      
+                      
+                      
+                      <li><a href="protocol-specification-things-search.html">Search</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-specification-things-messages.html">Messages</a></li>
+                      
+                      
+                      
+                  </ul>
+              </li>
+              
+              
+              
+              
+              
+              
+              <li><a href="protocol-specification-policies.html">Policies group</a></li>
+              
+              
+              
+              <li class="subfolders">
+                  <a href="#"><span></span>→ commands/events</a>
+                  <ul>
+                      
+                      
+                      
+                      <li><a href="protocol-specification-policies-create-or-modify.html">Create/Modify</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-specification-policies-retrieve.html">Retrieve</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-specification-policies-delete.html">Delete</a></li>
+                      
+                      
+                      
+                  </ul>
+              </li>
+              
+              
+              
+              
+              
+              
+              <li><a href="protocol-bindings.html">Bindings</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="protocol-examples.html">Examples</a></li>
+              
+              
+              
+              <li class="subfolders">
+                  <a href="#"><span></span>→ Things examples</a>
+                  <ul>
+                      
+                      
+                      
+                      <li><a href="protocol-examples-creatething.html">Create a Thing</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-deletething.html">Delete a Thing</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-modifything.html">Modify a Thing</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-retrievething.html">Retrieve a Thing</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-retrievethings.html">Retrieve multiple Things</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-modifypolicyid.html">Modify the Policy ID of a Thing</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-createattributes.html">Create Attributes</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-deleteattributes.html">Delete Attributes</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-modifyattributes.html">Modify Attributes</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-retrieveattributes.html">Retrieve Attributes</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-createattribute.html">Create a single Attribute</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-deleteattribute.html">Delete a single Attribute</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-modifyattribute.html">Modify a single Attribute</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-retrieveattribute.html">Retrieve a single Attribute</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-createthingdefinition.html">Create a Definition</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-deletethingdefinition.html">Delete a Definition</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-modifythingdefinition.html">Modify a Definition</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-retrievethingdefinition.html">Retrieve a Definition</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-createfeatures.html">Create Features</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-deletefeatures.html">Delete Features</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-modifyfeatures.html">Modify Features</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-retrievefeatures.html">Retrieve Features</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-createfeature.html">Create a single Feature</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-deletefeature.html">Delete a single Feature</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-modifyfeature.html">Modify a single Feature</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-retrievefeature.html">Retrieve a single Feature</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-createdefinition.html">Create Feature Definition</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-deletedefinition.html">Delete Feature Definition</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-modifydefinition.html">Modify Feature Definition</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-retrievedefinition.html">Retrieve Feature Definition</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-createproperties.html">Create Feature Properties</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-deleteproperties.html">Delete Feature Properties</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-modifyproperties.html">Modify Feature Properties</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-retrieveproperties.html">Retrieve Feature Properties</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-createproperty.html">Create a single Property</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-deleteproperty.html">Delete a single Property</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-modifyproperty.html">Modify a single Property</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-retrieveproperty.html">Retrieve a single Property</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-errorresponses.html">Error responses</a></li>
+                      
+                      
+                      
+                  </ul>
+              </li>
+              
+              
+              
+              <li class="subfolders">
+                  <a href="#"><span></span>→ Policies examples</a>
+                  <ul>
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-createpolicy.html">Create a Policy</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-deletepolicy.html">Delete a Policy</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-modifypolicy.html">Modify a Policy</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-retrievepolicy.html">Retrieve a Policy</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-modifypolicyentries.html">Modify entries</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-retrievepolicyentries.html">Retrieve entries</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-createpolicyentry.html">Create a single entry</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-deletepolicyentry.html">Delete a single entry</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-modifypolicyentry.html">Modify a single entry</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-retrievepolicyentry.html">Retrieve a single entry</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-modifysubjects.html">Modify subjects</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-retrievesubjects.html">Retrieve subjects</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-createsubject.html">Create a single subject</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-deletesubject.html">Delete a single subject</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-modifysubject.html">Modify a single subject</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-retrievesubject.html">Retrieve a single subject</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-modifyresources.html">Modify resources</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-retrieveresources.html">Retrieve resources</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-createresource.html">Create a single resource</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-deleteresource.html">Delete a single resource</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-modifyresource.html">Modify a single resource</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-retrieveresource.html">Retrieve a single resource</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-errorresponses.html">Error responses</a></li>
+                      
+                      
+                      
+                  </ul>
+              </li>
+              
+              
+              
+              
+              
+              
+              <li><a href="protocol-examples-search.html">→ Search examples</a></li>
+              
+              
+              
+              
+          </ul>
+        </li>
+    
+  
+  
+  
+    
+    <li><a href="sandbox.html">Sandbox</a></li>
+    
+  
+  
+  
+    
+    <li><a href="presentations.html">Presentations</a></li>
+    
+  
+  
+  
+    
+    <li><a href="glossary.html">Glossary</a></li>
+    
+  
+  
+  
+    
+    <li><a href="feedback.html">Feedback</a></li>
+    
+  
+  
+  
+    
+         <p class="external">
+             <a href="#" id="collapseAll">Collapse All</a> | <a href="#" id="expandAll">Expand All</a>
+         </p>
+    
+</ul>
+
+<!-- this highlights the active parent class in the sidebar. this is critical so that the parent expands when you're viewing a page. This must appear below the sidebar code above. Otherwise, if placed inside customscripts.js, the script runs before the sidebar code runs and the class never gets inserted.-->
+<script>$("li.active").parents('li').toggleClass("active");
+</script>
+
+            </div>
+            
+        
+
+        <!-- Content Column -->
+        <div class="col-md-9" id="tg-sb-content">
+            <div class="post-header">
+   <h1 class="post-title-main">Payload mapping in connectivity service</h1>
+</div>
+
+
+
+<div class="post-content">
+
+   
+
+    
+    
+<!-- this handles the automatic toc. use ## for subheads to auto-generate the on-page minitoc. if you use html tags, you must supply an ID for the heading element in order for it to appear in the minitoc. -->
+<script>
+$( document ).ready(function() {
+  // Handler for .ready() called.
+
+$('#toc').toc({ minimumHeaders: 0, listType: 'ul', showSpeed: 0, headers: 'h2,h3,h4' });
+
+/* this offset helps account for the space taken up by the floating toolbar. */
+$('#toc').on('click', 'a', function() {
+  var target = $(this.getAttribute('href'))
+    , scroll_target = target.offset().top
+
+  $(window).scrollTop(scroll_target - 10);
+  return false
+})
+  
+});
+</script>
+
+<div id="toc"></div>
+
+    
+
+
+    
+
+
+    
+
+  <div class="bs-callout bs-callout-primary"><strong>TL;DR</strong><br />The payload mapping feature in Ditto’s connectivity APIs can be used to 
+    transform arbitrary payload consumed via the different supported protocols 
+    to <a href="protocol-overview.html">Ditto Protocol</a> messages and vice versa.</div>
+
+<h2 id="motivation">Motivation</h2>
+
+<p>Eclipse Ditto is about providing access to IoT devices via the <a href="intro-digitaltwins.html">digital twin</a> pattern. In order to
+provide structured APIs for different heterogeneous devices Ditto defines a lightweight JSON based <a href="basic-overview.html">model</a>.</p>
+
+<p>A <a href="basic-thing.html">Thing</a> might look like in the following example:</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"thingId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"the.namespace:the-thing-id"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"policyId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"the.namespace:the-policy-id"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"location"</span><span class="p">:</span><span class="w"> </span><span class="s2">"kitchen"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="s2">"features"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"transmission"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+       </span><span class="s2">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+         </span><span class="s2">"cur_speed"</span><span class="p">:</span><span class="w"> </span><span class="mi">90</span><span class="w">
+       </span><span class="p">}</span><span class="w">
+     </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>Devices in the IoT, may they be brownfield devices or newly produced devices, will probably not send their data to the
+cloud in the structure and <a href="protocol-overview.html">protocol</a> Ditto requires.</p>
+
+<p>They should not need to be aware of something like Ditto running in the cloud mirroring them as digital twins.</p>
+
+<p>So for example device payload could look like this:</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"val"</span><span class="p">:</span><span class="w"> </span><span class="s2">"23.42 °C"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"ts"</span><span class="p">:</span><span class="w"> </span><span class="mi">1523946112727</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>In case of constrained devices or IoT protocols, even binary payload might be common.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>0x08BD (hex representation)
+</code></pre></div></div>
+
+<h2 id="builtin-mappers">Builtin mappers</h2>
+
+<p>The following message mappers are included in the Ditto codebase:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Mapper Alias</th>
+      <th>Description</th>
+      <th>Inbound</th>
+      <th>Outbound</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><a href="#ditto-mapper">Ditto</a></td>
+      <td>Assumes that inbound/outbound messages are already in <a href="protocol-overview.html">Ditto Protocol</a> (JSON) format.</td>
+      <td>✓</td>
+      <td>✓</td>
+    </tr>
+    <tr>
+      <td><a href="#javascript-mapper">JavaScript</a></td>
+      <td>Converts arbitrary messages from and to the <a href="protocol-overview.html">Ditto Protocol</a> format using <strong>custom</strong> JavaScript code executed by Ditto.</td>
+      <td>✓</td>
+      <td>✓</td>
+    </tr>
+    <tr>
+      <td><a href="#normalized-mapper">Normalized</a></td>
+      <td>Transforms the payload of events to a normalized view.</td>
+      <td> </td>
+      <td>✓</td>
+    </tr>
+    <tr>
+      <td><a href="#connectionstatus-mapper">ConnectionStatus</a></td>
+      <td>This mapper handles messages containing <code class="highlighter-rouge">creation-time</code> and <code class="highlighter-rouge">ttd</code> headers by updating a feature of the targeted thing with <a href="basic-feature.html#feature-definition">definition</a> <a href="https://vorto.eclipse.org/#/details/org.eclipse.ditto:ConnectionStatus:1.0.0">ConnectionStatus</a>.</td>
+      <td>✓</td>
+      <td> </td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="ditto-mapper">Ditto mapper</h3>
+
+<p>This is the default <a href="protocol-overview.html">Ditto Protocol</a> mapper. If you do not specify any payload mapping this
+ mapper is used to map inbound and outbound messages. The mapper requires has no mandatory options, so its alias can
+ be directly used as a mapper reference.</p>
+
+<p>It assumes that received messages are in <a href="protocol-specification.html">Ditto Protocol JSON</a> and emits outgoing messages
+ also in that format.</p>
+
+<h3 id="javascript-mapper">JavaScript mapper</h3>
+
+<p>This mapper may be used whenever any inbound messages are not yet in <a href="protocol-overview.html">Ditto Protocol</a>. By using 
+ the built in <a href="#javascript-mapping-engine">JavaScript mapping engine</a> (based on Rhino) custom defined JavaScript scripts
+ can be executed which are responsible for creating <a href="protocol-specification.html">Ditto Protocol JSON</a> message from 
+ arbitrary consumed payload.</p>
+
+<p>The same is possible for outbound messages in order to transform <a href="protocol-specification.html">Ditto Protocol JSON</a>
+ messages (e.g. events or responses) to arbitrary other formats.</p>
+
+<h4 id="configuration-options">Configuration options</h4>
+
+<ul>
+  <li><code class="highlighter-rouge">incomingScript</code> (required): the mapping script for incoming messages</li>
+  <li><code class="highlighter-rouge">outgoingScript</code> (required):  the mapping script for outgoing messages</li>
+  <li><code class="highlighter-rouge">loadBytebufferJS</code> (optional, default: <code class="highlighter-rouge">"false"</code>): whether to load ByteBufferJS library</li>
+  <li><code class="highlighter-rouge">loadLongJS</code> (optional, default: <code class="highlighter-rouge">"false"</code>): whether to load LongJS library</li>
+</ul>
+
+<h3 id="normalized-mapper">Normalized Mapper</h3>
+
+<p>This mapper transforms <code class="highlighter-rouge">created</code> and <code class="highlighter-rouge">modified</code> events (other type of messages are dropped) to a normalized view. 
+Events are mapped to a nested sparse JSON.</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"topic"</span><span class="p">:</span><span class="w"> </span><span class="s2">"thing/id/things/twin/events/modified"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="s2">"content-type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"application/vnd.eclipse.ditto+json"</span><span class="w"> </span><span class="p">},</span><span class="w">
+  </span><span class="s2">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/features/sensors/properties/temperature/indoor/value"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"value"</span><span class="p">:</span><span class="w"> </span><span class="mi">42</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>would result in the following normalized JSON representation:</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"thingId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"thing:id"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"features"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"sensors"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"temperature"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="s2">"indoor"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"value"</span><span class="p">:</span><span class="w"> </span><span class="mi">42</span><span class="w">
+          </span><span class="p">}</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="s2">"_context"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"topic"</span><span class="p">:</span><span class="w"> </span><span class="s2">"thing/id/things/twin/events/modified"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/features/sensors/properties/temperature/indoor/value"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"content-type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"application/vnd.eclipse.ditto+json"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+<p>The <code class="highlighter-rouge">_context</code> field contains the original message content excluding the <code class="highlighter-rouge">value</code>.</p>
+
+<h4 id="configuration-options-1">Configuration options</h4>
+
+<ul>
+  <li><code class="highlighter-rouge">fields</code> (optional, default: all fields): comma separated list of fields that are contained in the result (see also
+ chapter about <a href="httpapi-concepts.html#with-field-selector">field selectors</a>)</li>
+</ul>
+
+<h3 id="connectionstatus-mapper">ConnectionStatus Mapper</h3>
+<p>This mapper transforms the information from the <code class="highlighter-rouge">ttd</code> and <code class="highlighter-rouge">creation-time</code> message headers (see Eclipse Hono <a href="https://www.eclipse.org/hono/docs/concepts/device-notifications/">device
+ notifications</a>) into a ModifyFeature
+ command that complies with the <a href="https://vorto.eclipse.org/#/details/org.eclipse.ditto:ConnectionStatus:1.0.0">Vorto functionblock</a> <code class="highlighter-rouge">org.eclipse.ditto:ConnectionStatus</code>.</p>
+
+<p>The connectivity state of the device is then represented in a Feature.<br />
+ It is mostly used in conjunction with another mapper that transforms the payload e.g.:<br />
+ <code class="highlighter-rouge">"payloadMapping": [ "Ditto" , "connectionStatus" ]</code></p>
+
+<p>Example of a resulting <code class="highlighter-rouge">ConnectionStatus</code> feature:</p>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"thingId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"eclipse:ditto"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"features"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"ConnectionStatus"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"definition"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="s2">"org.eclipse.ditto:ConnectionStatus:1.0.0"</span><span class="w"> </span><span class="p">],</span><span class="w">
+      </span><span class="s2">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="s2">"readySince"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2019-10-29T14:16:18Z"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"readyUntil"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2019-10-29T14:21:18Z"</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h4 id="configuration-options-2">Configuration options</h4>
+
+<ul>
+  <li><code class="highlighter-rouge">thingId</code> (required): The ID of the Thing that is updated with the connectivity state. It can either be a fixed value
+ or a header placeholder (e.g. <code class="highlighter-rouge">{{ header:device_id }}</code>).</li>
+  <li><code class="highlighter-rouge">featureId</code> (optional, default: <code class="highlighter-rouge">ConnectionStatus</code>): The ID of the Feature that is updated. It can either be a
+ fixed value or resolved from a message header (e.g. <code class="highlighter-rouge">{{ header:feature_id }}</code>).</li>
+</ul>
+
+<h2 id="example-connection-with-multiple-mappers">Example connection with multiple mappers</h2>
+
+<p>The following example connection defines a <code class="highlighter-rouge">ConnectionStatus</code> mapping with the ID <code class="highlighter-rouge">status</code> and references it in a
+ source.<br />
+ Messages received via this source will be mapped by the <code class="highlighter-rouge">Ditto</code> mapping and the <code class="highlighter-rouge">ConnectionStatus</code> mapping.<br /> 
+ The <code class="highlighter-rouge">Ditto</code> mapping requires no options to be configured, so you can directly use its alias <code class="highlighter-rouge">Ditto</code>.</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w"> 
+  </span><span class="err">...</span><span class="w">  
+  </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"exampleConnection"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"sources"</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="w">
+      </span><span class="s2">"addresses"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"&lt;source&gt;"</span><span class="p">],</span><span class="w">
+      </span><span class="s2">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"ditto:inbound"</span><span class="p">],</span><span class="w">
+      </span><span class="s2">"payloadMapping"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"Ditto"</span><span class="p">,</span><span class="w"> </span><span class="s2">"status"</span><span class="p">]</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">],</span><span class="w">
+  </span><span class="s2">"mappingDefinitions"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"mappingEngine"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ConnectionStatus"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"options"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"thingId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{{ header:device_id }}"</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<div class="alert alert-info" role="alert"><i class="fa fa-info-circle"></i> <b>Note:</b> Starting aliases with an uppercase character and IDs with a lowercase character is
+ encouraged to avoid confusion but this is not enforced. </div>
+
+<h2 id="javascript-mapping-engine">JavaScript mapping engine</h2>
+
+<p>Ditto utilizes the <a href="https://github.com/mozilla/rhino">Rhino</a> JavaScript engine for Java for evaluating the JavaScript
+to apply for mapping payloads.</p>
+
+<p>Using Rhino instead of Nashorn, the newer JavaScript engine shipped with Java, has the benefit that sandboxing can be 
+applied in a better way.</p>
+
+<p>Sandboxing of different payload scripts is required as Ditto is intended to be run as cloud service where multiple
+connections to different endpoints are managed for different tenants at the same time. This requires the isolation of
+each single script to avoid interference with other scripts and to protect the JVM executing the script against harmful
+code execution.</p>
+
+<h3 id="constraints">Constraints</h3>
+
+<p>Rhino does not fully support EcmaScript 6. Check which language constructs are supported before using
+them in a mapping function. See <a href="http://mozilla.github.io/rhino/compat/engines.html">http://mozilla.github.io/rhino/compat/engines.html</a>.</p>
+
+<p>Ditto currently includes Rhino version <code class="highlighter-rouge">1.7.11</code> and has the <code class="highlighter-rouge">VERSION_ES6</code> flag enabled.</p>
+
+<h4 id="sandboxing">Sandboxing</h4>
+
+<p>For sandboxing/security reasons following restrictions apply:</p>
+
+<ul>
+  <li>access to Java packages and classes is not possible</li>
+  <li>using <code class="highlighter-rouge">exit</code>, <code class="highlighter-rouge">quit</code>, <code class="highlighter-rouge">print</code>, etc. is not possible</li>
+  <li>file access is not possible</li>
+  <li>doing remote calls (e.g. to foreign web-servers) is not possible</li>
+  <li>programming an endless-loop will terminate the script</li>
+  <li>programming a recursion will terminate the script</li>
+  <li>the file size of the script is limited</li>
+  <li>no foreign JS libraries can be loaded (unless they fit in the file size limit and are included into the mapping script)</li>
+</ul>
+
+<h3 id="helper-libraries">Helper libraries</h3>
+
+<p>In order to work more conveniently with binary payloads, the following libraries may be loaded for payload transformations:</p>
+
+<ul>
+  <li><a href="https://github.com/dcodeIO/bytebuffer.js">bytebuffer.js</a> a ByteBuffer implementation using ArrayBuffers</li>
+  <li><a href="https://github.com/dcodeIO/long.js">long.js</a> for representing a 64-bit two’s-complement integer value</li>
+</ul>
+
+<h3 id="helper-functions">Helper functions</h3>
+
+<p>Ditto comes with a few helper functions, which makes writing the mapping scripts easier. They are available under the
+<code class="highlighter-rouge">Ditto</code> scope:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cm">/**
+ * Builds a Ditto Protocol message from the passed parameters.
+ * @param {string} namespace - The namespace of the entity in java package notation, e.g.: "org.eclipse.ditto"
+ * @param {string} id - The ID of the entity
+ * @param {string} group - The affected group/entity, one of: "things"
+ * @param {string} channel - The channel for the signal, one of: "twin"|"live"
+ * @param {string} criterion - The criterion to apply, one of: "commands"|"events"|"search"|"messages"|"errors"
+ * @param {string} action - The action to perform, one of: "create"|"retrieve"|"modify"|"delete"
+ * @param {string} path - The path which is affected by the message, e.g.: "/attributes"
+ * @param {Object.&lt;string, string&gt;} dittoHeaders - The headers Object containing all Ditto Protocol header values
+ * @param {*} [value] - The value to apply / which was applied (e.g. in a "modify" action)
+ * @param {number} status - The status code that indicates the result of the command.
+ * @param {Object} extra - The enriched extra fields when selected via "extraFields" option.
+ * @returns {DittoProtocolMessage} dittoProtocolMessage - 
+ *  the mapped Ditto Protocol message or 
+ *  &lt;code&gt;null&lt;/code&gt; if the message could/should not be mapped
+ */</span>
+<span class="kd">function</span> <span class="nx">buildDittoProtocolMsg</span><span class="p">(</span><span class="nx">namespace</span><span class="p">,</span> <span class="nx">id</span><span class="p">,</span> <span class="nx">group</span><span class="p">,</span> <span class="nx">channel</span><span class="p">,</span> <span class="nx">criterion</span><span class="p">,</span> <span class="nx">action</span><span class="p">,</span> <span class="nx">path</span><span class="p">,</span> <span class="nx">dittoHeaders</span><span class="p">,</span> <span class="nx">value</span><span class="p">,</span> <span class="nx">status</span><span class="p">,</span> <span class="nx">extra</span><span class="p">)</span> <span class="p">{</span>
+
+    <span class="kd">let</span> <span class="nx">dittoProtocolMsg</span> <span class="o">=</span> <span class="p">{};</span>
+    <span class="nx">dittoProtocolMsg</span><span class="p">.</span><span class="nx">topic</span> <span class="o">=</span> <span class="nx">namespace</span> <span class="o">+</span> <span class="s2">"/"</span> <span class="o">+</span> <span class="nx">id</span> <span class="o">+</span> <span class="s2">"/"</span> <span class="o">+</span> <span class="nx">group</span> <span class="o">+</span> <span class="s2">"/"</span> <span class="o">+</span> <span class="nx">channel</span> <span class="o">+</span> <span class="s2">"/"</span> <span class="o">+</span> <span class="nx">criterion</span> <span class="o">+</span> <span class="s2">"/"</span> <span class="o">+</span> <span class="nx">action</span><span class="p">;</span>
+    <span class="nx">dittoProtocolMsg</span><span class="p">.</span><span class="nx">path</span> <span class="o">=</span> <span class="nx">path</span><span class="p">;</span>
+    <span class="nx">dittoProtocolMsg</span><span class="p">.</span><span class="nx">headers</span> <span class="o">=</span> <span class="nx">dittoHeaders</span><span class="p">;</span>
+    <span class="nx">dittoProtocolMsg</span><span class="p">.</span><span class="nx">value</span> <span class="o">=</span> <span class="nx">value</span><span class="p">;</span>
+    <span class="nx">dittoProtocolMsg</span><span class="p">.</span><span class="nx">status</span> <span class="o">=</span> <span class="nx">status</span><span class="p">;</span>
+    <span class="nx">dittoProtocolMsg</span><span class="p">.</span><span class="nx">extra</span> <span class="o">=</span> <span class="nx">extra</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nx">dittoProtocolMsg</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="cm">/**
+ * Builds an external message from the passed parameters.
+ * @param {Object.&lt;string, string&gt;} headers - The external headers Object containing header values
+ * @param {string} [textPayload] - The external mapped String
+ * @param {ArrayBuffer} [bytePayload] - The external mapped bytes as ArrayBuffer
+ * @param {string} [contentType] - The returned Content-Type
+ * @returns {ExternalMessage} externalMessage - 
+ *  the mapped external message
+ *  or &lt;code&gt;null&lt;/code&gt; if the message could/should not be mapped
+ */</span>
+<span class="kd">function</span> <span class="nx">buildExternalMsg</span><span class="p">(</span><span class="nx">headers</span><span class="p">,</span> <span class="nx">textPayload</span><span class="p">,</span> <span class="nx">bytePayload</span><span class="p">,</span> <span class="nx">contentType</span><span class="p">)</span> <span class="p">{</span>
+
+    <span class="kd">let</span> <span class="nx">externalMsg</span> <span class="o">=</span> <span class="p">{};</span>
+    <span class="nx">externalMsg</span><span class="p">.</span><span class="nx">headers</span> <span class="o">=</span> <span class="nx">headers</span><span class="p">;</span>
+    <span class="nx">externalMsg</span><span class="p">.</span><span class="nx">textPayload</span> <span class="o">=</span> <span class="nx">textPayload</span><span class="p">;</span>
+    <span class="nx">externalMsg</span><span class="p">.</span><span class="nx">bytePayload</span> <span class="o">=</span> <span class="nx">bytePayload</span><span class="p">;</span>
+    <span class="nx">externalMsg</span><span class="p">.</span><span class="nx">contentType</span> <span class="o">=</span> <span class="nx">contentType</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nx">externalMsg</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="cm">/**
+ * Transforms the passed ArrayBuffer to a String interpreting the content of the passed arrayBuffer as unsigned 8
+ * bit integers.
+ *
+ * @param {ArrayBuffer} arrayBuffer the ArrayBuffer to transform to a String
+ * @returns {String} the transformed String
+ */</span>
+<span class="kd">function</span> <span class="nx">arrayBufferToString</span><span class="p">(</span><span class="nx">arrayBuffer</span><span class="p">)</span> <span class="p">{</span>
+
+    <span class="k">return</span> <span class="nb">String</span><span class="p">.</span><span class="nx">fromCharCode</span><span class="p">.</span><span class="nx">apply</span><span class="p">(</span><span class="kc">null</span><span class="p">,</span> <span class="k">new</span> <span class="nb">Uint8Array</span><span class="p">(</span><span class="nx">arrayBuffer</span><span class="p">));</span>
+<span class="p">}</span>
+
+<span class="cm">/**
+ * Transforms the passed String to an ArrayBuffer using unsigned 8 bit integers.
+ *
+ * @param {String} string the String to transform to an ArrayBuffer
+ * @returns {ArrayBuffer} the transformed ArrayBuffer
+ */</span>
+<span class="kd">function</span> <span class="nx">stringToArrayBuffer</span><span class="p">(</span><span class="nx">string</span><span class="p">)</span> <span class="p">{</span>
+
+    <span class="kd">let</span> <span class="nx">buf</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">ArrayBuffer</span><span class="p">(</span><span class="nx">string</span><span class="p">.</span><span class="nx">length</span><span class="p">);</span>
+    <span class="kd">let</span> <span class="nx">bufView</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Uint8Array</span><span class="p">(</span><span class="nx">buf</span><span class="p">);</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kd">let</span> <span class="nx">i</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="nx">strLen</span><span class="o">=</span><span class="nx">string</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">&lt;</span><span class="nx">strLen</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">bufView</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">=</span> <span class="nx">string</span><span class="p">.</span><span class="nx">charCodeAt</span><span class="p">(</span><span class="nx">i</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="nx">buf</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="cm">/**
+ * Transforms the passed ArrayBuffer to a {ByteBuffer} (from bytebuffer.js library which needs to be loaded).
+ *
+ * @param {ArrayBuffer} arrayBuffer the ArrayBuffer to transform
+ * @returns {ByteBuffer} the transformed ByteBuffer
+ */</span>
+<span class="kd">function</span> <span class="nx">asByteBuffer</span><span class="p">(</span><span class="nx">arrayBuffer</span><span class="p">)</span> <span class="p">{</span>
+    
+    <span class="kd">let</span> <span class="nx">byteBuffer</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">ArrayBuffer</span><span class="p">(</span><span class="nx">arrayBuffer</span><span class="p">.</span><span class="nx">byteLength</span><span class="p">);</span>
+    <span class="k">new</span> <span class="nb">Uint8Array</span><span class="p">(</span><span class="nx">byteBuffer</span><span class="p">).</span><span class="kd">set</span><span class="p">(</span><span class="k">new</span> <span class="nb">Uint8Array</span><span class="p">(</span><span class="nx">arrayBuffer</span><span class="p">));</span>
+    <span class="k">return</span> <span class="nx">dcodeIO</span><span class="p">.</span><span class="nx">ByteBuffer</span><span class="p">.</span><span class="nx">wrap</span><span class="p">(</span><span class="nx">byteBuffer</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="mapping-incoming-messages">Mapping incoming messages</h3>
+
+<p>Incoming external messages can be mapped to Ditto Protocol conform messages by implementing the following JavaScript function:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cm">/**
+ * Maps the passed parameters to a Ditto Protocol message.
+ * @param {Object.&lt;string, string&gt;} headers - The headers Object containing all received header values
+ * @param {string} [textPayload] - The String to be mapped
+ * @param {ArrayBuffer} [bytePayload] - The bytes to be mapped as ArrayBuffer
+ * @param {string} [contentType] - The received Content-Type, e.g. "application/json"
+ * @returns {(DittoProtocolMessage|Array&lt;DittoProtocolMessage&gt;)} dittoProtocolMessage(s) -
+ *  the mapped Ditto Protocol message,
+ *  an array of Ditto Protocol messages or
+ *  &lt;code&gt;null&lt;/code&gt; if the message could/should not be mapped
+ */</span>
+<span class="kd">function</span> <span class="nx">mapToDittoProtocolMsg</span><span class="p">(</span>
+    <span class="nx">headers</span><span class="p">,</span>
+    <span class="nx">textPayload</span><span class="p">,</span>
+    <span class="nx">bytePayload</span><span class="p">,</span>
+    <span class="nx">contentType</span>
+<span class="p">)</span> <span class="p">{</span>
+
+    <span class="c1">// ###</span>
+    <span class="c1">// Insert your mapping logic here:</span>
+    <span class="c1">// ###</span>
+
+    <span class="k">return</span> <span class="nx">Ditto</span><span class="p">.</span><span class="nx">buildDittoProtocolMsg</span><span class="p">(</span>
+        <span class="nx">namespace</span><span class="p">,</span>
+        <span class="nx">id</span><span class="p">,</span>
+        <span class="nx">group</span><span class="p">,</span>
+        <span class="nx">channel</span><span class="p">,</span>
+        <span class="nx">criterion</span><span class="p">,</span>
+        <span class="nx">action</span><span class="p">,</span>
+        <span class="nx">path</span><span class="p">,</span>
+        <span class="nx">dittoHeaders</span><span class="p">,</span>
+        <span class="nx">value</span><span class="p">,</span>
+        <span class="nx">status</span>
+    <span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>The result of the function has to be a JavaScript object in <a href="protocol-overview.html">Ditto Protocol</a> or an array of 
+such JavaScript objects. That’s where the helper method <code class="highlighter-rouge">Ditto.buildDittoProtocolMsg</code> is useful: it explicitly 
+defines which parameters are required for the Ditto Protocol message.</p>
+
+<h3 id="mapping-outgoing-messages">Mapping outgoing messages</h3>
+
+<p>Outgoing Ditto Protocol messages (e.g. <a href="basic-signals-commandresponse.html">responses</a> or <a href="basic-signals-event.html">events</a>) 
+can be mapped to external messages by implementing the following JavaScript function:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cm">/**
+ * Maps the passed parameters which originated from a Ditto Protocol message to an external message.
+ * @param {string} namespace - The namespace of the entity in java package notation, e.g.: "org.eclipse.ditto"
+ * @param {string} id - The ID of the entity
+ * @param {string} channel - The channel for the signal, one of: "twin"|"live"
+ * @param {string} group - The affected group/entity, one of: "things"
+ * @param {string} criterion - The criterion to apply, one of: "commands"|"events"|"search"|"messages"|"errors"
+ * @param {string} action - The action to perform, one of: "create"|"retrieve"|"modify"|"delete"
+ * @param {string} path - The path which is affected by the message, e.g.: "/attributes"
+ * @param {Object.&lt;string, string&gt;} dittoHeaders - The headers Object containing all Ditto Protocol header values
+ * @param {*} [value] - The value to apply / which was applied (e.g. in a "modify" action)
+ * @param {number} status - The status code that indicates the result of the command.
+ * @param {Object} extra - The enriched extra fields when selected via "extraFields" option.
+ * @returns {(ExternalMessage|Array&lt;ExternalMessage&gt;)} externalMessage -
+ *  The mapped external message,
+ *  an array of external messages or
+ *  &lt;code&gt;null&lt;/code&gt; if the message could/should not be mapped
+ */</span>
+<span class="kd">function</span> <span class="nx">mapFromDittoProtocolMsg</span><span class="p">(</span>
+    <span class="nx">namespace</span><span class="p">,</span>
+    <span class="nx">id</span><span class="p">,</span>
+    <span class="nx">group</span><span class="p">,</span>
+    <span class="nx">channel</span><span class="p">,</span>
+    <span class="nx">criterion</span><span class="p">,</span>
+    <span class="nx">action</span><span class="p">,</span>
+    <span class="nx">path</span><span class="p">,</span>
+    <span class="nx">dittoHeaders</span><span class="p">,</span>
+    <span class="nx">value</span><span class="p">,</span>
+    <span class="nx">status</span><span class="p">,</span>
+    <span class="nx">extra</span>
+<span class="p">)</span> <span class="p">{</span>
+
+    <span class="c1">// ###</span>
+    <span class="c1">// Insert your mapping logic here:</span>
+    <span class="c1">// ###</span>
+
+    <span class="k">return</span>  <span class="nx">Ditto</span><span class="p">.</span><span class="nx">buildExternalMsg</span><span class="p">(</span>
+        <span class="nx">headers</span><span class="p">,</span>
+        <span class="nx">textPayload</span><span class="p">,</span>
+        <span class="nx">bytePayload</span><span class="p">,</span>
+        <span class="nx">contentType</span>
+    <span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>The result of the function has to be a JavaScript object or an array of JavaScript objects with the fields <code class="highlighter-rouge">headers</code>, 
+<code class="highlighter-rouge">textPayload</code>, <code class="highlighter-rouge">bytePayload</code> and <code class="highlighter-rouge">contentType</code>. That’s where the helper method <code class="highlighter-rouge">Ditto.buildExternalMsg</code> is useful: it
+ explicitly defines which parameters are required for the external message.</p>
+
+<h2 id="javascript-payload-types">JavaScript payload types</h2>
+
+<p>Both, text payloads and byte payloads may be mapped.</p>
+
+<h3 id="text-payloads">Text payloads</h3>
+
+<p>Working with text payloads is as easy as it gets in JavaScript. For example, for the content-type <code class="highlighter-rouge">application/json</code>
+structured data may be processed like this:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">let</span> <span class="nx">value</span><span class="p">;</span>
+<span class="k">if</span> <span class="p">(</span><span class="nx">contentType</span> <span class="o">===</span> <span class="s1">'application/json'</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">let</span> <span class="nx">parsedJson</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">textPayload</span><span class="p">);</span>
+    <span class="nx">value</span> <span class="o">=</span> <span class="nx">parsedJson</span><span class="p">.</span><span class="nx">number1</span> <span class="o">+</span> <span class="nx">parsedJson</span><span class="p">[</span><span class="s1">'sub-field'</span><span class="p">];</span> <span class="c1">// remember to access JSON keys with dashes in a JS special way</span>
+<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="c1">// a script may decide to not map other content-types than application/json</span>
+    <span class="k">return</span> <span class="kc">null</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="c1">// proceed ...</span>
+</code></pre></div></div>
+
+<h3 id="byte-payloads">Byte payloads</h3>
+
+<p>Working with byte payloads is also possible but does require a little bit of knowledge about JavaScipt’s 
+<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/ArrayBuffer">ArrayBuffer</a> 
+<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray">TypedArrays</a> and
+<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/DataView">DataView</a>.</p>
+
+<p>What you get in the mapping scripts is a <code class="highlighter-rouge">bytePayload</code> of type <code class="highlighter-rouge">ArrayBuffer</code> which lets you work on the bytes in different ways:</p>
+
+<h4 id="typed-arrays">Typed Arrays</h4>
+
+<blockquote>
+  <p>A TypedArray [is] a view into an ArrayBuffer where every item has the same size and type.<br /> <a href="https://hacks.mozilla.org/2017/01/typedarray-or-dataview-understanding-byte-order/">source</a></p>
+</blockquote>
+
+<p>With TypedArrays you can simply wrap the <code class="highlighter-rouge">bytePayload</code> <code class="highlighter-rouge">ArrayBuffer</code> and work on all the items e.g. as unsigned 8-bit integers:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">let</span> <span class="nx">bytes</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Uint8Array</span><span class="p">(</span><span class="nx">bytePayload</span><span class="p">);</span>
+<span class="nx">bytes</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span> <span class="c1">// access the first byte</span>
+<span class="nx">bytes</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span> <span class="c1">// access the second byte</span>
+</code></pre></div></div>
+
+<h4 id="dataviews">DataViews</h4>
+
+<blockquote>
+  <p>The DataView [is] another view into an ArrayBuffer, but one which allows items of different size and type in the ArrayBuffer.<br /> <a href="https://hacks.mozilla.org/2017/01/typedarray-or-dataview-understanding-byte-order/">source</a></p>
+</blockquote>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">let</span> <span class="nx">view</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">DataView</span><span class="p">(</span><span class="nx">bytePayload</span><span class="p">);</span>
+<span class="nx">view</span><span class="p">.</span><span class="nx">getInt8</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span> <span class="c1">// access a 8-bit signed integer (byte) on offset=0</span>
+<span class="nx">view</span><span class="p">.</span><span class="nx">getUint16</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span> <span class="c1">// access a 16-bit unsigned integer (usigned short) on offset=1</span>
+</code></pre></div></div>
+
+<p>DataViews also allow to <code class="highlighter-rouge">set</code> bytes to an underlying ArrayBuffer conveniently.</p>
+
+<h4 id="bytebufferjs">ByteBuffer.js</h4>
+
+<p>Alternatively, Ditto’s JavaScript transformation may be loaded with the <a href="#helper-libraries">above mentioned</a> libraries, e.g. “bytebuffer.js”.<br />
+With <code class="highlighter-rouge">ByteBuffer</code>, the content of an <code class="highlighter-rouge">ArrayBuffer</code> can be accessed in a buffered way:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">let</span> <span class="nx">byteBuf</span> <span class="o">=</span> <span class="nx">Ditto</span><span class="p">.</span><span class="nx">asByteBuffer</span><span class="p">(</span><span class="nx">bytePayload</span><span class="p">);</span>
+<span class="kd">let</span> <span class="nx">numberFromBytes</span> <span class="o">=</span> <span class="nb">parseInt</span><span class="p">(</span><span class="nx">byteBuf</span><span class="p">.</span><span class="nx">toHex</span><span class="p">(),</span> <span class="mi">16</span><span class="p">);</span>
+
+<span class="kd">let</span> <span class="nx">base64encoded</span> <span class="o">=</span> <span class="nx">byteBuf</span><span class="p">.</span><span class="nx">toBase64</span><span class="p">();</span>
+<span class="kd">let</span> <span class="nx">buf</span> <span class="o">=</span> <span class="nx">dcodeIO</span><span class="p">.</span><span class="nx">ByteBuffer</span><span class="p">.</span><span class="nx">fromBase64</span><span class="p">(</span><span class="nx">base64encoded</span><span class="p">);</span>
+
+<span class="nx">buf</span><span class="p">.</span><span class="nx">readInt</span><span class="p">();</span> <span class="c1">// read a 32bit signed integer + advances the offset in the buffer</span>
+<span class="nx">buf</span><span class="p">.</span><span class="nx">readUTF8String</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span> <span class="c1">// read 4 characters of UTF-8 encoded string + advances the offset in the buffer</span>
+<span class="nx">buf</span><span class="p">.</span><span class="nx">remaining</span><span class="p">();</span> <span class="c1">// gets the number of remaining readable bytes in the buffer</span>
+</code></pre></div></div>
+
+<p>Check the <a href="https://github.com/dcodeIO/bytebuffer.js/wiki/API">ByteBuffer API documentation</a> to find out what is possible with that helper.</p>
+
+<h2 id="javascript-examples">JavaScript Examples</h2>
+
+<h3 id="text-payload-example">Text payload example</h3>
+
+<p>Let’s assume your device sends telemetry data via <a href="https://www.eclipse.org/hono/">Eclipse Hono’s</a> MQTT adapter into the cloud.
+And that an example payload of your device is:</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"temp"</span><span class="p">:</span><span class="w"> </span><span class="s2">"23.42 °C"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"hum"</span><span class="p">:</span><span class="w"> </span><span class="mi">78</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"pres"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"value"</span><span class="p">:</span><span class="w"> </span><span class="mi">760</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"unit"</span><span class="p">:</span><span class="w"> </span><span class="s2">"mmHg"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>We want to map a single message of this device containing updates for all 3 values to a Thing in the following structure:</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"thingId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"the.namespace:the-thing-id"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"policyId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"the.namespace:the-policy-id"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"features"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"temperature"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+       </span><span class="s2">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+         </span><span class="s2">"value"</span><span class="p">:</span><span class="w"> </span><span class="mf">23.42</span><span class="w">
+       </span><span class="p">}</span><span class="w">
+     </span><span class="p">},</span><span class="w">
+    </span><span class="s2">"pressure"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+       </span><span class="s2">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+         </span><span class="s2">"value"</span><span class="p">:</span><span class="w"> </span><span class="mi">760</span><span class="w">
+       </span><span class="p">}</span><span class="w">
+     </span><span class="p">},</span><span class="w">
+    </span><span class="s2">"humidity"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+       </span><span class="s2">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+         </span><span class="s2">"value"</span><span class="p">:</span><span class="w"> </span><span class="mi">78</span><span class="w">
+       </span><span class="p">}</span><span class="w">
+     </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>Therefore, we define following <code class="highlighter-rouge">incoming</code> mapping function:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">mapToDittoProtocolMsg</span><span class="p">(</span>
+    <span class="nx">headers</span><span class="p">,</span>
+    <span class="nx">textPayload</span><span class="p">,</span>
+    <span class="nx">bytePayload</span><span class="p">,</span>
+    <span class="nx">contentType</span>
+<span class="p">)</span> <span class="p">{</span>
+    
+    <span class="k">if</span> <span class="p">(</span><span class="nx">contentType</span> <span class="o">!==</span> <span class="s1">'application/json'</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="kc">null</span><span class="p">;</span> <span class="c1">// only handle messages with content-type application/json</span>
+    <span class="p">}</span>
+    
+    <span class="kd">let</span> <span class="nx">jsonData</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">textPayload</span><span class="p">);</span>
+    
+    <span class="kd">let</span> <span class="nx">value</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="na">temperature</span><span class="p">:</span> <span class="p">{</span>
+            <span class="na">properties</span><span class="p">:</span> <span class="p">{</span>
+                <span class="na">value</span><span class="p">:</span> <span class="nx">jsonData</span><span class="p">.</span><span class="nx">temp</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s2">" "</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="c1">// omit the unit</span>
+            <span class="p">}</span>
+        <span class="p">},</span>
+        <span class="na">pressure</span><span class="p">:</span> <span class="p">{</span>
+            <span class="na">properties</span><span class="p">:</span> <span class="p">{</span>
+                <span class="na">value</span><span class="p">:</span> <span class="nx">jsonData</span><span class="p">.</span><span class="nx">pres</span><span class="p">.</span><span class="nx">value</span>
+            <span class="p">}</span>
+        <span class="p">},</span>
+        <span class="na">humidity</span><span class="p">:</span> <span class="p">{</span>
+            <span class="na">properties</span><span class="p">:</span> <span class="p">{</span>
+                <span class="na">value</span><span class="p">:</span> <span class="nx">jsonData</span><span class="p">.</span><span class="nx">hum</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">};</span>
+
+    <span class="k">return</span> <span class="nx">Ditto</span><span class="p">.</span><span class="nx">buildDittoProtocolMsg</span><span class="p">(</span>
+        <span class="s1">'org.eclipse.ditto'</span><span class="p">,</span> <span class="c1">// in this example always the same</span>
+        <span class="nx">headers</span><span class="p">[</span><span class="s1">'device_id'</span><span class="p">],</span> <span class="c1">// Eclipse Hono sets the authenticated device_id as AMQP 1.0 header</span>
+        <span class="s1">'things'</span><span class="p">,</span> <span class="c1">// we deal with a Thing</span>
+        <span class="s1">'twin'</span><span class="p">,</span> <span class="c1">// we want to update the twin</span>
+        <span class="s1">'commands'</span><span class="p">,</span> <span class="c1">// we want to create a command to update a twin</span>
+        <span class="s1">'modify'</span><span class="p">,</span> <span class="c1">// modify the twin</span>
+        <span class="s1">'/features'</span><span class="p">,</span> <span class="c1">// modify all features at once</span>
+        <span class="nx">headers</span><span class="p">,</span> <span class="c1">// pass through the headers from AMQP 1.0</span>
+        <span class="nx">value</span>
+    <span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>When your device now sends its payload via the MQTT adapter of Eclipse Hono:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mosquitto_pub <span class="nt">-u</span> <span class="s1">'sensor1@DEFAULT_TENANT'</span> <span class="nt">-P</span> hono-secret <span class="nt">-t</span> telemetry <span class="nt">-m</span> <span class="s1">'{"temp": "23.42 °C","hum": 78,"pres": {"value": 760,"unit": "mmHg"}}'</span>
+</code></pre></div></div>
+
+<p>Your digital twin is updated by applying the specified script and extracting the relevant values from the passed <code class="highlighter-rouge">textPayload</code>.</p>
+
+<h3 id="bytes-payload-example">Bytes payload example</h3>
+
+<p>For this example, let’s assume your device sends telemetry data via <a href="https://www.eclipse.org/hono/">Eclipse Hono’s</a> HTTP adapter into the cloud.
+An example payload of your device - displayed as hexadecimal - is:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>0x09EF03F72A
+</code></pre></div></div>
+
+<p>Let us now also assume that</p>
+
+<ul>
+  <li>the first 2 bytes <code class="highlighter-rouge">09 EF</code> represent
+    <ul>
+      <li>the temperature as 16bit signed integer (thus, may also be negative)</li>
+      <li>this is not a float in oder to save space (as float needs at least 32 bit)</li>
+    </ul>
+  </li>
+  <li>the second 2 bytes <code class="highlighter-rouge">03 F7</code> represent the pressure as 16bit signed integer</li>
+  <li>the last byte <code class="highlighter-rouge">2A</code> represents the humidity as 8bit unsigned integer of our device.</li>
+</ul>
+
+<p>We want to map a single message of this device containing updates for all 3 values to a Thing in the following structure:</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"thingId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"the.namespace:the-thing-id"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"policyId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"the.namespace:the-policy-id"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"features"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"temperature"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+       </span><span class="s2">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+         </span><span class="s2">"value"</span><span class="p">:</span><span class="w"> </span><span class="mf">25.43</span><span class="w">
+       </span><span class="p">}</span><span class="w">
+     </span><span class="p">},</span><span class="w">
+    </span><span class="s2">"pressure"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+       </span><span class="s2">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+         </span><span class="s2">"value"</span><span class="p">:</span><span class="w"> </span><span class="mi">1015</span><span class="w">
+       </span><span class="p">}</span><span class="w">
+     </span><span class="p">},</span><span class="w">
+    </span><span class="s2">"humidity"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+       </span><span class="s2">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+         </span><span class="s2">"value"</span><span class="p">:</span><span class="w"> </span><span class="mi">42</span><span class="w">
+       </span><span class="p">}</span><span class="w">
+     </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>Therefore, we define following <code class="highlighter-rouge">incoming</code> mapping function:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">mapToDittoProtocolMsg</span><span class="p">(</span>
+    <span class="nx">headers</span><span class="p">,</span>
+    <span class="nx">textPayload</span><span class="p">,</span>
+    <span class="nx">bytePayload</span><span class="p">,</span>
+    <span class="nx">contentType</span>
+<span class="p">)</span> <span class="p">{</span>
+    
+    <span class="k">if</span> <span class="p">(</span><span class="nx">contentType</span> <span class="o">!==</span> <span class="s1">'application/octet-stream'</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="kc">null</span><span class="p">;</span> <span class="c1">// only handle messages with content-type application/octet-stream</span>
+    <span class="p">}</span>
+    
+    <span class="kd">let</span> <span class="nx">view</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">DataView</span><span class="p">(</span><span class="nx">bytePayload</span><span class="p">);</span>
+    
+    <span class="kd">let</span> <span class="nx">value</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="na">temperature</span><span class="p">:</span> <span class="p">{</span>
+            <span class="na">properties</span><span class="p">:</span> <span class="p">{</span>
+                <span class="c1">// interpret the first 2 bytes (16 bit) as signed int and divide through 100.0:</span>
+                <span class="na">value</span><span class="p">:</span> <span class="nx">view</span><span class="p">.</span><span class="nx">getInt16</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="o">/</span> <span class="mf">100.0</span>
+            <span class="p">}</span>
+        <span class="p">},</span>
+        <span class="na">pressure</span><span class="p">:</span> <span class="p">{</span>
+            <span class="na">properties</span><span class="p">:</span> <span class="p">{</span>
+                <span class="c1">// interpret the next 2 bytes (16 bit) as signed int:</span>
+                <span class="na">value</span><span class="p">:</span> <span class="nx">view</span><span class="p">.</span><span class="nx">getInt16</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+            <span class="p">}</span>
+        <span class="p">},</span>
+        <span class="na">humidity</span><span class="p">:</span> <span class="p">{</span>
+            <span class="na">properties</span><span class="p">:</span> <span class="p">{</span>
+                <span class="c1">// interpret the next 1 bytes (8 bit) as unsigned int:</span>
+                <span class="na">value</span><span class="p">:</span> <span class="nx">view</span><span class="p">.</span><span class="nx">getUint8</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">};</span>
+
+    <span class="k">return</span> <span class="nx">Ditto</span><span class="p">.</span><span class="nx">buildDittoProtocolMsg</span><span class="p">(</span>
+        <span class="s1">'org.eclipse.ditto'</span><span class="p">,</span> <span class="c1">// in this example always the same</span>
+        <span class="nx">headers</span><span class="p">[</span><span class="s1">'device_id'</span><span class="p">],</span> <span class="c1">// Eclipse Hono sets the authenticated device_id as AMQP 1.0 header</span>
+        <span class="s1">'things'</span><span class="p">,</span> <span class="c1">// we deal with a Thing</span>
+        <span class="s1">'twin'</span><span class="p">,</span> <span class="c1">// we want to update the twin</span>
+        <span class="s1">'commands'</span><span class="p">,</span> <span class="c1">// we want to create a command to update a twin</span>
+        <span class="s1">'modify'</span><span class="p">,</span> <span class="c1">// modify the twin</span>
+        <span class="s1">'/features'</span><span class="p">,</span> <span class="c1">// modify all features at once</span>
+        <span class="nx">headers</span><span class="p">,</span> <span class="c1">// pass through the headers from AMQP 1.0</span>
+        <span class="nx">value</span>
+    <span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>When your device now sends its payload via the HTTP adapter of Eclipse Hono:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">echo</span> <span class="nt">-e</span> <span class="k">$((</span><span class="m">0</span>x09EF03F72A<span class="k">))</span> | curl <span class="nt">-i</span> <span class="nt">-X</span> POST <span class="nt">-u</span> sensor1@DEFAULT_TENANT:hono-secret <span class="nt">-H</span> <span class="s1">'Content-Type: application/octet-stream'</span> <span class="nt">--data-binary</span> @- http://127.0.0.1:8080/telemetry
+</code></pre></div></div>
+
+<p>Your digital twin is updated by applying the specified script and extracting the relevant values from the passed <code class="highlighter-rouge">bytePayload</code>.</p>
+
+<h2 id="custom-java-based-implementation">Custom Java based implementation</h2>
+
+<p>Beside the JavaScript based mapping - which can be configured/changed at runtime without the need of restarting the
+connectivity service - there is also the possibility to implement a custom Java based mapper.</p>
+
+<p>The interface to be implemented is <code class="highlighter-rouge">org.eclipse.ditto.services.connectivity.mapping.MessageMapper</code> (<a href="https://github.com/eclipse/ditto/blob/master/services/connectivity/mapping/src/main/java/org/eclipse/ditto/services/connectivity/mapping/MessageMapper.java">find the source here</a>)
+with the following signature to implement (this is only for experts, the sources contain JavaDoc):</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">MessageMapper</span> <span class="o">{</span>
+    
+    <span class="kt">void</span> <span class="nf">configure</span><span class="o">(</span><span class="n">MessageMapperConfiguration</span> <span class="n">configuration</span><span class="o">);</span>
+    
+    <span class="n">List</span><span class="o">&lt;</span><span class="n">Adaptable</span><span class="o">&gt;</span> <span class="nf">map</span><span class="o">(</span><span class="n">ExternalMessage</span> <span class="n">message</span><span class="o">);</span>
+    
+    <span class="n">List</span><span class="o">&lt;</span><span class="n">ExternalMessage</span><span class="o">&gt;</span> <span class="nf">map</span><span class="o">(</span><span class="n">Adaptable</span> <span class="n">adaptable</span><span class="o">);</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p>After instantiation of the custom <code class="highlighter-rouge">MessageMapper</code>, the <code class="highlighter-rouge">configure</code> method is called with all the <em>options</em> which were 
+provided to the mapper in the <a href="connectivity-manage-connections.html#create-connection">configured connection</a>. Use them
+in order to pass in configurations, thresholds, etc.</p>
+
+<p>Then, simply implement both of the <code class="highlighter-rouge">map</code> methods:</p>
+
+<ul>
+  <li><code class="highlighter-rouge">List&lt;Adaptable&gt; map(ExternalMessage message)</code> maps from an incoming external message to
+    <ul>
+      <li>an empty list of <code class="highlighter-rouge">Adaptable</code>s if the incoming message should be dropped</li>
+      <li>a list of one or many <a href="protocol-overview.html">Ditto Protocol</a> <code class="highlighter-rouge">Adaptable</code>s</li>
+    </ul>
+  </li>
+  <li><code class="highlighter-rouge">List&lt;ExternalMessage&gt; map(Adaptable adaptable)</code> maps from an outgoing <a href="protocol-overview.html">Ditto Protocol</a> <code class="highlighter-rouge">Adaptable</code> to
+    <ul>
+      <li>an empty list of <code class="highlighter-rouge">ExternalMessage</code>s if the outgoing message should be dropped</li>
+      <li>a list of one or many external messages</li>
+    </ul>
+  </li>
+</ul>
+
+<p>In order to use this custom Java based mapper implementation, the following steps are required:</p>
+
+<ul>
+  <li>the implementing Class must be annotated with <code class="highlighter-rouge">@PayloadMapper(alias="customMapper")</code> and define at least one alias</li>
+  <li>if the custom mapper requires mandatory options then specify <code class="highlighter-rouge">@PayloadMapper(alias="customMapper", requiresMandatoryConfiguration=true)</code></li>
+  <li>the Class needs obviously to be on the classpath of the <a href="architecture-services-connectivity.html">connectivity</a> microservice 
+in order to be loaded</li>
+  <li>when creating a new connection you have to specify the alias of your mapper as the <code class="highlighter-rouge">mappingEngine</code> in the
+connection’s <code class="highlighter-rouge">mappingDefinitions</code> and reference the ID of your mapper in a source or a target</li>
+</ul>
+
+<div class="alert alert-success" role="alert"><i class="fa fa-check-square-o"></i> <b>Tip:</b> If your mapper does not require any options (<code class="highlighter-rouge">requiresMandatoryConfiguration=false</code>), you can
+ directly reference the alias in a source or a target without first defining it inside <code class="highlighter-rouge">mappingDefinitions</code>.</div>
+
+
+    <div class="tags">
+        
+        <b>Tags: </b>
+        
+        
+        
+        <a href="tag_connectivity.html" class="btn btn-default navbar-btn cursorNorm" role="button">connectivity</a>
+        
+        
+        
+    </div>
+
+</div>
+
+<hr class="shaded"/>
+
+<footer>
+            <div class="row">
+                <div class="col-lg-12 footer">
+                    <div class="logo">
+                        <a href="https://eclipse.org"><img src="images/eclipse_foundation_logo.svg" alt="Eclipse logo"/></a>
+                    </div>
+                    <p class="notice">
+                        &copy;2021 Eclipse Ditto.
+                         Site last generated: Feb 22, 2021 <br />
+                    </p>
+                    <div class="quickLinks">
+                        <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">
+                            &gt; Privacy Policy
+                        </a>
+                        <a href="https://www.eclipse.org/legal/termsofuse.php" target="_blank">
+                            &gt; Terms of Use
+                        </a>
+                        <a href="https://www.eclipse.org/legal/copyright.php" target="_blank">
+                            &gt; Copyright Agent
+                        </a>
+                        <a href="https://www.eclipse.org/legal" target="_blank">
+                            &gt; Legal
+                        </a>
+                        <a href="https://www.eclipse.org/legal/epl-2.0/" target="_blank">
+                            &gt; License
+                        </a>
+                        <a href="https://eclipse.org/security" target="_blank">
+                            &gt; Report a Vulnerability
+                        </a>
+                    </div>
+                </div>
+            </div>
+</footer>
+
+
+        </div>
+    <!-- /.row -->
+</div>
+<!-- /.container -->
+</div>
+<!-- /#main -->
+    </div>
+
+</body>
+</html>

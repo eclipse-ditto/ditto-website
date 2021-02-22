@@ -1,0 +1,2991 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="">
+<meta name="keywords" content="protocol,  protocol, specification, create, modify, thing">
+<title>  Things - Create-Or-Modify protocol specification • Eclipse Ditto • a digital twin framework</title>
+
+<link rel="stylesheet" href="css/syntax.css">
+<link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" crossorigin="anonymous">
+<link rel="stylesheet" href="css/modern-business.css">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" crossorigin="anonymous">
+<link rel="stylesheet" href="css/customstyles.css">
+<link rel="stylesheet" href="css/boxshadowproperties.css">
+<link rel="stylesheet" href="css/theme-ditto.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,700|Source+Code+Pro:300,600|Titillium+Web:400,600,700">
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js" crossorigin="anonymous"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" crossorigin="anonymous"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/anchor-js/2.0.0/anchor.min.js" crossorigin="anonymous"></script>
+<script src="js/toc.js"></script>
+<script src="js/customscripts.js"></script>
+
+<script type="application/ld+json">
+{
+  "@context": "http://schema.org",
+  "@type": "Organization",
+  "url": "https://eclipse.org/ditto/",
+  "logo": "https://eclipse.org/ditto/images/ditto.svg"
+}
+</script>
+
+<link rel="icon" type="image/png" href="images/favicon-16x16.png" sizes="16x16">
+<link rel="icon" type="image/png" href="images/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="images/favicon-96x96.png" sizes="96x96">
+
+<link rel="alternate" type="application/rss+xml" title="Eclipse Ditto Blog" href="https://www.eclipse.org/ditto/feed.xml">
+
+<!-- Eclipse Foundation cookie consent: -->
+<link rel="stylesheet" type="text/css" href="//www.eclipse.org/eclipse.org-common/themes/solstice/public/stylesheets/vendor/cookieconsent/cookieconsent.min.css" />
+<script src="//www.eclipse.org/eclipse.org-common/themes/solstice/public/javascript/vendor/cookieconsent/default.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            $("#tg-sb-link").click(function() {
+                $("#tg-sb-sidebar").toggle();
+                $("#tg-sb-content").toggleClass('col-md-9');
+                $("#tg-sb-content").toggleClass('col-md-12');
+                $("#tg-sb-icon").toggleClass('fa-toggle-on');
+                $("#tg-sb-icon").toggleClass('fa-toggle-off');
+            });
+        });
+    </script>
+</head>
+
+
+<script>
+    (function(w,d,s,l,i){
+        w[l]=w[l]||[];
+        w[l].push({'gtm.start':
+            new Date().getTime(),event:'gtm.js'});
+        var f=d.getElementsByTagName(s)[0],
+            j=d.createElement(s),
+            dl=l!='dataLayer'?'&l='+l:'';
+        j.async=true;
+        j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;
+        f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-5WLCZXC');
+</script>
+
+
+
+<body>
+<!-- Navigation -->
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container topnavlinks">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-ditto-home" href="index.html">&nbsp;<img src="images/ditto_allwhite_symbolonly.svg" class="ditto-navbar-symbol" alt="Home"> <img src="images/ditto_allwhite_textonly.svg" class="ditto-navbar-symbol-text" alt="Ditto"></a>
+        </div>
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <!-- toggle sidebar button -->
+                <!--<li><a id="tg-sb-link" href="#"><i id="tg-sb-icon" class="fa fa-toggle-on"></i> Nav</a></li>-->
+                <!-- entries without drop-downs appear here -->
+
+
+
+
+                
+                
+                
+                <li><a href="blog.html">Blog</a></li>
+                
+                
+                
+                <li><a href="intro-overview.html">Documentation</a></li>
+                
+                
+                
+                <li><a href="http-api-doc.html">HTTP API</a></li>
+                
+                
+                
+                <li><a href="sandbox.html">Sandbox</a></li>
+                
+                
+                
+                <li><a href="https://github.com/eclipse/ditto" target="_blank">GitHub</a></li>
+                
+                
+                
+                <li><a href="https://github.com/eclipse/ditto-examples" target="_blank">GitHub examples</a></li>
+                
+                
+                
+                <!-- entries with drop-downs appear here -->
+                <!-- conditional logic to control which topnav appears for the audience defined in the configuration file.-->
+                
+                
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Links<b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        
+                        
+                        <li><a href="https://projects.eclipse.org/projects/iot.ditto" target="_blank">Eclipse Ditto Project</a></li>
+                        
+                        
+                        
+                        <li><a href="https://www.eclipse.org/forums/index.php/f/364/" target="_blank">Forum</a></li>
+                        
+                        
+                        
+                        <li><a href="https://ci.eclipse.org/ditto/" target="_blank">Jenkins</a></li>
+                        
+                        
+                        
+                        <li><a href="https://dev.eclipse.org/mhonarc/lists/ditto-dev/" target="_blank">Mailing list archives</a></li>
+                        
+                        
+                        
+                        <li><a href="https://gitter.im/eclipse/ditto" target="_blank">Gitter.im chat</a></li>
+                        
+                        
+                    </ul>
+                </li>
+                
+                
+                
+                <!--comment out this block if you want to hide search-->
+                <li>
+                    <!--start search-->
+                    <div id="search-demo-container">
+                        <input type="text" id="search-input" placeholder="search...">
+                        <ul id="results-container"></ul>
+                    </div>
+                    <script src="//cdnjs.cloudflare.com/ajax/libs/simple-jekyll-search/0.0.9/jekyll-search.js" type="text/javascript"></script>
+                    <script type="text/javascript">
+                            SimpleJekyllSearch.init({
+                                searchInput: document.getElementById('search-input'),
+                                resultsContainer: document.getElementById('results-container'),
+                                dataSource: 'search.json',
+                                searchResultTemplate: '<li><a href="{url}" title="Things - Create-Or-Modify protocol specification">{title}</a></li>',
+                                noResultsText: 'No results found.',
+                                limit: 10,
+                                fuzzy: true,
+                    })
+                    </script>
+                    <!--end search-->
+                </li>
+            </ul>
+        </div>
+    </div>
+    <!-- /.container -->
+</nav>
+
+<!-- Page Content -->
+<div class="container">
+  <div id="main">
+    <!-- Content Row -->
+    <div class="row">
+        
+        
+            <!-- Sidebar Column -->
+            <div class="col-md-3" id="tg-sb-sidebar">
+                
+
+<ul id="mysidebar" class="nav">
+  <li class="sidebarTitle">
+    <label for="docVersion">Eclipse Ditto  version:</label>
+    <div class="select-wrapper">
+      <select id="docVersion" name="docVersion">
+        
+        <option value="">development</option>
+        
+        <option value="1.0">1.0</option>
+        
+        <option value="1.1">1.1</option>
+        
+        <option value="1.2">1.2</option>
+        
+        <option value="1.3">1.3</option>
+        
+        <option value="1.4">1.4</option>
+        
+        <option value="1.5">1.5</option>
+        
+      </select>
+    </div>
+    <div id="dev-warning">
+      <div markdown="span" class="alert alert-warning" role="alert" style="font-size:0.6em"><i class="fa fa-warning"></i> <b>Important:</b> This documentation reflects the latest 'development'. You might want to choose a released version.</div>
+    </div>
+  </li>
+  
+  
+  
+    
+        <li class="subfolders">
+          <a href="#"><span></span>Introduction</a>
+          <ul>
+              
+              
+              
+              <li><a href="intro-overview.html">Overview</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="intro-digitaltwins.html">Digital twins</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="intro-hello-world.html">Hello world</a></li>
+              
+              
+              
+              
+          </ul>
+        </li>
+    
+  
+  
+  
+    
+        <li class="subfolders">
+          <a href="#"><span></span>Release Notes</a>
+          <ul>
+              
+              
+              
+              <li><a href="release_notes_140.html">1.4.0</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="release_notes_130.html">1.3.0</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="release_notes_121.html">1.2.1</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="release_notes_120.html">1.2.0</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="release_notes_115.html">1.1.5</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="release_notes_113.html">1.1.3</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="release_notes_112.html">1.1.2</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="release_notes_111.html">1.1.1</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="release_notes_110.html">1.1.0</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="release_notes_100.html">1.0.0</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="release_notes_090.html">0.9.0</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="release_notes_080.html">0.8.0</a></li>
+              
+              
+              
+              <li class="subfolders">
+                  <a href="#"><span></span>Milestone releases</a>
+                  <ul>
+                      
+                      
+                      
+                      <li><a href="release_notes_100-M2.html">1.0.0-M2</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_100-M1a.html">1.0.0-M1a</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_090-M2.html">0.9.0-M2</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_090-M1.html">0.9.0-M1</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_080-M3.html">0.8.0-M3</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_080-M2.html">0.8.0-M2</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_080-M1.html">0.8.0-M1</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_030-M2.html">0.3.0-M2</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_030-M1.html">0.3.0-M1</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_020-M1.html">0.2.0-M1</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_010-M3.html">0.1.0-M3</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_010-M1.html">0.1.0-M1</a></li>
+                      
+                      
+                      
+                  </ul>
+              </li>
+              
+              
+              
+              
+          </ul>
+        </li>
+    
+  
+  
+  
+    
+        <li class="subfolders">
+          <a href="#"><span></span>Installation</a>
+          <ul>
+              
+              
+              
+              <li><a href="installation-building.html">Building Ditto</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="installation-running.html">Running Ditto</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="installation-operating.html">Operating Ditto</a></li>
+              
+              
+              
+              
+          </ul>
+        </li>
+    
+  
+  
+  
+    
+        <li class="subfolders">
+          <a href="#"><span></span>Basic concepts</a>
+          <ul>
+              
+              
+              
+              <li><a href="basic-overview.html">Overview</a></li>
+              
+              
+              
+              <li class="subfolders">
+                  <a href="#"><span></span>Model entities</a>
+                  <ul>
+                      
+                      
+                      
+                      <li><a href="basic-thing.html">Thing</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="basic-acl.html">Access Control List (ACL)</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="basic-feature.html">Feature</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="basic-policy.html">Policy</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="basic-namespaces-and-names.html">Namespaces and Names</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="basic-metadata.html">Thing Metadata</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="basic-errors.html">Errors</a></li>
+                      
+                      
+                      
+                  </ul>
+              </li>
+              
+              
+              
+              
+              
+              
+              <li><a href="basic-auth.html">Authentication and Authorization</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="basic-messages.html">Messages</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="basic-signals.html">Signals</a></li>
+              
+              
+              
+              <li class="subfolders">
+                  <a href="#"><span></span>Signal types</a>
+                  <ul>
+                      
+                      
+                      
+                      <li><a href="basic-signals-command.html">Command</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="basic-signals-commandresponse.html">Command response</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="basic-signals-errorresponse.html">Error response</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="basic-signals-event.html">Event</a></li>
+                      
+                      
+                      
+                  </ul>
+              </li>
+              
+              
+              
+              
+              
+              
+              <li><a href="basic-apis.html">APIs</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="basic-connections.html">Connections</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="basic-placeholders.html">Placeholders</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="basic-changenotifications.html">Change notifications</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="basic-rql.html">RQL expressions</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="basic-enrichment.html">Signal enrichment</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="basic-search.html">Search</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="basic-acknowledgements.html">Acknowledgements / QoS</a></li>
+              
+              
+              
+              
+          </ul>
+        </li>
+    
+  
+  
+  
+    
+        <li class="subfolders">
+          <a href="#"><span></span>Architecture</a>
+          <ul>
+              
+              
+              
+              <li><a href="architecture-overview.html">Overview</a></li>
+              
+              
+              
+              <li class="subfolders">
+                  <a href="#"><span></span>Services</a>
+                  <ul>
+                      
+                      
+                      
+                      <li><a href="architecture-services-policies.html">Policies</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="architecture-services-things.html">Things</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="architecture-services-things-search.html">Things-Search</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="architecture-services-connectivity.html">Connectivity</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="architecture-services-concierge.html">Concierge</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="architecture-services-gateway.html">Gateway</a></li>
+                      
+                      
+                      
+                  </ul>
+              </li>
+              
+              
+              
+              
+          </ul>
+        </li>
+    
+  
+  
+  
+    
+        <li class="subfolders">
+          <a href="#"><span></span>HTTP API</a>
+          <ul>
+              
+              
+              
+              <li><a href="httpapi-overview.html">Overview</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="httpapi-concepts.html">Concepts</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="httpapi-search.html">Search</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="httpapi-messages.html">Messages</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="httpapi-protocol-bindings-websocket.html">WebSocket protocol binding</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="httpapi-sse.html">Server sent events</a></li>
+              
+              
+              
+              
+          </ul>
+        </li>
+    
+  
+  
+  
+    
+        <li class="subfolders">
+          <a href="#"><span></span>Connectivity API</a>
+          <ul>
+              
+              
+              
+              <li><a href="connectivity-overview.html">Overview</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="connectivity-manage-connections.html">Manage connections</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="connectivity-protocol-bindings-amqp091.html">AMQP 0.9.1 protocol binding</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="connectivity-protocol-bindings-amqp10.html">AMQP 1.0 protocol binding</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="connectivity-protocol-bindings-mqtt.html">MQTT 3.1.1 protocol binding</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="connectivity-protocol-bindings-mqtt5.html">MQTT 5 protocol binding</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="connectivity-protocol-bindings-http.html">HTTP 1.1 protocol binding</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="connectivity-protocol-bindings-kafka2.html">Kafka 2.x protocol binding</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="connectivity-mapping.html">Payload mapping</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="connectivity-header-mapping.html">Header mapping</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="connectivity-tls-certificates.html">TLS certificates</a></li>
+              
+              
+              
+              
+          </ul>
+        </li>
+    
+  
+  
+  
+    
+        <li class="subfolders">
+          <a href="#"><span></span>Client SDK</a>
+          <ul>
+              
+              
+              
+              <li><a href="client-sdk-overview.html">Overview</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="client-sdk-java.html">Java</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="client-sdk-javascript.html">JavaScript</a></li>
+              
+              
+              
+              
+          </ul>
+        </li>
+    
+  
+  
+  
+    
+        <li class="subfolders">
+          <a href="#"><span></span>Ditto Protocol</a>
+          <ul>
+              
+              
+              
+              <li><a href="protocol-overview.html">Overview</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="protocol-twinlive.html">Twin/live channel</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="protocol-specification.html">Specification</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="protocol-specification-topic.html">Protocol topic</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="protocol-specification-things.html">Things group</a></li>
+              
+              
+              
+              <li class="subfolders">
+                  <a href="#"><span></span>→ commands/events</a>
+                  <ul>
+                      
+                      
+                      
+                      <li class="active"><a href="protocol-specification-things-create-or-modify.html">Create/Modify</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-specification-things-retrieve.html">Retrieve</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-specification-things-delete.html">Delete</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-specification-acks.html">Acknowledgements</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-specification-errors.html">Errors</a></li>
+                      
+                      
+                      
+                  </ul>
+              </li>
+              
+              
+              
+              <li class="subfolders">
+                  <a href="#"><span></span>→ search/messages</a>
+                  <ul>
+                      
+                      
+                      
+                      <li><a href="protocol-specification-things-search.html">Search</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-specification-things-messages.html">Messages</a></li>
+                      
+                      
+                      
+                  </ul>
+              </li>
+              
+              
+              
+              
+              
+              
+              <li><a href="protocol-specification-policies.html">Policies group</a></li>
+              
+              
+              
+              <li class="subfolders">
+                  <a href="#"><span></span>→ commands/events</a>
+                  <ul>
+                      
+                      
+                      
+                      <li><a href="protocol-specification-policies-create-or-modify.html">Create/Modify</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-specification-policies-retrieve.html">Retrieve</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-specification-policies-delete.html">Delete</a></li>
+                      
+                      
+                      
+                  </ul>
+              </li>
+              
+              
+              
+              
+              
+              
+              <li><a href="protocol-bindings.html">Bindings</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="protocol-examples.html">Examples</a></li>
+              
+              
+              
+              <li class="subfolders">
+                  <a href="#"><span></span>→ Things examples</a>
+                  <ul>
+                      
+                      
+                      
+                      <li><a href="protocol-examples-creatething.html">Create a Thing</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-deletething.html">Delete a Thing</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-modifything.html">Modify a Thing</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-retrievething.html">Retrieve a Thing</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-retrievethings.html">Retrieve multiple Things</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-modifypolicyid.html">Modify the Policy ID of a Thing</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-createattributes.html">Create Attributes</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-deleteattributes.html">Delete Attributes</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-modifyattributes.html">Modify Attributes</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-retrieveattributes.html">Retrieve Attributes</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-createattribute.html">Create a single Attribute</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-deleteattribute.html">Delete a single Attribute</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-modifyattribute.html">Modify a single Attribute</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-retrieveattribute.html">Retrieve a single Attribute</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-createthingdefinition.html">Create a Definition</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-deletethingdefinition.html">Delete a Definition</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-modifythingdefinition.html">Modify a Definition</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-retrievethingdefinition.html">Retrieve a Definition</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-createfeatures.html">Create Features</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-deletefeatures.html">Delete Features</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-modifyfeatures.html">Modify Features</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-retrievefeatures.html">Retrieve Features</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-createfeature.html">Create a single Feature</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-deletefeature.html">Delete a single Feature</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-modifyfeature.html">Modify a single Feature</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-retrievefeature.html">Retrieve a single Feature</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-createdefinition.html">Create Feature Definition</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-deletedefinition.html">Delete Feature Definition</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-modifydefinition.html">Modify Feature Definition</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-retrievedefinition.html">Retrieve Feature Definition</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-createproperties.html">Create Feature Properties</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-deleteproperties.html">Delete Feature Properties</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-modifyproperties.html">Modify Feature Properties</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-retrieveproperties.html">Retrieve Feature Properties</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-createproperty.html">Create a single Property</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-deleteproperty.html">Delete a single Property</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-modifyproperty.html">Modify a single Property</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-retrieveproperty.html">Retrieve a single Property</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-errorresponses.html">Error responses</a></li>
+                      
+                      
+                      
+                  </ul>
+              </li>
+              
+              
+              
+              <li class="subfolders">
+                  <a href="#"><span></span>→ Policies examples</a>
+                  <ul>
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-createpolicy.html">Create a Policy</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-deletepolicy.html">Delete a Policy</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-modifypolicy.html">Modify a Policy</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-retrievepolicy.html">Retrieve a Policy</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-modifypolicyentries.html">Modify entries</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-retrievepolicyentries.html">Retrieve entries</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-createpolicyentry.html">Create a single entry</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-deletepolicyentry.html">Delete a single entry</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-modifypolicyentry.html">Modify a single entry</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-retrievepolicyentry.html">Retrieve a single entry</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-modifysubjects.html">Modify subjects</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-retrievesubjects.html">Retrieve subjects</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-createsubject.html">Create a single subject</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-deletesubject.html">Delete a single subject</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-modifysubject.html">Modify a single subject</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-retrievesubject.html">Retrieve a single subject</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-modifyresources.html">Modify resources</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-retrieveresources.html">Retrieve resources</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-createresource.html">Create a single resource</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-deleteresource.html">Delete a single resource</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-modifyresource.html">Modify a single resource</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-retrieveresource.html">Retrieve a single resource</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-errorresponses.html">Error responses</a></li>
+                      
+                      
+                      
+                  </ul>
+              </li>
+              
+              
+              
+              
+              
+              
+              <li><a href="protocol-examples-search.html">→ Search examples</a></li>
+              
+              
+              
+              
+          </ul>
+        </li>
+    
+  
+  
+  
+    
+    <li><a href="sandbox.html">Sandbox</a></li>
+    
+  
+  
+  
+    
+    <li><a href="presentations.html">Presentations</a></li>
+    
+  
+  
+  
+    
+    <li><a href="glossary.html">Glossary</a></li>
+    
+  
+  
+  
+    
+    <li><a href="feedback.html">Feedback</a></li>
+    
+  
+  
+  
+    
+         <p class="external">
+             <a href="#" id="collapseAll">Collapse All</a> | <a href="#" id="expandAll">Expand All</a>
+         </p>
+    
+</ul>
+
+<!-- this highlights the active parent class in the sidebar. this is critical so that the parent expands when you're viewing a page. This must appear below the sidebar code above. Otherwise, if placed inside customscripts.js, the script runs before the sidebar code runs and the class never gets inserted.-->
+<script>$("li.active").parents('li').toggleClass("active");
+</script>
+
+            </div>
+            
+        
+
+        <!-- Content Column -->
+        <div class="col-md-9" id="tg-sb-content">
+            <div class="post-header">
+   <h1 class="post-title-main">Things - Create-Or-Modify protocol specification</h1>
+</div>
+
+
+
+<div class="post-content">
+
+   
+
+    
+    
+<!-- this handles the automatic toc. use ## for subheads to auto-generate the on-page minitoc. if you use html tags, you must supply an ID for the heading element in order for it to appear in the minitoc. -->
+<script>
+$( document ).ready(function() {
+  // Handler for .ready() called.
+
+$('#toc').toc({ minimumHeaders: 0, listType: 'ul', showSpeed: 0, headers: 'h2,h3,h4' });
+
+/* this offset helps account for the space taken up by the floating toolbar. */
+$('#toc').on('click', 'a', function() {
+  var target = $(this.getAttribute('href'))
+    , scroll_target = target.offset().top
+
+  $(window).scrollTop(scroll_target - 10);
+  return false
+})
+  
+});
+</script>
+
+<div id="toc"></div>
+
+    
+
+
+    
+
+
+    
+
+  <p>All <code class="highlighter-rouge">topics</code> contain the <code class="highlighter-rouge">&lt;channel&gt;</code> which may be either <code class="highlighter-rouge">twin</code> or <code class="highlighter-rouge">live</code>.<br />
+For the meaning of those two channels see <a href="protocol-specification.html">Protocol specification</a>.</p>
+
+<h2 id="create-a-thing">Create a Thing</h2>
+
+<p>This command creates the thing specified by the <code class="highlighter-rouge">&lt;namespace&gt;</code> and <code class="highlighter-rouge">&lt;thingId&gt;</code> in the topic defined by the JSON in the
+value.
+The <a href="#" data-toggle="tooltip" data-original-title="An access control list (ACL) holds the current status on who (subject) is permitted to which extent (read, write, administrate) to manage a Thing.">ACL</a> of the created Thing
+must include at least one subject authorized to READ, WRITE and ADMINISTRATE permissions.
+If no ACL is provided within the command, a default ACL with an entry for the authorized subject with all permissions
+set to true will be created.</p>
+
+<h3 id="command">Command</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Field</th>
+      <th>Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>topic</strong></td>
+      <td><code class="highlighter-rouge">&lt;namespace&gt;/&lt;thingName&gt;/things/&lt;channel&gt;/commands/create</code></td>
+    </tr>
+    <tr>
+      <td><strong>path</strong></td>
+      <td><code class="highlighter-rouge">/</code></td>
+    </tr>
+    <tr>
+      <td><strong>value</strong></td>
+      <td>The complete thing as JSON object, see <a href="protocol-specification.html#dittoProtocolPayload">Ditto protocol payload (JSON)</a>.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="response">Response</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Field</th>
+      <th> </th>
+      <th>Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>topic</strong></td>
+      <td> </td>
+      <td><code class="highlighter-rouge">&lt;namespace&gt;/&lt;thingName&gt;/things/&lt;channel&gt;/commands/create</code></td>
+    </tr>
+    <tr>
+      <td><strong>path</strong></td>
+      <td> </td>
+      <td><code class="highlighter-rouge">/</code></td>
+    </tr>
+    <tr>
+      <td><strong>value</strong></td>
+      <td> </td>
+      <td>The created Thing as JSON object, see <a href="protocol-specification.html#dittoProtocolPayload">Ditto protocol payload (JSON)</a>.</td>
+    </tr>
+    <tr>
+      <td><strong>status</strong></td>
+      <td><em>code</em></td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td><code class="highlighter-rouge">201</code></td>
+      <td>Success - the thing was created successfully.</td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td><code class="highlighter-rouge">409</code></td>
+      <td>Conflict - a thing with the given ID already exists.</td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td> </td>
+      <td>See <a href="protocol-examples-errorresponses.html">Thing Error Responses</a> for examples of other error responses.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="event">Event</h3>
+
+<p>The event emitted by Ditto after a thing was created.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Field</th>
+      <th>Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>topic</strong></td>
+      <td><code class="highlighter-rouge">&lt;namespace&gt;/&lt;thingName&gt;/things/&lt;channel&gt;/events/created</code></td>
+    </tr>
+    <tr>
+      <td><strong>path</strong></td>
+      <td><code class="highlighter-rouge">/</code></td>
+    </tr>
+    <tr>
+      <td><strong>value</strong></td>
+      <td>The created thing as JSON object, see <a href="protocol-specification.html#dittoProtocolPayload">Ditto protocol payload (JSON)</a></td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>Example:</strong> <a href="protocol-examples-creatething.html">Create a Thing.</a></p>
+
+<h2 id="create-or-modify-a-thing">Create or modify a Thing</h2>
+
+<p>This command modifies the thing specified by the <code class="highlighter-rouge">&lt;namespace&gt;</code> and <code class="highlighter-rouge">&lt;thingId&gt;</code> in the <code class="highlighter-rouge">topic</code> with the JSON in the 
+<code class="highlighter-rouge">value</code>, if it already exists. Otherwise, the thing is created.</p>
+
+<h3 id="command-1">Command</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Field</th>
+      <th>Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>topic</strong></td>
+      <td><code class="highlighter-rouge">&lt;namespace&gt;/&lt;thingName&gt;/things/&lt;channel&gt;/commands/modify</code></td>
+    </tr>
+    <tr>
+      <td><strong>path</strong></td>
+      <td><code class="highlighter-rouge">/</code></td>
+    </tr>
+    <tr>
+      <td><strong>value</strong></td>
+      <td>The complete thing as JSON.<br />see <a href="protocol-specification.html#dittoProtocolPayload">Ditto protocol payload (JSON)</a></td>
+    </tr>
+  </tbody>
+</table>
+
+<p>For modifying an existing thing, the authorized subject needs WRITE permission.<br />
+If the update is targeting the <a href="#" data-toggle="tooltip" data-original-title="An access control list (ACL) holds the current status on who (subject) is permitted to which extent (read, write, administrate) to manage a Thing.">ACL</a>, 
+the authorized subject additionally needs ADMINISTRATE permission.<br />
+If the thing does not yet exist, the same rules apply as described for the <a href="#create-a-thing">create command</a>.</p>
+
+<h3 id="response-1">Response</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Field</th>
+      <th> </th>
+      <th>Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>topic</strong></td>
+      <td> </td>
+      <td><code class="highlighter-rouge">&lt;namespace&gt;/&lt;thingName&gt;/things/&lt;channel&gt;/commands/modify</code></td>
+    </tr>
+    <tr>
+      <td><strong>path</strong></td>
+      <td> </td>
+      <td><code class="highlighter-rouge">/</code></td>
+    </tr>
+    <tr>
+      <td><strong>value</strong></td>
+      <td> </td>
+      <td>The created Thing as JSON object, see <a href="protocol-specification.html#dittoProtocolPayload">Ditto protocol payload (JSON)</a>. This field is not available, if the Thing already existed.</td>
+    </tr>
+    <tr>
+      <td><strong>status</strong></td>
+      <td><em>code</em></td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td><code class="highlighter-rouge">201</code></td>
+      <td>Success - the Thing was created successfully.</td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td><code class="highlighter-rouge">204</code></td>
+      <td>Success - the Thing was modified successfully.</td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td><code class="highlighter-rouge">403</code></td>
+      <td>Not Modifiable - The Thing could not be modified as the requester had insufficient permissions (‘WRITE’ is required).</td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td><code class="highlighter-rouge">404</code></td>
+      <td>Not Found - The Thing was not found or requester had insufficient permissions.</td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td> </td>
+      <td>See <a href="protocol-examples-errorresponses.html">Thing Error Responses</a> for examples of other error responses.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="event-1">Event</h3>
+
+<p>The event emitted by Ditto after a thing was modified.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Field</th>
+      <th>Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>topic</strong></td>
+      <td><code class="highlighter-rouge">&lt;namespace&gt;/&lt;thingName&gt;/things/&lt;channel&gt;/events/modified</code></td>
+    </tr>
+    <tr>
+      <td><strong>path</strong></td>
+      <td><code class="highlighter-rouge">/</code></td>
+    </tr>
+    <tr>
+      <td><strong>value</strong></td>
+      <td>The modified Thing as JSON<br />see <a href="protocol-specification.html#dittoProtocolPayload">Ditto protocol payload (JSON)</a>.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>Example:</strong> <a href="protocol-examples-modifything.html">Modify a Thing</a></p>
+
+<p>In case a thing was created, the event described for the <a href="#create-a-thing">create command</a> will be emitted.</p>
+
+<h2 id="create-or-modify-all-attributes-of-a-thing">Create or modify all Attributes of a Thing</h2>
+
+<p>Create or modify the Attributes of a Thing identified by the <code class="highlighter-rouge">&lt;namespace&gt;</code> and <code class="highlighter-rouge">&lt;thingId&gt;</code> in the <code class="highlighter-rouge">topic</code>.
+The Attributes will be replaced by the JSON in the <code class="highlighter-rouge">value</code>.</p>
+
+<h3 id="command-2">Command</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Field</th>
+      <th>Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>topic</strong></td>
+      <td><code class="highlighter-rouge">&lt;namespace&gt;/&lt;thingName&gt;/things/&lt;channel&gt;/commands/modify</code></td>
+    </tr>
+    <tr>
+      <td><strong>path</strong></td>
+      <td><code class="highlighter-rouge">/attributes</code></td>
+    </tr>
+    <tr>
+      <td><strong>value</strong></td>
+      <td>The attributes of the thing as JSON, see property <code class="highlighter-rouge">attributes</code> of Things JSON schema. See <a href="protocol-specification.html#dittoProtocolPayload">Ditto protocol payload (JSON)</a>.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="response-2">Response</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Field</th>
+      <th> </th>
+      <th>Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>topic</strong></td>
+      <td> </td>
+      <td><code class="highlighter-rouge">&lt;namespace&gt;/&lt;thingName&gt;/things/&lt;channel&gt;/commands/modify</code></td>
+    </tr>
+    <tr>
+      <td><strong>path</strong></td>
+      <td> </td>
+      <td><code class="highlighter-rouge">/attributes</code></td>
+    </tr>
+    <tr>
+      <td><strong>value</strong></td>
+      <td> </td>
+      <td>The created attributes as JSON, see property <code class="highlighter-rouge">attributes</code> of Things JSON schema. See <a href="protocol-specification.html#dittoProtocolPayload">Ditto protocol payload (JSON).</a>. This field is not available, if the thing already contained attributes.</td>
+    </tr>
+    <tr>
+      <td><strong>status</strong></td>
+      <td><em>code</em></td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td><code class="highlighter-rouge">201</code></td>
+      <td>Success - Attributes were created successfully.</td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td><code class="highlighter-rouge">204</code></td>
+      <td>Success - Attributes were modified successfully.</td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td><code class="highlighter-rouge">403</code></td>
+      <td>Not Modifiable - The Attributes could not be modified as the requester had insufficient permissions (‘WRITE’ is required).</td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td><code class="highlighter-rouge">404</code></td>
+      <td>Not Found - The Thing or Attributes were not found or requester had insufficient permissions.</td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td> </td>
+      <td>See <a href="protocol-examples-errorresponses.html">Thing Error Responses</a> for examples of other error responses.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="event-2">Event</h3>
+
+<p>If the thing already contained attributes before the command was applied and they were thus overwritten, a <code class="highlighter-rouge">modified</code> 
+event will be emitted.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Field</th>
+      <th>Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>topic</strong></td>
+      <td><code class="highlighter-rouge">&lt;namespace&gt;/&lt;thingName&gt;/things/&lt;channel&gt;/events/modified</code></td>
+    </tr>
+    <tr>
+      <td><strong>path</strong></td>
+      <td><code class="highlighter-rouge">/attributes</code></td>
+    </tr>
+    <tr>
+      <td><strong>value</strong></td>
+      <td>The modified attributes of the thing as JSON, see property <code class="highlighter-rouge">attributes</code> of the Things JSON schema. See <a href="protocol-specification.html#dittoProtocolPayload">Ditto protocol payload (JSON)</a>.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>Example:</strong> <a href="protocol-examples-modifyattributes.html">Modify Attributes</a></p>
+
+<p>If the thing did not yet contain attributes before the command was applied, a <code class="highlighter-rouge">created</code> event will be emitted.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Field</th>
+      <th>Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>topic</strong></td>
+      <td><code class="highlighter-rouge">&lt;namespace&gt;/&lt;thingName&gt;/things/&lt;channel&gt;/events/created</code></td>
+    </tr>
+    <tr>
+      <td><strong>path</strong></td>
+      <td><code class="highlighter-rouge">/attributes</code></td>
+    </tr>
+    <tr>
+      <td><strong>value</strong></td>
+      <td>The created Attributes of the Thing as JSON, see property <code class="highlighter-rouge">attributes</code> of the Things JSON schema at <a href="protocol-specification.html#dittoProtocolPayload">Ditto protocol payload (JSON)</a>.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>Example:</strong> <a href="protocol-examples-createattributes.html">Create Attributes</a></p>
+
+<h2 id="create-or-modify-a-single-attribute-of-a-thing">Create or modify a single Attribute of a Thing</h2>
+
+<p>Create or modify a specific attribute identified by the <code class="highlighter-rouge">&lt;attributePath&gt;</code> of the Thing.
+The attribute will be created in case it doesn’t exist yet, otherwise the thing attribute is updated.
+The attribute (JSON) can be referenced hierarchically by applying <a href="https://tools.ietf.org/html/rfc6901">JSON Pointer notation (RFC-6901)</a>.</p>
+
+<h3 id="command-3">Command</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Field</th>
+      <th>Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>topic</strong></td>
+      <td><code class="highlighter-rouge">&lt;namespace&gt;/&lt;thingName&gt;/things/&lt;channel&gt;/commands/modify</code></td>
+    </tr>
+    <tr>
+      <td><strong>path</strong></td>
+      <td><code class="highlighter-rouge">/attributes/&lt;attributePath&gt;</code></td>
+    </tr>
+    <tr>
+      <td><strong>value</strong></td>
+      <td>The specific attribute of the Thing as JSON.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="response-3">Response</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Field</th>
+      <th> </th>
+      <th>Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>topic</strong></td>
+      <td> </td>
+      <td><code class="highlighter-rouge">&lt;namespace&gt;/&lt;thingName&gt;/things/&lt;channel&gt;/commands/modify</code></td>
+    </tr>
+    <tr>
+      <td><strong>path</strong></td>
+      <td> </td>
+      <td><code class="highlighter-rouge">/attributes/&lt;attributePath&gt;</code></td>
+    </tr>
+    <tr>
+      <td><strong>value</strong></td>
+      <td> </td>
+      <td>The created attribute as JSON. This field is not available, if the attribute already existed.</td>
+    </tr>
+    <tr>
+      <td><strong>status</strong></td>
+      <td><em>code</em></td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td><code class="highlighter-rouge">201</code></td>
+      <td>Success - The Attribute was created successfully.</td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td><code class="highlighter-rouge">204</code></td>
+      <td>Success - The Attribute was modified successfully.</td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td><code class="highlighter-rouge">403</code></td>
+      <td>Not Modifiable - The Attribute could not be modified as the requester had insufficient permissions (‘WRITE’ is required).</td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td><code class="highlighter-rouge">404</code></td>
+      <td>Not Found - The Thing or Attribute was not found or requester had insufficient permissions.</td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td> </td>
+      <td>See <a href="protocol-examples-errorresponses.html">Thing Error Responses</a> for examples of other error responses.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="event-3">Event</h3>
+
+<p>If the attribute already existed before the command was applied and it was thus overwritten by the command, a 
+<code class="highlighter-rouge">modified</code> event will be emitted.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Field</th>
+      <th>Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>topic</strong></td>
+      <td><code class="highlighter-rouge">&lt;namespace&gt;/&lt;thingName&gt;/things/&lt;channel&gt;/events/modified</code></td>
+    </tr>
+    <tr>
+      <td><strong>path</strong></td>
+      <td><code class="highlighter-rouge">/attributes/&lt;attributePath&gt;</code></td>
+    </tr>
+    <tr>
+      <td><strong>value</strong></td>
+      <td>The modified Attribute of the Thing as JSON value.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>Example:</strong> <a href="protocol-examples-modifyattribute.html">Modify a single Attribute</a></p>
+
+<p>If the attribute did not yet exist before the command was applied, a <code class="highlighter-rouge">created</code> event will be emitted.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Field</th>
+      <th>Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>topic</strong></td>
+      <td><code class="highlighter-rouge">&lt;namespace&gt;/&lt;thingName&gt;/things/&lt;channel&gt;/events/created</code></td>
+    </tr>
+    <tr>
+      <td><strong>path</strong></td>
+      <td><code class="highlighter-rouge">/attributes/&lt;attributePath&gt;</code></td>
+    </tr>
+    <tr>
+      <td><strong>value</strong></td>
+      <td>The created Attribute of the Thing as JSON value.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>Example:</strong> <a href="protocol-examples-createattribute.html">Create a single Attribute</a></p>
+
+<h2 id="create-or-modify-a-single-definition-of-a-thing">Create or modify a single definition of a Thing</h2>
+
+<p>Create or modify a definition of the Thing.
+The definition will be created in case it doesn’t exist yet, otherwise the thing definition is updated.</p>
+
+<h3 id="command-4">Command</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Field</th>
+      <th>Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>topic</strong></td>
+      <td><code class="highlighter-rouge">&lt;namespace&gt;/&lt;thingName&gt;/things/&lt;channel&gt;/commands/modify</code></td>
+    </tr>
+    <tr>
+      <td><strong>path</strong></td>
+      <td><code class="highlighter-rouge">/definition</code></td>
+    </tr>
+    <tr>
+      <td><strong>value</strong></td>
+      <td>The specific definition of the Thing as JSON string value.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="response-4">Response</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Field</th>
+      <th> </th>
+      <th>Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>topic</strong></td>
+      <td> </td>
+      <td><code class="highlighter-rouge">&lt;namespace&gt;/&lt;thingName&gt;/things/&lt;channel&gt;/commands/modify</code></td>
+    </tr>
+    <tr>
+      <td><strong>path</strong></td>
+      <td> </td>
+      <td><code class="highlighter-rouge">/definition</code></td>
+    </tr>
+    <tr>
+      <td><strong>value</strong></td>
+      <td> </td>
+      <td>The created definition as JSON string value. This field is not available, if the definition already existed.</td>
+    </tr>
+    <tr>
+      <td><strong>status</strong></td>
+      <td><em>code</em></td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td><code class="highlighter-rouge">201</code></td>
+      <td>Success - The definition was created successfully.</td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td><code class="highlighter-rouge">204</code></td>
+      <td>Success - The definition was modified successfully.</td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td><code class="highlighter-rouge">403</code></td>
+      <td>Not Modifiable - The definition could not be modified as the requester had insufficient permissions (‘WRITE’ is required).</td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td><code class="highlighter-rouge">404</code></td>
+      <td>Not Found - The Thing or definition was not found or requester had insufficient permissions.</td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td> </td>
+      <td>See <a href="protocol-examples-errorresponses.html">Thing Error Responses</a> for examples of other error responses.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="event-4">Event</h3>
+
+<p>If the definition already existed before the command was applied and it was thus overwritten by the command, a 
+<code class="highlighter-rouge">modified</code> event will be emitted.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Field</th>
+      <th>Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>topic</strong></td>
+      <td><code class="highlighter-rouge">&lt;namespace&gt;/&lt;thingName&gt;/things/&lt;channel&gt;/events/modified</code></td>
+    </tr>
+    <tr>
+      <td><strong>path</strong></td>
+      <td><code class="highlighter-rouge">/definition</code></td>
+    </tr>
+    <tr>
+      <td><strong>value</strong></td>
+      <td>The modified definition of the Thing as JSON string value.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>Example:</strong> <a href="protocol-examples-modifythingdefinition.html">Modify a definition</a></p>
+
+<p>If the definition did not yet exist before the command was applied, a <code class="highlighter-rouge">created</code> event will be emitted.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Field</th>
+      <th>Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>topic</strong></td>
+      <td><code class="highlighter-rouge">&lt;namespace&gt;/&lt;thingName&gt;/things/&lt;channel&gt;/events/created</code></td>
+    </tr>
+    <tr>
+      <td><strong>path</strong></td>
+      <td><code class="highlighter-rouge">/definition</code></td>
+    </tr>
+    <tr>
+      <td><strong>value</strong></td>
+      <td>The created definition of the Thing as JSON string value.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>Example:</strong> <a href="protocol-examples-createthingdefinition.html">Create a definition</a></p>
+
+<h2 id="create-or-modify-all-features-of-a-thing">Create or modify all Features of a Thing</h2>
+
+<p>Create or modify the Features of a Thing identified by the <code class="highlighter-rouge">&lt;namespace&gt;</code> and the <code class="highlighter-rouge">&lt;thingId&gt;</code> in the topic.<br />
+The list of Features will be replaced by the JSON in the <code class="highlighter-rouge">value</code>.</p>
+
+<h3 id="command-5">Command</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Field</th>
+      <th>Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>topic</strong></td>
+      <td><code class="highlighter-rouge">&lt;namespace&gt;/&lt;thingName&gt;/things/&lt;channel&gt;/commands/modify</code></td>
+    </tr>
+    <tr>
+      <td><strong>path</strong></td>
+      <td><code class="highlighter-rouge">/features</code></td>
+    </tr>
+    <tr>
+      <td><strong>value</strong></td>
+      <td>All Features of the Thing as JSON, see property <code class="highlighter-rouge">features</code> of Things JSON schema. See <a href="protocol-specification.html#dittoProtocolPayload">Ditto protocol payload (JSON)</a>.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="response-5">Response</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Field</th>
+      <th> </th>
+      <th>Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>topic</strong></td>
+      <td> </td>
+      <td><code class="highlighter-rouge">&lt;namespace&gt;/&lt;thingName&gt;/things/&lt;channel&gt;/commands/modify</code></td>
+    </tr>
+    <tr>
+      <td><strong>path</strong></td>
+      <td> </td>
+      <td><code class="highlighter-rouge">/features</code></td>
+    </tr>
+    <tr>
+      <td><strong>value</strong></td>
+      <td> </td>
+      <td>The created Features as JSON, see property <code class="highlighter-rouge">features</code> of Things JSON schema at <a href="protocol-specification.html#dittoProtocolPayload">Ditto protocol payload (JSON)</a>. This field is not available, if the thing already contained features.</td>
+    </tr>
+    <tr>
+      <td><strong>status</strong></td>
+      <td><em>code</em></td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td><code class="highlighter-rouge">201</code></td>
+      <td>Success - The Features were created successfully.</td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td><code class="highlighter-rouge">204</code></td>
+      <td>Success - The Features were modified successfully.</td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td><code class="highlighter-rouge">403</code></td>
+      <td>Not Modifiable - The Features could not be modified as the requester had insufficient permissions (‘WRITE’ is required).</td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td><code class="highlighter-rouge">404</code></td>
+      <td>Not Found - The Thing or Features were not found or requester had insufficient permissions.</td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td> </td>
+      <td>See <a href="protocol-examples-errorresponses.html">Thing Error Responses</a> for examples of other error responses.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="event-5">Event</h3>
+
+<p>If the thing already contained Features before the command was applied and they were thus overwritten, a 
+<code class="highlighter-rouge">modified</code> event will be emitted.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Field</th>
+      <th>Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>topic</strong></td>
+      <td><code class="highlighter-rouge">&lt;namespace&gt;/&lt;thingName&gt;/things/&lt;channel&gt;/events/modified</code></td>
+    </tr>
+    <tr>
+      <td><strong>path</strong></td>
+      <td><code class="highlighter-rouge">/features</code></td>
+    </tr>
+    <tr>
+      <td><strong>value</strong></td>
+      <td>All Features of the Thing as JSON, see property <code class="highlighter-rouge">features</code> of the Things JSON schema. See <a href="protocol-specification.html#dittoProtocolPayload">Ditto protocol payload (JSON)</a>.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>Example:</strong> <a href="protocol-examples-modifyfeatures.html">Modify Features</a></p>
+
+<p>If the thing did not yet contain Features before the command was applied, a <code class="highlighter-rouge">created</code> event will be emitted.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Field</th>
+      <th>Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>topic</strong></td>
+      <td><code class="highlighter-rouge">&lt;namespace&gt;/&lt;thingName&gt;/things/&lt;channel&gt;/events/created</code></td>
+    </tr>
+    <tr>
+      <td><strong>path</strong></td>
+      <td><code class="highlighter-rouge">/features</code></td>
+    </tr>
+    <tr>
+      <td><strong>value</strong></td>
+      <td>All Features of the Thing as JSON, see property <code class="highlighter-rouge">features</code> of the Things JSON schema at <a href="protocol-specification.html#dittoProtocolPayload">Ditto protocol payload (JSON)</a>.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>Example:</strong> <a href="protocol-examples-createfeatures.html">Create Features</a></p>
+
+<h2 id="create-or-modify-single-feature-of-a-thing">Create or modify single Feature of a Thing</h2>
+
+<p>Create or modify a specific Feature (identified by the Feature ID in the <code class="highlighter-rouge">path</code>) of the Thing (identified by the <code class="highlighter-rouge">&lt;namespace&gt;</code> and the <code class="highlighter-rouge">&lt;thingId&gt;</code> in the topic).</p>
+
+<h3 id="command-6">Command</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Field</th>
+      <th>Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>topic</strong></td>
+      <td><code class="highlighter-rouge">&lt;namespace&gt;/&lt;thingName&gt;/things/&lt;channel&gt;/commands/modify</code></td>
+    </tr>
+    <tr>
+      <td><strong>path</strong></td>
+      <td><code class="highlighter-rouge">/features/&lt;featureId&gt;</code></td>
+    </tr>
+    <tr>
+      <td><strong>value</strong></td>
+      <td>The specific Feature of the Thing as JSON. See <a href="protocol-specification.html#dittoProtocolPayload">Ditto protocol payload (JSON)</a>.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="response-6">Response</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Field</th>
+      <th> </th>
+      <th>Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>topic</strong></td>
+      <td> </td>
+      <td><code class="highlighter-rouge">&lt;namespace&gt;/&lt;thingName&gt;/things/&lt;channel&gt;/commands/modify</code></td>
+    </tr>
+    <tr>
+      <td><strong>path</strong></td>
+      <td> </td>
+      <td><code class="highlighter-rouge">/features/&lt;featureId&gt;</code></td>
+    </tr>
+    <tr>
+      <td><strong>value</strong></td>
+      <td> </td>
+      <td>The created Feature as JSON. See <a href="protocol-specification.html#dittoProtocolPayload">Ditto protocol payload (JSON)</a>. This field is not available, if the Feature already existed.</td>
+    </tr>
+    <tr>
+      <td><strong>status</strong></td>
+      <td><em>code</em></td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td><code class="highlighter-rouge">201</code></td>
+      <td>Success - The Feature was created successfully.</td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td><code class="highlighter-rouge">204</code></td>
+      <td>Success - the Feature was modified successfully.</td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td><code class="highlighter-rouge">403</code></td>
+      <td>Not Modifiable - The Feature could not be modified as the requester had insufficient permissions (‘WRITE’ is required).</td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td><code class="highlighter-rouge">404</code></td>
+      <td>Not Found - The Thing or Feature was not found or requester had insufficient permissions.</td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td> </td>
+      <td>See <a href="protocol-examples-errorresponses.html">Thing Error Responses</a> for examples of other error responses.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="event-6">Event</h3>
+
+<p>If the Feature already existed before the command was applied and it was thus overwritten by the command, a 
+<code class="highlighter-rouge">modified</code> event will be emitted.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Field</th>
+      <th>Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>topic</strong></td>
+      <td><code class="highlighter-rouge">&lt;namespace&gt;/&lt;thingName&gt;/things/&lt;channel&gt;/events/modified</code></td>
+    </tr>
+    <tr>
+      <td><strong>path</strong></td>
+      <td><code class="highlighter-rouge">/features/&lt;featureId&gt;</code></td>
+    </tr>
+    <tr>
+      <td><strong>value</strong></td>
+      <td>The modified Feature of the Thing as JSON. See <a href="protocol-specification.html#dittoProtocolPayload">Ditto protocol payload (JSON)</a>.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>Example:</strong> <a href="protocol-examples-modifyfeature.html">Modify a single Feature</a></p>
+
+<p>If the Feature did not yet exist before the command was applied, a <code class="highlighter-rouge">created</code> event will be emitted.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Field</th>
+      <th>Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>topic</strong></td>
+      <td><code class="highlighter-rouge">&lt;namespace&gt;/&lt;thingName&gt;/things/&lt;channel&gt;/events/created</code></td>
+    </tr>
+    <tr>
+      <td><strong>path</strong></td>
+      <td><code class="highlighter-rouge">/features/&lt;featureId&gt;</code></td>
+    </tr>
+    <tr>
+      <td><strong>value</strong></td>
+      <td>The created Feature of the Thing as JSON.<br />see <a href="protocol-specification.html#dittoProtocolPayload">Ditto protocol payload (JSON)</a>.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>Example:</strong> <a href="protocol-examples-createfeature.html">Create a single Feature</a></p>
+
+<h2 id="create-or-modify-definition-of-a-feature">Create or modify Definition of a Feature</h2>
+
+<p>Create or modify the Definition of a Feature (identified by the Feature ID in the <code class="highlighter-rouge">path</code>) of the Thing (identified by the <code class="highlighter-rouge">&lt;namespace&gt;</code> and the <code class="highlighter-rouge">&lt;thingId&gt;</code> in the <code class="highlighter-rouge">topic</code>).</p>
+
+<h3 id="command-7">Command</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Field</th>
+      <th>Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>topic</strong></td>
+      <td><code class="highlighter-rouge">&lt;namespace&gt;/&lt;thingName&gt;/things/&lt;channel&gt;/commands/modify</code></td>
+    </tr>
+    <tr>
+      <td><strong>path</strong></td>
+      <td><code class="highlighter-rouge">/features/&lt;featureId&gt;/definition</code></td>
+    </tr>
+    <tr>
+      <td><strong>value</strong></td>
+      <td>The Definition of the Feature as JSON array, see property <code class="highlighter-rouge">definition</code> of Things JSON schema. See <a href="protocol-specification.html#dittoProtocolPayload">Ditto protocol payload (JSON)</a>.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="response-7">Response</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Field</th>
+      <th> </th>
+      <th>Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>topic</strong></td>
+      <td> </td>
+      <td><code class="highlighter-rouge">&lt;namespace&gt;/&lt;thingName&gt;/things/&lt;channel&gt;/commands/modify</code></td>
+    </tr>
+    <tr>
+      <td><strong>path</strong></td>
+      <td> </td>
+      <td><code class="highlighter-rouge">/features/&lt;featureId&gt;/definition</code></td>
+    </tr>
+    <tr>
+      <td><strong>value</strong></td>
+      <td> </td>
+      <td>The created Definition of the Feature as JSON array, see property <code class="highlighter-rouge">definition</code> of Things JSON schema at <a href="protocol-specification.html#dittoProtocolPayload">Ditto protocol payload (JSON)</a>. This field is not available, if the Definition already existed.</td>
+    </tr>
+    <tr>
+      <td><strong>status</strong></td>
+      <td><em>code</em></td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td><code class="highlighter-rouge">201</code></td>
+      <td>Success - the Definition was created successfully.</td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td><code class="highlighter-rouge">204</code></td>
+      <td>Success - the Definition was modified successfully.</td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td><code class="highlighter-rouge">403</code></td>
+      <td>Not Modifiable - The Definition could not be modified as the requester had insufficient permissions (‘WRITE’ is required).</td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td><code class="highlighter-rouge">404</code></td>
+      <td>Not Found - The Thing, Feature or Definition was not found or requester had insufficient permissions.</td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td> </td>
+      <td>See <a href="protocol-examples-errorresponses.html">Thing Error Responses</a> for examples of other error responses.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="event-7">Event</h3>
+
+<p>If the Feature Definition already existed before the command was applied and it was thus overwritten by the command, a 
+<code class="highlighter-rouge">modified</code> event will be emitted.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Field</th>
+      <th>Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>topic</strong></td>
+      <td><code class="highlighter-rouge">&lt;namespace&gt;/&lt;thingName&gt;/things/&lt;channel&gt;/events/modified</code></td>
+    </tr>
+    <tr>
+      <td><strong>path</strong></td>
+      <td><code class="highlighter-rouge">/features/&lt;featureId&gt;/definition</code></td>
+    </tr>
+    <tr>
+      <td><strong>value</strong></td>
+      <td>The modified Definition of the Feature as JSON array, see property <code class="highlighter-rouge">properties</code> of the Things JSON schema. See <a href="protocol-specification.html#dittoProtocolPayload">Ditto protocol payload (JSON)</a>.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>Example:</strong> <a href="protocol-examples-modifydefinition.html">Modify Feature Definition</a></p>
+
+<p>If the Feature Definition did not yet exist before the command was applied, a <code class="highlighter-rouge">created</code> event will be emitted.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Field</th>
+      <th>Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>topic</strong></td>
+      <td><code class="highlighter-rouge">&lt;namespace&gt;/&lt;thingName&gt;/things/&lt;channel&gt;/events/created</code></td>
+    </tr>
+    <tr>
+      <td><strong>path</strong></td>
+      <td><code class="highlighter-rouge">/features/&lt;featureId&gt;/definition</code></td>
+    </tr>
+    <tr>
+      <td><strong>value</strong></td>
+      <td>The created Definition of the Feature as JSON array, see property <code class="highlighter-rouge">definition</code> of the Things JSON schema at <a href="protocol-specification.html#dittoProtocolPayload">Ditto protocol payload (JSON)</a>.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>Example:</strong> <a href="protocol-examples-createdefinition.html">Create Feature Definition</a></p>
+
+<h2 id="modify-all-properties-of-a-feature">Modify all Properties of a Feature</h2>
+
+<p>Create or modify the Properties of a Feature (identified by the Feature ID in the <code class="highlighter-rouge">path</code>) of the Thing (identified by the <code class="highlighter-rouge">&lt;namespace&gt;</code> and the <code class="highlighter-rouge">&lt;thingId&gt;</code> in the <code class="highlighter-rouge">topic</code>).</p>
+
+<h3 id="command-8">Command</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Field</th>
+      <th>Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>topic</strong></td>
+      <td><code class="highlighter-rouge">&lt;namespace&gt;/&lt;thingName&gt;/things/&lt;channel&gt;/commands/modify</code></td>
+    </tr>
+    <tr>
+      <td><strong>path</strong></td>
+      <td><code class="highlighter-rouge">/features/&lt;featureId&gt;/properties</code></td>
+    </tr>
+    <tr>
+      <td><strong>value</strong></td>
+      <td>The Properties of the Feature as JSON, see property <code class="highlighter-rouge">properties</code> of Things JSON schema. See <a href="protocol-specification.html#dittoProtocolPayload">Ditto protocol payload (JSON)</a>.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="response-8">Response</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Field</th>
+      <th> </th>
+      <th>Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>topic</strong></td>
+      <td> </td>
+      <td><code class="highlighter-rouge">&lt;namespace&gt;/&lt;thingName&gt;/things/&lt;channel&gt;/commands/modify</code></td>
+    </tr>
+    <tr>
+      <td><strong>path</strong></td>
+      <td> </td>
+      <td><code class="highlighter-rouge">/features/&lt;featureId&gt;/properties</code></td>
+    </tr>
+    <tr>
+      <td><strong>value</strong></td>
+      <td> </td>
+      <td>The created Properties of the Feature as JSON object, see property <code class="highlighter-rouge">properties</code> of Things JSON schema at <a href="protocol-specification.html#dittoProtocolPayload">Ditto protocol payload (JSON)</a>. This field is not available, if Feature already contained Properties.</td>
+    </tr>
+    <tr>
+      <td><strong>status</strong></td>
+      <td><em>code</em></td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td><code class="highlighter-rouge">201</code></td>
+      <td>Success - the Properties were created successfully.</td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td><code class="highlighter-rouge">204</code></td>
+      <td>Success - the Properties were modified successfully.</td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td><code class="highlighter-rouge">403</code></td>
+      <td>Not Modifiable - The Properties could not be modified as the requester had insufficient permissions (‘WRITE’ is required).</td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td><code class="highlighter-rouge">404</code></td>
+      <td>Not Found - The Properties were not found or requester had insufficient permissions.</td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td> </td>
+      <td>See <a href="protocol-examples-errorresponses.html">Thing Error Responses</a> for examples of other error responses.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="event-8">Event</h3>
+
+<p>If the Feature already contained Properties before the command was applied and they were thus overwritten by the 
+command, a <code class="highlighter-rouge">modified</code> event will be emitted.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Field</th>
+      <th>Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>topic</strong></td>
+      <td><code class="highlighter-rouge">&lt;namespace&gt;/&lt;thingName&gt;/things/&lt;channel&gt;/events/modified</code></td>
+    </tr>
+    <tr>
+      <td><strong>path</strong></td>
+      <td><code class="highlighter-rouge">/features/&lt;featureId&gt;/properties</code></td>
+    </tr>
+    <tr>
+      <td><strong>value</strong></td>
+      <td>The modified Properties of the Feature as JSON, see property <code class="highlighter-rouge">properties</code> of the Things JSON schema. See <a href="protocol-specification.html#dittoProtocolPayload">Ditto protocol payload (JSON)</a>.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>Example:</strong> <a href="protocol-examples-modifyproperties.html">Modify Feature Properties</a></p>
+
+<p>If the Feature did not yet contain Properties before the command was applied, a <code class="highlighter-rouge">created</code> event will be emitted.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Field</th>
+      <th>Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>topic</strong></td>
+      <td><code class="highlighter-rouge">&lt;namespace&gt;/&lt;thingName&gt;/things/&lt;channel&gt;/events/created</code></td>
+    </tr>
+    <tr>
+      <td><strong>path</strong></td>
+      <td><code class="highlighter-rouge">/features/&lt;featureId&gt;/properties</code></td>
+    </tr>
+    <tr>
+      <td><strong>value</strong></td>
+      <td>The created Properties of the Feature as JSON object, see property <code class="highlighter-rouge">properties</code> of the Things JSON schema at <a href="protocol-specification.html#dittoProtocolPayload">Ditto protocol payload (JSON)</a>.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>Example:</strong> <a href="protocol-examples-createproperties.html">Create Feature Properties</a></p>
+
+<h2 id="create-or-modify-a-single-property-of-a-feature">Create or modify a single Property of a Feature</h2>
+
+<p>Create or modify a specific Property (identified by <code class="highlighter-rouge">&lt;propertyPath&gt;</code>) of a Feature (identified by the <code class="highlighter-rouge">&lt;featureId&gt;</code> in the <code class="highlighter-rouge">path</code>). 
+The Property will be created if it doesn’t exist or else updated.
+The Property (JSON) can be referenced hierarchically by applying <a href="https://tools.ietf.org/html/rfc6901">JSON Pointer notation (RFC-6901)</a>.</p>
+
+<h3 id="command-9">Command</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Field</th>
+      <th>Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>topic</strong></td>
+      <td><code class="highlighter-rouge">&lt;namespace&gt;/&lt;thingName&gt;/things/&lt;channel&gt;/commands/modify</code></td>
+    </tr>
+    <tr>
+      <td><strong>path</strong></td>
+      <td><code class="highlighter-rouge">/features/&lt;featureId&gt;/properties/&lt;propertyPath&gt;</code></td>
+    </tr>
+    <tr>
+      <td><strong>value</strong></td>
+      <td>The specific Property of the Feature as JSON.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="response-9">Response</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Field</th>
+      <th> </th>
+      <th>Value</th>
+      <th> </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>topic</strong></td>
+      <td> </td>
+      <td><code class="highlighter-rouge">&lt;namespace&gt;/&lt;thingName&gt;/things/&lt;channel&gt;/commands/modify</code></td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td><strong>path</strong></td>
+      <td> </td>
+      <td><code class="highlighter-rouge">/features/&lt;featureId&gt;/properties/&lt;propertyPath&gt;</code></td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td><strong>value</strong></td>
+      <td> </td>
+      <td>The created Property of the Feature as JSON. This field is not available, if the Property already existed.</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td><strong>status</strong></td>
+      <td><em>code</em></td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td><code class="highlighter-rouge">201</code></td>
+      <td>Success - the Property was created successfully.</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td><code class="highlighter-rouge">204</code></td>
+      <td>Success - the Property was modified successfully.</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td><code class="highlighter-rouge">403</code></td>
+      <td>Not Modifiable - The Property could not be modified as the requester had insufficient permissions (‘WRITE’ is required).</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td><code class="highlighter-rouge">404</code></td>
+      <td>Not Found - The Thing or Property was not found or requester had insufficient permissions.</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td> </td>
+      <td> </td>
+      <td>See <a href="protocol-examples-errorresponses.html">Thing Error Responses</a> for examples of other error responses.</td>
+      <td> </td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="event-9">Event</h3>
+
+<p>If the Feature Property already existed before the command was applied and it was thus overwritten by the command, a 
+<code class="highlighter-rouge">modified</code> event will be emitted.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Field</th>
+      <th>Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>topic</strong></td>
+      <td><code class="highlighter-rouge">&lt;namespace&gt;/&lt;thingName&gt;/things/&lt;channel&gt;/events/modified</code></td>
+    </tr>
+    <tr>
+      <td><strong>path</strong></td>
+      <td><code class="highlighter-rouge">/features/&lt;featureId&gt;/properties/&lt;propertyPath&gt;</code></td>
+    </tr>
+    <tr>
+      <td><strong>value</strong></td>
+      <td>The modified Property of the Thing as JSON.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>Example:</strong> <a href="protocol-examples-modifyproperty.html">Modify a single Feature Property</a></p>
+
+<p>If the Feature Property did not yet exist before the command was applied, a <code class="highlighter-rouge">created</code> event will be emitted.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Field</th>
+      <th>Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>topic</strong></td>
+      <td><code class="highlighter-rouge">&lt;namespace&gt;/&lt;thingName&gt;/things/&lt;channel&gt;/events/created</code></td>
+    </tr>
+    <tr>
+      <td><strong>path</strong></td>
+      <td><code class="highlighter-rouge">/features/&lt;featureId&gt;/properties/&lt;propertyPath&gt;</code></td>
+    </tr>
+    <tr>
+      <td><strong>value</strong></td>
+      <td>The created Property of the Thing as JSON.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>Example:</strong> <a href="protocol-examples-createproperty.html">Create a single Feature Property</a></p>
+
+
+
+    <div class="tags">
+        
+        <b>Tags: </b>
+        
+        
+        
+        <a href="tag_protocol.html" class="btn btn-default navbar-btn cursorNorm" role="button">protocol</a>
+        
+        
+        
+    </div>
+
+</div>
+
+<hr class="shaded"/>
+
+<footer>
+            <div class="row">
+                <div class="col-lg-12 footer">
+                    <div class="logo">
+                        <a href="https://eclipse.org"><img src="images/eclipse_foundation_logo.svg" alt="Eclipse logo"/></a>
+                    </div>
+                    <p class="notice">
+                        &copy;2021 Eclipse Ditto.
+                         Site last generated: Feb 22, 2021 <br />
+                    </p>
+                    <div class="quickLinks">
+                        <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">
+                            &gt; Privacy Policy
+                        </a>
+                        <a href="https://www.eclipse.org/legal/termsofuse.php" target="_blank">
+                            &gt; Terms of Use
+                        </a>
+                        <a href="https://www.eclipse.org/legal/copyright.php" target="_blank">
+                            &gt; Copyright Agent
+                        </a>
+                        <a href="https://www.eclipse.org/legal" target="_blank">
+                            &gt; Legal
+                        </a>
+                        <a href="https://www.eclipse.org/legal/epl-2.0/" target="_blank">
+                            &gt; License
+                        </a>
+                        <a href="https://eclipse.org/security" target="_blank">
+                            &gt; Report a Vulnerability
+                        </a>
+                    </div>
+                </div>
+            </div>
+</footer>
+
+
+        </div>
+    <!-- /.row -->
+</div>
+<!-- /.container -->
+</div>
+<!-- /#main -->
+    </div>
+
+</body>
+</html>

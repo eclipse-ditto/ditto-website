@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Contains the HTTP API documentation of Eclipse Ditto.">
+<meta name="keywords" content=" HTTP, REST, documentation, swagger, openapi">
+<title>  HTTP API • Eclipse Ditto • a digital twin framework</title>
+
+<link rel="stylesheet" href="css/syntax.css">
+<link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" crossorigin="anonymous">
+<link rel="stylesheet" href="css/modern-business.css">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" crossorigin="anonymous">
+<link rel="stylesheet" href="css/customstyles.css">
+<link rel="stylesheet" href="css/boxshadowproperties.css">
+<link rel="stylesheet" href="css/theme-ditto.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,700|Source+Code+Pro:300,600|Titillium+Web:400,600,700">
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js" crossorigin="anonymous"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" crossorigin="anonymous"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/anchor-js/2.0.0/anchor.min.js" crossorigin="anonymous"></script>
+<script src="js/toc.js"></script>
+<script src="js/customscripts.js"></script>
+
+<script type="application/ld+json">
+{
+  "@context": "http://schema.org",
+  "@type": "Organization",
+  "url": "https://eclipse.org/ditto/",
+  "logo": "https://eclipse.org/ditto/images/ditto.svg"
+}
+</script>
+
+<link rel="icon" type="image/png" href="images/favicon-16x16.png" sizes="16x16">
+<link rel="icon" type="image/png" href="images/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="images/favicon-96x96.png" sizes="96x96">
+
+<link rel="alternate" type="application/rss+xml" title="Eclipse Ditto Blog" href="https://www.eclipse.org/ditto/feed.xml">
+
+<!-- Eclipse Foundation cookie consent: -->
+<link rel="stylesheet" type="text/css" href="//www.eclipse.org/eclipse.org-common/themes/solstice/public/stylesheets/vendor/cookieconsent/cookieconsent.min.css" />
+<script src="//www.eclipse.org/eclipse.org-common/themes/solstice/public/javascript/vendor/cookieconsent/default.min.js"></script>
+
+
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/3.20.5/swagger-ui.css" >
+    <link rel="stylesheet" type="text/css" href="css/swagger.css" >
+    <style>
+        html
+        {
+            box-sizing: border-box;
+            overflow: -moz-scrollbars-vertical;
+            overflow-y: scroll;
+        }
+        *,
+        *:before,
+        *:after
+        {
+            box-sizing: inherit;
+        }
+    </style>
+</head>
+
+
+<script>
+    (function(w,d,s,l,i){
+        w[l]=w[l]||[];
+        w[l].push({'gtm.start':
+            new Date().getTime(),event:'gtm.js'});
+        var f=d.getElementsByTagName(s)[0],
+            j=d.createElement(s),
+            dl=l!='dataLayer'?'&l='+l:'';
+        j.async=true;
+        j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;
+        f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-5WLCZXC');
+</script>
+
+
+
+<body>
+<!-- Navigation -->
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container topnavlinks">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-ditto-home" href="index.html">&nbsp;<img src="images/ditto_allwhite_symbolonly.svg" class="ditto-navbar-symbol" alt="Home"> <img src="images/ditto_allwhite_textonly.svg" class="ditto-navbar-symbol-text" alt="Ditto"></a>
+        </div>
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <!-- toggle sidebar button -->
+                <!--<li><a id="tg-sb-link" href="#"><i id="tg-sb-icon" class="fa fa-toggle-on"></i> Nav</a></li>-->
+                <!-- entries without drop-downs appear here -->
+
+
+
+
+                
+                
+                
+                <li><a href="blog.html">Blog</a></li>
+                
+                
+                
+                <li><a href="intro-overview.html">Documentation</a></li>
+                
+                
+                
+                <li class="active"><a href="http-api-doc.html">HTTP API</a></li>
+                
+                
+                
+                <li><a href="https://ditto.eclipse.org" target="_blank">Sandbox</a></li>
+                
+                
+                
+                <li><a href="https://github.com/eclipse/ditto" target="_blank">GitHub</a></li>
+                
+                
+                
+                <li><a href="https://github.com/eclipse/ditto-examples" target="_blank">GitHub examples</a></li>
+                
+                
+                
+                <!-- entries with drop-downs appear here -->
+                <!-- conditional logic to control which topnav appears for the audience defined in the configuration file.-->
+                
+                
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Links<b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        
+                        
+                        <li><a href="https://projects.eclipse.org/projects/iot.ditto" target="_blank">Eclipse Ditto Project</a></li>
+                        
+                        
+                        
+                        <li><a href="https://www.eclipse.org/forums/index.php/f/364/" target="_blank">Forum</a></li>
+                        
+                        
+                        
+                        <li><a href="https://ci.eclipse.org/ditto/" target="_blank">Jenkins</a></li>
+                        
+                        
+                        
+                        <li><a href="https://dev.eclipse.org/mhonarc/lists/ditto-dev/" target="_blank">Mailing list archives</a></li>
+                        
+                        
+                        
+                        <li><a href="https://gitter.im/eclipse/ditto" target="_blank">Gitter.im chat</a></li>
+                        
+                        
+                    </ul>
+                </li>
+                
+                
+                
+                <!--comment out this block if you want to hide search-->
+                <li>
+                    <!--start search-->
+                    <div id="search-demo-container">
+                        <input type="text" id="search-input" placeholder="search...">
+                        <ul id="results-container"></ul>
+                    </div>
+                    <script src="//cdnjs.cloudflare.com/ajax/libs/simple-jekyll-search/0.0.9/jekyll-search.js" type="text/javascript"></script>
+                    <script type="text/javascript">
+                            SimpleJekyllSearch.init({
+                                searchInput: document.getElementById('search-input'),
+                                resultsContainer: document.getElementById('results-container'),
+                                dataSource: 'search.json',
+                                searchResultTemplate: '<li><a href="{url}" title="HTTP API">{title}</a></li>',
+                                noResultsText: 'No results found.',
+                                limit: 10,
+                                fuzzy: true,
+                    })
+                    </script>
+                    <!--end search-->
+                </li>
+            </ul>
+        </div>
+    </div>
+    <!-- /.container -->
+</nav>
+
+
+<!-- Page Content -->
+<div id="swagger-ui">
+</div>
+
+<div style="width: 100%; max-width: 1460px; margin: 0 auto; padding: 0 20px;">
+    <footer>
+            <div class="row">
+                <div class="col-lg-12 footer">
+                    <div class="logo">
+                        <a href="https://eclipse.org"><img src="images/eclipse_foundation_logo.svg" alt="Eclipse logo"/></a>
+                    </div>
+                    <p class="notice">
+                        &copy;2021 Eclipse Ditto.
+                         Site last generated: Feb 22, 2021 <br />
+                    </p>
+                    <div class="quickLinks">
+                        <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">
+                            &gt; Privacy Policy
+                        </a>
+                        <a href="https://www.eclipse.org/legal/termsofuse.php" target="_blank">
+                            &gt; Terms of Use
+                        </a>
+                        <a href="https://www.eclipse.org/legal/copyright.php" target="_blank">
+                            &gt; Copyright Agent
+                        </a>
+                        <a href="https://www.eclipse.org/legal" target="_blank">
+                            &gt; Legal
+                        </a>
+                        <a href="https://www.eclipse.org/legal/epl-2.0/" target="_blank">
+                            &gt; License
+                        </a>
+                        <a href="https://eclipse.org/security" target="_blank">
+                            &gt; Report a Vulnerability
+                        </a>
+                    </div>
+                </div>
+            </div>
+</footer>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/3.20.5/swagger-ui-bundle.js"> </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/3.20.5/swagger-ui-standalone-preset.js"> </script>
+<script>
+    window.onload = function() {
+
+        // Build a system
+      window.ui = SwaggerUIBundle({
+           urls: [
+             {url: "openapi/ditto-api-1.yml", name: "Ditto API v1- deprecated"},
+             {url: "openapi/ditto-api-2.yml", name:"Ditto API v2"}
+           ],
+           "urls.primaryName": "Ditto API v2",
+           validatorUrl: null,
+           docExpansion: "none",
+           dom_id: '#swagger-ui',
+           deepLinking: true,
+           presets: [
+             SwaggerUIBundle.presets.apis,
+             SwaggerUIStandalonePreset
+           ],
+           plugins: [
+             SwaggerUIBundle.plugins.DownloadUrl
+           ],
+           layout: "StandaloneLayout"
+       });
+    }
+</script>
+
+
+</body>
+</html>

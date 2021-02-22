@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="">
+<meta name="keywords" content="blog,  ">
+<title>  Eclipse Ditto now supports OpenID Connect </title>
+
+<link rel="stylesheet" href="css/syntax.css">
+<link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" crossorigin="anonymous">
+<link rel="stylesheet" href="css/modern-business.css">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" crossorigin="anonymous">
+<link rel="stylesheet" href="css/customstyles.css">
+<link rel="stylesheet" href="css/boxshadowproperties.css">
+<link rel="stylesheet" href="css/theme-ditto.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,700|Source+Code+Pro:300,600|Titillium+Web:400,600,700">
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js" crossorigin="anonymous"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" crossorigin="anonymous"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/anchor-js/2.0.0/anchor.min.js" crossorigin="anonymous"></script>
+<script src="js/toc.js"></script>
+<script src="js/customscripts.js"></script>
+
+<script type="application/ld+json">
+{
+  "@context": "http://schema.org",
+  "@type": "Organization",
+  "url": "https://eclipse.org/ditto/",
+  "logo": "https://eclipse.org/ditto/images/ditto.svg"
+}
+</script>
+
+<link rel="icon" type="image/png" href="images/favicon-16x16.png" sizes="16x16">
+<link rel="icon" type="image/png" href="images/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="images/favicon-96x96.png" sizes="96x96">
+
+<link rel="alternate" type="application/rss+xml" title="Eclipse Ditto Blog" href="https://www.eclipse.org/ditto/feed.xml">
+
+<!-- Eclipse Foundation cookie consent: -->
+<link rel="stylesheet" type="text/css" href="//www.eclipse.org/eclipse.org-common/themes/solstice/public/stylesheets/vendor/cookieconsent/cookieconsent.min.css" />
+<script src="//www.eclipse.org/eclipse.org-common/themes/solstice/public/javascript/vendor/cookieconsent/default.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            $("#tg-sb-link").click(function() {
+                $("#tg-sb-sidebar").toggle();
+                $("#tg-sb-content").toggleClass('col-md-9');
+                $("#tg-sb-content").toggleClass('col-md-12');
+                $("#tg-sb-icon").toggleClass('fa-toggle-on');
+                $("#tg-sb-icon").toggleClass('fa-toggle-off');
+            });
+        });
+    </script>
+</head>
+
+
+<script>
+    (function(w,d,s,l,i){
+        w[l]=w[l]||[];
+        w[l].push({'gtm.start':
+            new Date().getTime(),event:'gtm.js'});
+        var f=d.getElementsByTagName(s)[0],
+            j=d.createElement(s),
+            dl=l!='dataLayer'?'&l='+l:'';
+        j.async=true;
+        j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;
+        f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-5WLCZXC');
+</script>
+
+
+
+<body>
+<!-- Navigation -->
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container topnavlinks">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-ditto-home" href="index.html">&nbsp;<img src="images/ditto_allwhite_symbolonly.svg" class="ditto-navbar-symbol" alt="Home"> <img src="images/ditto_allwhite_textonly.svg" class="ditto-navbar-symbol-text" alt="Ditto"></a>
+        </div>
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <!-- toggle sidebar button -->
+                <!--<li><a id="tg-sb-link" href="#"><i id="tg-sb-icon" class="fa fa-toggle-on"></i> Nav</a></li>-->
+                <!-- entries without drop-downs appear here -->
+
+
+
+
+                
+                
+                
+                <li><a href="blog.html">Blog</a></li>
+                
+                
+                
+                <li><a href="intro-overview.html">Documentation</a></li>
+                
+                
+                
+                <li><a href="http-api-doc.html">HTTP API</a></li>
+                
+                
+                
+                <li><a href="https://ditto.eclipse.org" target="_blank">Sandbox</a></li>
+                
+                
+                
+                <li><a href="https://github.com/eclipse/ditto" target="_blank">GitHub</a></li>
+                
+                
+                
+                <li><a href="https://github.com/eclipse/ditto-examples" target="_blank">GitHub examples</a></li>
+                
+                
+                
+                <!-- entries with drop-downs appear here -->
+                <!-- conditional logic to control which topnav appears for the audience defined in the configuration file.-->
+                
+                
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Links<b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        
+                        
+                        <li><a href="https://projects.eclipse.org/projects/iot.ditto" target="_blank">Eclipse Ditto Project</a></li>
+                        
+                        
+                        
+                        <li><a href="https://www.eclipse.org/forums/index.php/f/364/" target="_blank">Forum</a></li>
+                        
+                        
+                        
+                        <li><a href="https://ci.eclipse.org/ditto/" target="_blank">Jenkins</a></li>
+                        
+                        
+                        
+                        <li><a href="https://dev.eclipse.org/mhonarc/lists/ditto-dev/" target="_blank">Mailing list archives</a></li>
+                        
+                        
+                        
+                        <li><a href="https://gitter.im/eclipse/ditto" target="_blank">Gitter.im chat</a></li>
+                        
+                        
+                    </ul>
+                </li>
+                
+                
+                
+                <!--comment out this block if you want to hide search-->
+                <li>
+                    <!--start search-->
+                    <div id="search-demo-container">
+                        <input type="text" id="search-input" placeholder="search...">
+                        <ul id="results-container"></ul>
+                    </div>
+                    <script src="//cdnjs.cloudflare.com/ajax/libs/simple-jekyll-search/0.0.9/jekyll-search.js" type="text/javascript"></script>
+                    <script type="text/javascript">
+                            SimpleJekyllSearch.init({
+                                searchInput: document.getElementById('search-input'),
+                                resultsContainer: document.getElementById('results-container'),
+                                dataSource: 'search.json',
+                                searchResultTemplate: '<li><a href="{url}" title="Eclipse Ditto now supports OpenID Connect">{title}</a></li>',
+                                noResultsText: 'No results found.',
+                                limit: 10,
+                                fuzzy: true,
+                    })
+                    </script>
+                    <!--end search-->
+                </li>
+            </ul>
+        </div>
+    </div>
+    <!-- /.container -->
+</nav>
+
+<!-- Page Content -->
+<div class="container">
+  <div id="main">
+    <!-- Content Row -->
+    <div class="row">
+        
+        
+
+        <!-- Content Column -->
+        <div class="col-md-12" id="tg-sb-content">
+            <!-- Look the author details up from the site config. -->
+
+
+<!-- Output author details if some exist. -->
+<!-- Output author details if some exist. -->
+<!---->
+<!--<span>-->
+    <!--&lt;!&ndash; Mugshot. &ndash;&gt;-->
+    <!--<img src="https://www.gravatar.com/avatar/6654f15bc147b143bb2a7ed87eb70c1a?s=135" alt="A photo of Johannes Schneider" />-->
+
+<!--&lt;!&ndash; Personal Info. &ndash;&gt;-->
+    <!--Written by <a href="https://github.com/jokraehe" target="_blank">Johannes Schneider</a>-->
+<!--</span>-->
+<!---->
+
+<article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+    <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">Eclipse Ditto now supports OpenID Connect</h1>
+        <p class="post-meta">Published by <img src="https://www.gravatar.com/avatar/6654f15bc147b143bb2a7ed87eb70c1a?s=135" alt="A photo of Johannes Schneider" style="width:50px;border-radius:50%;display:inline-block;margin-right:5px;" /><span itemprop="author" itemscope itemtype="http://schema.org/Person"><span itemprop="name"><a href="https://github.com/jokraehe" target="_blank">Johannes Schneider</a> </span></span> on <time datetime="2019-08-28T00:00:00+00:00" itemprop="datePublished">Aug 28, 2019</time> - Tags:
+            
+            
+            
+            <a href="tag_blog.html">blog</a>
+            
+            
+            
+
+        </p>
+
+
+    </header>
+
+    <div class="post-content" itemprop="articleBody">
+
+        
+
+        
+
+        <p>Eclipse Ditto now supports all OAuth 2.0 providers which implement <a href="https://openid.net/connect/">OpenID Connect</a> out-of-the-box.
+You can find a list of certified providers at <a href="https://openid.net/developers/certified/">OpenID Connect - Certified OpenID Provider Servers and Services</a>.</p>
+
+<p>With this post, we want to give an example of this new feature using the open source provider <a href="https://www.ory.sh">ORY Hydra</a>.
+Follow their <a href="https://www.ory.sh/docs/next/hydra/configure-deploy#installing-ory-hydra">installation guide</a> for a
+ docker based setup on your development machine.</p>
+
+<h4 id="configuration">Configuration</h4>
+<p>Download the self-signed certificate form the ORY Hydra server: https://localhost:9000/.well-known/openid-configuration</p>
+
+<p>Use the downloaded certificate for the akka-http ssl configuration.</p>
+<pre><code class="language-hocon">ssl-config {
+  trustManager = {
+    stores = [
+      { type = "PEM", path = "/path/to/cert/globalsign.crt" }
+    ]
+  }
+}
+</code></pre>
+
+<p>The authentication provider must be added to the ditto-gateway configuration.</p>
+<pre><code class="language-hocon">ditto.gateway.authentication {
+    oauth {
+      openid-connect-issuers = {
+        ory = "https://localhost:9000/"
+      }
+    }
+}
+</code></pre>
+
+<p>The configured subject-issuer will be used to prefix the value of the “sub” claim, e.g.</p>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"subjects"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"ory:foo@bar.com"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"generated"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h4 id="authenticate-ditto-api">Authenticate Ditto API</h4>
+<p>Create an OAuth client with hydra to be able to create ID Tokens.</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker run <span class="nt">--rm</span> <span class="nt">-it</span> <span class="se">\</span>
+  <span class="nt">-e</span> <span class="nv">HYDRA_ADMIN_URL</span><span class="o">=</span>https://ory-hydra-example--hydra:4445 <span class="se">\</span>
+  <span class="nt">--network</span> hydraguide <span class="se">\</span>
+  oryd/hydra:v1.0.0 <span class="se">\</span>
+  clients create <span class="nt">--skip-tls-verify</span> <span class="se">\</span>
+    <span class="nt">--id</span> eclipse-ditto <span class="se">\</span>
+    <span class="nt">--secret</span> some-secret <span class="se">\</span>
+    <span class="nt">--grant-types</span> authorization_code,refresh_token,client_credentials,implicit <span class="se">\</span>
+    <span class="nt">--response-types</span> token,code,id_token <span class="se">\</span>
+    <span class="nt">--scope</span> openid,offline <span class="se">\</span>
+    <span class="nt">--callbacks</span> http://127.0.0.1:9010/callback
+</code></pre></div></div>
+
+<p>Use the client to generate an ID Token.</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker run <span class="nt">--rm</span> <span class="nt">-it</span> <span class="se">\</span>
+  <span class="nt">--network</span> hydraguide <span class="se">\</span>
+  <span class="nt">-p</span> 9010:9010 <span class="se">\</span>
+  oryd/hydra:v1.0.0 <span class="se">\</span>
+  token user <span class="nt">--skip-tls-verify</span> <span class="se">\</span>
+    <span class="nt">--port</span> 9010 <span class="se">\</span>
+    <span class="nt">--auth-url</span> https://localhost:9000/oauth2/auth <span class="se">\</span>
+    <span class="nt">--token-url</span> https://ory-hydra-example--hydra:4444/oauth2/token <span class="se">\</span>
+    <span class="nt">--client-id</span> eclipse-ditto <span class="se">\</span>
+    <span class="nt">--client-secret</span> some-secret <span class="se">\</span>
+    <span class="nt">--scope</span> openid
+</code></pre></div></div>
+<p>After that perform the OAuth 2.0 Authorize Code Flow by opening the link, as prompted, 
+in your browser, and follow the steps shown there.</p>
+
+<p>Use the generated token to authenticate Ditto API.</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">-X</span> POST <span class="se">\</span>
+  http://localhost:8080/api/2/things <span class="se">\</span>
+  <span class="nt">-H</span> <span class="s1">'Authorization: Bearer &lt;JWT&gt;'</span> <span class="se">\</span>
+  <span class="nt">-H</span> <span class="s1">'Content-Type: application/json'</span> <span class="se">\</span>
+  <span class="nt">-d</span> <span class="s1">'{}'</span>
+</code></pre></div></div>
+
+<p><br />
+<br /></p>
+<figure><img class="docimage" src="images/ditto.svg" alt="Ditto" style="max-width: 500px" /></figure>
+
+<p>–<br />
+The Eclipse Ditto team</p>
+
+    </div>
+
+
+
+</article>
+
+<hr class="shaded"/>
+
+<footer>
+            <div class="row">
+                <div class="col-lg-12 footer">
+                    <div class="logo">
+                        <a href="https://eclipse.org"><img src="images/eclipse_foundation_logo.svg" alt="Eclipse logo"/></a>
+                    </div>
+                    <p class="notice">
+                        &copy;2021 Eclipse Ditto.
+                         Site last generated: Feb 22, 2021 <br />
+                    </p>
+                    <div class="quickLinks">
+                        <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">
+                            &gt; Privacy Policy
+                        </a>
+                        <a href="https://www.eclipse.org/legal/termsofuse.php" target="_blank">
+                            &gt; Terms of Use
+                        </a>
+                        <a href="https://www.eclipse.org/legal/copyright.php" target="_blank">
+                            &gt; Copyright Agent
+                        </a>
+                        <a href="https://www.eclipse.org/legal" target="_blank">
+                            &gt; Legal
+                        </a>
+                        <a href="https://www.eclipse.org/legal/epl-2.0/" target="_blank">
+                            &gt; License
+                        </a>
+                        <a href="https://eclipse.org/security" target="_blank">
+                            &gt; Report a Vulnerability
+                        </a>
+                    </div>
+                </div>
+            </div>
+</footer>
+
+
+        </div>
+    <!-- /.row -->
+</div>
+<!-- /.container -->
+</div>
+<!-- /#main -->
+    </div>
+
+</body>
+</html>

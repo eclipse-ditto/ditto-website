@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="">
+<meta name="keywords" content="blog,  ">
+<title>  Using Eclipse Hono's Command&Control with Eclipse Ditto </title>
+
+<link rel="stylesheet" href="css/syntax.css">
+<link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" crossorigin="anonymous">
+<link rel="stylesheet" href="css/modern-business.css">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" crossorigin="anonymous">
+<link rel="stylesheet" href="css/customstyles.css">
+<link rel="stylesheet" href="css/boxshadowproperties.css">
+<link rel="stylesheet" href="css/theme-ditto.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,700|Source+Code+Pro:300,600|Titillium+Web:400,600,700">
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js" crossorigin="anonymous"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" crossorigin="anonymous"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/anchor-js/2.0.0/anchor.min.js" crossorigin="anonymous"></script>
+<script src="js/toc.js"></script>
+<script src="js/customscripts.js"></script>
+
+<script type="application/ld+json">
+{
+  "@context": "http://schema.org",
+  "@type": "Organization",
+  "url": "https://eclipse.org/ditto/",
+  "logo": "https://eclipse.org/ditto/images/ditto.svg"
+}
+</script>
+
+<link rel="icon" type="image/png" href="images/favicon-16x16.png" sizes="16x16">
+<link rel="icon" type="image/png" href="images/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="images/favicon-96x96.png" sizes="96x96">
+
+<link rel="alternate" type="application/rss+xml" title="Eclipse Ditto Blog" href="https://www.eclipse.org/ditto/feed.xml">
+
+<!-- Eclipse Foundation cookie consent: -->
+<link rel="stylesheet" type="text/css" href="//www.eclipse.org/eclipse.org-common/themes/solstice/public/stylesheets/vendor/cookieconsent/cookieconsent.min.css" />
+<script src="//www.eclipse.org/eclipse.org-common/themes/solstice/public/javascript/vendor/cookieconsent/default.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            $("#tg-sb-link").click(function() {
+                $("#tg-sb-sidebar").toggle();
+                $("#tg-sb-content").toggleClass('col-md-9');
+                $("#tg-sb-content").toggleClass('col-md-12');
+                $("#tg-sb-icon").toggleClass('fa-toggle-on');
+                $("#tg-sb-icon").toggleClass('fa-toggle-off');
+            });
+        });
+    </script>
+</head>
+
+
+<script>
+    (function(w,d,s,l,i){
+        w[l]=w[l]||[];
+        w[l].push({'gtm.start':
+            new Date().getTime(),event:'gtm.js'});
+        var f=d.getElementsByTagName(s)[0],
+            j=d.createElement(s),
+            dl=l!='dataLayer'?'&l='+l:'';
+        j.async=true;
+        j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;
+        f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-5WLCZXC');
+</script>
+
+
+
+<body>
+<!-- Navigation -->
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container topnavlinks">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-ditto-home" href="index.html">&nbsp;<img src="images/ditto_allwhite_symbolonly.svg" class="ditto-navbar-symbol" alt="Home"> <img src="images/ditto_allwhite_textonly.svg" class="ditto-navbar-symbol-text" alt="Ditto"></a>
+        </div>
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <!-- toggle sidebar button -->
+                <!--<li><a id="tg-sb-link" href="#"><i id="tg-sb-icon" class="fa fa-toggle-on"></i> Nav</a></li>-->
+                <!-- entries without drop-downs appear here -->
+
+
+
+
+                
+                
+                
+                <li><a href="blog.html">Blog</a></li>
+                
+                
+                
+                <li><a href="intro-overview.html">Documentation</a></li>
+                
+                
+                
+                <li><a href="http-api-doc.html">HTTP API</a></li>
+                
+                
+                
+                <li><a href="https://ditto.eclipse.org" target="_blank">Sandbox</a></li>
+                
+                
+                
+                <li><a href="https://github.com/eclipse/ditto" target="_blank">GitHub</a></li>
+                
+                
+                
+                <li><a href="https://github.com/eclipse/ditto-examples" target="_blank">GitHub examples</a></li>
+                
+                
+                
+                <!-- entries with drop-downs appear here -->
+                <!-- conditional logic to control which topnav appears for the audience defined in the configuration file.-->
+                
+                
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Links<b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        
+                        
+                        <li><a href="https://projects.eclipse.org/projects/iot.ditto" target="_blank">Eclipse Ditto Project</a></li>
+                        
+                        
+                        
+                        <li><a href="https://www.eclipse.org/forums/index.php/f/364/" target="_blank">Forum</a></li>
+                        
+                        
+                        
+                        <li><a href="https://ci.eclipse.org/ditto/" target="_blank">Jenkins</a></li>
+                        
+                        
+                        
+                        <li><a href="https://dev.eclipse.org/mhonarc/lists/ditto-dev/" target="_blank">Mailing list archives</a></li>
+                        
+                        
+                        
+                        <li><a href="https://gitter.im/eclipse/ditto" target="_blank">Gitter.im chat</a></li>
+                        
+                        
+                    </ul>
+                </li>
+                
+                
+                
+                <!--comment out this block if you want to hide search-->
+                <li>
+                    <!--start search-->
+                    <div id="search-demo-container">
+                        <input type="text" id="search-input" placeholder="search...">
+                        <ul id="results-container"></ul>
+                    </div>
+                    <script src="//cdnjs.cloudflare.com/ajax/libs/simple-jekyll-search/0.0.9/jekyll-search.js" type="text/javascript"></script>
+                    <script type="text/javascript">
+                            SimpleJekyllSearch.init({
+                                searchInput: document.getElementById('search-input'),
+                                resultsContainer: document.getElementById('results-container'),
+                                dataSource: 'search.json',
+                                searchResultTemplate: '<li><a href="{url}" title="Using Eclipse Hono's Command&Control with Eclipse Ditto">{title}</a></li>',
+                                noResultsText: 'No results found.',
+                                limit: 10,
+                                fuzzy: true,
+                    })
+                    </script>
+                    <!--end search-->
+                </li>
+            </ul>
+        </div>
+    </div>
+    <!-- /.container -->
+</nav>
+
+<!-- Page Content -->
+<div class="container">
+  <div id="main">
+    <!-- Content Row -->
+    <div class="row">
+        
+        
+
+        <!-- Content Column -->
+        <div class="col-md-12" id="tg-sb-content">
+            <!-- Look the author details up from the site config. -->
+
+
+<!-- Output author details if some exist. -->
+<!-- Output author details if some exist. -->
+<!---->
+<!--<span>-->
+    <!--&lt;!&ndash; Mugshot. &ndash;&gt;-->
+    <!--<img src="https://www.gravatar.com/avatar/3b7439f0bd26958055d784ef08bccc21?s=135" alt="A photo of Dominik Guggemos" />-->
+
+<!--&lt;!&ndash; Personal Info. &ndash;&gt;-->
+    <!--Written by <a href="https://github.com/dguggemos" target="_blank">Dominik Guggemos</a>-->
+<!--</span>-->
+<!---->
+
+<article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+    <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">Using Eclipse Hono's Command&Control with Eclipse Ditto</h1>
+        <p class="post-meta">Published by <img src="https://www.gravatar.com/avatar/3b7439f0bd26958055d784ef08bccc21?s=135" alt="A photo of Dominik Guggemos" style="width:50px;border-radius:50%;display:inline-block;margin-right:5px;" /><span itemprop="author" itemscope itemtype="http://schema.org/Person"><span itemprop="name"><a href="https://github.com/dguggemos" target="_blank">Dominik Guggemos</a> </span></span> on <time datetime="2018-12-05T00:00:00+00:00" itemprop="datePublished">Dec 5, 2018</time> - Tags:
+            
+            
+            
+            <a href="tag_blog.html">blog</a>
+            
+            
+            
+
+        </p>
+
+
+    </header>
+
+    <div class="post-content" itemprop="articleBody">
+
+        
+
+        
+
+        <p>With <a href="release_notes_080.html">version 0.8.0</a> Eclipse Ditto can now interact with Eclipse Hono using the 
+“Command &amp; Control” feature. It is possible to send a 
+Thing (or Feature) message at the Ditto Message API, which is then forwarded to Hono as a 
+command message. Hono routes the message to the device, which in turn can send a response to the command including a 
+status, telling if the command was successfully processed or not. 
+This response is routed back via Hono to the Ditto Message API.</p>
+
+<p>In this example we connect the <a href="https://ditto.eclipse.org/">Ditto sandbox</a> and the 
+<a href="https://www.eclipse.org/hono/sandbox/">Hono sandbox</a> to send a message (3) to a simulated device via the 
+Ditto Messages API. The device receives the command from the Hono HTTP Adapter and responds with a message (4) 
+that is routed back to the caller at the Ditto Message API (5). For the sake of simplicity we use simple curl 
+commands both for the Ditto and Hono HTTP APIs.</p>
+
+<p>The following steps are covered in this example:</p>
+
+<ol>
+  <li>Setup a connection between Eclipse Ditto and Hono sandboxes</li>
+  <li>Signal availability of the device</li>
+  <li>Send a Ditto message</li>
+  <li>Device receives command and sends command response</li>
+  <li>Caller receives response at Ditto Message API</li>
+</ol>
+
+<p><img src="images/blog/2018-12-14-command-and-control.png" alt="Command and Control" /></p>
+
+<h3 id="prerequisites-a-ditto-digital-twin-and-a-hono-device">Prerequisites: A Ditto digital twin and a Hono device</h3>
+
+<p>The creation of a Hono device and Ditto digital twin has already been covered in the blog post 
+<a href="2018-05-02-connecting-ditto-hono.html">Connecting Eclipse Ditto to Eclipse Hono</a>. For brevity we will just list the 
+required commands to create a twin/device here. For a detailed explanation of the steps please refer to the previous 
+post.</p>
+
+<h4 id="create-hono-device">Create Hono device</h4>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># setup a tenant</span>
+<span class="nv">$ </span>curl <span class="nt">-X</span> POST <span class="nt">-i</span> <span class="nt">-H</span> <span class="s1">'Content-Type: application/json'</span> <span class="nt">-d</span> <span class="s1">'{"tenant-id": "org.eclipse.ditto"}'</span> http://hono.eclipse.org:28080/tenant
+<span class="c"># create a device</span>
+<span class="nv">$ </span>curl <span class="nt">-X</span> POST <span class="nt">-i</span> <span class="nt">-H</span> <span class="s1">'Content-Type: application/json'</span> <span class="nt">-d</span> <span class="s1">'{"device-id": "org.eclipse.ditto:teapot"}'</span> http://hono.eclipse.org:28080/registration/org.eclipse.ditto
+<span class="c"># add device credentials</span>
+<span class="nv">$ PWD_HASH</span><span class="o">=</span><span class="k">$(</span><span class="nb">echo</span> <span class="nt">-n</span> <span class="s1">'teapot'</span> | openssl dgst <span class="nt">-binary</span> <span class="nt">-sha512</span> | base64 <span class="nt">-w</span> 0<span class="k">)</span>
+<span class="nv">$ </span>curl <span class="nt">-X</span> POST <span class="nt">-i</span> <span class="nt">-H</span> <span class="s1">'Content-Type: application/json'</span> <span class="nt">-d</span> <span class="s1">'{
+  "device-id": "org.eclipse.ditto:teapot",
+  "type": "hashed-password",
+  "auth-id": "teapot",
+  "secrets": [{
+      "hash-function" : "sha-512",
+      "pwd-hash": "'</span><span class="nv">$PWD_HASH</span><span class="s1">'"
+  }]
+}'</span> http://hono.eclipse.org:28080/credentials/org.eclipse.ditto
+</code></pre></div></div>
+
+<h4 id="create-ditto-policy-for-digital-twin">Create Ditto policy for digital twin</h4>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># create policy in Ditto</span>
+<span class="nv">$ </span>curl <span class="nt">-X</span> PUT <span class="nt">-i</span> <span class="nt">-u</span> demo5:demo <span class="nt">-H</span> <span class="s1">'Content-Type: application/json'</span> <span class="nt">-d</span> <span class="s1">'{
+   "policyId": "org.eclipse.ditto:teapot-policy",
+   "entries": {
+       "DEMO": {
+           "subjects": {
+              "nginx:demo5": {
+                  "type": "basic auth user and user used in connection'</span>s authorizationContext<span class="s2">"
+              }
+           },
+           "</span>resources<span class="s2">": {
+               "</span>thing:/<span class="s2">": {
+                   "</span>grant<span class="s2">": ["</span>READ<span class="s2">", "</span>WRITE<span class="s2">"],
+                   "</span>revoke<span class="s2">": []
+               },
+               "</span>policy:/<span class="s2">": {
+                   "</span>grant<span class="s2">": ["</span>READ<span class="s2">", "</span>WRITE<span class="s2">"],
+                   "</span>revoke<span class="s2">": []
+               },
+               "</span>message:/<span class="s2">": {
+                   "</span>grant<span class="s2">": ["</span>READ<span class="s2">", "</span>WRITE<span class="s2">"],
+                   "</span>revoke<span class="s2">": []
+               }
+           }
+       }
+   }
+}' https://ditto.eclipse.org/api/2/policies/org.eclipse.ditto:teapot-policy 
+</span></code></pre></div></div>
+
+<h4 id="create-ditto-digital-twin">Create Ditto digital twin</h4>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># create thing in Ditto</span>
+<span class="nv">$ </span>curl <span class="nt">-X</span> PUT <span class="nt">-i</span> <span class="nt">-u</span> demo5:demo <span class="nt">-H</span> <span class="s1">'Content-Type: application/json'</span> <span class="nt">-d</span> <span class="s1">'{
+    "policyId": "org.eclipse.ditto:teapot-policy",
+    "features": {
+      "water": {
+        "properties": {
+          "temperature": 20
+        }
+      }
+    }
+}'</span> https://ditto.eclipse.org/api/2/things/org.eclipse.ditto:teapot 
+</code></pre></div></div>
+
+<h3 id="setup-a-connection-for-command--control">Setup a connection for Command &amp; Control</h3>
+<p>In order to forward Ditto Messages to the device as a Hono command we first need to setup and configure a 
+<a href="connectivity-manage-connections.html">connection</a> between Eclipse Ditto and Eclipse Hono that is prepared for 
+<em>Command &amp; Control</em> messages. According to the 
+<a href="https://www.eclipse.org/hono/">Hono documentation</a> 
+the connection must contain a target with the address <code class="highlighter-rouge">control/&lt;tenant-id&gt;/&lt;device-id&gt;</code> 
+and a source with the address <code class="highlighter-rouge">control/&lt;tenant-id&gt;/&lt;reply-identifier&gt;</code>. The <code class="highlighter-rouge">reply-identifier</code> can be 
+chosen arbitrarily, but must be set as the <code class="highlighter-rouge">reply-to</code> header of a command exactly as defined in the connection:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">-X</span> POST <span class="nt">-i</span> <span class="nt">-u</span> devops:devopsPw1! <span class="se">\</span>
+     <span class="nt">-H</span> <span class="s1">'Content-Type: application/json'</span> <span class="se">\</span>
+     <span class="nt">-d</span> <span class="s1">'{
+           "targetActorSelection": "/system/sharding/connection",
+           "headers": {
+             "aggregate": false
+           },
+           "piggybackCommand": {
+             "type": "connectivity.commands:createConnection",
+             "connection": {
+               "id": "command-and-control-connection",
+               "connectionType": "amqp-10",
+               "connectionStatus": "open",
+               "uri": "amqp://consumer%40HONO:verysecret@hono.eclipse.org:15672",
+               "failoverEnabled": true,
+               "sources": [{
+                   "addresses": [
+                     "control/org.eclipse.ditto/replies"
+                   ],
+                   "authorizationContext": [
+                     "nginx:demo5"
+                   ],
+                   "headerMapping": {
+                     "correlation-id": "{{ header:correlation-id }}",
+                     "status": "{{ header:status }}",
+                     "content-type": "{{ header:content-type }}"
+                   }
+                 }
+               ],
+               "targets": [{
+                   "address": "control/org.eclipse.ditto/{{ thing:name }}",
+                   "authorizationContext": [
+                     "nginx:demo5"
+                   ],
+                   "topics":["_/_/things/live/messages"],
+                   "headerMapping": {
+                     "message-id": "{{ header:correlation-id }}",
+                     "subject": "{{ topic:subject }}",
+                     "content-type": "application/vnd.eclipse.ditto+json",
+                     "reply-to": "control/org.eclipse.ditto/replies"
+                   }
+                 }
+               ]
+             }
+           }
+         }'</span> <span class="se">\</span>
+    https://ditto.eclipse.org/devops/piggyback/connectivity?timeout<span class="o">=</span>10s
+</code></pre></div></div>
+
+<p>As described in the 
+<a href="https://www.eclipse.org/hono/">Hono API description</a> 
+a command message has three mandatory properties: <code class="highlighter-rouge">correlation-id</code>, <code class="highlighter-rouge">subject</code> and <code class="highlighter-rouge">reply-to</code>, these are defined in the 
+target header mapping of the connection. 
+The source header mapping defines a mapping for <code class="highlighter-rouge">correlation-id</code> and <code class="highlighter-rouge">status</code> to internal headers, they are required 
+to properly map the Hono command response to a Ditto message response.</p>
+
+<h3 id="signal-availability-of-device">Signal availability of device</h3>
+
+<p>As we are using the Hono HTTP Adapter to connect our device, send telemetry and receive commands, the designated way 
+is therefor to signal readiness to receive a command by specifying the <code class="highlighter-rouge">hono-ttd</code> parameter on an arbitrary event (for 
+detailed description please consult the 
+[Hono HTTP Adapter] (https://www.eclipse.org/hono/) 
+guide).</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">-X</span> POST <span class="nt">-i</span> <span class="nt">-u</span> teapot@org.eclipse.ditto:teapot <span class="nt">-H</span> <span class="s1">'hono-ttd: 60'</span> <span class="nt">-H</span> <span class="s1">'Content-Type: application/json'</span> <span class="se">\</span>
+     <span class="nt">-d</span> <span class="s1">'{
+           "topic": "org.eclipse.ditto/teapot/things/twin/commands/modify",
+           "path": "/features/water/properties/temperature",
+           "value": 23
+         }'</span> <span class="se">\</span>
+     http://hono.eclipse.org:8080/telemetry
+</code></pre></div></div>
+
+<p>The request is now open to receive a command for 60 seconds before it is terminated.</p>
+
+<h3 id="send-a-ditto-message">Send a Ditto message</h3>
+
+<p>Now we can use the <a href="protocol-specification-things-messages.html#using-the-messages-api">Ditto Messages API</a> to send a 
+message to the device waiting for a command:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">-i</span> <span class="nt">-X</span> POST <span class="s1">'https://ditto.eclipse.org/api/2/things/org.eclipse.ditto:teapot/inbox/messages/brew?timeout=60'</span> <span class="se">\</span>
+     <span class="nt">-u</span> demo5:demo <span class="se">\</span>
+     <span class="nt">-H</span> <span class="s1">'x-correlation-id: command-and-control'</span> <span class="se">\</span>
+     <span class="nt">-d</span> <span class="s1">'{"targetTemperature":85}'</span>
+</code></pre></div></div>
+
+<h3 id="device-receives-the-command">Device receives the command</h3>
+
+<p>The message is forwarded to Hono as configured in the connection and finally terminates the pending request we opened 
+before with a status code of <code class="highlighter-rouge">200 OK</code>:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>HTTP/1.1 200 OK
+hono-command: brew
+hono-cmd-req-id: 013command-and-controlreplies
+Content-Type: application/octet-stream
+Content-Length: 17
+Connection: Keep-Alive
+</code></pre></div></div>
+
+<p>Hono adds two headers besides the standard HTTP headers: <code class="highlighter-rouge">hono-command</code> and <code class="highlighter-rouge">hono-cmd-req-id</code>. 
+<code class="highlighter-rouge">hono-command</code> contains the subject of the message and <code class="highlighter-rouge">hono-cmd-req-id</code> identifies the messages and is used to 
+correlate the request and the response we are now going to send.</p>
+
+<h3 id="device-sends-a-command-response">Device sends a command response</h3>
+
+<p>We use the header value of <code class="highlighter-rouge">hono-cmd-req-id</code> to construct the response address: 
+<code class="highlighter-rouge">http://hono.eclipse.org:8080/control/res/013command-and-controlreplies</code></p>
+
+<p>Another curl command completes the roundtrip with a response from the simulated device:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">-i</span> <span class="nt">-X</span> POST <span class="nt">-u</span> teapot@org.eclipse.ditto:teapot <span class="se">\</span>
+     <span class="nt">-H</span> <span class="s1">'Content-Type: application/json'</span> <span class="se">\</span>
+     <span class="nt">-H</span> <span class="s1">'hono-cmd-status: 200'</span> <span class="se">\</span>
+     <span class="nt">-d</span> <span class="s1">'{
+           "topic": "org.eclipse.ditto/teapot/things/live/messages/brew",
+           "headers": {
+             "content-type": "application/json",
+             "correlation-id": "command-and-control"
+           },
+           "path": "/inbox/messages/brew",
+           "value": { "eta": 56},
+           "status": 200
+         }'</span> <span class="se">\</span>
+     http://hono.eclipse.org:8080/control/res/013command-and-controlreplies
+</code></pre></div></div>
+
+<h3 id="message-response-is-received-at-ditto-message-api">Message response is received at Ditto Message API</h3>
+<p>And finally we receive the command response at the Ditto Message API where we sent the original message:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>HTTP/1.1 200 OK
+correlation-id: command-and-control
+message-id: command-and-control
+status: 200
+Content-Type: application/json
+Content-Length: 10
+
+{"eta":56}
+</code></pre></div></div>
+
+<h3 id="alternative-receive-command-and-send-response-via-mqtt">Alternative: Receive command and send response via MQTT</h3>
+
+<p>Alternatively we can also receive the command by subscribing to the MQTT topic <code class="highlighter-rouge">control/+/+/req/#</code> at the 
+<a href="https://www.eclipse.org/hono/">Hono MQTT Adapter</a>:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>mosquitto_sub <span class="nt">-d</span> <span class="nt">-h</span> hono.eclipse.org <span class="nt">-p</span> 8883 <span class="nt">-v</span> <span class="nt">-u</span> <span class="s1">'teapot@org.eclipse.ditto'</span> <span class="nt">-P</span> teapot <span class="nt">-t</span> <span class="s1">'control/+/+/req/#'</span>
+</code></pre></div></div>
+
+<p>And also publish the command response on the MQTT topic <code class="highlighter-rouge">control///res/013command-and-controlreplies/200</code>:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mosquitto_pub <span class="nt">-d</span> <span class="nt">-h</span> hono.eclipse.org <span class="nt">-p</span> 8883 <span class="nt">-u</span> <span class="s1">'teapot@org.eclipse.ditto'</span> <span class="nt">-P</span> teapot <span class="se">\</span>
+              <span class="nt">-t</span> control///res/013command-and-controlreplies/200 <span class="se">\</span>
+              <span class="nt">-m</span> <span class="s1">'{
+                    "topic": "org.eclipse.ditto/teapot/things/live/messages/brew",
+                    "headers": {
+                      "content-type": "application/json",
+                      "correlation-id": "command-and-control"
+                    },
+                    "path": "/inbox/messages/brew",
+                    "value": {
+                      "eta": 58
+                    },
+                    "status": 200
+                  }'</span>
+</code></pre></div></div>
+
+<p>If you have any wishes, improvements, are missing something
+or just want to get in touch with us, you can use one of
+our <a href="feedback.html">feedback channels</a>.</p>
+
+<figure><img class="docimage" src="images/ditto.svg" alt="Ditto" style="max-width: 500px" /></figure>
+
+<p>–<br />
+The Eclipse Ditto team</p>
+
+    </div>
+
+
+
+</article>
+
+<hr class="shaded"/>
+
+<footer>
+            <div class="row">
+                <div class="col-lg-12 footer">
+                    <div class="logo">
+                        <a href="https://eclipse.org"><img src="images/eclipse_foundation_logo.svg" alt="Eclipse logo"/></a>
+                    </div>
+                    <p class="notice">
+                        &copy;2021 Eclipse Ditto.
+                         Site last generated: Feb 22, 2021 <br />
+                    </p>
+                    <div class="quickLinks">
+                        <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">
+                            &gt; Privacy Policy
+                        </a>
+                        <a href="https://www.eclipse.org/legal/termsofuse.php" target="_blank">
+                            &gt; Terms of Use
+                        </a>
+                        <a href="https://www.eclipse.org/legal/copyright.php" target="_blank">
+                            &gt; Copyright Agent
+                        </a>
+                        <a href="https://www.eclipse.org/legal" target="_blank">
+                            &gt; Legal
+                        </a>
+                        <a href="https://www.eclipse.org/legal/epl-2.0/" target="_blank">
+                            &gt; License
+                        </a>
+                        <a href="https://eclipse.org/security" target="_blank">
+                            &gt; Report a Vulnerability
+                        </a>
+                    </div>
+                </div>
+            </div>
+</footer>
+
+
+        </div>
+    <!-- /.row -->
+</div>
+<!-- /.container -->
+</div>
+<!-- /#main -->
+    </div>
+
+</body>
+</html>
