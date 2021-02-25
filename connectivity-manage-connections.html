@@ -1697,7 +1697,7 @@ $('#toc').on('click', 'a', function() {
     
 
   <p>In order to manage (CRUD) connections in Ditto <a href="installation-operating.html#devops-commands">DevOps commands</a>
-have to be used. There is no separate HTTP API for managing the connections, as this is not a task for a developer using 
+have to be used. There is no separate HTTP API for managing the connections, as this is not a task for a developer using
 the digital twin APIs but more for a “DevOps engineer” creating new connections to external systems.</p>
 
 <p>All connection related piggyback commands use the following HTTP endpoint:</p>
@@ -1707,8 +1707,10 @@ the digital twin APIs but more for a “DevOps engineer” creating new connecti
 
 <h2 id="authorization">Authorization</h2>
 
-<p>When creating new connections, an <code class="highlighter-rouge">authorizationContext</code> is needed providing the <em>authorization subjects</em> (e.g. IDs of authorized users) to use in order to determine the permissions for when the connection executes commands (e.g. modifying a Thing).
-If you want to use a user for the basic auth (from the <a href="connectivity-protocol-bindings-http.html">HTTP API</a>) use the prefix <code class="highlighter-rouge">nginx:</code>, e.g. <code class="highlighter-rouge">nginx:ditto</code>.
+<p>When creating new connections, an <code class="highlighter-rouge">authorizationContext</code> is needed providing the <em>authorization subjects</em> (e.g. IDs of
+authorized users) to use in order to determine the permissions for when the connection executes commands (e.g. modifying
+a Thing). If you want to use a user for the basic auth (from the <a href="connectivity-protocol-bindings-http.html">HTTP API</a>)
+use the prefix <code class="highlighter-rouge">nginx:</code>, e.g. <code class="highlighter-rouge">nginx:ditto</code>.
 See <a href="basic-auth.html#authorization-context-in-devops-commands">Basic Authentication</a> for more information.</p>
 
 <h2 id="crud-commands">CRUD commands</h2>
@@ -1724,17 +1726,17 @@ See <a href="basic-auth.html#authorization-context-in-devops-commands">Basic Aut
 
 <h3 id="create-connection">Create connection</h3>
 
-<p>Create a new connection by sending the following DevOps command:</p>
+<p>Create a new connection by sending the following DevOps command.</p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-    </span><span class="s2">"targetActorSelection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/system/sharding/connection"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"aggregate"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
-    </span><span class="p">},</span><span class="w">
-    </span><span class="s2">"piggybackCommand"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"connectivity.commands:createConnection"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"connection"</span><span class="p">:</span><span class="w"> </span><span class="p">{}</span><span class="w">
-    </span><span class="p">}</span><span class="w">
+  </span><span class="s2">"targetActorSelection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/system/sharding/connection"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"aggregate"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="s2">"piggybackCommand"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"connectivity.commands:createConnection"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"connection"</span><span class="p">:</span><span class="w"> </span><span class="p">{}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
@@ -1745,17 +1747,17 @@ For protocol specific examples, consult the <a href="connectivity-protocol-bindi
 
 <h3 id="modify-connection">Modify connection</h3>
 
-<p>Modify an existing connection by sending the following DevOps command:</p>
+<p>Modify an existing connection by sending the following DevOps command.</p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-    </span><span class="s2">"targetActorSelection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/system/sharding/connection"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"aggregate"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
-    </span><span class="p">},</span><span class="w">
-    </span><span class="s2">"piggybackCommand"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"connectivity.commands:modifyConnection"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"connection"</span><span class="p">:</span><span class="w"> </span><span class="p">{}</span><span class="w">
-    </span><span class="p">}</span><span class="w">
+  </span><span class="s2">"targetActorSelection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/system/sharding/connection"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"aggregate"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="s2">"piggybackCommand"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"connectivity.commands:modifyConnection"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"connection"</span><span class="p">:</span><span class="w"> </span><span class="p">{}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
@@ -1763,65 +1765,65 @@ For protocol specific examples, consult the <a href="connectivity-protocol-bindi
 
 <h3 id="retrieve-connection">Retrieve connection</h3>
 
-<p>The only parameter necessary for retrieving a connection is the <code class="highlighter-rouge">connectionId</code>:</p>
+<p>The only parameter necessary for retrieving a connection is the <code class="highlighter-rouge">connectionId</code>.</p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-    </span><span class="s2">"targetActorSelection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/system/sharding/connection"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"aggregate"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
-    </span><span class="p">},</span><span class="w">
-    </span><span class="s2">"piggybackCommand"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"connectivity.commands:retrieveConnection"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"connectionId"</span><span class="p">:</span><span class="s2">"&lt;connectionID&gt;"</span><span class="w">
-    </span><span class="p">}</span><span class="w">
+  </span><span class="s2">"targetActorSelection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/system/sharding/connection"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"aggregate"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="s2">"piggybackCommand"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"connectivity.commands:retrieveConnection"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"connectionId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;connectionID&gt;"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
 <h3 id="open-connection">Open connection</h3>
 
-<p>The only parameter necessary for opening a connection is the <code class="highlighter-rouge">connectionId</code>:</p>
+<p>The only parameter necessary for opening a connection is the <code class="highlighter-rouge">connectionId</code>.</p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-    </span><span class="s2">"targetActorSelection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/system/sharding/connection"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"aggregate"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
-    </span><span class="p">},</span><span class="w">
-    </span><span class="s2">"piggybackCommand"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"connectivity.commands:openConnection"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"connectionId"</span><span class="p">:</span><span class="s2">"&lt;connectionID&gt;"</span><span class="w">
-    </span><span class="p">}</span><span class="w">
+  </span><span class="s2">"targetActorSelection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/system/sharding/connection"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"aggregate"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="s2">"piggybackCommand"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"connectivity.commands:openConnection"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"connectionId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;connectionID&gt;"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
 <h3 id="close-connection">Close connection</h3>
 
-<p>The only parameter necessary for closing a connection is the <code class="highlighter-rouge">connectionId</code>:</p>
+<p>The only parameter necessary for closing a connection is the <code class="highlighter-rouge">connectionId</code>.</p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-    </span><span class="s2">"targetActorSelection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/system/sharding/connection"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"aggregate"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
-    </span><span class="p">},</span><span class="w">
-    </span><span class="s2">"piggybackCommand"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"connectivity.commands:closeConnection"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"connectionId"</span><span class="p">:</span><span class="s2">"&lt;connectionID&gt;"</span><span class="w">
-    </span><span class="p">}</span><span class="w">
+  </span><span class="s2">"targetActorSelection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/system/sharding/connection"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"aggregate"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="s2">"piggybackCommand"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"connectivity.commands:closeConnection"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"connectionId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;connectionID&gt;"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
 <h3 id="delete-connection">Delete connection</h3>
 
-<p>The only parameter necessary for deleting a connection is the <code class="highlighter-rouge">connectionId</code>:</p>
+<p>The only parameter necessary for deleting a connection is the <code class="highlighter-rouge">connectionId</code>.</p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-    </span><span class="s2">"targetActorSelection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/system/sharding/connection"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"aggregate"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
-    </span><span class="p">},</span><span class="w">
-    </span><span class="s2">"piggybackCommand"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"connectivity.commands:deleteConnection"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"connectionId"</span><span class="p">:</span><span class="s2">"&lt;connectionID&gt;"</span><span class="w">
-    </span><span class="p">}</span><span class="w">
+  </span><span class="s2">"targetActorSelection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/system/sharding/connection"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"aggregate"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="s2">"piggybackCommand"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"connectivity.commands:deleteConnection"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"connectionId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;connectionID&gt;"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
@@ -1831,6 +1833,7 @@ For protocol specific examples, consult the <a href="connectivity-protocol-bindi
 
 <ul>
   <li><a href="#test-connection">test</a></li>
+  <li><a href="#retrieve-ids-of-all-connections">Retrieve ids of all connections</a></li>
   <li><a href="#retrieve-connection-status">retrieve connection status</a></li>
   <li><a href="#retrieve-connection-metrics">retrieve connection metrics</a></li>
   <li><a href="#reset-connection-metrics">reset connection metrics</a></li>
@@ -1843,43 +1846,61 @@ For protocol specific examples, consult the <a href="connectivity-protocol-bindi
 
 <p>Run a test connection command before creating a persisted connection to validate the connection configuration. This
 command checks the configuration and establishes a connection to the remote endpoint in order to validate the connection
-credentials. The test connection is closed afterwards and will not be persisted. Analog to the <a href="#create-connection">createConnection</a>
+credentials. The test connection is closed afterwards and will not be persisted. Analog to
+the <a href="#create-connection">createConnection</a>
 command, it requires a full connection configuration in the piggyback command.</p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-    </span><span class="s2">"targetActorSelection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/system/sharding/connection"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"aggregate"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
-    </span><span class="p">},</span><span class="w">
-    </span><span class="s2">"piggybackCommand"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"connectivity.commands:testConnection"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"connection"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-           </span><span class="err">...</span><span class="w"> </span><span class="err">//Define</span><span class="w"> </span><span class="err">connection</span><span class="w"> </span><span class="err">configuration</span><span class="w">
-        </span><span class="p">}</span><span class="w">
+  </span><span class="s2">"targetActorSelection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/system/sharding/connection"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"aggregate"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="s2">"piggybackCommand"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"connectivity.commands:testConnection"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"connection"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="err">...</span><span class="w">
+      </span><span class="err">//Define</span><span class="w"> </span><span class="err">connection</span><span class="w"> </span><span class="err">configuration</span><span class="w">
     </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+
+</span></code></pre></div></div>
+
+<h3 id="retrieve-ids-of-all-connections">Retrieve ids of all connections</h3>
+
+<p>This command returns the ids of all connections.</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"targetActorSelection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/user/connectivityRoot/connectionIdsRetrieval/singleton"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"aggregate"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="s2">"piggybackCommand"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"connectivity.commands:retrieveAllConnectionIds"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
 <h3 id="retrieve-connection-status">Retrieve connection status</h3>
 
-<p>This command returns the connection status by showing if a connection is currently enabled/disabled and if it is 
-successfully established. The only parameter necessary for retrieving the connection status is the <code class="highlighter-rouge">connectionId</code>:</p>
+<p>This command returns the connection status by showing if a connection is currently enabled/disabled and if it is
+successfully established. The only parameter necessary for retrieving the connection status is the <code class="highlighter-rouge">connectionId</code>.</p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-    </span><span class="s2">"targetActorSelection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/system/sharding/connection"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"aggregate"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
-    </span><span class="p">},</span><span class="w">
-    </span><span class="s2">"piggybackCommand"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"connectivity.commands:retrieveConnectionStatus"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"connectionId"</span><span class="p">:</span><span class="s2">"&lt;connectionID&gt;"</span><span class="w">
-    </span><span class="p">}</span><span class="w">
+  </span><span class="s2">"targetActorSelection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/system/sharding/connection"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"aggregate"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="s2">"piggybackCommand"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"connectivity.commands:retrieveConnectionStatus"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"connectionId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;connectionID&gt;"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
 <h3 id="retrieve-connection-metrics">Retrieve connection metrics</h3>
 
-<p>This command returns the connection metrics showing how many messages have been successfully or failingly <code class="highlighter-rouge">conusmed</code>, 
+<p>This command returns the connection metrics showing how many messages have been successfully or failingly <code class="highlighter-rouge">conusmed</code>,
 <code class="highlighter-rouge">filtered</code>, <code class="highlighter-rouge">mapped</code>, <code class="highlighter-rouge">published</code>, <code class="highlighter-rouge">dropped</code>. The metrics are collected and returned in different time intervals:</p>
 <ul>
   <li>the last minute</li>
@@ -1887,57 +1908,56 @@ successfully established. The only parameter necessary for retrieving the connec
   <li>the last 24 hours</li>
 </ul>
 
-<p>The only parameter necessary for retrieving the connection metrics is the <code class="highlighter-rouge">connectionId</code>:</p>
+<p>The only parameter necessary for retrieving the connection metrics is the <code class="highlighter-rouge">connectionId</code>.</p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-    </span><span class="s2">"targetActorSelection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/system/sharding/connection"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"aggregate"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
-    </span><span class="p">},</span><span class="w">
-    </span><span class="s2">"piggybackCommand"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"connectivity.commands:retrieveConnectionMetrics"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"connectionId"</span><span class="p">:</span><span class="s2">"&lt;connectionID&gt;"</span><span class="w">
-    </span><span class="p">}</span><span class="w">
+  </span><span class="s2">"targetActorSelection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/system/sharding/connection"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"aggregate"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="s2">"piggybackCommand"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"connectivity.commands:retrieveConnectionMetrics"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"connectionId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;connectionID&gt;"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
 <h3 id="reset-connection-metrics">Reset connection metrics</h3>
 
-<p>This command resets the connection metrics - all metrics are set to <code class="highlighter-rouge">0</code> again. The only parameter
-necessary for retrieving the connection metrics is the <code class="highlighter-rouge">connectionId</code>:</p>
+<p>This command resets the connection metrics - all metrics are set to <code class="highlighter-rouge">0</code> again. The only parameter necessary for
+retrieving the connection metrics is the <code class="highlighter-rouge">connectionId</code>.</p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-    </span><span class="s2">"targetActorSelection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/system/sharding/connection"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"aggregate"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
-    </span><span class="p">},</span><span class="w">
-    </span><span class="s2">"piggybackCommand"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"connectivity.commands:resetConnectionMetrics"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"connectionId"</span><span class="p">:</span><span class="s2">"&lt;connectionID&gt;"</span><span class="w">
-    </span><span class="p">}</span><span class="w">
+  </span><span class="s2">"targetActorSelection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/system/sharding/connection"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"aggregate"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="s2">"piggybackCommand"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"connectivity.commands:resetConnectionMetrics"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"connectionId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;connectionID&gt;"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
 <h3 id="enable-connection-logs">Enable connection logs</h3>
 
-<p>Enables the connection logging feature of a connection for 24 hours.
-As soon as connection logging is enabled, you will be able to <a href="#retrieve-connection-logs">retrieve connection logs</a>. The
-logs will contain a fixed amount of success and failure logs for each source and target of your connection and correlate
-with the metrics of the connection. This will allow you more insight in what goes well, and more importantly, what goes wrong.</p>
+<p>Enables the connection logging feature of a connection for 24 hours. As soon as connection logging is enabled, you will
+be able to <a href="#retrieve-connection-logs">retrieve connection logs</a>. The logs will contain a fixed amount of success and
+failure logs for each source and target of your connection and correlate with the metrics of the connection. This will
+allow you more insight in what goes well, and more importantly, what goes wrong.</p>
 
-<p>The default duration and the maximum amount of logs stored for one connection can be configured in Ditto’s connectivity service
-configuration.</p>
+<p>The default duration and the maximum amount of logs stored for one connection can be configured in Ditto’s connectivity
+service configuration.</p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-
-    </span><span class="s2">"targetActorSelection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/system/sharding/connection"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"aggregate"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
-    </span><span class="p">},</span><span class="w">
-    </span><span class="s2">"piggybackCommand"</span><span class="p">:{</span><span class="w">
-		</span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"connectivity.commands:enableConnectionLogs"</span><span class="p">,</span><span class="w">
-		</span><span class="s2">"connectionId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;connectionID&gt;"</span><span class="w">
-	</span><span class="p">}</span><span class="w">
+  </span><span class="s2">"targetActorSelection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/system/sharding/connection"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"aggregate"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="s2">"piggybackCommand"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"connectivity.commands:enableConnectionLogs"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"connectionId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;connectionID&gt;"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
@@ -1950,19 +1970,18 @@ the older entries will be dropped. So keep in mind that you might miss some of t
 <p>The response will also provide information on how long the logging feature will still be enabled. Since the timer will
 always be reset when retrieving the logs, the timestamp will always be 24 hours from now.</p>
 
-<p>The default duration and the maximum amount of logs stored for one connection can be configured in Ditto’s connectivity service
-configuration.</p>
+<p>The default duration and the maximum amount of logs stored for one connection can be configured in Ditto’s connectivity
+service configuration.</p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-
-    </span><span class="s2">"targetActorSelection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/system/sharding/connection"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"aggregate"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
-    </span><span class="p">},</span><span class="w">
-    </span><span class="s2">"piggybackCommand"</span><span class="p">:{</span><span class="w">
-		</span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"connectivity.commands:retrieveConnectionLogs"</span><span class="p">,</span><span class="w">
-		</span><span class="s2">"connectionId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;connectionID&gt;"</span><span class="w">
-	</span><span class="p">}</span><span class="w">
+  </span><span class="s2">"targetActorSelection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/system/sharding/connection"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"aggregate"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="s2">"piggybackCommand"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"connectivity.commands:retrieveConnectionLogs"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"connectionId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;connectionID&gt;"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
@@ -1971,34 +1990,36 @@ configuration.</p>
 <p>Clears all currently stored connection logs.</p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-
-    </span><span class="s2">"targetActorSelection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/system/sharding/connection"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"aggregate"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
-    </span><span class="p">},</span><span class="w">
-    </span><span class="s2">"piggybackCommand"</span><span class="p">:{</span><span class="w">
-		</span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"connectivity.commands:resetConnectionLogs"</span><span class="p">,</span><span class="w">
-		</span><span class="s2">"connectionId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;connectionID&gt;"</span><span class="w">
-	</span><span class="p">}</span><span class="w">
+  </span><span class="s2">"targetActorSelection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/system/sharding/connection"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"aggregate"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="s2">"piggybackCommand"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"connectivity.commands:resetConnectionLogs"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"connectionId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;connectionID&gt;"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
 <h2 id="payload-mapping-configuration">Payload mapping configuration</h2>
 
-<p>To enable a custom <a href="connectivity-mapping.html">payload mapping</a> for a specific source or target of a connection, you 
-have to configure a payload mapping definition in the connection configuration object. The following snippet shows an 
-example <code class="highlighter-rouge">mappingDefinitions</code>. This configuration must be embedded in the connection configuration as shown in the 
-<a href="basic-connections.html">Connections</a> section. These payload mapping definitions are then referenced by its ID 
-(the key of the JSON object) in the sources and targets of the connection using the field <code class="highlighter-rouge">payloadMapping</code>. 
-If no payload mapping or definition is provided, the <a href="connectivity-mapping.html#ditto-mapper">Ditto message mapping</a> 
+<p>To enable a custom <a href="connectivity-mapping.html">payload mapping</a> for a specific source or target of a connection, you
+have to configure a payload mapping definition in the connection configuration object. The following snippet shows an
+example <code class="highlighter-rouge">mappingDefinitions</code>. This configuration must be embedded in the connection configuration as shown in the
+<a href="basic-connections.html">Connections</a> section. These payload mapping definitions are then referenced by its ID
+(the key of the JSON object) in the sources and targets of the connection using the field <code class="highlighter-rouge">payloadMapping</code>. If no
+payload mapping or definition is provided, the <a href="connectivity-mapping.html#ditto-mapper">Ditto message mapping</a>
 is used as the default.</p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
   </span><span class="err">...</span><span class="w">
   </span><span class="s2">"mappingDefinitions"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"customJs"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">                     </span><span class="err">//</span><span class="w"> </span><span class="err">(</span><span class="mi">1</span><span class="err">)</span><span class="w">
-      </span><span class="s2">"mappingEngine"</span><span class="p">:</span><span class="w"> </span><span class="s2">"JavaScript"</span><span class="p">,</span><span class="w">  </span><span class="err">//</span><span class="w"> </span><span class="err">(</span><span class="mi">2</span><span class="err">)</span><span class="w">
-      </span><span class="s2">"options"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">                    </span><span class="err">//</span><span class="w"> </span><span class="err">(</span><span class="mi">3</span><span class="err">)</span><span class="w">
+    </span><span class="s2">"customJs"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="err">//</span><span class="w"> </span><span class="err">(</span><span class="mi">1</span><span class="err">)</span><span class="w">
+      </span><span class="s2">"mappingEngine"</span><span class="p">:</span><span class="w"> </span><span class="s2">"JavaScript"</span><span class="p">,</span><span class="w">
+      </span><span class="err">//</span><span class="w"> </span><span class="err">(</span><span class="mi">2</span><span class="err">)</span><span class="w">
+      </span><span class="s2">"options"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="err">//</span><span class="w"> </span><span class="err">(</span><span class="mi">3</span><span class="err">)</span><span class="w">
         </span><span class="s2">"incomingScript"</span><span class="p">:</span><span class="w"> </span><span class="s2">".."</span><span class="p">,</span><span class="w">
         </span><span class="s2">"outgoingScript"</span><span class="p">:</span><span class="w"> </span><span class="s2">".."</span><span class="w">
       </span><span class="p">}</span><span class="w">
@@ -2007,7 +2028,9 @@ is used as the default.</p>
   </span><span class="s2">"sources"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
     </span><span class="p">{</span><span class="w">
       </span><span class="s2">"addresses"</span><span class="p">:</span><span class="w"> </span><span class="s2">"source"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"payloadMapping"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"customJs"</span><span class="p">]</span><span class="w">  
+      </span><span class="s2">"payloadMapping"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"customJs"</span><span class="w">
+      </span><span class="p">]</span><span class="w">
     </span><span class="p">}</span><span class="w">
   </span><span class="p">]</span><span class="w">
   </span><span class="err">...</span><span class="w">
@@ -2045,7 +2068,7 @@ is used as the default.</p>
                     </div>
                     <p class="notice">
                         &copy;2021 Eclipse Ditto.
-                         Site last generated: Feb 22, 2021 <br />
+                         Site last generated: Feb 25, 2021 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">
