@@ -260,7 +260,7 @@
               
               
               
-              <li><a href="release_notes_200.html">2.0.0</a></li>
+              <li><a href="release_notes_next.html">2.0.0</a></li>
               
               
               
@@ -590,6 +590,12 @@
                       
                       
                       <li><a href="basic-signals-event.html">Event</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="basic-signals-announcement.html">Announcement</a></li>
                       
                       
                       
@@ -1053,6 +1059,12 @@
                       
                       
                       <li><a href="protocol-specification-policies-delete.html">Delete</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-specification-policies-announcement.html">Announcement</a></li>
                       
                       
                       
@@ -1595,6 +1607,12 @@
                       
                       
                       
+                      
+                      
+                      <li><a href="protocol-examples-policies-announcement-subjectDeletion.html">Announcement for subject deletion</a></li>
+                      
+                      
+                      
                   </ul>
               </li>
               
@@ -1709,6 +1727,7 @@ $('#toc').on('click', 'a', function() {
   <li><code class="highlighter-rouge">org.eclipse.ditto/fancy-car-42/things/live/messages/hello.world</code></li>
   <li><code class="highlighter-rouge">org.eclipse.ditto/fancy-policy-1/policies/commands/create</code></li>
   <li><code class="highlighter-rouge">org.eclipse.ditto/fancy-policy-1/policies/commands/delete</code></li>
+  <li><code class="highlighter-rouge">org.eclipse.ditto/fancy-policy-1/policies/announcements/subjectDeletion</code></li>
 </ul>
 
 <h2 id="namespace">Namespace</h2>
@@ -1776,7 +1795,7 @@ the defined <code class="highlighter-rouge">{channel}</code>.</p>
 
 <h3 id="commands-criterion">Commands criterion</h3>
 
-<p><em>commands</em> are sent to Ditto in order to do something, either on the digital twin or on a real connected device.
+<p><em>commands</em> are sent to Ditto in order to do something, either on the digital twin or on a real connected device.<br />
 They are separated in ModifyCommands for creating, modifying, deleting and QueryCommands for retrieving.</p>
 
 <p>For each command Ditto processed a command response is created.
@@ -1786,19 +1805,19 @@ Command responses have the same topic path as the commands which they answer to.
 
 <h3 id="events-criterion">Events criterion</h3>
 
-<p><em>events</em> are emitted by Ditto for each command which successfully <em>modified</em> an entity.
+<p><em>events</em> are emitted by Ditto for each command which successfully <em>modified</em> an entity.<br />
 Each ModifyCommand causes a specific Event type to be published for which interested parties can subscribe themselves.</p>
 
 <h3 id="search-criterion">Search criterion</h3>
 
-<p><em>search</em> requests can only be put on the <em>twin channel</em>.
+<p><em>search</em> requests can only be put on the <em>twin channel</em>.<br />
 They contain a query string defining on which data to search in the population of all <strong>digital twins</strong>.
 Ditto respects the <a href="basic-auth.html">authorization</a> information while searching for the requested data and returns the
 search result as paged list of search hits.</p>
 
 <h3 id="messages-criterion">Messages criterion</h3>
 
-<p><em>messages</em> are always exchanged via the <em>live channel</em>.
+<p><em>messages</em> are always exchanged via the <em>live channel</em>.<br />
 They carry a custom payload and can be answered by another, correlated message.</p>
 
 <h3 id="errors-criterion">Errors criterion</h3>
@@ -1817,6 +1836,11 @@ Acks contain a <em>status integer</em> which reflects a status code with the sam
 ack was successful (2xx status range) or not (4xx or 5xx status range).<br />
 Acks contain <em>headers</em> which include at least the <code class="highlighter-rouge">correlation-id</code> of the command/event to acknowledge, and optionally 
 contain a custom <em>payload</em>.</p>
+
+<h3 id="announcement-criterion">Announcement criterion</h3>
+
+<p><em>announcements</em> are published by Ditto prior to an <em>event</em> taking place.<br />
+They are created by Ditto and are e.g. published a configured amount of time before an event will likely happen.</p>
 
 <h2 id="action-optional">Action (optional)</h2>
 
@@ -1872,6 +1896,9 @@ provided that it conforms to <a href="https://tools.ietf.org/html/rfc3986">RFC-3
 The criterion has to match the regular expression <code class="highlighter-rouge">[a-zA-Z0-9-_:]{3,100}</code>, i.e. letters of the Latin alphabet, numbers,
 dashes, and underscores.</p>
 
+<h3 id="announcement-criterion-actions">Announcement criterion actions</h3>
+
+<p>For the <em>announcement</em> criterion, the <em>action</em> segment specifies the announcement name.</p>
 
 
     <div class="tags">
@@ -1898,7 +1925,7 @@ dashes, and underscores.</p>
                     </div>
                     <p class="notice">
                         &copy;2021 Eclipse Ditto.
-                         Site last generated: Feb 25, 2021 <br />
+                         Site last generated: Mar 5, 2021 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

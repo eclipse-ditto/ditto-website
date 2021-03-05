@@ -260,7 +260,7 @@
               
               
               
-              <li><a href="release_notes_200.html">2.0.0</a></li>
+              <li><a href="release_notes_next.html">2.0.0</a></li>
               
               
               
@@ -590,6 +590,12 @@
                       
                       
                       <li><a href="basic-signals-event.html">Event</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="basic-signals-announcement.html">Announcement</a></li>
                       
                       
                       
@@ -1053,6 +1059,12 @@
                       
                       
                       <li><a href="protocol-specification-policies-delete.html">Delete</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-specification-policies-announcement.html">Announcement</a></li>
                       
                       
                       
@@ -1595,6 +1607,12 @@
                       
                       
                       
+                      
+                      
+                      <li><a href="protocol-examples-policies-announcement-subjectDeletion.html">Announcement for subject deletion</a></li>
+                      
+                      
+                      
                   </ul>
               </li>
               
@@ -1839,6 +1857,15 @@ WebSocket session, the following text message has to be sent to the backend: <co
 
 <p>From then on the WebSocket session will receive all live events it is entitled to see.</p>
 
+<h3 id="request-policy-announcements">Request policy announcements</h3>
+
+<p>In order to subscribe for <a href="protocol-specification-policies-announcement.html">Policy announcements</a> which can be 
+published to a WebSocket session, the following text message has to be sent to the backend: 
+<code class="highlighter-rouge">START-SEND-POLICY-ANNOUNCEMENTS</code></p>
+
+<p>From then on the WebSocket session will receive all announcements related to policies related to the authenticated 
+subjects of the websocket session.</p>
+
 <h3 id="overview">Overview</h3>
 
 <p>The following table shows which WebSocket protocol message are supported:</p>
@@ -1858,44 +1885,54 @@ WebSocket session, the following text message has to be sent to the backend: <co
       <td><code class="highlighter-rouge">-</code></td>
     </tr>
     <tr>
-      <td>Subscribe for <a href="basic-changenotifications.html">events/change notifications</a></td>
+      <td>Subscribe for <a href="basic-changenotifications.html">Thing events/change notifications</a></td>
       <td><code class="highlighter-rouge">START-SEND-EVENTS</code></td>
       <td><code class="highlighter-rouge">START-SEND-EVENTS:ACK</code></td>
     </tr>
     <tr>
-      <td>Stop receiving change notifications</td>
+      <td>Stop receiving Thing change notifications</td>
       <td><code class="highlighter-rouge">STOP-SEND-EVENTS</code></td>
       <td><code class="highlighter-rouge">STOP-SEND-EVENTS:ACK</code></td>
     </tr>
     <tr>
-      <td>Subscribe for <a href="basic-messages.html">messages</a></td>
+      <td>Subscribe for <a href="basic-messages.html">Thing messages</a></td>
       <td><code class="highlighter-rouge">START-SEND-MESSAGES</code></td>
       <td><code class="highlighter-rouge">START-SEND-MESSAGES:ACK</code></td>
     </tr>
     <tr>
-      <td>Stop receiving messages</td>
+      <td>Stop receiving Thing messages</td>
       <td><code class="highlighter-rouge">STOP-SEND-MESSAGES</code></td>
       <td><code class="highlighter-rouge">STOP-SEND-MESSAGES:ACK</code></td>
     </tr>
     <tr>
-      <td>Subscribe for <a href="protocol-twinlive.html">live commands</a></td>
+      <td>Subscribe for <a href="protocol-twinlive.html">Thing live commands</a></td>
       <td><code class="highlighter-rouge">START-SEND-LIVE-COMMANDS</code></td>
       <td><code class="highlighter-rouge">START-SEND-LIVE-COMMANDS:ACK</code></td>
     </tr>
     <tr>
-      <td>Stop receiving live commands</td>
+      <td>Stop receiving Thing live commands</td>
       <td><code class="highlighter-rouge">STOP-SEND-LIVE-COMMANDS</code></td>
       <td><code class="highlighter-rouge">STOP-SEND-LIVE-COMMANDS:ACK</code></td>
     </tr>
     <tr>
-      <td>Subscribe for <a href="protocol-twinlive.html">live events</a></td>
+      <td>Subscribe for <a href="protocol-twinlive.html">Thing live events</a></td>
       <td><code class="highlighter-rouge">START-SEND-LIVE-EVENTS</code></td>
       <td><code class="highlighter-rouge">START-SEND-LIVE-EVENTS:ACK</code></td>
     </tr>
     <tr>
-      <td>Stop receiving live commands</td>
+      <td>Stop receiving Thing live commands</td>
       <td><code class="highlighter-rouge">STOP-SEND-LIVE-EVENTS</code></td>
       <td><code class="highlighter-rouge">STOP-SEND-LIVE-EVENTS:ACK</code></td>
+    </tr>
+    <tr>
+      <td>Subscribe for <a href="protocol-specification-policies-announcement.html">Policy announcements</a></td>
+      <td><code class="highlighter-rouge">START-SEND-POLICY-ANNOUNCEMENTS</code></td>
+      <td><code class="highlighter-rouge">START-SEND-POLICY-ANNOUNCEMENTS:ACK</code></td>
+    </tr>
+    <tr>
+      <td>Stop receiving Policy announcements</td>
+      <td><code class="highlighter-rouge">STOP-SEND-POLICY-ANNOUNCEMENTS</code></td>
+      <td><code class="highlighter-rouge">STOP-SEND-POLICY-ANNOUNCEMENTS:ACK</code></td>
     </tr>
   </tbody>
 </table>
@@ -1925,24 +1962,29 @@ to the request message. This is supported for all request messages:</p>
   </thead>
   <tbody>
     <tr>
-      <td>Subscribe for <a href="basic-changenotifications.html">events/change notifications</a></td>
+      <td>Subscribe for <a href="basic-changenotifications.html">Thing events/change notifications</a></td>
       <td><code class="highlighter-rouge">START-SEND-EVENTS</code></td>
       <td>✔</td>
     </tr>
     <tr>
-      <td>Subscribe for <a href="basic-messages.html">messages</a></td>
+      <td>Subscribe for <a href="basic-messages.html">Thing messages</a></td>
       <td><code class="highlighter-rouge">START-SEND-MESSAGES</code></td>
       <td>✔</td>
     </tr>
     <tr>
-      <td>Subscribe for <a href="protocol-twinlive.html">live commands</a></td>
+      <td>Subscribe for <a href="protocol-twinlive.html">Thing live commands</a></td>
       <td><code class="highlighter-rouge">START-SEND-LIVE-COMMANDS</code></td>
       <td>✔</td>
     </tr>
     <tr>
-      <td>Subscribe for <a href="protocol-twinlive.html">live events</a></td>
+      <td>Subscribe for <a href="protocol-twinlive.html">Thing live events</a></td>
       <td><code class="highlighter-rouge">START-SEND-LIVE-EVENTS</code></td>
       <td>✔</td>
+    </tr>
+    <tr>
+      <td>Subscribe for <a href="protocol-specification-policies-announcement.html">Policy announcements</a></td>
+      <td><code class="highlighter-rouge">START-SEND-POLICY-ANNOUNCEMENTS</code></td>
+      <td>❌</td>
     </tr>
   </tbody>
 </table>
@@ -1968,28 +2010,34 @@ following parameters can additionally be provided when sending the WebSocket pro
   </thead>
   <tbody>
     <tr>
-      <td>Subscribe for <a href="basic-changenotifications.html">events/change notifications</a></td>
+      <td>Subscribe for <a href="basic-changenotifications.html">Thing events/change notifications</a></td>
       <td><code class="highlighter-rouge">START-SEND-EVENTS</code></td>
       <td>✔</td>
       <td>✔</td>
     </tr>
     <tr>
-      <td>Subscribe for <a href="basic-messages.html">messages</a></td>
+      <td>Subscribe for <a href="basic-messages.html">Thing messages</a></td>
       <td><code class="highlighter-rouge">START-SEND-MESSAGES</code></td>
       <td>✔</td>
       <td>❌</td>
     </tr>
     <tr>
-      <td>Subscribe for <a href="protocol-twinlive.html">live commands</a></td>
+      <td>Subscribe for <a href="protocol-twinlive.html">Thing live commands</a></td>
       <td><code class="highlighter-rouge">START-SEND-LIVE-COMMANDS</code></td>
       <td>✔</td>
       <td>❌</td>
     </tr>
     <tr>
-      <td>Subscribe for <a href="protocol-twinlive.html">live events</a></td>
+      <td>Subscribe for <a href="protocol-twinlive.html">Thing live events</a></td>
       <td><code class="highlighter-rouge">START-SEND-LIVE-EVENTS</code></td>
       <td>✔</td>
       <td>✔</td>
+    </tr>
+    <tr>
+      <td>Subscribe for <a href="protocol-specification-policies-announcement.html">Policy announcements</a></td>
+      <td><code class="highlighter-rouge">START-SEND-POLICY-ANNOUNCEMENTS</code></td>
+      <td>✔</td>
+      <td>❌</td>
     </tr>
   </tbody>
 </table>
@@ -2039,7 +2087,7 @@ would match an attribute “counter” to be greater than 42:</p>
                     </div>
                     <p class="notice">
                         &copy;2021 Eclipse Ditto.
-                         Site last generated: Feb 25, 2021 <br />
+                         Site last generated: Mar 5, 2021 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">
