@@ -5,9 +5,252 @@
         <description>Announcements, tutorials and examples around Eclipse Ditto and Digital Twins</description>
         <link>https://www.eclipse.org/ditto/</link>
         <atom:link href="https://www.eclipse.org/ditto/feed.xml" rel="self" type="application/rss+xml"/>
-        <pubDate>Wed, 10 Mar 2021 10:22:26 +0000</pubDate>
-        <lastBuildDate>Wed, 10 Mar 2021 10:22:26 +0000</lastBuildDate>
+        <pubDate>Mon, 22 Mar 2021 11:58:19 +0000</pubDate>
+        <lastBuildDate>Mon, 22 Mar 2021 11:58:19 +0000</lastBuildDate>
         <generator>Jekyll v3.6.2</generator>
+        
+        <item>
+            <title>Use Eclipse Ditto with Azure IoT Hub as message broker</title>
+            <description>&lt;p&gt;This blogpost is based upon Eclipse Ditto Version &lt;strong&gt;1.5.0&lt;/strong&gt;, the Azure IoT Suite as of
+&lt;strong&gt;2021-03-19&lt;/strong&gt; and the azure-iot-device-client version &lt;strong&gt;1.29.2&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;h1 id=&quot;connecting-devices-to-eclipse-ditto-via-azure-iot-hub&quot;&gt;Connecting devices to Eclipse Ditto via Azure IoT Hub&lt;/h1&gt;
+&lt;p&gt;This blog post elaborates on connecting and managing devices in Eclipse Ditto by using the Azure IoT Hub 
+as a message broker.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;images/blog/2021-03-22-azure-iot-hub-integration-overview.png&quot; alt=&quot;Connection Overview&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;The basic functionality that can be used at the time of creating this blogpost are:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;[D2C] Sending telemetry data from the device to update its Ditto digital-twin representation.&lt;/li&gt;
+  &lt;li&gt;[D2C] Same ID enforcement based on the Azure IoT Hub device-id to prevent spoofing other digital-twins.&lt;/li&gt;
+  &lt;li&gt;[C2D] Sending live-messages to the device.&lt;/li&gt;
+  &lt;li&gt;[D2C] Sending feedback to live messages to the service.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;setting-up-connections-in-ditto&quot;&gt;Setting up connections in Ditto&lt;/h2&gt;
+&lt;p&gt;The features described above will work with an “out-of-the-box” Azure IoT Hub subscription, 
+so no additional configuration is needed in the IoT Hub. In order to connect Ditto to the IoT Hub you have to set up 
+two AMQP 1.0 connections. One for receiving telemetry data, the other for sending live-messages and receiving 
+live-message feedback.&lt;/p&gt;
+
+&lt;h3 id=&quot;telemetry-connection&quot;&gt;Telemetry Connection&lt;/h3&gt;
+
+&lt;p&gt;This connection subscribes to telemetry messages, published by the Azure IoT Hub built-in “Event Hub like” endpoint.&lt;/p&gt;
+
+&lt;p&gt;Adding an enforcement for the &lt;code class=&quot;highlighter-rouge&quot;&gt;based on the&lt;/code&gt; prevents 
+applying a digital-twin update to the twin of another device (Device Spoofing).&lt;/p&gt;
+
+&lt;p&gt;To establish this connection the placeholders below have to be substituted by:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;``: The &lt;code class=&quot;highlighter-rouge&quot;&gt;SharedAccessKeyName&lt;/code&gt; in your Event Hub-compatible endpoint (i.e. service).&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;``: The &lt;code class=&quot;highlighter-rouge&quot;&gt;SharedAccessKey&lt;/code&gt; in your Event Hub-compatible endpoint.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;``: The &lt;code class=&quot;highlighter-rouge&quot;&gt;Endpoint&lt;/code&gt; in your Event Hub-compatible endpoint (Cut leading “sb://” and trailing slash,
+e.g.. ihsuprodblres055dednamespace.servicebus.windows.net).&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;``: The &lt;code class=&quot;highlighter-rouge&quot;&gt;EntitiyPath&lt;/code&gt; in your Event Hub-compatible endpoint (e.g.. hubname-8584619-2e72252706).&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;em&gt;Note: You can use the “service” IoT Hub policy instead of the “iothubowner” policy, since this is more restricitve, 
+and represents the actual use of Ditto as a  northbound service.&lt;/em&gt;&lt;/p&gt;
+
+&lt;div class=&quot;language-json highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;id&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;azure-example-connection-telemetry&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;connectionType&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;amqp-10&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;connectionStatus&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;open&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;failoverEnabled&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;kc&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;uri&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;amqps://:@:5671&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;source&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+      &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;addresses&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;/ConsumerGroups/$Default/Partitions/0&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;/ConsumerGroups/$Default/Partitions/1&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+      &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+      &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;authorizationContext&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;ditto&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+      &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;enforcement&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;input&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;filters&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+          &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+      &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;a href=&quot;https://www.eclipse.org/ditto/connectivity-manage-connections.html&quot;&gt;Further information on creating connections&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;a href=&quot;https://docs.microsoft.com/en-us/azure/iot-hub/iot-hub-devguide-messages-d2c&quot;&gt;Further information on D2C messaging capabilities of Azure IoT Hub&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;a href=&quot;https://docs.microsoft.com/de-de/azure/iot-hub/iot-hub-devguide-messages-read-builtin&quot;&gt;Further information on the built-in “event-hub like” endpoint of Azure IoT Hub&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;message-connection&quot;&gt;Message connection&lt;/h3&gt;
+
+&lt;p&gt;This connection enables forwarding live messages to the Azure IoT Hub (which forwards it to the device)
+and receiving feedback to these live-messages from the device.&lt;/p&gt;
+
+&lt;p&gt;Adding the header-mapping &lt;code class=&quot;highlighter-rouge&quot;&gt;&quot;message_id&quot;: &quot;&quot;&lt;/code&gt; enables Azure IoT Hub to correlate messages.
+Adding the header-mapping &lt;code class=&quot;highlighter-rouge&quot;&gt;&quot;to&quot;: &quot;/devices//messages/deviceInbound&quot;&lt;/code&gt; is 
+necessary for correct message routing by Azure IoT Hub. The header &lt;code class=&quot;highlighter-rouge&quot;&gt;ditto-message-thing-id&lt;/code&gt; will be set as a 
+default header by Ditto.&lt;/p&gt;
+
+&lt;p&gt;To establish this connection the placeholders below have to be substituted:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;``: The name of the chosen IoT Hub policy + “@sas.root.” + the name of your IoT Hub 
+(i.e. service@sas.root.my-hub).&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;``: The Hostname of your IoT Hub (i.e. my-hub.azure-devices.net).&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;``: An URL encoded SAS token. Information on how to generate a token can be found at 
+&lt;a href=&quot;https://docs.microsoft.com/en-us/cli/azure/ext/azure-iot/iot/hub?view=azure-cli-latest#ext_azure_iot_az_iot_hub_generate_sas_token&quot;&gt;az iot hub generate-sas-token.&lt;/a&gt; 
+The generated token has to be additionally URL encoded (browser console -&amp;gt; &lt;code class=&quot;highlighter-rouge&quot;&gt;encodeURI('')&lt;/code&gt;).&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;em&gt;Note: The generated SAS token has a maximum TTL of 365 days, so the token has to be changed to a newly generated before expiry. 
+Otherwise, the connection tries to reconnect or closes automatically, when &lt;code class=&quot;highlighter-rouge&quot;&gt;failoverEnabled&lt;/code&gt; is set to &lt;code class=&quot;highlighter-rouge&quot;&gt;false&lt;/code&gt;.&lt;/em&gt;&lt;/p&gt;
+
+&lt;div class=&quot;language-json highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;id&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;azure-example-connection-messages&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;connectionType&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;amqp-10&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;connectionStatus&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;open&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;failoverEnabled&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;kc&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;uri&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;amqps://:@:5671&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;target&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;address&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;/messages/devicebound&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+      &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;topics&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;_/_/things/live/messages&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+      &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+      &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;authorizationContext&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;ditto&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+      &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;headerMapping&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;message_id&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;to&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;/devices//messages/deviceInbound&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+      &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;strong&gt;The java azure-iot-device-client currently can not be used to receive messages with JSON as body. 
+Thus, the messages’ payload has to be byte-encoded.&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;This can be achieved by configuring an outgoing JavaScript payload mapper in the message connection:&lt;/p&gt;
+&lt;div class=&quot;language-javascript highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;mapFromDittoProtocolMsg&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;namespace&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;group&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;channel&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;criterion&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;action&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;path&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;dittoHeaders&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;value&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;status&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;extra&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+
+  &lt;span class=&quot;kd&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;headers&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;dittoHeaders&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;kd&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;textPayload&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;kd&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;bytePayload&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;Ditto&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;stringToArrayBuffer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;Ditto&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;buildDittoProtocolMsg&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;namespace&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;group&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;channel&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;criterion&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;action&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;path&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;dittoHeaders&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;value&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;toString&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;());&lt;/span&gt;
+  &lt;span class=&quot;kd&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;contentType&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'application/octet-stream'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+  &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;Ditto&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;buildExternalMsg&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;headers&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;textPayload&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;bytePayload&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;contentType&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;a href=&quot;https://www.eclipse.org/ditto/connectivity-manage-connections.html&quot;&gt;Further information on creating connections&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;a href=&quot;https://www.eclipse.org/ditto/connectivity-mapping.html&quot;&gt;Further information on payload-mapping&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;a href=&quot;https://docs.microsoft.com/de-de/azure/iot-hub/iot-hub-devguide-messages-c2d&quot;&gt;Further information on C2D messaging capabilities of Azure IoT Hub&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;possible-improvements&quot;&gt;Possible improvements&lt;/h2&gt;
+
+&lt;p&gt;Some features of Ditto could be used in combination with Azure IoT Hub with some adjustments. These include:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Using the &lt;code class=&quot;highlighter-rouge&quot;&gt;ImplicitThingCreationMapper&lt;/code&gt; to implicitly create a new thing when a new device is registered in Azure IoT Hub.&lt;/li&gt;
+  &lt;li&gt;Using the ConnectionStatusMapper to update the ConnectionStatus of things, when their devices disconnect from Azure IoT Hub.&lt;/li&gt;
+  &lt;li&gt;[C2D] Directly invoke methods on the device (Direct Method Invocation).&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;using-the-implicitthingcreation-and-connectionstatus-features-based-on-azure-iot-hub-events&quot;&gt;Using the ImplicitThingCreation and ConnectionStatus features based on Azure IoT Hub events&lt;/h3&gt;
+
+&lt;p&gt;Azure IoT Hub has the possibility to publish events for status changes of device connections and the creation/removal of new devices.
+These events are published via an Azure EventGrid to another chosen Azure application. 
+By publishing these events to an Azure Event Hub, a Ditto AMQP connection can subscribe for them.&lt;/p&gt;
+
+&lt;p&gt;The payload-mappers for &lt;code class=&quot;highlighter-rouge&quot;&gt;ImplicitThingCreation&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;ConnectionStatus&lt;/code&gt; could be adjusted to handle such event messages and 
+create new things or update the &lt;code class=&quot;highlighter-rouge&quot;&gt;ConnectionStatus&lt;/code&gt; feature depending on the received messages.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://docs.microsoft.com/de-de/azure/event-grid/event-schema-iot-hub?tabs=event-grid-event-schema&quot;&gt;Further information on the events published by Azure IoT Hub&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;using-direct-method-invocation&quot;&gt;Using Direct Method Invocation&lt;/h3&gt;
+
+&lt;p&gt;Azure IoT Hub provides an endpoint for directly invoking methods on a device. This can be compared to live-commands.
+Direct Method Invocation can only be done via HTTP. For authentication SAS has to be used. 
+This authentication mechanism, however, is not yet implemented for HTTP Push of Eclipse Ditto 
+connections.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://docs.microsoft.com/de-de/azure/iot-hub/iot-hub-devguide-direct-methods&quot;&gt;Further information on direct method invocations&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;implementing-an-automatic-refresh-mechanism-for-sasl-tokens&quot;&gt;Implementing an automatic refresh mechanism for SASL tokens&lt;/h3&gt;
+
+&lt;p&gt;The &lt;code class=&quot;highlighter-rouge&quot;&gt;connectionString&lt;/code&gt; provided by an Azure IoT Hub device’s policy could be used to generate and refresh a SASL token. 
+This would require a new connection setting, which could store such a &lt;code class=&quot;highlighter-rouge&quot;&gt;connectionString&lt;/code&gt;, and an algorithm, which can 
+generate a SAS token out of that string.&lt;/p&gt;
+
+&lt;h2 id=&quot;getting-started&quot;&gt;Getting started&lt;/h2&gt;
+
+&lt;p&gt;To get started using Azure IoT Hub as a message broker for Eclipse Ditto, the 
+&lt;a href=&quot;https://github.com/eclipse/ditto-examples/tree/master/azure/azure-iot-hub-device-simulator&quot;&gt;Azure IoT Hub Device Simulator Example&lt;/a&gt; 
+is a good entry point.&lt;/p&gt;
+</description>
+            <pubDate>Mon, 22 Mar 2021 00:00:00 +0000</pubDate>
+            <link>https://www.eclipse.org/ditto/2021-03-22-azure-iot-hub-integration.html</link>
+            <guid isPermaLink="true">https://www.eclipse.org/ditto/2021-03-22-azure-iot-hub-integration.html</guid>
+            
+            <category>blog</category>
+            
+            <category>architecture</category>
+            
+            <category>connection</category>
+            
+            
+        </item>
         
         <item>
             <title>Support merge functionality for things resources</title>
@@ -1304,61 +1547,6 @@ The Eclipse Ditto team&lt;/p&gt;
             <pubDate>Wed, 30 Sep 2020 00:00:00 +0000</pubDate>
             <link>https://www.eclipse.org/ditto/2020-09-30-release-announcement-130.html</link>
             <guid isPermaLink="true">https://www.eclipse.org/ditto/2020-09-30-release-announcement-130.html</guid>
-            
-            <category>blog</category>
-            
-            
-        </item>
-        
-        <item>
-            <title>Announcing Eclipse Ditto Release 1.2.0</title>
-            <description>&lt;p&gt;Today, the Ditto team is happy to announce the second minor (feature) update of Ditto &lt;code class=&quot;highlighter-rouge&quot;&gt;1.x&lt;/code&gt;:&lt;br /&gt;
-&lt;strong&gt;Eclipse Ditto 1.2.0&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;1.2.0 focuses on the following areas:&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;“At least once” (QoS 1) processing of messages consumed/sent via Ditto’s managed &lt;a href=&quot;basic-connections.html&quot;&gt;connections&lt;/a&gt;
- (via &lt;a href=&quot;basic-acknowledgements.html&quot;&gt;acknowledgements&lt;/a&gt;)&lt;/li&gt;
-  &lt;li&gt;Addition of a &lt;code class=&quot;highlighter-rouge&quot;&gt;&quot;_created&quot;&lt;/code&gt; timestamp for newly created digital twins (things)&lt;/li&gt;
-  &lt;li&gt;Possibility to inject arbitrary &lt;code class=&quot;highlighter-rouge&quot;&gt;&quot;_metadata&quot;&lt;/code&gt; when modifying digital twins (things)&lt;/li&gt;
-  &lt;li&gt;Authenticate HTTP push connections with client certificates&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Please have a look at the &lt;a href=&quot;release_notes_120.html&quot;&gt;1.2.0 release notes&lt;/a&gt; for a more detailed information on the release.&lt;/p&gt;
-
-&lt;h2 id=&quot;artifacts&quot;&gt;Artifacts&lt;/h2&gt;
-
-&lt;p&gt;The new Java artifacts have been published at the &lt;a href=&quot;https://repo.eclipse.org/content/repositories/ditto/&quot;&gt;Eclipse Maven repository&lt;/a&gt;
-as well as &lt;a href=&quot;https://repo1.maven.org/maven2/org/eclipse/ditto/&quot;&gt;Maven central&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;Also the &lt;a href=&quot;client-sdk-java.html&quot;&gt;Ditto Java client&lt;/a&gt;’s artifacts were published to Maven central.&lt;/p&gt;
-
-&lt;p&gt;The Docker images have been pushed to Docker Hub:&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://hub.docker.com/r/eclipse/ditto-policies/&quot;&gt;eclipse/ditto-policies&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://hub.docker.com/r/eclipse/ditto-things/&quot;&gt;eclipse/ditto-things&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://hub.docker.com/r/eclipse/ditto-things-search/&quot;&gt;eclipse/ditto-things-search&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://hub.docker.com/r/eclipse/ditto-gateway/&quot;&gt;eclipse/ditto-gateway&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://hub.docker.com/r/eclipse/ditto-connectivity/&quot;&gt;eclipse/ditto-connectivity&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://hub.docker.com/r/eclipse/ditto-concierge/&quot;&gt;eclipse/ditto-concierge&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;kubernetes-ready-helm-chart&quot;&gt;Kubernetes ready: Helm chart&lt;/h2&gt;
-
-&lt;p&gt;In order to run Eclipse Ditto in a Kubernetes environment, best rely on the official 
-&lt;a href=&quot;https://hub.helm.sh/charts/eclipse-iot/ditto&quot;&gt;Helm chart&lt;/a&gt; and deploy Ditto via the Helm package manager.&lt;/p&gt;
-
-&lt;p&gt;&lt;br /&gt;
-&lt;br /&gt;&lt;/p&gt;
-&lt;figure&gt;&lt;img class=&quot;docimage&quot; src=&quot;images/ditto.svg&quot; alt=&quot;Ditto&quot; style=&quot;max-width: 500px&quot; /&gt;&lt;/figure&gt;
-
-&lt;p&gt;–&lt;br /&gt;
-The Eclipse Ditto team&lt;/p&gt;
-</description>
-            <pubDate>Mon, 31 Aug 2020 00:00:00 +0000</pubDate>
-            <link>https://www.eclipse.org/ditto/2020-08-31-release-announcement-120.html</link>
-            <guid isPermaLink="true">https://www.eclipse.org/ditto/2020-08-31-release-announcement-120.html</guid>
             
             <category>blog</category>
             

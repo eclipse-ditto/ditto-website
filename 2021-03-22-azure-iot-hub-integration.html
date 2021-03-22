@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="">
+<meta name="keywords" content="blogarchitectureconnection,  ">
+<title>  Use Eclipse Ditto with Azure IoT Hub as message broker </title>
+
+<link rel="stylesheet" href="css/syntax.css">
+<link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" crossorigin="anonymous">
+<link rel="stylesheet" href="css/modern-business.css">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" crossorigin="anonymous">
+<link rel="stylesheet" href="css/customstyles.css">
+<link rel="stylesheet" href="css/boxshadowproperties.css">
+<link rel="stylesheet" href="css/theme-ditto.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,700|Source+Code+Pro:300,600|Titillium+Web:400,600,700">
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js" crossorigin="anonymous"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" crossorigin="anonymous"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/anchor-js/2.0.0/anchor.min.js" crossorigin="anonymous"></script>
+<script src="js/toc.js"></script>
+<script src="js/customscripts.js"></script>
+
+<script type="application/ld+json">
+{
+  "@context": "http://schema.org",
+  "@type": "Organization",
+  "url": "https://eclipse.org/ditto/",
+  "logo": "https://eclipse.org/ditto/images/ditto.svg"
+}
+</script>
+
+<link rel="icon" type="image/png" href="images/favicon-16x16.png" sizes="16x16">
+<link rel="icon" type="image/png" href="images/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="images/favicon-96x96.png" sizes="96x96">
+
+<link rel="alternate" type="application/rss+xml" title="Eclipse Ditto Blog" href="https://www.eclipse.org/ditto/feed.xml">
+
+<!-- Eclipse Foundation cookie consent: -->
+<link rel="stylesheet" type="text/css" href="//www.eclipse.org/eclipse.org-common/themes/solstice/public/stylesheets/vendor/cookieconsent/cookieconsent.min.css" />
+<script src="//www.eclipse.org/eclipse.org-common/themes/solstice/public/javascript/vendor/cookieconsent/default.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            $("#tg-sb-link").click(function() {
+                $("#tg-sb-sidebar").toggle();
+                $("#tg-sb-content").toggleClass('col-md-9');
+                $("#tg-sb-content").toggleClass('col-md-12');
+                $("#tg-sb-icon").toggleClass('fa-toggle-on');
+                $("#tg-sb-icon").toggleClass('fa-toggle-off');
+            });
+        });
+    </script>
+</head>
+
+
+<script>
+    (function(w,d,s,l,i){
+        w[l]=w[l]||[];
+        w[l].push({'gtm.start':
+            new Date().getTime(),event:'gtm.js'});
+        var f=d.getElementsByTagName(s)[0],
+            j=d.createElement(s),
+            dl=l!='dataLayer'?'&l='+l:'';
+        j.async=true;
+        j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;
+        f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-5WLCZXC');
+</script>
+
+
+
+<body>
+<!-- Navigation -->
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container topnavlinks">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-ditto-home" href="index.html">&nbsp;<img src="images/ditto_allwhite_symbolonly.svg" class="ditto-navbar-symbol" alt="Home"> <img src="images/ditto_allwhite_textonly.svg" class="ditto-navbar-symbol-text" alt="Ditto"></a>
+        </div>
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <!-- toggle sidebar button -->
+                <!--<li><a id="tg-sb-link" href="#"><i id="tg-sb-icon" class="fa fa-toggle-on"></i> Nav</a></li>-->
+                <!-- entries without drop-downs appear here -->
+
+
+
+
+                
+                
+                
+                <li><a href="blog.html">Blog</a></li>
+                
+                
+                
+                <li><a href="intro-overview.html">Documentation</a></li>
+                
+                
+                
+                <li><a href="http-api-doc.html">HTTP API</a></li>
+                
+                
+                
+                <li><a href="sandbox.html">Sandbox</a></li>
+                
+                
+                
+                <li><a href="https://github.com/eclipse/ditto" target="_blank">GitHub</a></li>
+                
+                
+                
+                <li><a href="https://github.com/eclipse/ditto-examples" target="_blank">GitHub examples</a></li>
+                
+                
+                
+                <!-- entries with drop-downs appear here -->
+                <!-- conditional logic to control which topnav appears for the audience defined in the configuration file.-->
+                
+                
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Links<b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        
+                        
+                        <li><a href="https://projects.eclipse.org/projects/iot.ditto" target="_blank">Eclipse Ditto Project</a></li>
+                        
+                        
+                        
+                        <li><a href="https://www.eclipse.org/forums/index.php/f/364/" target="_blank">Forum</a></li>
+                        
+                        
+                        
+                        <li><a href="https://ci.eclipse.org/ditto/" target="_blank">Jenkins</a></li>
+                        
+                        
+                        
+                        <li><a href="https://dev.eclipse.org/mhonarc/lists/ditto-dev/" target="_blank">Mailing list archives</a></li>
+                        
+                        
+                        
+                        <li><a href="https://gitter.im/eclipse/ditto" target="_blank">Gitter.im chat</a></li>
+                        
+                        
+                    </ul>
+                </li>
+                
+                
+                
+                <!--comment out this block if you want to hide search-->
+                <li>
+                    <!--start search-->
+                    <div id="search-demo-container">
+                        <input type="text" id="search-input" placeholder="search...">
+                        <ul id="results-container"></ul>
+                    </div>
+                    <script src="//cdnjs.cloudflare.com/ajax/libs/simple-jekyll-search/0.0.9/jekyll-search.js" type="text/javascript"></script>
+                    <script type="text/javascript">
+                            SimpleJekyllSearch.init({
+                                searchInput: document.getElementById('search-input'),
+                                resultsContainer: document.getElementById('results-container'),
+                                dataSource: 'search.json',
+                                searchResultTemplate: '<li><a href="{url}" title="Use Eclipse Ditto with Azure IoT Hub as message broker">{title}</a></li>',
+                                noResultsText: 'No results found.',
+                                limit: 10,
+                                fuzzy: true,
+                    })
+                    </script>
+                    <!--end search-->
+                </li>
+            </ul>
+        </div>
+    </div>
+    <!-- /.container -->
+</nav>
+
+<!-- Page Content -->
+<div class="container">
+  <div id="main">
+    <!-- Content Row -->
+    <div class="row">
+        
+        
+
+        <!-- Content Column -->
+        <div class="col-md-12" id="tg-sb-content">
+            <!-- Look the author details up from the site config. -->
+
+
+<!-- Output author details if some exist. -->
+<!-- Output author details if some exist. -->
+<!---->
+<!--<span>-->
+    <!--&lt;!&ndash; Mugshot. &ndash;&gt;-->
+    <!--<img src="https://www.gravatar.com/avatar/3c657b46dc4d006056091942068f6ad7?s=135" alt="A photo of David Schwilk" />-->
+
+<!--&lt;!&ndash; Personal Info. &ndash;&gt;-->
+    <!--Written by <a href="https://github.com/derschwilk" target="_blank">David Schwilk</a>-->
+<!--</span>-->
+<!---->
+
+<article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+    <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">Use Eclipse Ditto with Azure IoT Hub as message broker</h1>
+        <p class="post-meta">Published by <img src="https://www.gravatar.com/avatar/3c657b46dc4d006056091942068f6ad7?s=135" alt="A photo of David Schwilk" style="width:50px;border-radius:50%;display:inline-block;margin-right:5px;" /><span itemprop="author" itemscope itemtype="http://schema.org/Person"><span itemprop="name"><a href="https://github.com/derschwilk" target="_blank">David Schwilk</a> </span></span> on <time datetime="2021-03-22T00:00:00+00:00" itemprop="datePublished">Mar 22, 2021</time> - Tags:
+            
+            
+            
+            <a href="tag_blog.html">blog</a>, 
+            
+            
+            
+            <a href="tag_architecture.html">architecture</a>, 
+            
+            
+            
+            <a href="tag_connection.html">connection</a>
+            
+            
+            
+
+        </p>
+
+
+    </header>
+
+    <div class="post-content" itemprop="articleBody">
+
+        
+
+        
+        
+<!-- this handles the automatic toc. use ## for subheads to auto-generate the on-page minitoc. if you use html tags, you must supply an ID for the heading element in order for it to appear in the minitoc. -->
+<script>
+$( document ).ready(function() {
+  // Handler for .ready() called.
+
+$('#toc').toc({ minimumHeaders: 0, listType: 'ul', showSpeed: 0, headers: 'h2,h3,h4' });
+
+/* this offset helps account for the space taken up by the floating toolbar. */
+$('#toc').on('click', 'a', function() {
+  var target = $(this.getAttribute('href'))
+    , scroll_target = target.offset().top
+
+  $(window).scrollTop(scroll_target - 10);
+  return false
+})
+  
+});
+</script>
+
+<div id="toc"></div>
+
+        
+
+        <p>This blogpost is based upon Eclipse Ditto Version <strong>1.5.0</strong>, the Azure IoT Suite as of
+<strong>2021-03-19</strong> and the azure-iot-device-client version <strong>1.29.2</strong>.</p>
+
+<h1 id="connecting-devices-to-eclipse-ditto-via-azure-iot-hub">Connecting devices to Eclipse Ditto via Azure IoT Hub</h1>
+<p>This blog post elaborates on connecting and managing devices in Eclipse Ditto by using the Azure IoT Hub 
+as a message broker.</p>
+
+<p><img src="images/blog/2021-03-22-azure-iot-hub-integration-overview.png" alt="Connection Overview" /></p>
+
+<p>The basic functionality that can be used at the time of creating this blogpost are:</p>
+
+<ul>
+  <li>[D2C] Sending telemetry data from the device to update its Ditto digital-twin representation.</li>
+  <li>[D2C] Same ID enforcement based on the Azure IoT Hub device-id to prevent spoofing other digital-twins.</li>
+  <li>[C2D] Sending live-messages to the device.</li>
+  <li>[D2C] Sending feedback to live messages to the service.</li>
+</ul>
+
+<h2 id="setting-up-connections-in-ditto">Setting up connections in Ditto</h2>
+<p>The features described above will work with an “out-of-the-box” Azure IoT Hub subscription, 
+so no additional configuration is needed in the IoT Hub. In order to connect Ditto to the IoT Hub you have to set up 
+two AMQP 1.0 connections. One for receiving telemetry data, the other for sending live-messages and receiving 
+live-message feedback.</p>
+
+<h3 id="telemetry-connection">Telemetry Connection</h3>
+
+<p>This connection subscribes to telemetry messages, published by the Azure IoT Hub built-in “Event Hub like” endpoint.</p>
+
+<p>Adding an enforcement for the <code class="highlighter-rouge">based on the</code> prevents 
+applying a digital-twin update to the twin of another device (Device Spoofing).</p>
+
+<p>To establish this connection the placeholders below have to be substituted by:</p>
+
+<ul>
+  <li>
+    <p>``: The <code class="highlighter-rouge">SharedAccessKeyName</code> in your Event Hub-compatible endpoint (i.e. service).</p>
+  </li>
+  <li>
+    <p>``: The <code class="highlighter-rouge">SharedAccessKey</code> in your Event Hub-compatible endpoint.</p>
+  </li>
+  <li>
+    <p>``: The <code class="highlighter-rouge">Endpoint</code> in your Event Hub-compatible endpoint (Cut leading “sb://” and trailing slash,
+e.g.. ihsuprodblres055dednamespace.servicebus.windows.net).</p>
+  </li>
+  <li>
+    <p>``: The <code class="highlighter-rouge">EntitiyPath</code> in your Event Hub-compatible endpoint (e.g.. hubname-8584619-2e72252706).</p>
+  </li>
+</ul>
+
+<p><em>Note: You can use the “service” IoT Hub policy instead of the “iothubowner” policy, since this is more restricitve, 
+and represents the actual use of Ditto as a  northbound service.</em></p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"azure-example-connection-telemetry"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"connectionType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"amqp-10"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"connectionStatus"</span><span class="p">:</span><span class="w"> </span><span class="s2">"open"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"failoverEnabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"uri"</span><span class="p">:</span><span class="w"> </span><span class="s2">"amqps://:@:5671"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"source"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"addresses"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"/ConsumerGroups/$Default/Partitions/0"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"/ConsumerGroups/$Default/Partitions/1"</span><span class="w">
+      </span><span class="p">],</span><span class="w">
+      </span><span class="s2">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"ditto"</span><span class="p">],</span><span class="w">
+      </span><span class="s2">"enforcement"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"input"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"filters"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+          </span><span class="s2">""</span><span class="w">
+        </span><span class="p">]</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+<ul>
+  <li>
+    <p><a href="https://www.eclipse.org/ditto/connectivity-manage-connections.html">Further information on creating connections</a></p>
+  </li>
+  <li>
+    <p><a href="https://docs.microsoft.com/en-us/azure/iot-hub/iot-hub-devguide-messages-d2c">Further information on D2C messaging capabilities of Azure IoT Hub</a></p>
+  </li>
+  <li>
+    <p><a href="https://docs.microsoft.com/de-de/azure/iot-hub/iot-hub-devguide-messages-read-builtin">Further information on the built-in “event-hub like” endpoint of Azure IoT Hub</a></p>
+  </li>
+</ul>
+
+<h3 id="message-connection">Message connection</h3>
+
+<p>This connection enables forwarding live messages to the Azure IoT Hub (which forwards it to the device)
+and receiving feedback to these live-messages from the device.</p>
+
+<p>Adding the header-mapping <code class="highlighter-rouge">"message_id": ""</code> enables Azure IoT Hub to correlate messages.
+Adding the header-mapping <code class="highlighter-rouge">"to": "/devices//messages/deviceInbound"</code> is 
+necessary for correct message routing by Azure IoT Hub. The header <code class="highlighter-rouge">ditto-message-thing-id</code> will be set as a 
+default header by Ditto.</p>
+
+<p>To establish this connection the placeholders below have to be substituted:</p>
+
+<ul>
+  <li>
+    <p>``: The name of the chosen IoT Hub policy + “@sas.root.” + the name of your IoT Hub 
+(i.e. service@sas.root.my-hub).</p>
+  </li>
+  <li>
+    <p>``: The Hostname of your IoT Hub (i.e. my-hub.azure-devices.net).</p>
+  </li>
+  <li>
+    <p>``: An URL encoded SAS token. Information on how to generate a token can be found at 
+<a href="https://docs.microsoft.com/en-us/cli/azure/ext/azure-iot/iot/hub?view=azure-cli-latest#ext_azure_iot_az_iot_hub_generate_sas_token">az iot hub generate-sas-token.</a> 
+The generated token has to be additionally URL encoded (browser console -&gt; <code class="highlighter-rouge">encodeURI('')</code>).</p>
+  </li>
+</ul>
+
+<p><em>Note: The generated SAS token has a maximum TTL of 365 days, so the token has to be changed to a newly generated before expiry. 
+Otherwise, the connection tries to reconnect or closes automatically, when <code class="highlighter-rouge">failoverEnabled</code> is set to <code class="highlighter-rouge">false</code>.</em></p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"azure-example-connection-messages"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"connectionType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"amqp-10"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"connectionStatus"</span><span class="p">:</span><span class="w"> </span><span class="s2">"open"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"failoverEnabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"uri"</span><span class="p">:</span><span class="w"> </span><span class="s2">"amqps://:@:5671"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"target"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="s2">"address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/messages/devicebound"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"topics"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"_/_/things/live/messages"</span><span class="w">
+      </span><span class="p">],</span><span class="w">
+      </span><span class="s2">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"ditto"</span><span class="p">],</span><span class="w">
+      </span><span class="s2">"headerMapping"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"message_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"to"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/devices//messages/deviceInbound"</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p><strong>The java azure-iot-device-client currently can not be used to receive messages with JSON as body. 
+Thus, the messages’ payload has to be byte-encoded.</strong></p>
+
+<p>This can be achieved by configuring an outgoing JavaScript payload mapper in the message connection:</p>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">mapFromDittoProtocolMsg</span><span class="p">(</span>
+  <span class="nx">namespace</span><span class="p">,</span>
+  <span class="nx">id</span><span class="p">,</span>
+  <span class="nx">group</span><span class="p">,</span>
+  <span class="nx">channel</span><span class="p">,</span>
+  <span class="nx">criterion</span><span class="p">,</span>
+  <span class="nx">action</span><span class="p">,</span>
+  <span class="nx">path</span><span class="p">,</span>
+  <span class="nx">dittoHeaders</span><span class="p">,</span>
+  <span class="nx">value</span><span class="p">,</span>
+  <span class="nx">status</span><span class="p">,</span>
+  <span class="nx">extra</span>
+<span class="p">)</span> <span class="p">{</span>
+
+  <span class="kd">let</span> <span class="nx">headers</span> <span class="o">=</span> <span class="nx">dittoHeaders</span><span class="p">;</span>
+  <span class="kd">let</span> <span class="nx">textPayload</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+  <span class="kd">let</span> <span class="nx">bytePayload</span> <span class="o">=</span> <span class="nx">Ditto</span><span class="p">.</span><span class="nx">stringToArrayBuffer</span><span class="p">(</span><span class="nx">Ditto</span><span class="p">.</span><span class="nx">buildDittoProtocolMsg</span><span class="p">(</span><span class="nx">namespace</span><span class="p">,</span> <span class="nx">id</span><span class="p">,</span> <span class="nx">group</span><span class="p">,</span> <span class="nx">channel</span><span class="p">,</span> <span class="nx">criterion</span><span class="p">,</span> <span class="nx">action</span><span class="p">,</span> <span class="nx">path</span><span class="p">,</span> <span class="nx">dittoHeaders</span><span class="p">,</span> <span class="nx">value</span><span class="p">).</span><span class="nx">toString</span><span class="p">());</span>
+  <span class="kd">let</span> <span class="nx">contentType</span> <span class="o">=</span> <span class="s1">'application/octet-stream'</span><span class="p">;</span>
+
+  <span class="k">return</span> <span class="nx">Ditto</span><span class="p">.</span><span class="nx">buildExternalMsg</span><span class="p">(</span>
+    <span class="nx">headers</span><span class="p">,</span>
+    <span class="nx">textPayload</span><span class="p">,</span>
+    <span class="nx">bytePayload</span><span class="p">,</span>
+    <span class="nx">contentType</span>
+  <span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<ul>
+  <li>
+    <p><a href="https://www.eclipse.org/ditto/connectivity-manage-connections.html">Further information on creating connections</a></p>
+  </li>
+  <li>
+    <p><a href="https://www.eclipse.org/ditto/connectivity-mapping.html">Further information on payload-mapping</a></p>
+  </li>
+  <li>
+    <p><a href="https://docs.microsoft.com/de-de/azure/iot-hub/iot-hub-devguide-messages-c2d">Further information on C2D messaging capabilities of Azure IoT Hub</a></p>
+  </li>
+</ul>
+
+<h2 id="possible-improvements">Possible improvements</h2>
+
+<p>Some features of Ditto could be used in combination with Azure IoT Hub with some adjustments. These include:</p>
+
+<ul>
+  <li>Using the <code class="highlighter-rouge">ImplicitThingCreationMapper</code> to implicitly create a new thing when a new device is registered in Azure IoT Hub.</li>
+  <li>Using the ConnectionStatusMapper to update the ConnectionStatus of things, when their devices disconnect from Azure IoT Hub.</li>
+  <li>[C2D] Directly invoke methods on the device (Direct Method Invocation).</li>
+</ul>
+
+<h3 id="using-the-implicitthingcreation-and-connectionstatus-features-based-on-azure-iot-hub-events">Using the ImplicitThingCreation and ConnectionStatus features based on Azure IoT Hub events</h3>
+
+<p>Azure IoT Hub has the possibility to publish events for status changes of device connections and the creation/removal of new devices.
+These events are published via an Azure EventGrid to another chosen Azure application. 
+By publishing these events to an Azure Event Hub, a Ditto AMQP connection can subscribe for them.</p>
+
+<p>The payload-mappers for <code class="highlighter-rouge">ImplicitThingCreation</code> and <code class="highlighter-rouge">ConnectionStatus</code> could be adjusted to handle such event messages and 
+create new things or update the <code class="highlighter-rouge">ConnectionStatus</code> feature depending on the received messages.</p>
+
+<ul>
+  <li><a href="https://docs.microsoft.com/de-de/azure/event-grid/event-schema-iot-hub?tabs=event-grid-event-schema">Further information on the events published by Azure IoT Hub</a></li>
+</ul>
+
+<h3 id="using-direct-method-invocation">Using Direct Method Invocation</h3>
+
+<p>Azure IoT Hub provides an endpoint for directly invoking methods on a device. This can be compared to live-commands.
+Direct Method Invocation can only be done via HTTP. For authentication SAS has to be used. 
+This authentication mechanism, however, is not yet implemented for HTTP Push of Eclipse Ditto 
+connections.</p>
+
+<ul>
+  <li><a href="https://docs.microsoft.com/de-de/azure/iot-hub/iot-hub-devguide-direct-methods">Further information on direct method invocations</a></li>
+</ul>
+
+<h3 id="implementing-an-automatic-refresh-mechanism-for-sasl-tokens">Implementing an automatic refresh mechanism for SASL tokens</h3>
+
+<p>The <code class="highlighter-rouge">connectionString</code> provided by an Azure IoT Hub device’s policy could be used to generate and refresh a SASL token. 
+This would require a new connection setting, which could store such a <code class="highlighter-rouge">connectionString</code>, and an algorithm, which can 
+generate a SAS token out of that string.</p>
+
+<h2 id="getting-started">Getting started</h2>
+
+<p>To get started using Azure IoT Hub as a message broker for Eclipse Ditto, the 
+<a href="https://github.com/eclipse/ditto-examples/tree/master/azure/azure-iot-hub-device-simulator">Azure IoT Hub Device Simulator Example</a> 
+is a good entry point.</p>
+
+    </div>
+
+
+
+</article>
+
+<hr class="shaded"/>
+
+<footer>
+            <div class="row">
+                <div class="col-lg-12 footer">
+                    <div class="logo">
+                        <a href="https://eclipse.org"><img src="images/eclipse_foundation_logo.svg" alt="Eclipse logo"/></a>
+                    </div>
+                    <p class="notice">
+                        &copy;2021 Eclipse Ditto.
+                         Site last generated: Mar 22, 2021 <br />
+                    </p>
+                    <div class="quickLinks">
+                        <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">
+                            &gt; Privacy Policy
+                        </a>
+                        <a href="https://www.eclipse.org/legal/termsofuse.php" target="_blank">
+                            &gt; Terms of Use
+                        </a>
+                        <a href="https://www.eclipse.org/legal/copyright.php" target="_blank">
+                            &gt; Copyright Agent
+                        </a>
+                        <a href="https://www.eclipse.org/legal" target="_blank">
+                            &gt; Legal
+                        </a>
+                        <a href="https://www.eclipse.org/legal/epl-2.0/" target="_blank">
+                            &gt; License
+                        </a>
+                        <a href="https://eclipse.org/security" target="_blank">
+                            &gt; Report a Vulnerability
+                        </a>
+                    </div>
+                </div>
+            </div>
+</footer>
+
+
+        </div>
+    <!-- /.row -->
+</div>
+<!-- /.container -->
+</div>
+<!-- /#main -->
+    </div>
+
+</body>
+</html>
