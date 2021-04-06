@@ -5,9 +5,114 @@
         <description>Announcements, tutorials and examples around Eclipse Ditto and Digital Twins</description>
         <link>https://www.eclipse.org/ditto/</link>
         <atom:link href="https://www.eclipse.org/ditto/feed.xml" rel="self" type="application/rss+xml"/>
-        <pubDate>Mon, 22 Mar 2021 13:07:19 +0000</pubDate>
-        <lastBuildDate>Mon, 22 Mar 2021 13:07:19 +0000</lastBuildDate>
+        <pubDate>Tue, 06 Apr 2021 09:17:33 +0000</pubDate>
+        <lastBuildDate>Tue, 06 Apr 2021 09:17:33 +0000</lastBuildDate>
         <generator>Jekyll v3.6.2</generator>
+        
+        <item>
+            <title>Support SSH tunneling for managed connections</title>
+            <description>&lt;p&gt;With the upcoming release of Eclipse Ditto &lt;strong&gt;version 2.0.0&lt;/strong&gt; it will be possible to&lt;/p&gt;
+
+&lt;h1 id=&quot;ssh-tunneling-for-managed-connections&quot;&gt;SSH tunneling for managed connections&lt;/h1&gt;
+&lt;p&gt;With the upcoming release of Eclipse Ditto version 2.0.0, managed connections support establishing 
+an SSH tunnel, which is then used to connect to the actual target endpoint. This is useful when the target endpoint is 
+not directly accessible. Currently, this feature is available for all connection types supported in Ditto, except for 
+Kafka 2.x.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;images/blog/2021-04-06-ssh-tunnel-for-managed-connections-shema.png&quot; alt=&quot;Connection Overview&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;For further information, see &lt;a href=&quot;https://tools.ietf.
+org/html/rfc4254#section-7&quot;&gt;Secure Shell (SSH) Connection Protocol, RFC4254&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;setting-up-connections-with-ssh-tunneling-in-ditto&quot;&gt;Setting up connections with SSH tunneling in Ditto&lt;/h2&gt;
+&lt;p&gt;When setting up a tunneled connection, the configuration must specify the &lt;code class=&quot;highlighter-rouge&quot;&gt;sshTunnel&lt;/code&gt; section, which contains 
+the necessary information to establish the SSH port forwarding. For authentication, password and public 
+key are supported. Also, host validation using public key fingerprints are supported. The tunnel configuration does not 
+affect the other parts of your connection configuration. If the feature is enabled the connection will establish an SSH 
+tunnel and afterwards use this tunnel to connect to the desired endpoint. In case you later disable the SSH tunnel 
+feature, the payload will be processed directly to the desired endpoint.&lt;/p&gt;
+
+&lt;h3 id=&quot;basic-authentication&quot;&gt;Basic Authentication&lt;/h3&gt;
+&lt;p&gt;When using basic authenticating the &lt;code class=&quot;highlighter-rouge&quot;&gt;sshTunnel&lt;/code&gt; configuration should contain the &lt;code class=&quot;highlighter-rouge&quot;&gt;credentials.type&lt;/code&gt; &lt;code class=&quot;highlighter-rouge&quot;&gt;plain&lt;/code&gt;, as 
+well as the &lt;code class=&quot;highlighter-rouge&quot;&gt;username&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;password&lt;/code&gt; fields:&lt;/p&gt;
+&lt;div class=&quot;language-json highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;name&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;tunneled-connection&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;connectionType&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;mqtt&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;uri&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;tcp://mqtt.eclipseprojects.io:1883&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;sources&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;err&quot;&gt;...&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}],&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;sshTunnel&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;enabled&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;kc&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;uri&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;ssh://ssh-host:2222&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;credentials&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+      &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;type&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;plain&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+      &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;username&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;username&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+      &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;password&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;password&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;validateHost&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;kc&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;knownHosts&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;MD5:e0:3a:34:1c:68:ed:c6:bc:7c:ca:a8:67:c7:45:2b:19&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;authentication-with-public-key&quot;&gt;Authentication with public key&lt;/h3&gt;
+&lt;p&gt;On public key authentication the &lt;code class=&quot;highlighter-rouge&quot;&gt;credentials.type&lt;/code&gt; is &lt;code class=&quot;highlighter-rouge&quot;&gt;public-key&lt;/code&gt;. In addition to the &lt;code class=&quot;highlighter-rouge&quot;&gt;username&lt;/code&gt; the &lt;code class=&quot;highlighter-rouge&quot;&gt;publicKey&lt;/code&gt; and 
+&lt;code class=&quot;highlighter-rouge&quot;&gt;privateKey&lt;/code&gt; have to be provided. The public key must be provided as PEM-encoded key in &lt;code class=&quot;highlighter-rouge&quot;&gt;X.509&lt;/code&gt; format. The private 
+key must be provided as PEM-encoded key in unencrypted &lt;code class=&quot;highlighter-rouge&quot;&gt;PKCS8&lt;/code&gt; format as specified by &lt;a href=&quot;https://tools.ietf.org/html/rfc7468&quot;&gt;RFC-7468&lt;/a&gt;.&lt;/p&gt;
+&lt;div class=&quot;language-json highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;name&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;tunneled-connection&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;connectionType&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;mqtt&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;uri&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;tcp://mqtt.eclipseprojects.io:1883&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;sources&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;err&quot;&gt;...&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}],&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;sshTunnel&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;enabled&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;kc&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;uri&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;ssh://ssh-host:2222&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;credentials&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+      &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;type&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;public-key&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+      &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;username&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;username&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+      &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;publicKey&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;-----BEGIN PUBLIC KEY-----&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\n&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;MIIBIjANBgkqhkiG9.....&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\n&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;-----END PUBLIC KEY-----&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+      &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;privateKey&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;-----BEGIN PRIVATE KEY-----&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\n&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;MIIEvAIBADANBgkqhki....&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\n&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;-----END PRIVATE KEY-----&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;validateHost&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;kc&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;knownHosts&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;MD5:e0:3a:34:1c:68:ed:c6:bc:7c:ca:a8:67:c7:45:2b:19&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;The following command can be used to convert a standard OpenSSL key in PKCS1 format to the PKCS8 format accepted by Ditto:&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;openssl pkcs8 -topk8 -nocrypt -in client-private.pem.key -out client-private.pem.pk8
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;host-validation-using-public-key-fingerprints&quot;&gt;Host validation using public key fingerprints&lt;/h3&gt;
+&lt;p&gt;When &lt;code class=&quot;highlighter-rouge&quot;&gt;validateHost&lt;/code&gt; is enabled, the host public key fingerprints are validated. They can be provided 
+in the format the standard command line tool &lt;code class=&quot;highlighter-rouge&quot;&gt;ssh-keygen&lt;/code&gt; produces them. The fingerprints are 
+prefixed with an alias of the hash algorithm that was used to calculate the fingerprint. Ditto supports the following 
+hash algorithms for public key fingerprints: &lt;code class=&quot;highlighter-rouge&quot;&gt;MD5&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;SHA1&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;SHA224&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;SHA256&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;SHA384&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;SHA512&lt;/code&gt;. To generate a 
+valid fingerprint with an &lt;code class=&quot;highlighter-rouge&quot;&gt;MD5&lt;/code&gt; hash algorithm from the public key, following can be used:&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;ssh-keygen -lf id_rsa.pub -E md5
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;feedback&quot;&gt;Feedback?&lt;/h2&gt;
+
+&lt;p&gt;Please &lt;a href=&quot;feedback.html&quot;&gt;get in touch&lt;/a&gt; if you have feedback or questions regarding this new functionality.&lt;/p&gt;
+
+&lt;p&gt;&lt;br /&gt;
+&lt;br /&gt;&lt;/p&gt;
+&lt;figure&gt;&lt;img class=&quot;docimage&quot; src=&quot;images/ditto.svg&quot; alt=&quot;Ditto&quot; style=&quot;max-width: 500px&quot; /&gt;&lt;/figure&gt;
+
+&lt;p&gt;–&lt;br /&gt; 
+The Eclipse Ditto team&lt;/p&gt;
+</description>
+            <pubDate>Wed, 31 Mar 2021 00:00:00 +0000</pubDate>
+            <link>https://www.eclipse.org/ditto/2021-03-31-ssh-tunneling-for-managed-connections.html</link>
+            <guid isPermaLink="true">https://www.eclipse.org/ditto/2021-03-31-ssh-tunneling-for-managed-connections.html</guid>
+            
+            <category>blog</category>
+            
+            <category>architecture</category>
+            
+            <category>connection</category>
+            
+            
+        </item>
         
         <item>
             <title>Use Eclipse Ditto with Azure IoT Hub as message broker</title>
@@ -1492,61 +1597,6 @@ The Eclipse Ditto team&lt;/p&gt;
             <pubDate>Thu, 08 Oct 2020 00:00:00 +0000</pubDate>
             <link>https://www.eclipse.org/ditto/2020-10-08-asynchronous-client-creation.html</link>
             <guid isPermaLink="true">https://www.eclipse.org/ditto/2020-10-08-asynchronous-client-creation.html</guid>
-            
-            <category>blog</category>
-            
-            
-        </item>
-        
-        <item>
-            <title>Announcing Eclipse Ditto Release 1.3.0</title>
-            <description>&lt;p&gt;Today, the Ditto team is happy to announce the next feature update of Ditto &lt;code class=&quot;highlighter-rouge&quot;&gt;1.x&lt;/code&gt;: &lt;strong&gt;Eclipse Ditto 1.3.0&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;1.3.0 focuses on the following areas:&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;Implicit/automatic creation of digital twins (things)&lt;/li&gt;
-  &lt;li&gt;Use response of HTTP push connections as live message response&lt;/li&gt;
-  &lt;li&gt;“Raw” payload mapper for “pass-through” connectivity scenarios not affecting the twin&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Please have a look at the &lt;a href=&quot;release_notes_130.html&quot;&gt;1.3.0 release notes&lt;/a&gt; for a more detailed information on the release.&lt;/p&gt;
-
-&lt;p&gt;Also, some bugs were fixed which are not backported to Ditto 1.2.x - it is recommended to update to Ditto 1.3.0 right
-away and skip 1.2.x.&lt;/p&gt;
-
-&lt;h2 id=&quot;artifacts&quot;&gt;Artifacts&lt;/h2&gt;
-
-&lt;p&gt;The new Java artifacts have been published at the &lt;a href=&quot;https://repo.eclipse.org/content/repositories/ditto/&quot;&gt;Eclipse Maven repository&lt;/a&gt;
-as well as &lt;a href=&quot;https://repo1.maven.org/maven2/org/eclipse/ditto/&quot;&gt;Maven central&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;Also the &lt;a href=&quot;client-sdk-java.html&quot;&gt;Ditto Java client&lt;/a&gt;’s artifacts were published to Maven central.&lt;/p&gt;
-
-&lt;p&gt;The Docker images have been pushed to Docker Hub:&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://hub.docker.com/r/eclipse/ditto-policies/&quot;&gt;eclipse/ditto-policies&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://hub.docker.com/r/eclipse/ditto-things/&quot;&gt;eclipse/ditto-things&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://hub.docker.com/r/eclipse/ditto-things-search/&quot;&gt;eclipse/ditto-things-search&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://hub.docker.com/r/eclipse/ditto-gateway/&quot;&gt;eclipse/ditto-gateway&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://hub.docker.com/r/eclipse/ditto-connectivity/&quot;&gt;eclipse/ditto-connectivity&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://hub.docker.com/r/eclipse/ditto-concierge/&quot;&gt;eclipse/ditto-concierge&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;kubernetes-ready-helm-chart&quot;&gt;Kubernetes ready: Helm chart&lt;/h2&gt;
-
-&lt;p&gt;In order to run Eclipse Ditto in a Kubernetes environment, best rely on the official 
-&lt;a href=&quot;https://hub.helm.sh/charts/eclipse-iot/ditto&quot;&gt;Helm chart&lt;/a&gt; and deploy Ditto via the Helm package manager.&lt;/p&gt;
-
-&lt;p&gt;&lt;br /&gt;
-&lt;br /&gt;&lt;/p&gt;
-&lt;figure&gt;&lt;img class=&quot;docimage&quot; src=&quot;images/ditto.svg&quot; alt=&quot;Ditto&quot; style=&quot;max-width: 500px&quot; /&gt;&lt;/figure&gt;
-
-&lt;p&gt;–&lt;br /&gt;
-The Eclipse Ditto team&lt;/p&gt;
-</description>
-            <pubDate>Wed, 30 Sep 2020 00:00:00 +0000</pubDate>
-            <link>https://www.eclipse.org/ditto/2020-09-30-release-announcement-130.html</link>
-            <guid isPermaLink="true">https://www.eclipse.org/ditto/2020-09-30-release-announcement-130.html</guid>
             
             <category>blog</category>
             
