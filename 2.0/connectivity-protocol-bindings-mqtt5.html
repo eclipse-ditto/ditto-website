@@ -278,6 +278,13 @@
               
               
               
+              <li><a href="release_notes_201.html">2.0.1</a></li>
+              
+              
+              
+              
+              
+              
               <li><a href="release_notes_200.html">2.0.0</a></li>
               
               
@@ -1761,9 +1768,8 @@ If a command sets the header <code class="highlighter-rouge">reply-to</code>, th
   <li><code class="highlighter-rouge">"authorizationContext"</code> array that contains the authorization subjects in whose context
 inbound messages are processed. These subjects may contain placeholders, see 
 <a href="basic-connections.html#placeholder-for-source-authorization-subjects">placeholders</a> section for more information.</li>
-  <li>The optional field <code class="highlighter-rouge">"qos"</code> sets the maximum Quality of Service to request when subscribing for messages. Its value
+  <li>The required field <code class="highlighter-rouge">"qos"</code> sets the maximum Quality of Service to request when subscribing for messages. Its value
 can be <code class="highlighter-rouge">0</code> for at-most-once delivery, <code class="highlighter-rouge">1</code> for at-least-once delivery and <code class="highlighter-rouge">2</code> for exactly-once delivery.
-The default value is <code class="highlighter-rouge">2</code> (exactly-once).
 Support of any Quality of Service depends on the external MQTT broker</li>
 </ul>
 
@@ -1820,8 +1826,8 @@ broker are treated in the following way:</p>
     <ul>
       <li>based on the <a href="#specific-configuration">specificConfig</a> <a href="#reconnectforredelivery">reconnectForDelivery</a> either
         <ul>
-          <li>closes and reconnects the MQTT connection in order to receive unACKed QoS 1/2 messages again</li>
-          <li>or simply acknowledges the received MQTT 5 message</li>
+          <li>closes and reconnects the MQTT connection in order to immediately receive unACKed QoS 1/2 messages again</li>
+          <li>or simply doesn’t acknowledge the received MQTT 5 message resulting in a redelivery of a QoS &gt; 0 message by the MQTT broker</li>
         </ul>
       </li>
     </ul>
@@ -1832,6 +1838,25 @@ broker are treated in the following way:</p>
     </ul>
   </li>
 </ul>
+
+<p>In order to enable acknowledgement processing only for MQTT messages received with QoS 1/2, the following configuration
+has to be applied:</p>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"addresses"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="s2">"&lt;mqtt_topic&gt;"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"..."</span><span class="w">
+  </span><span class="p">],</span><span class="w">
+  </span><span class="s2">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="s2">"ditto:inbound-auth-subject"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"..."</span><span class="w">
+  </span><span class="p">],</span><span class="w">
+  </span><span class="s2">"qos"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"acknowledgementRequests"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"includes"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+    </span><span class="s2">"filter"</span><span class="p">:</span><span class="w"> </span><span class="s2">"fn:filter(header:mqtt.qos,'ne','0')"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
 
 <h3 id="target-format">Target format</h3>
 
@@ -1847,8 +1872,7 @@ has READ permission on the thing, which is associated with a message.</p>
 
 <p>The additional field <code class="highlighter-rouge">"qos"</code> sets the Quality of Service with which messages are published.
 Its value can be <code class="highlighter-rouge">0</code> for at-most-once delivery, <code class="highlighter-rouge">1</code> for at-least-once delivery and <code class="highlighter-rouge">2</code> for exactly-once delivery.
-Support of any Quality of Service depends on the external MQTT broker.
-The default value is <code class="highlighter-rouge">0</code> (at-most-once).</p>
+Support of any Quality of Service depends on the external MQTT broker.</p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
   </span><span class="s2">"address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"mqtt/topic/of/my/device/{{ thing:id }}"</span><span class="p">,</span><span class="w">
@@ -1911,9 +1935,9 @@ to apply for the used MQTT client.</p>
   </span><span class="s2">"uri"</span><span class="p">:</span><span class="w"> </span><span class="s2">"tcp://test.mosquitto.org:1883"</span><span class="p">,</span><span class="w">
   </span><span class="s2">"specificConfig"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
     </span><span class="s2">"clientId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"my-awesome-mqtt-client-id"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"reconnectForRedelivery"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"reconnectForRedelivery"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
     </span><span class="s2">"cleanSession"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"separatePublisherClient"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"separatePublisherClient"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
     </span><span class="s2">"publisherId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"my-awesome-mqtt-publisher-client-id"</span><span class="p">,</span><span class="w">
     </span><span class="s2">"reconnectForRedeliveryDelay"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5s"</span><span class="p">,</span><span class="w">
     </span><span class="s2">"lastWillTopic"</span><span class="p">:</span><span class="w"> </span><span class="s2">"my/last/will/topic"</span><span class="p">,</span><span class="w">
@@ -1944,7 +1968,7 @@ ID connects.</p>
 That causes that the MQTT broker will re-publish the message once the connection reconnected. <br />
 If configured to <code class="highlighter-rouge">false</code>, the MQTT message is simply acknowledged (<code class="highlighter-rouge">PUBACK</code> or <code class="highlighter-rouge">PUBREC</code>, <code class="highlighter-rouge">PUBREL</code>).</p>
 
-<p>Default: <code class="highlighter-rouge">true</code></p>
+<p>Default: <code class="highlighter-rouge">false</code></p>
 
 <p>Handle with care:</p>
 <ul>
@@ -1955,7 +1979,9 @@ the messages to be published during the reconnection phase are lost
       <li>to fix that, configure <code class="highlighter-rouge">"separatePublisherClient"</code> also to <code class="highlighter-rouge">true</code> in order to publish via another MQTT connection</li>
     </ul>
   </li>
-  <li>when set to <code class="highlighter-rouge">false</code>, MQTT messages with QoS 1 and 2 could get lost (e.g. during downtime or connection issues)</li>
+  <li>when set to <code class="highlighter-rouge">false</code>, MQTT messages with QoS 1 and 2 are redelivered based on the MQTT broker’s strategy,
+but may not be redelivered at all as the MQTT specification does not require unacknowledged messages to be redelivered
+without reconnection of the client</li>
 </ul>
 
 <h4 id="cleansession">cleanSession</h4>
@@ -1963,16 +1989,17 @@ the messages to be published during the reconnection phase are lost
 <p>Configure the MQTT client’s <code class="highlighter-rouge">cleanStart</code> flag. (The flag is called <code class="highlighter-rouge">cleanStart</code> but the option is <code class="highlighter-rouge">cleanSession</code> to
 be consistent with MQTT 3 specific config.)</p>
 
-<p>Default: the negation of <code class="highlighter-rouge">"reconnectForRedelivery"</code></p>
+<p>Default: <code class="highlighter-rouge">false</code></p>
 
 <h4 id="separatepublisherclient">separatePublisherClient</h4>
 
 <p>Configures whether to create a separate physical client and connection to the MQTT broker for publishing messages, or not.
-By default (configured to <code class="highlighter-rouge">true</code>), a single Ditto connection would open 2 MQTT connections/sessions: one for subscribing 
-and one for publishing. If configured to <code class="highlighter-rouge">false</code>, the same MQTT connection/session is used both: for subscribing 
-to messages, and for publishing messages.</p>
+If configured to <code class="highlighter-rouge">true</code>, a single Ditto connection would open 2 MQTT connections/sessions: one for subscribing 
+and one for publishing.<br />
+If configured to <code class="highlighter-rouge">false</code>, the same MQTT connection/session is used both: for subscribing to messages, and for publishing 
+messages.</p>
 
-<p>Default: <code class="highlighter-rouge">true</code></p>
+<p>Default: <code class="highlighter-rouge">false</code></p>
 
 <h4 id="publisherid">publisherId</h4>
 
@@ -2150,7 +2177,7 @@ for how to set it up.</p>
                     </div>
                     <p class="notice">
                         &copy;2021 Eclipse Ditto™.
-                         Site last generated: May 17, 2021 <br />
+                         Site last generated: May 20, 2021 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">
