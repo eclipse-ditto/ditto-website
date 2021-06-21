@@ -1,0 +1,2464 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="">
+<meta name="keywords" content="connectivity,  hmac, hmac-sha256, authorization, azure, aws, azure iot hub, azure service bus, azure monitor, aws version 4 signing, aws sns, signing">
+<title>  HMAC signing • Eclipse Ditto™ • a digital twin framework</title>
+
+<link rel="stylesheet" href="css/syntax.css">
+<link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" crossorigin="anonymous">
+<link rel="stylesheet" href="css/modern-business.css">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" crossorigin="anonymous">
+<link rel="stylesheet" href="css/customstyles.css">
+<link rel="stylesheet" href="css/boxshadowproperties.css">
+<link rel="stylesheet" href="css/theme-ditto.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,700|Source+Code+Pro:300,600|Titillium+Web:400,600,700">
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js" crossorigin="anonymous"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" crossorigin="anonymous"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/anchor-js/2.0.0/anchor.min.js" crossorigin="anonymous"></script>
+<script src="js/toc.js"></script>
+<script src="js/customscripts.js"></script>
+
+<script type="application/ld+json">
+{
+  "@context": "http://schema.org",
+  "@type": "Organization",
+  "url": "https://eclipse.org/ditto/",
+  "logo": "https://eclipse.org/ditto/images/ditto.svg"
+}
+</script>
+
+<link rel="icon" type="image/png" href="images/favicon-16x16.png" sizes="16x16">
+<link rel="icon" type="image/png" href="images/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="images/favicon-96x96.png" sizes="96x96">
+
+<link rel="alternate" type="application/rss+xml" title="Eclipse Ditto Blog" href="https://www.eclipse.org/ditto/feed.xml">
+
+<!-- Eclipse Foundation cookie consent: -->
+<link rel="stylesheet" type="text/css" href="//www.eclipse.org/eclipse.org-common/themes/solstice/public/stylesheets/vendor/cookieconsent/cookieconsent.min.css" />
+<script src="//www.eclipse.org/eclipse.org-common/themes/solstice/public/javascript/vendor/cookieconsent/default.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            $("#tg-sb-link").click(function() {
+                $("#tg-sb-sidebar").toggle();
+                $("#tg-sb-content").toggleClass('col-md-9');
+                $("#tg-sb-content").toggleClass('col-md-12');
+                $("#tg-sb-icon").toggleClass('fa-toggle-on');
+                $("#tg-sb-icon").toggleClass('fa-toggle-off');
+            });
+        });
+    </script>
+</head>
+
+
+<script>
+    (function(w,d,s,l,i){
+        w[l]=w[l]||[];
+        w[l].push({'gtm.start':
+            new Date().getTime(),event:'gtm.js'});
+        var f=d.getElementsByTagName(s)[0],
+            j=d.createElement(s),
+            dl=l!='dataLayer'?'&l='+l:'';
+        j.async=true;
+        j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;
+        f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-5WLCZXC');
+</script>
+
+
+
+<body>
+<!-- Navigation -->
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container topnavlinks">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-ditto-home" href="index.html">&nbsp;<img src="images/ditto_allwhite_symbolonly.svg" class="ditto-navbar-symbol" alt="Home"> <img src="images/ditto_allwhite_textonly.svg" class="ditto-navbar-symbol-text" alt="Eclipse Ditto™"></a>
+        </div>
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <!-- toggle sidebar button -->
+                <!--<li><a id="tg-sb-link" href="#"><i id="tg-sb-icon" class="fa fa-toggle-on"></i> Nav</a></li>-->
+                <!-- entries without drop-downs appear here -->
+
+
+
+
+                
+                
+                
+                <li><a href="blog.html">Blog</a></li>
+                
+                
+                
+                <li><a href="intro-overview.html">Documentation</a></li>
+                
+                
+                
+                <li><a href="http-api-doc.html">HTTP API</a></li>
+                
+                
+                
+                <li><a href="sandbox.html">Sandbox</a></li>
+                
+                
+                
+                  
+                  <li><a href="https://github.com/eclipse/ditto" target="_blank">
+                    <img src="images/GitHub-Mark-Light-32px.png" alt="Sources at GitHub">
+                  </a></li>
+                  
+                
+                
+                
+                  
+                  <li><a href="https://github.com/eclipse/ditto-clients" target="_blank">
+                    <img src="images/GitHub-Mark-Light-32px.png" alt="SDK sources at GitHub">SDKs
+                  </a></li>
+                  
+                
+                
+                
+                  
+                  <li><a href="https://github.com/eclipse/ditto-examples" target="_blank">
+                    <img src="images/GitHub-Mark-Light-32px.png" alt="Example sources at GitHub">examples
+                  </a></li>
+                  
+                
+                
+                
+                <!-- entries with drop-downs appear here -->
+                <!-- conditional logic to control which topnav appears for the audience defined in the configuration file.-->
+                
+                
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Links<b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        
+                        
+                        <li><a href="https://projects.eclipse.org/projects/iot.ditto" target="_blank">Eclipse Ditto Project</a></li>
+                        
+                        
+                        
+                        <li><a href="https://www.eclipse.org/forums/index.php/f/364/" target="_blank">Forum</a></li>
+                        
+                        
+                        
+                        <li><a href="https://ci.eclipse.org/ditto/" target="_blank">Jenkins</a></li>
+                        
+                        
+                        
+                        <li><a href="https://dev.eclipse.org/mhonarc/lists/ditto-dev/" target="_blank">Mailing list archives</a></li>
+                        
+                        
+                        
+                        <li><a href="https://gitter.im/eclipse/ditto" target="_blank">Gitter.im chat</a></li>
+                        
+                        
+                    </ul>
+                </li>
+                
+                
+                
+                <!--comment out this block if you want to hide search-->
+                <li>
+                    <!--start search-->
+                    <div id="search-demo-container">
+                        <input type="text" id="search-input" placeholder="search...">
+                        <ul id="results-container"></ul>
+                    </div>
+                    <script src="//cdnjs.cloudflare.com/ajax/libs/simple-jekyll-search/0.0.9/jekyll-search.js" type="text/javascript"></script>
+                    <script type="text/javascript">
+                            SimpleJekyllSearch.init({
+                                searchInput: document.getElementById('search-input'),
+                                resultsContainer: document.getElementById('results-container'),
+                                dataSource: 'search.json',
+                                searchResultTemplate: '<li><a href="{url}" title="HMAC signing">{title}</a></li>',
+                                noResultsText: 'No results found.',
+                                limit: 10,
+                                fuzzy: true,
+                    })
+                    </script>
+                    <!--end search-->
+                </li>
+            </ul>
+        </div>
+    </div>
+    <!-- /.container -->
+</nav>
+
+<!-- Page Content -->
+<div class="container">
+  <div id="main">
+    <!-- Content Row -->
+    <div class="row">
+        
+        
+            <!-- Sidebar Column -->
+            <div class="col-md-3" id="tg-sb-sidebar">
+                
+
+<ul id="mysidebar" class="nav">
+  <li class="sidebarTitle">
+    <label for="docVersion">Eclipse Ditto™ version:</label>
+    <div class="select-wrapper">
+      <select id="docVersion" name="docVersion">
+        
+        <option value="">development</option>
+        
+        <option value="2.0">2.0</option>
+        
+        <option value="1.5">1.5</option>
+        
+        <option value="1.4">1.4</option>
+        
+        <option value="1.3">1.3</option>
+        
+        <option value="1.2">1.2</option>
+        
+        <option value="1.1">1.1</option>
+        
+        <option value="1.0">1.0</option>
+        
+      </select>
+    </div>
+    <div id="dev-warning">
+      <div markdown="span" class="alert alert-warning" role="alert" style="font-size:0.6em"><i class="fa fa-warning"></i> <b>Important:</b> This documentation reflects the latest 'development'. You might want to choose a released version.</div>
+    </div>
+  </li>
+  
+  
+  
+    
+        <li class="subfolders">
+          <a href="#"><span></span>Introduction</a>
+          <ul>
+              
+              
+              
+              <li><a href="intro-overview.html">Overview</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="intro-digitaltwins.html">Digital twins</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="intro-hello-world.html">Hello world</a></li>
+              
+              
+              
+              
+          </ul>
+        </li>
+    
+  
+  
+  
+    
+        <li class="subfolders">
+          <a href="#"><span></span>Release Notes</a>
+          <ul>
+              
+              
+              
+              <li><a href="release_notes_201.html">2.0.1</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="release_notes_200.html">2.0.0</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="release_notes_151.html">1.5.1</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="release_notes_150.html">1.5.0</a></li>
+              
+              
+              
+              <li class="subfolders">
+                  <a href="#"><span></span>Archive</a>
+                  <ul>
+                      
+                      
+                      
+                      <li><a href="release_notes_140.html">1.4.0</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_130.html">1.3.0</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_121.html">1.2.1</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_120.html">1.2.0</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_115.html">1.1.5</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_113.html">1.1.3</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_112.html">1.1.2</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_111.html">1.1.1</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_110.html">1.1.0</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_100.html">1.0.0</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_090.html">0.9.0</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_080.html">0.8.0</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_100-M2.html">1.0.0-M2</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_100-M1a.html">1.0.0-M1a</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_090-M2.html">0.9.0-M2</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_090-M1.html">0.9.0-M1</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_080-M3.html">0.8.0-M3</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_080-M2.html">0.8.0-M2</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_080-M1.html">0.8.0-M1</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_030-M2.html">0.3.0-M2</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_030-M1.html">0.3.0-M1</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_020-M1.html">0.2.0-M1</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_010-M3.html">0.1.0-M3</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_010-M1.html">0.1.0-M1</a></li>
+                      
+                      
+                      
+                  </ul>
+              </li>
+              
+              
+              
+              
+          </ul>
+        </li>
+    
+  
+  
+  
+    
+        <li class="subfolders">
+          <a href="#"><span></span>Installation</a>
+          <ul>
+              
+              
+              
+              <li><a href="installation-building.html">Building Ditto</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="installation-running.html">Running Ditto</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="installation-operating.html">Operating Ditto</a></li>
+              
+              
+              
+              
+          </ul>
+        </li>
+    
+  
+  
+  
+    
+        <li class="subfolders">
+          <a href="#"><span></span>Basic concepts</a>
+          <ul>
+              
+              
+              
+              <li><a href="basic-overview.html">Overview</a></li>
+              
+              
+              
+              <li class="subfolders">
+                  <a href="#"><span></span>Model entities</a>
+                  <ul>
+                      
+                      
+                      
+                      <li><a href="basic-thing.html">Thing</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="basic-feature.html">Feature</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="basic-policy.html">Policy</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="basic-namespaces-and-names.html">Namespaces and Names</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="basic-metadata.html">Thing Metadata</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="basic-errors.html">Errors</a></li>
+                      
+                      
+                      
+                  </ul>
+              </li>
+              
+              
+              
+              
+              
+              
+              <li><a href="basic-auth.html">Authentication and Authorization</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="basic-messages.html">Messages</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="basic-signals.html">Signals</a></li>
+              
+              
+              
+              <li class="subfolders">
+                  <a href="#"><span></span>Signal types</a>
+                  <ul>
+                      
+                      
+                      
+                      <li><a href="basic-signals-command.html">Command</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="basic-signals-commandresponse.html">Command response</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="basic-signals-errorresponse.html">Error response</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="basic-signals-event.html">Event</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="basic-signals-announcement.html">Announcement</a></li>
+                      
+                      
+                      
+                  </ul>
+              </li>
+              
+              
+              
+              
+              
+              
+              <li><a href="basic-apis.html">APIs</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="basic-connections.html">Connections</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="basic-placeholders.html">Placeholders</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="basic-changenotifications.html">Change notifications</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="basic-rql.html">RQL expressions</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="basic-enrichment.html">Signal enrichment</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="basic-search.html">Search</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="basic-acknowledgements.html">Acknowledgements / QoS</a></li>
+              
+              
+              
+              
+          </ul>
+        </li>
+    
+  
+  
+  
+    
+        <li class="subfolders">
+          <a href="#"><span></span>Advanced concepts</a>
+          <ul>
+              
+              
+              
+              <li><a href="advanced-data-by-pass.html">Data By-Pass</a></li>
+              
+              
+              
+              
+          </ul>
+        </li>
+    
+  
+  
+  
+    
+        <li class="subfolders">
+          <a href="#"><span></span>Architecture</a>
+          <ul>
+              
+              
+              
+              <li><a href="architecture-overview.html">Overview</a></li>
+              
+              
+              
+              <li class="subfolders">
+                  <a href="#"><span></span>Services</a>
+                  <ul>
+                      
+                      
+                      
+                      <li><a href="architecture-services-policies.html">Policies</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="architecture-services-things.html">Things</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="architecture-services-things-search.html">Things-Search</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="architecture-services-connectivity.html">Connectivity</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="architecture-services-concierge.html">Concierge</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="architecture-services-gateway.html">Gateway</a></li>
+                      
+                      
+                      
+                  </ul>
+              </li>
+              
+              
+              
+              
+          </ul>
+        </li>
+    
+  
+  
+  
+    
+        <li class="subfolders">
+          <a href="#"><span></span>HTTP API</a>
+          <ul>
+              
+              
+              
+              <li><a href="httpapi-overview.html">Overview</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="httpapi-concepts.html">Concepts</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="httpapi-search.html">Search</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="httpapi-messages.html">Messages</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="httpapi-protocol-bindings-websocket.html">WebSocket protocol binding</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="httpapi-protocol-bindings-cloudevents.html">Cloud Events HTTP protocol binding</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="httpapi-sse.html">Server sent events</a></li>
+              
+              
+              
+              
+          </ul>
+        </li>
+    
+  
+  
+  
+    
+        <li class="subfolders">
+          <a href="#"><span></span>Connectivity API</a>
+          <ul>
+              
+              
+              
+              <li><a href="connectivity-overview.html">Overview</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="connectivity-manage-connections.html">Manage connections</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="connectivity-protocol-bindings-amqp091.html">AMQP 0.9.1 protocol binding</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="connectivity-protocol-bindings-amqp10.html">AMQP 1.0 protocol binding</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="connectivity-protocol-bindings-mqtt.html">MQTT 3.1.1 protocol binding</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="connectivity-protocol-bindings-mqtt5.html">MQTT 5 protocol binding</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="connectivity-protocol-bindings-http.html">HTTP 1.1 protocol binding</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="connectivity-protocol-bindings-kafka2.html">Kafka 2.x protocol binding</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="connectivity-mapping.html">Payload mapping</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="connectivity-header-mapping.html">Header mapping</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="connectivity-tls-certificates.html">TLS certificates</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="connectivity-ssh-tunneling.html">SSH tunneling</a></li>
+              
+              
+              
+              
+              
+              
+              <li class="active"><a href="connectivity-hmac-signing.html">HMAC signing</a></li>
+              
+              
+              
+              
+          </ul>
+        </li>
+    
+  
+  
+  
+    
+        <li class="subfolders">
+          <a href="#"><span></span>Client SDK</a>
+          <ul>
+              
+              
+              
+              <li><a href="client-sdk-overview.html">Overview</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="client-sdk-java.html">Java</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="client-sdk-javascript.html">JavaScript</a></li>
+              
+              
+              
+              
+          </ul>
+        </li>
+    
+  
+  
+  
+    
+        <li class="subfolders">
+          <a href="#"><span></span>Ditto Protocol</a>
+          <ul>
+              
+              
+              
+              <li><a href="protocol-overview.html">Overview</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="protocol-twinlive.html">Twin/live channel</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="protocol-specification.html">Specification</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="protocol-specification-topic.html">Protocol topic</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="protocol-specification-errors.html">Errors</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="protocol-specification-things.html">Things group</a></li>
+              
+              
+              
+              <li class="subfolders">
+                  <a href="#"><span></span>→ commands/events</a>
+                  <ul>
+                      
+                      
+                      
+                      <li><a href="protocol-specification-things-create-or-modify.html">Create/Modify</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-specification-things-merge.html">Merge</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-specification-things-retrieve.html">Retrieve</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-specification-things-delete.html">Delete</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-specification-acks.html">Acknowledgements</a></li>
+                      
+                      
+                      
+                  </ul>
+              </li>
+              
+              
+              
+              <li class="subfolders">
+                  <a href="#"><span></span>→ search/messages</a>
+                  <ul>
+                      
+                      
+                      
+                      <li><a href="protocol-specification-things-search.html">Search</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-specification-things-messages.html">Messages</a></li>
+                      
+                      
+                      
+                  </ul>
+              </li>
+              
+              
+              
+              
+              
+              
+              <li><a href="protocol-specification-policies.html">Policies group</a></li>
+              
+              
+              
+              <li class="subfolders">
+                  <a href="#"><span></span>→ commands/announcements</a>
+                  <ul>
+                      
+                      
+                      
+                      <li><a href="protocol-specification-policies-create-or-modify.html">Create/Modify</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-specification-policies-retrieve.html">Retrieve</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-specification-policies-delete.html">Delete</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-specification-policies-announcement.html">Announcement</a></li>
+                      
+                      
+                      
+                  </ul>
+              </li>
+              
+              
+              
+              
+              
+              
+              <li><a href="protocol-specification-connections.html">Connections group</a></li>
+              
+              
+              
+              <li class="subfolders">
+                  <a href="#"><span></span>→ announcements</a>
+                  <ul>
+                      
+                      
+                      
+                      <li><a href="protocol-specification-connections-announcement.html">Announcement</a></li>
+                      
+                      
+                      
+                  </ul>
+              </li>
+              
+              
+              
+              
+              
+              
+              <li><a href="protocol-bindings.html">Bindings</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="protocol-examples.html">Examples</a></li>
+              
+              
+              
+              <li class="subfolders">
+                  <a href="#"><span></span>→ Things examples</a>
+                  <ul>
+                      
+                      
+                      
+                      <li><a href="protocol-examples-creatething.html">Create a Thing</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-deletething.html">Delete a Thing</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-modifything.html">Modify a Thing</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-retrievething.html">Retrieve a Thing</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-retrievethings.html">Retrieve multiple Things</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-modifypolicyid.html">Modify the Policy ID of a Thing</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-createattributes.html">Create Attributes</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-deleteattributes.html">Delete Attributes</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-modifyattributes.html">Modify Attributes</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-retrieveattributes.html">Retrieve Attributes</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-createattribute.html">Create a single Attribute</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-deleteattribute.html">Delete a single Attribute</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-modifyattribute.html">Modify a single Attribute</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-retrieveattribute.html">Retrieve a single Attribute</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-createthingdefinition.html">Create a Definition</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-deletethingdefinition.html">Delete a Definition</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-modifythingdefinition.html">Modify a Definition</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-retrievethingdefinition.html">Retrieve a Definition</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-createfeatures.html">Create Features</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-deletefeatures.html">Delete Features</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-modifyfeatures.html">Modify Features</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-retrievefeatures.html">Retrieve Features</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-createfeature.html">Create a single Feature</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-deletefeature.html">Delete a single Feature</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-modifyfeature.html">Modify a single Feature</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-retrievefeature.html">Retrieve a single Feature</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-createdefinition.html">Create Feature Definition</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-deletedefinition.html">Delete Feature Definition</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-modifydefinition.html">Modify Feature Definition</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-retrievedefinition.html">Retrieve Feature Definition</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-createproperties.html">Create Feature Properties</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-deleteproperties.html">Delete Feature Properties</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-modifyproperties.html">Modify Feature Properties</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-retrieveproperties.html">Retrieve Feature Properties</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-createproperty.html">Create a single Property</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-deleteproperty.html">Delete a single Property</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-modifyproperty.html">Modify a single Property</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-retrieveproperty.html">Retrieve a single Property</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-createdesiredproperties.html">Create desired Feature Properties</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-deletedesiredproperties.html">Delete desired Feature Properties</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-modifydesiredproperties.html">Modify desired Feature Properties</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-retrievedesiredproperties.html">Retrieve desired Feature Properties</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-createdesiredproperty.html">Create a single desired Property</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-deletedesiredproperty.html">Delete a single desired Property</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-modifydesiredproperty.html">Modify a single desired Property</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-retrievedesiredproperty.html">Retrieve a single desired Property</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-errorresponses.html">Error responses</a></li>
+                      
+                      
+                      
+                  </ul>
+              </li>
+              
+              
+              
+              <li class="subfolders">
+                  <a href="#"><span></span>→ Things merge examples</a>
+                  <ul>
+                      
+                      
+                      
+                      <li><a href="protocol-examples-mergething.html">Merge a Thing</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-mergepolicyid.html">Merge the Policy ID of a Thing</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-mergeattributes.html">Merge Attributes</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-mergeattribute.html">Merge a single Attribute</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-mergethingdefinition.html">Merge a Definition</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-mergefeatures.html">Merge Features</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-mergefeature.html">Merge a single Feature</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-mergefeaturedefinition.html">Merge Feature Definition</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-mergeproperties.html">Merge Feature Properties</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-mergeproperty.html">Merge a single Property</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-mergedesiredproperties.html">Merge desired Feature Properties</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-mergedesiredproperty.html">Merge a single desired Property</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-errorresponses.html">Error responses</a></li>
+                      
+                      
+                      
+                  </ul>
+              </li>
+              
+              
+              
+              <li class="subfolders">
+                  <a href="#"><span></span>→ Policies examples</a>
+                  <ul>
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-createpolicy.html">Create a Policy</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-deletepolicy.html">Delete a Policy</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-modifypolicy.html">Modify a Policy</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-retrievepolicy.html">Retrieve a Policy</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-modifypolicyentries.html">Modify entries</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-retrievepolicyentries.html">Retrieve entries</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-createpolicyentry.html">Create a single entry</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-deletepolicyentry.html">Delete a single entry</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-modifypolicyentry.html">Modify a single entry</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-retrievepolicyentry.html">Retrieve a single entry</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-modifysubjects.html">Modify subjects</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-retrievesubjects.html">Retrieve subjects</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-createsubject.html">Create a single subject</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-deletesubject.html">Delete a single subject</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-modifysubject.html">Modify a single subject</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-retrievesubject.html">Retrieve a single subject</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-modifyresources.html">Modify resources</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-retrieveresources.html">Retrieve resources</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-createresource.html">Create a single resource</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-deleteresource.html">Delete a single resource</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-modifyresource.html">Modify a single resource</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-retrieveresource.html">Retrieve a single resource</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-errorresponses.html">Error responses</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-announcement-subjectDeletion.html">Announcement for subject deletion</a></li>
+                      
+                      
+                      
+                  </ul>
+              </li>
+              
+              
+              
+              <li class="subfolders">
+                  <a href="#"><span></span>→ Connections examples</a>
+                  <ul>
+                      
+                      
+                      
+                      <li><a href="protocol-examples-connections-announcement-opened.html">Announcement for connection opened</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-connections-announcement-closed.html">Announcement for connection gracefully closed</a></li>
+                      
+                      
+                      
+                  </ul>
+              </li>
+              
+              
+              
+              
+              
+              
+              <li><a href="protocol-examples-search.html">→ Search examples</a></li>
+              
+              
+              
+              
+          </ul>
+        </li>
+    
+  
+  
+  
+    
+    <li><a href="sandbox.html">Sandbox</a></li>
+    
+  
+  
+  
+    
+    <li><a href="presentations.html">Presentations</a></li>
+    
+  
+  
+  
+    
+    <li><a href="glossary.html">Glossary</a></li>
+    
+  
+  
+  
+    
+    <li><a href="feedback.html">Feedback</a></li>
+    
+  
+  
+  
+    
+         <p class="external">
+             <a href="#" id="collapseAll">Collapse All</a> | <a href="#" id="expandAll">Expand All</a>
+         </p>
+    
+</ul>
+
+<!-- this highlights the active parent class in the sidebar. this is critical so that the parent expands when you're viewing a page. This must appear below the sidebar code above. Otherwise, if placed inside customscripts.js, the script runs before the sidebar code runs and the class never gets inserted.-->
+<script>$("li.active").parents('li').toggleClass("active");
+</script>
+
+            </div>
+            
+        
+
+        <!-- Content Column -->
+        <div class="col-md-9" id="tg-sb-content">
+            <div class="post-header">
+   <h1 class="post-title-main">HMAC signing</h1>
+</div>
+
+
+
+<div class="post-content">
+
+   
+
+    
+    
+<!-- this handles the automatic toc. use ## for subheads to auto-generate the on-page minitoc. if you use html tags, you must supply an ID for the heading element in order for it to appear in the minitoc. -->
+<script>
+$( document ).ready(function() {
+  // Handler for .ready() called.
+
+$('#toc').toc({ minimumHeaders: 0, listType: 'ul', showSpeed: 0, headers: 'h2,h3,h4' });
+
+/* this offset helps account for the space taken up by the floating toolbar. */
+$('#toc').on('click', 'a', function() {
+  var target = $(this.getAttribute('href'))
+    , scroll_target = target.offset().top
+
+  $(window).scrollTop(scroll_target - 10);
+  return false
+})
+  
+});
+</script>
+
+<div id="toc"></div>
+
+    
+
+
+    
+
+
+    
+
+  <h2 id="hmac-signing">HMAC signing</h2>
+
+<p>Ditto provides an extensible framework for HMAC-based signing authentication processes for HTTP Push and
+AMQP 1.0 connections. Three algorithms are available out of the box:</p>
+
+<ul>
+  <li><code class="highlighter-rouge">aws4-hmac-sha256</code> (HTTP Push only): <a href="https://docs.aws.amazon.com/general/latest/gr/signature-version-4.html">Version 4 request signing</a> for Amazon Web Services (AWS)</li>
+  <li><code class="highlighter-rouge">az-monitor-2016-04-01</code> (HTTP Push only): <a href="https://docs.microsoft.com/en-us/azure/azure-monitor/logs/data-collector-api#authorization">Version 2016-04-01 request signing</a> for Azure Monitor Data Collector</li>
+  <li><code class="highlighter-rouge">az-sasl</code> (HTTP Push and AMQP 1.0): <a href="https://docs.microsoft.com/en-us/azure/iot-hub/iot-hub-dev-guide-sas?tabs=node">Shared Access Signatures</a> for Azure IoT Hub</li>
+  <li><code class="highlighter-rouge">az-sasl</code> (HTTP Push only): <a href="https://docs.microsoft.com/en-us/azure/service-bus-messaging/service-bus-sas">Shared Access Signatures</a> for Azure Service Bus</li>
+</ul>
+
+<p>To use a request signing algorithm for authentication, set the <code class="highlighter-rouge">credentials</code> field of the connection as follows.</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"connectionType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http-push"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"uri"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://...:443"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"credentials"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"hmac"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"algorithm"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;algorithm&gt;"</span><span class="p">,</span><span class="w"> </span><span class="err">//</span><span class="w"> </span><span class="err">e.g.</span><span class="p">:</span><span class="w"> </span><span class="s2">"az-monitor-2016-04-01"</span><span class="w">
+    </span><span class="s2">"parameters"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+       </span><span class="err">//</span><span class="w"> </span><span class="err">parameters</span><span class="w"> </span><span class="err">of</span><span class="w"> </span><span class="err">the</span><span class="w"> </span><span class="err">algorithm</span><span class="w"> </span><span class="err">named</span><span class="w"> </span><span class="err">above.</span><span class="w">
+       </span><span class="err">...</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="err">...</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h3 id="pre-defined-algorithms">Pre-defined algorithms</h3>
+
+<h4 id="aws4-hmac-sha256">aws4-hmac-sha256</h4>
+
+<p>This algorithm works for AWS SNS and other services using <a href="https://docs.aws.amazon.com/general/latest/gr/signature-version-4.html">Version 4 request signing</a>.</p>
+
+<p>The parameters of the algorithm <code class="highlighter-rouge">aws4-hmac-sha256</code> are:</p>
+<ul>
+  <li><code class="highlighter-rouge">region</code>: Region of the AWS endpoint.</li>
+  <li><code class="highlighter-rouge">service</code>: Service name of the AWS endpoint.</li>
+  <li><code class="highlighter-rouge">accessKey</code>: Access key of the signing user.</li>
+  <li><code class="highlighter-rouge">secretKey</code>: Secret key of the signing user.</li>
+  <li><code class="highlighter-rouge">doubleEncode</code>: Whether to double-encode and normalize path segments during request signing. Should be <code class="highlighter-rouge">false</code> for S3 and <code class="highlighter-rouge">true</code> for other services. Defaults to <code class="highlighter-rouge">true</code>.</li>
+  <li><code class="highlighter-rouge">canonicalHeaders</code>: Array of names of headers to include in the signature. Default to <code class="highlighter-rouge">["host"]</code>.</li>
+  <li><code class="highlighter-rouge">xAmzContentSha256</code>: Configuration for the header <code class="highlighter-rouge">x-amz-content-sha256</code>, which is mandatory for S3. Possible values are:
+    <ul>
+      <li><code class="highlighter-rouge">EXCLUDED</code>: Do not send the header for non-S3 services. This is the default.</li>
+      <li><code class="highlighter-rouge">INCLUDED</code>: Sign the payload hash as the value of the header for S3.</li>
+      <li><code class="highlighter-rouge">UNSIGNED</code>: Omit the payload hash in the signature for S3.</li>
+    </ul>
+  </li>
+</ul>
+
+<h4 id="az-monitor-2016-04-01">az-monitor-2016-04-01</h4>
+
+<p>This algorithm works for <a href="https://docs.microsoft.com/en-us/azure/azure-monitor/logs/data-collector-api#authorization">Version 2016-04-01 request signing</a>
+for Azure Monitor Data Collector.</p>
+
+<p>The parameters of the algorithm <code class="highlighter-rouge">az-monitor-2016-04-01</code> are:</p>
+<ul>
+  <li><code class="highlighter-rouge">workspaceId</code>: ID of the Azure Monitor workspace.</li>
+  <li><code class="highlighter-rouge">sharedKey</code>: Primary or secondary key of the Azure Monitor workspace.</li>
+</ul>
+
+<h4 id="az-sasl">az-sasl</h4>
+
+<p>This algorithm works for Azure IoT Hub (HTTP and AMQP) <a href="https://docs.microsoft.com/en-us/azure/iot-hub/iot-hub-dev-guide-sas?tabs=node">Shared Access Signatures</a>
+and Azure Service Bus (HTTP) <a href="https://docs.microsoft.com/en-us/azure/service-bus-messaging/service-bus-sas">Shared Access Signatures</a>.</p>
+
+<p>The parameters of the algorithm <code class="highlighter-rouge">az-sasl</code> are:</p>
+<ul>
+  <li><code class="highlighter-rouge">sharedKeyName</code>: Name of the used <code class="highlighter-rouge">sharedKey</code>.</li>
+  <li><code class="highlighter-rouge">sharedKey</code>: Primary or secondary key of <code class="highlighter-rouge">sharedKeyName</code>. The key for Azure Service Bus needs an additional
+<code class="highlighter-rouge">Base64</code> encoding to work (e.g. a primary key <code class="highlighter-rouge">theKey</code> should be encoded to <code class="highlighter-rouge">dGhlS2V5</code> and used in this format).</li>
+  <li><code class="highlighter-rouge">endpoint</code>: The endpoint which is used in the signature. For Azure IoT Hub this is expected
+to be the <code class="highlighter-rouge">resourceUri</code> without protocol (e.g. <code class="highlighter-rouge">myHub.azure-devices.net</code>, see the respective Azure documentation).
+For Azure Service Bus, this is expected to be the full URI of the resource to which access
+is claimed (e.g. <code class="highlighter-rouge">https://myNamespaces.servicebus.windows.net/myQueue</code>, see the respective Azure documentation)</li>
+  <li><code class="highlighter-rouge">ttl</code> (optional): The time to live of a signature as a string in duration format. Allowed time units are “ms” (milliseconds),
+“s” (seconds), “m” (minutes) and “h” (hours), e.g. “10m” for ten minutes.
+<code class="highlighter-rouge">ttl</code> should only be set for AMQP connections and defines how long the connection signing is valid.
+The broker (e.g. Azure IoT Hub) will close the connection after <code class="highlighter-rouge">ttl</code> and Ditto will reconnect with a new signature.
+Defaults to 7 days.</li>
+</ul>
+
+<h3 id="supported-connection-types">Supported connection types</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th> </th>
+      <th>HTTP Push connection</th>
+      <th>AMQP 1.0 connection</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="highlighter-rouge">aws-hmac-sha256</code></td>
+      <td>✓</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">az-monitor-2016-04-01</code></td>
+      <td>✓</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">az-sasl</code></td>
+      <td>✓</td>
+      <td>✓ (for Azure IoT Hub)</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="configuration">Configuration</h3>
+
+<p>Algorithm names and implementations are configured in <a href="https://github.com/eclipse/ditto/blob/master/connectivity/service/src/main/resources/connectivity.conf"><code class="highlighter-rouge">connectivity.conf</code></a>.
+The default configuration provides the names and implementations of the available pre-defined algorithms for the given
+connection types.</p>
+<pre><code class="language-hocon">ditto.connectivity.connection {
+  http-push.hmac-algorithms = {
+
+    aws4-hmac-sha256 =
+      "org.eclipse.ditto.connectivity.service.messaging.httppush.AwsRequestSigningFactory"
+
+    az-monitor-2016-04-01 =
+      "org.eclipse.ditto.connectivity.service.messaging.httppush.AzMonitorRequestSigningFactory"
+
+    az-sasl =
+      "org.eclipse.ditto.connectivity.service.messaging.signing.AzSaslSigningFactory"
+
+    // my-own-request-signing-algorithm =
+    //   "my.package.MyOwnImplementationOfHttpRequestSigningFactory"
+  }
+  amqp10.hmac-algorithms = {
+
+    az-sasl =
+      "org.eclipse.ditto.connectivity.service.messaging.signing.AzSaslSigningFactory"
+
+    // my-own-connection-signing-algorithm =
+    //   "my.package.MyOwnImplementationOfAmqpConnectionSigningFactory"
+  }
+}
+</code></pre>
+
+<p>Users may add own request signing algorithms by implementing a defined interface and providing the fully
+qualified class name of the implementation in the config. The following table provides information where to update the configuration
+and which interface needs to be implemented.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th> </th>
+      <th>HTTP Push connection</th>
+      <th>AMQP 1.0 connection</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Config path</td>
+      <td><code class="highlighter-rouge">ditto.connectivity.connection.http-push.hmac-algorithms</code></td>
+      <td><code class="highlighter-rouge">ditto.connectivity.connection.amqp10.hmac-algorithms</code></td>
+    </tr>
+    <tr>
+      <td>Class to implement</td>
+      <td><a href="https://github.com/eclipse/ditto/blob/master/connectivity/service/src/main/java/org/eclipse/ditto/connectivity/service/messaging/httppush/HttpRequestSigningFactory.java">HttpRequestSigningFactory</a></td>
+      <td><a href="https://github.com/eclipse/ditto/blob/master/connectivity/service/src/main/java/org/eclipse/ditto/connectivity/service/messaging/amqp/AmqpConnectionSigningFactory.java">AmqpConnectionSigningFactory</a></td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="example-integrations">Example integrations</h3>
+
+<h4 id="aws-sns">AWS SNS</h4>
+
+<p>This example is an HTTP connection to <a href="https://aws.amazon.com/sns/">AWS SNS (Simple Notification Service)</a> publishing
+twin events as messages to an SNS topic. Prerequisites are:</p>
+<ul>
+  <li>An IAM user with access to SNS,</li>
+  <li>An SNS topic,</li>
+  <li>A subscription on the SNS topic to receive twin events, e.g. by email.</li>
+</ul>
+
+<p>The SNS connection is shown below.</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"00000000-0000-0000-0000-000000000000"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"AWS SNS"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"connectionType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http-push"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"connectionStatus"</span><span class="p">:</span><span class="w"> </span><span class="s2">"open"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"uri"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://sns.&lt;aws-region&gt;.amazonaws.com:443"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"credentials"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"hmac"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"algorithm"</span><span class="p">:</span><span class="w"> </span><span class="s2">"aws4-hmac-sha256"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"parameters"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"region"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;aws-region&gt;"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"service"</span><span class="p">:</span><span class="w"> </span><span class="s2">"sns"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"accessKey"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;aws-access-key&gt;"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"secretKey"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;aws-secret-key&gt;"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="s2">"sources"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+  </span><span class="s2">"targets"</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="w">
+      </span><span class="s2">"address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"GET:/"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"topics"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="s2">"_/_/things/twin/events"</span><span class="w"> </span><span class="p">],</span><span class="w">
+      </span><span class="s2">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="s2">"integration:ditto"</span><span class="w"> </span><span class="p">],</span><span class="w">
+      </span><span class="s2">"headerMapping"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
+      </span><span class="s2">"payloadMapping"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="s2">"javascript"</span><span class="w"> </span><span class="p">]</span><span class="w">
+  </span><span class="p">}],</span><span class="w">
+  </span><span class="s2">"clientCount"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"failoverEnabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"validateCertificates"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"processorPoolSize"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"specificConfig"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"parallelism"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="s2">"mappingDefinitions"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"javascript"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"mappingEngine"</span><span class="p">:</span><span class="w"> </span><span class="s2">"JavaScript"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"options"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"incomingScript"</span><span class="p">:</span><span class="w"> </span><span class="s2">"function mapToDittoProtocolMsg() {</span><span class="se">\n</span><span class="s2">    return undefined;</span><span class="se">\n</span><span class="s2">}"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"outgoingScript"</span><span class="p">:</span><span class="w"> </span><span class="s2">"function mapFromDittoProtocolMsg(namespace,name,group,channel,criterion,action,path,dittoHeaders,value,status,extra) {</span><span class="se">\n</span><span class="s2">  let textPayload = JSON.stringify(Ditto.buildDittoProtocolMsg(namespace, name, group, channel, criterion, action, path, dittoHeaders, value, status, extra));</span><span class="se">\n</span><span class="s2">  let query = 'Action=Publish&amp;Message=' + encodeURIComponent(textPayload) + '&amp;Subject=ThingModified&amp;TopicArn=&lt;sns-topic-arn&gt;';</span><span class="se">\n</span><span class="s2">  let headers = {</span><span class="se">\"</span><span class="s2">http.query</span><span class="se">\"</span><span class="s2">:query};</span><span class="se">\n</span><span class="s2">  return Ditto.buildExternalMsg(headers,'',null,'text/plain');</span><span class="se">\n</span><span class="s2">}</span><span class="se">\n</span><span class="s2">"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"loadBytebufferJS"</span><span class="p">:</span><span class="w"> </span><span class="s2">"false"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"loadLongJS"</span><span class="p">:</span><span class="w"> </span><span class="s2">"false"</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="s2">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>Parameters:</p>
+<ul>
+  <li><code class="highlighter-rouge">&lt;aws-region&gt;</code>: The region of the SNS service.</li>
+  <li><code class="highlighter-rouge">&lt;aws-access-key&gt;</code> The access key of the user authorized for SNS.</li>
+  <li><code class="highlighter-rouge">&lt;aws-secret-key&gt;</code> The secret key of the user authorized for SNS.</li>
+  <li><code class="highlighter-rouge">&lt;sns-topic-arn&gt;</code> The ARN of the SNS topic. Note that it is a part of the URI and every <code class="highlighter-rouge">:</code> needs to be encoded as
+<code class="highlighter-rouge">%3A</code>.</li>
+</ul>
+
+<p>Here is the outgoing payload mapping in a readable format.
+Since the HTTP API of SNS requires GET requests with all necessary information in
+the query parameters, the payload mapper computes the query string and sets it via
+the <a href="connectivity-protocol-bindings-http.html#target-header-mapping">special header</a> <code class="highlighter-rouge">http.query</code>.
+It is important to set payload to <code class="highlighter-rouge">null</code> so that the HMAC
+signature is computed from the SHA256 hash of the empty string, which SNS expects.</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">mapFromDittoProtocolMsg</span><span class="p">(</span><span class="nx">namespace</span><span class="p">,</span><span class="nx">name</span><span class="p">,</span><span class="nx">group</span><span class="p">,</span><span class="nx">channel</span><span class="p">,</span><span class="nx">criterion</span><span class="p">,</span>
+                                 <span class="nx">action</span><span class="p">,</span><span class="nx">path</span><span class="p">,</span><span class="nx">dittoHeaders</span><span class="p">,</span><span class="nx">value</span><span class="p">,</span><span class="nx">status</span><span class="p">,</span><span class="nx">extra</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">let</span> <span class="nx">textPayload</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">Ditto</span><span class="p">.</span><span class="nx">buildDittoProtocolMsg</span><span class="p">(</span><span class="nx">namespace</span><span class="p">,</span> <span class="nx">name</span><span class="p">,</span>
+      <span class="nx">group</span><span class="p">,</span> <span class="nx">channel</span><span class="p">,</span> <span class="nx">criterion</span><span class="p">,</span> <span class="nx">action</span><span class="p">,</span> <span class="nx">path</span><span class="p">,</span> <span class="nx">dittoHeaders</span><span class="p">,</span> <span class="nx">value</span><span class="p">,</span> <span class="nx">status</span><span class="p">,</span> <span class="nx">extra</span><span class="p">));</span>
+  <span class="kd">let</span> <span class="nx">query</span> <span class="o">=</span> <span class="s1">'Action=Publish&amp;Message='</span> <span class="o">+</span> <span class="nb">encodeURIComponent</span><span class="p">(</span><span class="nx">textPayload</span><span class="p">)</span> <span class="o">+</span>
+      <span class="s1">'&amp;Subject=ThingModified&amp;TopicArn=&lt;sns-topic-arn&gt;'</span><span class="p">;</span>
+  <span class="kd">let</span> <span class="nx">headers</span> <span class="o">=</span> <span class="p">{</span> <span class="s2">"http.query"</span><span class="p">:</span> <span class="nx">query</span> <span class="p">};</span>
+  <span class="k">return</span> <span class="nx">Ditto</span><span class="p">.</span><span class="nx">buildExternalMsg</span><span class="p">(</span><span class="nx">headers</span><span class="p">,</span> <span class="s1">''</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="s1">'text/plain'</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h4 id="aws-s3">AWS S3</h4>
+
+<p>This example is an HTTP connection to <a href="https://aws.amazon.com/s3/">AWS S3 (Simple Storage Service)</a> publishing
+twin events as objects in an S3 bucket. Prerequisites are:</p>
+<ul>
+  <li>An IAM user with access to S3,</li>
+  <li>An S3 bucket.</li>
+</ul>
+
+<p>The S3 connection is shown below. The credentials parameter <code class="highlighter-rouge">"xAmzContentSha256": "INCLUDED"</code> is necessary in order
+to include the payload hash as the value of the header <code class="highlighter-rouge">x-amz-content-sha256</code>. In addition,
+the parameter <code class="highlighter-rouge">"doubleEncode"</code> must be set to <code class="highlighter-rouge">false</code> because S3 performs URI-encoding only once when computing
+the signature, in contrast to other AWS services where the path segments of HTTP requests are encoded twice.</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"00000000-0000-0000-0000-000000000000"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"AWS S3"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"connectionType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http-push"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"connectionStatus"</span><span class="p">:</span><span class="w"> </span><span class="s2">"open"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"uri"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://&lt;s3-bucket&gt;.s3.&lt;aws-region&gt;.amazonaws.com:443"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"credentials"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"hmac"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"algorithm"</span><span class="p">:</span><span class="w"> </span><span class="s2">"aws4-hmac-sha256"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"parameters"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"region"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;aws-region&gt;"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"service"</span><span class="p">:</span><span class="w"> </span><span class="s2">"s3"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"accessKey"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;aws-access-key&gt;"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"secretKey"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;aws-secret-key&gt;"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"doubleEncode"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"canonicalHeaders"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="s2">"host"</span><span class="p">,</span><span class="w"> </span><span class="s2">"x-amz-date"</span><span class="w"> </span><span class="p">],</span><span class="w">
+      </span><span class="s2">"xAmzContentSha256"</span><span class="p">:</span><span class="w"> </span><span class="s2">"INCLUDED"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="s2">"sources"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+  </span><span class="s2">"targets"</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="w">
+      </span><span class="s2">"address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"PUT:/"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"topics"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="s2">"_/_/things/twin/events"</span><span class="w"> </span><span class="p">],</span><span class="w">
+      </span><span class="s2">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="s2">"integration:ditto"</span><span class="w"> </span><span class="p">],</span><span class="w">
+      </span><span class="s2">"headerMapping"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
+      </span><span class="s2">"payloadMapping"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"javascript"</span><span class="w">
+      </span><span class="p">]</span><span class="w">
+  </span><span class="p">}],</span><span class="w">
+  </span><span class="s2">"clientCount"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"failoverEnabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"validateCertificates"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"processorPoolSize"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"specificConfig"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"parallelism"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="s2">"mappingDefinitions"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"javascript"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"mappingEngine"</span><span class="p">:</span><span class="w"> </span><span class="s2">"JavaScript"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"options"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"incomingScript"</span><span class="p">:</span><span class="w"> </span><span class="s2">"function mapToDittoProtocolMsg() {</span><span class="se">\n</span><span class="s2">  return undefined;</span><span class="se">\n</span><span class="s2">}</span><span class="se">\n</span><span class="s2">"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"outgoingScript"</span><span class="p">:</span><span class="w"> </span><span class="s2">"function mapFromDittoProtocolMsgWrapper(msg) {</span><span class="se">\n</span><span class="s2">  let topic = msg['topic'].split('/').join(':');</span><span class="se">\n</span><span class="s2">  let headers = {</span><span class="se">\n</span><span class="s2">      'http.path': topic+':'+msg['revision']</span><span class="se">\n</span><span class="s2">  };</span><span class="se">\n</span><span class="s2">  let textPayload = JSON.stringify(msg);</span><span class="se">\n</span><span class="s2">  let bytePayload = null;</span><span class="se">\n</span><span class="s2">  let contentType = 'application/json';</span><span class="se">\n\n</span><span class="s2">  return Ditto.buildExternalMsg(</span><span class="se">\n</span><span class="s2">    headers,</span><span class="se">\n</span><span class="s2">    textPayload,</span><span class="se">\n</span><span class="s2">    bytePayload,</span><span class="se">\n</span><span class="s2">    contentType</span><span class="se">\n</span><span class="s2">  );</span><span class="se">\n</span><span class="s2">}</span><span class="se">\n</span><span class="s2">"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"loadBytebufferJS"</span><span class="p">:</span><span class="w"> </span><span class="s2">"false"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"loadLongJS"</span><span class="p">:</span><span class="w"> </span><span class="s2">"false"</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="s2">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>Parameters:</p>
+<ul>
+  <li><code class="highlighter-rouge">&lt;s3-bucket&gt;</code>: Name of the S3 bucket.</li>
+  <li><code class="highlighter-rouge">&lt;aws-region&gt;</code>: The region of the S3 service.</li>
+  <li><code class="highlighter-rouge">&lt;aws-access-key&gt;</code> The access key of the user authorized for S3.</li>
+  <li><code class="highlighter-rouge">&lt;aws-secret-key&gt;</code> The secret key of the user authorized for S3.</li>
+</ul>
+
+<p>In order to create a distinct object for each event,
+the payload mapper that computes the path string and sets it via
+the <a href="connectivity-protocol-bindings-http.html#target-header-mapping">special header</a> <code class="highlighter-rouge">http.path</code>.
+The mapper overrides the function <code class="highlighter-rouge">mapFromDittoProtocolMsgWrapper</code> instead of the usual
+<code class="highlighter-rouge">mapFromDittoProtocolMsg</code> so that it has access to the revision number of twin events.
+The value of <code class="highlighter-rouge">http.path</code> is the name of the object, which consists of the topic of the event with <code class="highlighter-rouge">/</code> replaced by <code class="highlighter-rouge">:</code>
+followed by its revision. For example, a thing-modified event of revision 42 generates the object
+<code class="highlighter-rouge">&lt;namespace&gt;:&lt;name&gt;:things:twin:events:modified:42</code>.</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">mapFromDittoProtocolMsgWrapper</span><span class="p">(</span><span class="nx">msg</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">let</span> <span class="nx">topic</span> <span class="o">=</span> <span class="nx">msg</span><span class="p">[</span><span class="s1">'topic'</span><span class="p">].</span><span class="nx">split</span><span class="p">(</span><span class="s1">'/'</span><span class="p">).</span><span class="nx">join</span><span class="p">(</span><span class="s1">':'</span><span class="p">);</span>
+  <span class="kd">let</span> <span class="nx">headers</span> <span class="o">=</span> <span class="p">{</span>
+      <span class="s1">'http.path'</span><span class="p">:</span> <span class="nx">topic</span> <span class="o">+</span> <span class="s1">':'</span> <span class="o">+</span> <span class="nx">msg</span><span class="p">[</span><span class="s1">'revision'</span><span class="p">]</span>
+  <span class="p">};</span>
+  <span class="kd">let</span> <span class="nx">textPayload</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">msg</span><span class="p">);</span>
+  <span class="kd">let</span> <span class="nx">bytePayload</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+  <span class="kd">let</span> <span class="nx">contentType</span> <span class="o">=</span> <span class="s1">'application/json'</span><span class="p">;</span>
+
+  <span class="k">return</span> <span class="nx">Ditto</span><span class="p">.</span><span class="nx">buildExternalMsg</span><span class="p">(</span>
+    <span class="nx">headers</span><span class="p">,</span>
+    <span class="nx">textPayload</span><span class="p">,</span>
+    <span class="nx">bytePayload</span><span class="p">,</span>
+    <span class="nx">contentType</span>
+  <span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h4 id="azure-monitor-data-collector-http-api">Azure Monitor Data Collector HTTP API</h4>
+
+<p>This example is an HTTP connection pushing twin events into
+<a href="https://docs.microsoft.com/en-us/azure/azure-monitor/logs/data-collector-api">Azure Monitor Data Collector API</a>.
+It requires an Azure Log Analytics Workspace.</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"00000000-0000-0000-0000-000000000000"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Azure Monitor"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"connectionType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http-push"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"connectionStatus"</span><span class="p">:</span><span class="w"> </span><span class="s2">"open"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"uri"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://&lt;workspace-id&gt;.ods.opinsights.azure.com:443"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"credentials"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"hmac"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"algorithm"</span><span class="p">:</span><span class="w"> </span><span class="s2">"az-monitor-2016-04-01"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"parameters"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"workspaceId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;workspace-id&gt;"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"sharedKey"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;shared-key&gt;"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="s2">"sources"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+  </span><span class="s2">"targets"</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="w">
+      </span><span class="s2">"address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"POST:/api/logs?api-version=2016-04-01"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"topics"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="s2">"_/_/things/twin/events"</span><span class="w"> </span><span class="p">],</span><span class="w">
+      </span><span class="s2">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="s2">"integration:ditto"</span><span class="w"> </span><span class="p">],</span><span class="w">
+      </span><span class="s2">"headerMapping"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"Content-Type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"application/json"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"Log-Type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"TwinEvent"</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+  </span><span class="p">}],</span><span class="w">
+  </span><span class="s2">"clientCount"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"failoverEnabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"validateCertificates"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"processorPoolSize"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"specificConfig"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"parallelism"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="s2">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>Parameters:</p>
+<ul>
+  <li><code class="highlighter-rouge">&lt;workspace-id&gt;</code>: The ID of the log analytics workspace.</li>
+  <li><code class="highlighter-rouge">&lt;shared-key&gt;</code>: The primary or secondary shared key of the log analytics workspace.</li>
+</ul>
+
+<p>The connection publishes all fields of all twin events under the log type <code class="highlighter-rouge">TwinEvent</code>. After a maximum of 30 minutes
+after the first event, Azure Monitor should have created a custom log type <code class="highlighter-rouge">TwinEvent_CL</code> containing a twin event
+in each row.</p>
+
+<h4 id="azure-iot-hub-http-api">Azure IoT Hub HTTP API</h4>
+
+<p>What follows is an example of a connection which forwards live messages sent to things as direct method calls to
+<a href="https://docs.microsoft.com/en-us/azure/iot-hub/about-iot-hub">Azure IoT Hub</a> via HTTP. You’ll receive the response of the direct method call.</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"00000000-0000-0000-0000-000000000000"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Azure IoT Hub HTTP"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"connectionType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http-push"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"connectionStatus"</span><span class="p">:</span><span class="w"> </span><span class="s2">"open"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"uri"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://&lt;hostname&gt;:443"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"sources"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+  </span><span class="s2">"targets"</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="w">
+    </span><span class="s2">"address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"POST:/twins/{{ thing:id }}/methods?api-version=2018-06-30"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"topics"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"_/_/things/live/messages"</span><span class="p">],</span><span class="w">
+    </span><span class="s2">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"integration:ditto"</span><span class="p">],</span><span class="w">
+    </span><span class="s2">"issuedAcknowledgementLabel"</span><span class="p">:</span><span class="w"> </span><span class="s2">"live-response"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"headerMapping"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
+    </span><span class="s2">"payloadMapping"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"javascript"</span><span class="p">]</span><span class="w">
+  </span><span class="p">}],</span><span class="w">
+  </span><span class="s2">"clientCount"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"failoverEnabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"validateCertificates"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"processorPoolSize"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"specificConfig"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"parallelism"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="s2">"mappingDefinitions"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"javascript"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"mappingEngine"</span><span class="p">:</span><span class="w"> </span><span class="s2">"JavaScript"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"options"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"incomingScript"</span><span class="p">:</span><span class="w"> </span><span class="s2">"function mapToDittoProtocolMsg() {</span><span class="se">\n</span><span class="s2">  return undefined;</span><span class="se">\n</span><span class="s2">}</span><span class="se">\n</span><span class="s2">"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"outgoingScript"</span><span class="p">:</span><span class="w"> </span><span class="s2">"function mapFromDittoProtocolMsg(</span><span class="se">\n</span><span class="s2">  namespace,</span><span class="se">\n</span><span class="s2">  name,</span><span class="se">\n</span><span class="s2">  group,</span><span class="se">\n</span><span class="s2">  channel,</span><span class="se">\n</span><span class="s2">  criterion,</span><span class="se">\n</span><span class="s2">  action,</span><span class="se">\n</span><span class="s2">  path,</span><span class="se">\n</span><span class="s2">  dittoHeaders,</span><span class="se">\n</span><span class="s2">  value,</span><span class="se">\n</span><span class="s2">  status,</span><span class="se">\n</span><span class="s2">  extra</span><span class="se">\n</span><span class="s2">) {</span><span class="se">\n\n</span><span class="s2">  let headers = dittoHeaders;</span><span class="se">\n</span><span class="s2">  let payload = {</span><span class="se">\n</span><span class="s2">      </span><span class="se">\"</span><span class="s2">methodName</span><span class="se">\"</span><span class="s2">: action,</span><span class="se">\n</span><span class="s2">      </span><span class="se">\"</span><span class="s2">responseTimeoutInSeconds</span><span class="se">\"</span><span class="s2">: parseInt(dittoHeaders.timeout),</span><span class="se">\n</span><span class="s2">      </span><span class="se">\"</span><span class="s2">payload</span><span class="se">\"</span><span class="s2">: value</span><span class="se">\n</span><span class="s2">  };</span><span class="se">\n</span><span class="s2">  let textPayload = JSON.stringify(payload);</span><span class="se">\n</span><span class="s2">  let bytePayload = null;</span><span class="se">\n</span><span class="s2">  let contentType = 'application/json';</span><span class="se">\n\n</span><span class="s2">  return Ditto.buildExternalMsg(</span><span class="se">\n</span><span class="s2">    headers, // The external headers Object containing header values</span><span class="se">\n</span><span class="s2">    textPayload, // The external mapped String</span><span class="se">\n</span><span class="s2">    bytePayload, // The external mapped byte[]</span><span class="se">\n</span><span class="s2">    contentType // The returned Content-Type</span><span class="se">\n</span><span class="s2">  );</span><span class="se">\n</span><span class="s2">}</span><span class="se">\n</span><span class="s2">"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"loadBytebufferJS"</span><span class="p">:</span><span class="w"> </span><span class="s2">"false"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"loadLongJS"</span><span class="p">:</span><span class="w"> </span><span class="s2">"false"</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="s2">"credentials"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"hmac"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"algorithm"</span><span class="p">:</span><span class="w"> </span><span class="s2">"az-sasl"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"parameters"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"sharedKeyName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;shared-access-policy-name&gt;"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"sharedKey"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;shared-access-key&gt;"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"endpoint"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;hostname&gt;"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="s2">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>Parameters:</p>
+<ul>
+  <li><code class="highlighter-rouge">&lt;hostname&gt;</code>: The hostname of your iot hub instance. E.g. <code class="highlighter-rouge">my-hub.azure-devices.net</code>.</li>
+  <li><code class="highlighter-rouge">&lt;shared-access-policy-name&gt;</code>: The name of the (Azure IoT Hub) shared access policy, which has the <code class="highlighter-rouge">Service connect</code> permission. E.g. <code class="highlighter-rouge">service</code>.</li>
+  <li><code class="highlighter-rouge">&lt;shared-access-key&gt;</code>: The primary or secondary key of above policy. E.g. <code class="highlighter-rouge">theKey</code>.</li>
+</ul>
+
+<p>The <code class="highlighter-rouge">outgoingScript</code> provides JavaScript payload mapping which maps the outgoing ditto protocol message into
+the required <a href="https://docs.microsoft.com/en-us/azure/iot-hub/iot-hub-devguide-direct-methods#invoke-a-direct-method-from-a-back-end-app">direct method format</a>.
+I.e. it uses the live message subject as <code class="highlighter-rouge">methodName</code>, the timeout as <code class="highlighter-rouge">responseTimeoutInSeconds</code> and the value as <code class="highlighter-rouge">payload</code>:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">mapFromDittoProtocolMsg</span><span class="p">(</span>
+        <span class="nx">namespace</span><span class="p">,</span>
+        <span class="nx">name</span><span class="p">,</span>
+        <span class="nx">group</span><span class="p">,</span>
+        <span class="nx">channel</span><span class="p">,</span>
+        <span class="nx">criterion</span><span class="p">,</span>
+        <span class="nx">action</span><span class="p">,</span>
+        <span class="nx">path</span><span class="p">,</span>
+        <span class="nx">dittoHeaders</span><span class="p">,</span>
+        <span class="nx">value</span><span class="p">,</span>
+        <span class="nx">status</span><span class="p">,</span>
+        <span class="nx">extra</span>
+<span class="p">)</span> <span class="p">{</span>
+
+  <span class="kd">let</span> <span class="nx">headers</span> <span class="o">=</span> <span class="nx">dittoHeaders</span><span class="p">;</span>
+  <span class="kd">let</span> <span class="nx">payload</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">"methodName"</span><span class="p">:</span> <span class="nx">action</span><span class="p">,</span>
+    <span class="s2">"responseTimeoutInSeconds"</span><span class="p">:</span> <span class="nb">parseInt</span><span class="p">(</span><span class="nx">dittoHeaders</span><span class="p">.</span><span class="nx">timeout</span><span class="p">),</span>
+    <span class="s2">"payload"</span><span class="p">:</span> <span class="nx">value</span>
+  <span class="p">};</span>
+  <span class="kd">let</span> <span class="nx">textPayload</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">payload</span><span class="p">);</span>
+  <span class="kd">let</span> <span class="nx">bytePayload</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+  <span class="kd">let</span> <span class="nx">contentType</span> <span class="o">=</span> <span class="s1">'application/json'</span><span class="p">;</span>
+
+  <span class="k">return</span> <span class="nx">Ditto</span><span class="p">.</span><span class="nx">buildExternalMsg</span><span class="p">(</span>
+    <span class="nx">headers</span><span class="p">,</span>
+    <span class="nx">textPayload</span><span class="p">,</span>
+    <span class="nx">bytePayload</span><span class="p">,</span>
+    <span class="nx">contentType</span>
+  <span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>This is required since Azure IoT Hub direct methods require a specific format:</p>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"methodName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"reboot"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"responseTimeoutInSeconds"</span><span class="p">:</span><span class="w"> </span><span class="mi">200</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"payload"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"input1"</span><span class="p">:</span><span class="w"> </span><span class="s2">"someInput"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"input2"</span><span class="p">:</span><span class="w"> </span><span class="s2">"anotherInput"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>Send live messages to a Thing, which contain as value the expected <code class="highlighter-rouge">payload</code>, as live message subject the expected
+<code class="highlighter-rouge">methodName</code> and as timeout the expected <code class="highlighter-rouge">responseTimeoutInSeconds</code>. Then they can successfully invoke
+the direct method on their respective devices.</p>
+
+<p>E.g. a live message for the above direct method would be a <code class="highlighter-rouge">POST</code> to
+<code class="highlighter-rouge">&lt;ditto&gt;/api/2/things/&lt;thing-id&gt;/inbox/messages/reboot?timeout=200s</code> with body:</p>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"input1"</span><span class="p">:</span><span class="w"> </span><span class="s2">"someInput"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"input2"</span><span class="p">:</span><span class="w"> </span><span class="s2">"anotherInput"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h4 id="azure-iot-hub-amqp-api">Azure IoT Hub AMQP API</h4>
+
+<p>What follows is an example of a connections which forwards live messages sent to things as Cloud To Device (C2D)
+messages to <a href="https://docs.microsoft.com/en-us/azure/iot-hub/about-iot-hub">Azure IoT Hub</a> via AMQP 1.0.</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"00000000-0000-0000-0000-000000000000"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Azure IoT Hub AMQP"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"connectionType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"amqp-10"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"connectionStatus"</span><span class="p">:</span><span class="w"> </span><span class="s2">"open"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"uri"</span><span class="p">:</span><span class="w"> </span><span class="s2">"amqps://&lt;hostname&gt;:5671"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"sources"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+  </span><span class="s2">"targets"</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="w">
+    </span><span class="s2">"address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/messages/devicebound"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"topics"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"_/_/things/live/messages"</span><span class="p">],</span><span class="w">
+    </span><span class="s2">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"integration:ditto"</span><span class="p">],</span><span class="w">
+    </span><span class="s2">"headerMapping"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"iothub-ack"</span><span class="p">:</span><span class="w"> </span><span class="s2">"full"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"to"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/devices/{{thing:id}}/messages/devicebound"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+  </span><span class="p">],</span><span class="w">
+  </span><span class="s2">"clientCount"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"failoverEnabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"validateCertificates"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"processorPoolSize"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"credentials"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"hmac"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"algorithm"</span><span class="p">:</span><span class="w"> </span><span class="s2">"az-sasl"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"parameters"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"sharedKeyName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;shared-access-policy-name&gt;"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"sharedKey"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;shared-access-key&gt;"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"endpoint"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;hostname&gt;"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="s2">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>Parameters:</p>
+<ul>
+  <li><code class="highlighter-rouge">&lt;hostname&gt;</code>: The hostname of your iot hub instance. E.g. <code class="highlighter-rouge">my-hub.azure-devices.net</code>.</li>
+  <li><code class="highlighter-rouge">&lt;shared-access-policy-name&gt;</code>: The name of the (Azure IoT Hub) shared access policy, which has the <code class="highlighter-rouge">Service connect</code> permission. E.g. <code class="highlighter-rouge">service</code>.</li>
+  <li><code class="highlighter-rouge">&lt;shared-access-key&gt;</code>: The primary or secondary key of above policy. E.g. <code class="highlighter-rouge">theKey</code>.</li>
+</ul>
+
+<h4 id="azure-service-bus-http-api">Azure Service Bus HTTP API</h4>
+
+<p>What follows is an example of a connection which forwards live messages sent to things to a queue in
+<a href="https://docs.microsoft.com/en-us/azure/service-bus-messaging/service-bus-messaging-overview">Azure Service Bus</a>.</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"00000000-0000-0000-0000-000000000000"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Azure Service Bus HTTP"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"connectionType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http-push"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"connectionStatus"</span><span class="p">:</span><span class="w"> </span><span class="s2">"open"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"uri"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://&lt;hostname&gt;:443"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"sources"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+  </span><span class="s2">"targets"</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="w">
+    </span><span class="s2">"address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"POST:/&lt;queue-name&gt;/messages"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"topics"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"_/_/things/live/messages"</span><span class="p">],</span><span class="w">
+    </span><span class="s2">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"integration:ditto"</span><span class="p">],</span><span class="w">
+    </span><span class="s2">"issuedAcknowledgementLabel"</span><span class="p">:</span><span class="w"> </span><span class="s2">"live-response"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"headerMapping"</span><span class="p">:</span><span class="w"> </span><span class="p">{}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+  </span><span class="p">],</span><span class="w">
+  </span><span class="s2">"clientCount"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"failoverEnabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"validateCertificates"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"processorPoolSize"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"specificConfig"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"parallelism"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="s2">"credentials"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"hmac"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"algorithm"</span><span class="p">:</span><span class="w"> </span><span class="s2">"az-sasl"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"parameters"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"sharedKeyName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;shared-access-policy-name&gt;"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"sharedKey"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;base64-encoded-shared-key&gt;"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"endpoint"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://&lt;hostname&gt;/&lt;queue-name&gt;"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="s2">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>Parameters:</p>
+<ul>
+  <li><code class="highlighter-rouge">&lt;hostname&gt;</code>: The hostname of your service bus instance. E.g. <code class="highlighter-rouge">my-bus.servicebus.windows.net</code>.</li>
+  <li><code class="highlighter-rouge">&lt;queue-name&gt;</code>: The queue name to which you want to publish in your service bus instance. E.g. <code class="highlighter-rouge">my-queue</code>’.</li>
+  <li><code class="highlighter-rouge">&lt;shared-access-policy-name&gt;</code>: The name of the (Azure Service Bus) shared access policy, which has <code class="highlighter-rouge">Send</code> and <code class="highlighter-rouge">Listen</code> permissions. E.g. <code class="highlighter-rouge">RootManageSharedAccessKey</code>.</li>
+  <li><code class="highlighter-rouge">&lt;base64-encoded-shared-key&gt;</code>: The <code class="highlighter-rouge">Base64</code> encoded primary or secondary key of above policy. The signing work if you
+encode the key with <code class="highlighter-rouge">Base64</code> (although it already has <code class="highlighter-rouge">Base64</code> encoding). E.g. if the primary key is <code class="highlighter-rouge">theKey</code>, you need to use
+its encoded version <code class="highlighter-rouge">dGhlS2V5</code>.</li>
+</ul>
+
+
+    <div class="tags">
+        
+        <b>Tags: </b>
+        
+        
+        
+        <a href="tag_connectivity.html" class="btn btn-default navbar-btn cursorNorm" role="button">connectivity</a>
+        
+        
+        
+    </div>
+
+</div>
+
+<hr class="shaded"/>
+
+<footer>
+            <div class="row">
+                <div class="col-lg-12 footer">
+                    <div class="logo">
+                        <a href="https://eclipse.org"><img src="images/eclipse_foundation_logo.svg" alt="Eclipse logo"/></a>
+                    </div>
+                    <p class="notice">
+                        &copy;2021 Eclipse Ditto™.
+                         Site last generated: Jun 21, 2021 <br />
+                    </p>
+                    <div class="quickLinks">
+                        <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">
+                            &gt; Privacy Policy
+                        </a>
+                        <a href="https://www.eclipse.org/legal/termsofuse.php" target="_blank">
+                            &gt; Terms of Use
+                        </a>
+                        <a href="https://www.eclipse.org/legal/copyright.php" target="_blank">
+                            &gt; Copyright Agent
+                        </a>
+                        <a href="https://www.eclipse.org/legal" target="_blank">
+                            &gt; Legal
+                        </a>
+                        <a href="https://www.eclipse.org/legal/epl-2.0/" target="_blank">
+                            &gt; License
+                        </a>
+                        <a href="https://eclipse.org/security" target="_blank">
+                            &gt; Report a Vulnerability
+                        </a>
+                    </div>
+                </div>
+            </div>
+</footer>
+
+
+        </div>
+    <!-- /.row -->
+</div>
+<!-- /.container -->
+</div>
+<!-- /#main -->
+    </div>
+
+</body>
+</html>

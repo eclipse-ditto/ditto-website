@@ -904,6 +904,13 @@
               
               
               
+              
+              
+              <li><a href="connectivity-hmac-signing.html">HMAC signing</a></li>
+              
+              
+              
+              
           </ul>
         </li>
     
@@ -1056,7 +1063,7 @@
               
               
               <li class="subfolders">
-                  <a href="#"><span></span>→ commands/events</a>
+                  <a href="#"><span></span>→ commands/announcements</a>
                   <ul>
                       
                       
@@ -1080,6 +1087,28 @@
                       
                       
                       <li><a href="protocol-specification-policies-announcement.html">Announcement</a></li>
+                      
+                      
+                      
+                  </ul>
+              </li>
+              
+              
+              
+              
+              
+              
+              <li><a href="protocol-specification-connections.html">Connections group</a></li>
+              
+              
+              
+              <li class="subfolders">
+                  <a href="#"><span></span>→ announcements</a>
+                  <ul>
+                      
+                      
+                      
+                      <li><a href="protocol-specification-connections-announcement.html">Announcement</a></li>
                       
                       
                       
@@ -1633,6 +1662,27 @@
               
               
               
+              <li class="subfolders">
+                  <a href="#"><span></span>→ Connections examples</a>
+                  <ul>
+                      
+                      
+                      
+                      <li><a href="protocol-examples-connections-announcement-opened.html">Announcement for connection opened</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-connections-announcement-closed.html">Announcement for connection gracefully closed</a></li>
+                      
+                      
+                      
+                  </ul>
+              </li>
+              
+              
+              
               
               
               
@@ -1816,7 +1866,7 @@ in <a href="https://www.eclipse.org/ditto/protocol-overview.html">Ditto Protocol
         <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"Thing could not be created due to: "</span> <span class="o">+</span> <span class="n">throwable</span><span class="o">.</span><span class="na">getMessage</span><span class="o">());</span>
     <span class="o">}</span>
     <span class="k">return</span> <span class="n">client</span><span class="o">.</span><span class="na">twin</span><span class="o">().</span><span class="na">forId</span><span class="o">(</span><span class="n">thingId</span><span class="o">).</span><span class="na">putAttribute</span><span class="o">(</span><span class="s">"first-updated-at"</span><span class="o">,</span> <span class="n">OffsetDateTime</span><span class="o">.</span><span class="na">now</span><span class="o">().</span><span class="na">toString</span><span class="o">());</span>
-<span class="o">}).</span><span class="na">get</span><span class="o">();</span> <span class="c1">// this will block the thread! work asynchronously whenever possible!</span>
+<span class="o">}).</span><span class="na">toCompletableFuture</span><span class="o">().</span><span class="na">get</span><span class="o">();</span> <span class="c1">// this will block the thread! work asynchronously whenever possible!</span>
 </code></pre></div></div>
 
 <h4 id="subscribe-for-change-notifications">Subscribe for change notifications</h4>
@@ -1824,7 +1874,7 @@ in <a href="https://www.eclipse.org/ditto/protocol-overview.html">Ditto Protocol
 <p>In order to subscribe for <a href="basic-signals-event.html">events</a> emitted by Ditto after a twin was modified, start the 
 consumption on the <code class="highlighter-rouge">twin</code> channel:</p>
 
-<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">client</span><span class="o">.</span><span class="na">twin</span><span class="o">().</span><span class="na">startConsumption</span><span class="o">().</span><span class="na">get</span><span class="o">();</span>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">client</span><span class="o">.</span><span class="na">twin</span><span class="o">().</span><span class="na">startConsumption</span><span class="o">().</span><span class="na">toCompletableFuture</span><span class="o">().</span><span class="na">get</span><span class="o">();</span> <span class="c1">// this will block the thread! work asynchronously whenever possible!</span>
 <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"Subscribed for Twin events"</span><span class="o">);</span>
 <span class="n">client</span><span class="o">.</span><span class="na">twin</span><span class="o">().</span><span class="na">registerForThingChanges</span><span class="o">(</span><span class="s">"my-changes"</span><span class="o">,</span> <span class="n">change</span> <span class="o">-&gt;</span> <span class="o">{</span>
    <span class="k">if</span> <span class="o">(</span><span class="n">change</span><span class="o">.</span><span class="na">getAction</span><span class="o">()</span> <span class="o">==</span> <span class="n">ChangeAction</span><span class="o">.</span><span class="na">CREATED</span><span class="o">)</span> <span class="o">{</span>
@@ -1838,7 +1888,7 @@ consumption on the <code class="highlighter-rouge">twin</code> channel:</p>
 
 <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">client</span><span class="o">.</span><span class="na">twin</span><span class="o">().</span><span class="na">startConsumption</span><span class="o">(</span>
    <span class="n">Options</span><span class="o">.</span><span class="na">Consumption</span><span class="o">.</span><span class="na">filter</span><span class="o">(</span><span class="s">"gt(features/temperature/properties/value,23.0)"</span><span class="o">)</span>
-<span class="o">).</span><span class="na">get</span><span class="o">();</span>
+<span class="o">).</span><span class="na">toCompletableFuture</span><span class="o">().</span><span class="na">get</span><span class="o">();</span> <span class="c1">// this will block the thread! work asynchronously whenever possible!</span>
 <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"Subscribed for Twin events"</span><span class="o">);</span>
 <span class="n">client</span><span class="o">.</span><span class="na">twin</span><span class="o">().</span><span class="na">registerForFeaturePropertyChanges</span><span class="o">(</span><span class="s">"my-feature-changes"</span><span class="o">,</span> <span class="s">"temperature"</span><span class="o">,</span> <span class="s">"value"</span><span class="o">,</span> <span class="n">change</span> <span class="o">-&gt;</span> <span class="o">{</span>
    <span class="c1">// perform custom actions ..</span>
@@ -1852,7 +1902,7 @@ enhanced with the additional extra fields:</p>
 
 <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">client</span><span class="o">.</span><span class="na">twin</span><span class="o">().</span><span class="na">startConsumption</span><span class="o">(</span>
    <span class="n">Options</span><span class="o">.</span><span class="na">Consumption</span><span class="o">.</span><span class="na">extraFields</span><span class="o">(</span><span class="n">JsonFieldSelector</span><span class="o">.</span><span class="na">newInstance</span><span class="o">(</span><span class="s">"attributes/location"</span><span class="o">))</span>
-<span class="o">).</span><span class="na">get</span><span class="o">();</span>
+<span class="o">).</span><span class="na">toCompletableFuture</span><span class="o">().</span><span class="na">get</span><span class="o">();</span> <span class="c1">// this will block the thread! work asynchronously whenever possible!</span>
 <span class="n">client</span><span class="o">.</span><span class="na">twin</span><span class="o">().</span><span class="na">registerForThingChanges</span><span class="o">(</span><span class="s">"my-enriched-changes"</span><span class="o">,</span> <span class="n">change</span> <span class="o">-&gt;</span> <span class="o">{</span>
    <span class="n">Optional</span><span class="o">&lt;</span><span class="n">JsonObject</span><span class="o">&gt;</span> <span class="n">extra</span> <span class="o">=</span> <span class="n">change</span><span class="o">.</span><span class="na">getExtra</span><span class="o">();</span>
    <span class="c1">// perform custom actions, making use of the 'extra' data ..</span>
@@ -1864,7 +1914,7 @@ enhanced with the additional extra fields:</p>
 <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">client</span><span class="o">.</span><span class="na">twin</span><span class="o">().</span><span class="na">startConsumption</span><span class="o">(</span>
    <span class="n">Options</span><span class="o">.</span><span class="na">Consumption</span><span class="o">.</span><span class="na">extraFields</span><span class="o">(</span><span class="n">JsonFieldSelector</span><span class="o">.</span><span class="na">newInstance</span><span class="o">(</span><span class="s">"attributes/location"</span><span class="o">)),</span>
    <span class="n">Options</span><span class="o">.</span><span class="na">Consumption</span><span class="o">.</span><span class="na">filter</span><span class="o">(</span><span class="s">"eq(attributes/location,\"kitchen\")"</span><span class="o">)</span>
-<span class="o">).</span><span class="na">get</span><span class="o">();</span>
+<span class="o">).</span><span class="na">toCompletableFuture</span><span class="o">().</span><span class="na">get</span><span class="o">();</span> <span class="c1">// this will block the thread! work asynchronously whenever possible!</span>
 <span class="c1">// register the callbacks...</span>
 </code></pre></div></div>
 
@@ -1872,7 +1922,9 @@ enhanced with the additional extra fields:</p>
 
 <p>Register for receiving messages with the subject <code class="highlighter-rouge">hello.world</code> on any thing:</p>
 
-<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">client</span><span class="o">.</span><span class="na">live</span><span class="o">().</span><span class="na">registerForMessage</span><span class="o">(</span><span class="s">"globalMessageHandler"</span><span class="o">,</span> <span class="s">"hello.world"</span><span class="o">,</span> <span class="n">message</span> <span class="o">-&gt;</span> <span class="o">{</span>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">client</span><span class="o">.</span><span class="na">live</span><span class="o">().</span><span class="na">startConsumption</span><span class="o">().</span><span class="na">toCompletableFuture</span><span class="o">().</span><span class="na">get</span><span class="o">();</span> <span class="c1">// this will block the thread! work asynchronously whenever possible!</span>
+<span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"Subscribed for live messages/commands/events"</span><span class="o">);</span>
+<span class="n">client</span><span class="o">.</span><span class="na">live</span><span class="o">().</span><span class="na">registerForMessage</span><span class="o">(</span><span class="s">"globalMessageHandler"</span><span class="o">,</span> <span class="s">"hello.world"</span><span class="o">,</span> <span class="n">message</span> <span class="o">-&gt;</span> <span class="o">{</span>
    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"Received Message with subject "</span> <span class="o">+</span>  <span class="n">message</span><span class="o">.</span><span class="na">getSubject</span><span class="o">());</span>
    <span class="n">message</span><span class="o">.</span><span class="na">reply</span><span class="o">()</span>
       <span class="o">.</span><span class="na">statusCode</span><span class="o">(</span><span class="n">HttpStatusCode</span><span class="o">.</span><span class="na">IM_A_TEAPOT</span><span class="o">)</span>
@@ -1897,7 +1949,7 @@ enhanced with the additional extra fields:</p>
 
 <p>Read a policy:</p>
 <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">Policy</span> <span class="n">retrievedPolicy</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="na">policies</span><span class="o">().</span><span class="na">retrieve</span><span class="o">(</span><span class="n">PolicyId</span><span class="o">.</span><span class="na">of</span><span class="o">(</span><span class="s">"org.eclipse.ditto:new-policy"</span><span class="o">))</span>
-   <span class="o">.</span><span class="na">get</span><span class="o">();</span> <span class="c1">// this will block the thread! work asynchronously whenever possible!</span>
+   <span class="o">.</span><span class="na">toCompletableFuture</span><span class="o">().</span><span class="na">get</span><span class="o">();</span> <span class="c1">// this will block the thread! work asynchronously whenever possible!</span>
 </code></pre></div></div>
 
 <p>Create a policy:</p>
@@ -1909,7 +1961,7 @@ enhanced with the additional extra fields:</p>
    <span class="o">.</span><span class="na">build</span><span class="o">();</span>
 
 <span class="n">client</span><span class="o">.</span><span class="na">policies</span><span class="o">().</span><span class="na">create</span><span class="o">(</span><span class="n">newPolicy</span><span class="o">)</span>
-   <span class="o">.</span><span class="na">get</span><span class="o">();</span> <span class="c1">// this will block the thread! work asynchronously whenever possible!</span>
+   <span class="o">.</span><span class="na">toCompletableFuture</span><span class="o">().</span><span class="na">get</span><span class="o">();</span> <span class="c1">// this will block the thread! work asynchronously whenever possible!</span>
 </code></pre></div></div>
 
 <p>Updating and deleting policies is also possible via the Java client API, please follow the API and the JavaDoc.</p>
@@ -2004,7 +2056,7 @@ whenever a <code class="highlighter-rouge">Change</code> callback is invoked wit
                     </div>
                     <p class="notice">
                         &copy;2021 Eclipse Ditto™.
-                         Site last generated: May 20, 2021 <br />
+                         Site last generated: Jun 21, 2021 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">
