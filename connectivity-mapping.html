@@ -2349,6 +2349,30 @@ them in a mapping function. See <a href="http://mozilla.github.io/rhino/compat/e
       <span class="c1">// parsing failed (no JSON document); return null to drop the message</span>
       <span class="k">return</span> <span class="kc">null</span><span class="p">;</span>
     <span class="p">}</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">contentType</span> <span class="o">===</span> <span class="s1">'application/json'</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">let</span> <span class="nx">parsedJson</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">textPayload</span><span class="p">);</span>
+    <span class="c1">// the following variables would be determined from the "parsedJson" and from the "headers":</span>
+    <span class="kd">let</span> <span class="nx">namespace</span> <span class="o">=</span> <span class="s2">""</span><span class="p">;</span>
+    <span class="kd">let</span> <span class="nx">name</span> <span class="o">=</span> <span class="s2">""</span><span class="p">;</span>
+    <span class="kd">let</span> <span class="nx">group</span> <span class="o">=</span> <span class="s2">"things"</span><span class="p">;</span>
+    <span class="kd">let</span> <span class="nx">channel</span> <span class="o">=</span> <span class="s2">"twin"</span><span class="p">;</span>
+    <span class="kd">let</span> <span class="nx">criterion</span> <span class="o">=</span> <span class="s2">"commands"</span><span class="p">;</span>
+    <span class="kd">let</span> <span class="nx">action</span> <span class="o">=</span> <span class="s2">"modify"</span><span class="p">;</span>
+    <span class="kd">let</span> <span class="nx">path</span> <span class="o">=</span> <span class="s2">"/attributes"</span><span class="p">;</span>
+    <span class="kd">let</span> <span class="nx">dittoHeaders</span> <span class="o">=</span> <span class="p">{};</span>
+    <span class="kd">let</span> <span class="nx">value</span> <span class="o">=</span> <span class="p">{</span>
+      <span class="s2">"a"</span><span class="p">:</span> <span class="mi">1</span>
+    <span class="p">};</span>
+    <span class="k">return</span> <span class="nx">Ditto</span><span class="p">.</span><span class="nx">buildDittoProtocolMsg</span><span class="p">(</span>
+      <span class="nx">namespace</span><span class="p">,</span> 
+      <span class="nx">name</span><span class="p">,</span> 
+      <span class="nx">group</span><span class="p">,</span> 
+      <span class="nx">channel</span><span class="p">,</span> 
+      <span class="nx">criterion</span><span class="p">,</span> 
+      <span class="nx">action</span><span class="p">,</span> 
+      <span class="nx">path</span><span class="p">,</span> 
+      <span class="nx">dittoHeaders</span><span class="p">,</span> 
+      <span class="nx">value</span><span class="p">)</span>
   <span class="p">}</span>
   <span class="c1">// no mapping logic matched; return null to drop the message</span>
   <span class="k">return</span> <span class="kc">null</span><span class="p">;</span>
@@ -2356,8 +2380,32 @@ them in a mapping function. See <a href="http://mozilla.github.io/rhino/compat/e
 </code></pre></div></div>
 
 <p>The result of the function has to be a JavaScript object in <a href="protocol-overview.html">Ditto Protocol</a> or an array of 
-such JavaScript objects. That’s where the helper method <code class="highlighter-rouge">Ditto.buildDittoProtocolMsg</code> is useful: it explicitly 
-defines which parameters are required for the Ditto Protocol message.</p>
+such JavaScript objects. That’s where the helper method <code class="highlighter-rouge">Ditto.buildDittoProtocolMsg</code> is useful: 
+it explicitly defines which parameters are required for the Ditto Protocol message.</p>
+
+<p>There is another JavaScript function which is helpful when access to the complete external message is needed.
+It is possible to define the <code class="highlighter-rouge">mapToDittoProtocolMsgWrapper</code> in the incoming payload mapping and access the original
+<code class="highlighter-rouge">externalMsg</code>.</p>
+
+<p>This is the default implementation of <code class="highlighter-rouge">mapToDittoProtocolMsgWrapper</code>, delegating to <code class="highlighter-rouge">mapToDittoProtocolMsg</code>:</p>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cm">/**
+ * Maps the passed external message to a Ditto Protocol message.
+ * @param {ExternalMessage} externalMsg - The external message to map to a Ditto Protocol message
+ * @returns {(DittoProtocolMessage|Array&lt;DittoProtocolMessage&gt;)} dittoProtocolMessage(s) -
+ *  The mapped Ditto Protocol message,
+ *  an array of Ditto Protocol messages or
+ *  &lt;code&gt;null&lt;/code&gt; if the message could/should not be mapped
+ */</span>
+<span class="kd">function</span> <span class="nx">mapToDittoProtocolMsgWrapper</span><span class="p">(</span><span class="nx">externalMsg</span><span class="p">)</span> <span class="p">{</span>
+
+  <span class="kd">let</span> <span class="nx">headers</span> <span class="o">=</span> <span class="nx">externalMsg</span><span class="p">.</span><span class="nx">headers</span><span class="p">;</span>
+  <span class="kd">let</span> <span class="nx">textPayload</span> <span class="o">=</span> <span class="nx">externalMsg</span><span class="p">.</span><span class="nx">textPayload</span><span class="p">;</span>
+  <span class="kd">let</span> <span class="nx">bytePayload</span> <span class="o">=</span> <span class="nx">externalMsg</span><span class="p">.</span><span class="nx">bytePayload</span><span class="p">;</span>
+  <span class="kd">let</span> <span class="nx">contentType</span> <span class="o">=</span> <span class="nx">externalMsg</span><span class="p">.</span><span class="nx">contentType</span><span class="p">;</span>
+
+  <span class="k">return</span> <span class="nx">mapToDittoProtocolMsg</span><span class="p">(</span><span class="nx">headers</span><span class="p">,</span> <span class="nx">textPayload</span><span class="p">,</span> <span class="nx">bytePayload</span><span class="p">,</span> <span class="nx">contentType</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
 
 <h3 id="mapping-outgoing-messages">Mapping outgoing messages</h3>
 
@@ -2416,9 +2464,56 @@ can be mapped to external messages by implementing the following JavaScript func
 <span class="p">}</span>
 </code></pre></div></div>
 
-<p>The result of the function has to be a JavaScript object or an array of JavaScript objects with the fields <code class="highlighter-rouge">headers</code>, 
-<code class="highlighter-rouge">textPayload</code>, <code class="highlighter-rouge">bytePayload</code> and <code class="highlighter-rouge">contentType</code>. That’s where the helper method <code class="highlighter-rouge">Ditto.buildExternalMsg</code> is useful: it
-explicitly defines which parameters are required for the external message.</p>
+<p>The result of the function has to be a JavaScript object or, an array of JavaScript objects with the fields <code class="highlighter-rouge">headers</code>, 
+<code class="highlighter-rouge">textPayload</code>, <code class="highlighter-rouge">bytePayload</code> and <code class="highlighter-rouge">contentType</code>. That’s where the helper method <code class="highlighter-rouge">Ditto.buildExternalMsg</code> is useful: 
+it explicitly defines which parameters are required for the external message.</p>
+
+<p>There is another JavaScript function which is helpful when access to the complete Ditto protocol message is needed.
+It is possible to define the <code class="highlighter-rouge">mapFromDittoProtocolMsgWrapper</code> in the outgoing payload mapping and access the
+original <code class="highlighter-rouge">dittoProtocolMsg</code>.<br />
+Please refer to the <a href="protocol-specification.html#dittoProtocolEnvelope">Ditto Protocol specification</a>
+to inspect which JSON fields are available when.</p>
+
+<p>This is the default implementation of <code class="highlighter-rouge">mapFromDittoProtocolMsgWrapper</code>, delegating to <code class="highlighter-rouge">mapFromDittoProtocolMsg</code>:</p>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cm">/**
+ * Maps the passed Ditto Protocol message to an external message.
+ * @param {DittoProtocolMessage} dittoProtocolMsg - The Ditto Protocol message to map
+ * @returns {(ExternalMessage|Array&lt;ExternalMessage&gt;)} externalMessage -
+ *  The mapped external message,
+ *  an array of external messages or
+ *  &lt;code&gt;null&lt;/code&gt; if the message could/should not be mapped
+ */</span>
+<span class="kd">function</span> <span class="nx">mapFromDittoProtocolMsgWrapper</span><span class="p">(</span><span class="nx">dittoProtocolMsg</span><span class="p">)</span> <span class="p">{</span>
+
+  <span class="kd">let</span> <span class="nx">topic</span> <span class="o">=</span> <span class="nx">dittoProtocolMsg</span><span class="p">.</span><span class="nx">topic</span><span class="p">;</span>
+  <span class="kd">let</span> <span class="nx">splitTopic</span> <span class="o">=</span> <span class="nx">topic</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s2">"/"</span><span class="p">);</span>
+
+  <span class="kd">let</span> <span class="nx">namespace</span> <span class="o">=</span> <span class="nx">splitTopic</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+  <span class="kd">let</span> <span class="nx">name</span> <span class="o">=</span> <span class="nx">splitTopic</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
+  <span class="kd">let</span> <span class="nx">group</span> <span class="o">=</span> <span class="nx">splitTopic</span><span class="p">[</span><span class="mi">2</span><span class="p">];</span>
+
+  <span class="kd">let</span> <span class="nx">channel</span><span class="p">;</span>
+  <span class="kd">let</span> <span class="nx">criterion</span><span class="p">;</span>
+  <span class="kd">let</span> <span class="nx">action</span><span class="p">;</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">hasChannel</span><span class="p">(</span><span class="nx">group</span><span class="p">))</span> <span class="p">{</span>
+    <span class="nx">channel</span> <span class="o">=</span> <span class="nx">splitTopic</span><span class="p">[</span><span class="mi">3</span><span class="p">];</span>
+    <span class="nx">criterion</span> <span class="o">=</span> <span class="nx">splitTopic</span><span class="p">[</span><span class="mi">4</span><span class="p">];</span>
+    <span class="nx">action</span> <span class="o">=</span> <span class="nx">splitTopic</span><span class="p">[</span><span class="mi">5</span><span class="p">];</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="nx">channel</span> <span class="o">=</span> <span class="s1">'none'</span><span class="p">;</span>
+    <span class="nx">criterion</span> <span class="o">=</span> <span class="nx">splitTopic</span><span class="p">[</span><span class="mi">3</span><span class="p">];</span>
+    <span class="nx">action</span> <span class="o">=</span> <span class="nx">splitTopic</span><span class="p">[</span><span class="mi">4</span><span class="p">];</span>
+  <span class="p">}</span>
+
+  <span class="kd">let</span> <span class="nx">path</span> <span class="o">=</span> <span class="nx">dittoProtocolMsg</span><span class="p">.</span><span class="nx">path</span><span class="p">;</span>
+  <span class="kd">let</span> <span class="nx">dittoHeaders</span> <span class="o">=</span> <span class="nx">dittoProtocolMsg</span><span class="p">.</span><span class="nx">headers</span><span class="p">;</span>
+  <span class="kd">let</span> <span class="nx">value</span> <span class="o">=</span> <span class="nx">dittoProtocolMsg</span><span class="p">.</span><span class="nx">value</span><span class="p">;</span>
+  <span class="kd">let</span> <span class="nx">status</span> <span class="o">=</span> <span class="nx">dittoProtocolMsg</span><span class="p">.</span><span class="nx">status</span><span class="p">;</span>
+  <span class="kd">let</span> <span class="nx">extra</span> <span class="o">=</span> <span class="nx">dittoProtocolMsg</span><span class="p">.</span><span class="nx">extra</span><span class="p">;</span>
+
+  <span class="k">return</span> <span class="nx">mapFromDittoProtocolMsg</span><span class="p">(</span><span class="nx">namespace</span><span class="p">,</span> <span class="nx">name</span><span class="p">,</span> <span class="nx">group</span><span class="p">,</span> <span class="nx">channel</span><span class="p">,</span> <span class="nx">criterion</span><span class="p">,</span> <span class="nx">action</span><span class="p">,</span> <span class="nx">path</span><span class="p">,</span> <span class="nx">dittoHeaders</span><span class="p">,</span> <span class="nx">value</span><span class="p">,</span> <span class="nx">status</span><span class="p">,</span> <span class="nx">extra</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
 
 <h2 id="javascript-payload-types">JavaScript payload types</h2>
 
@@ -2442,7 +2537,7 @@ structured data may be processed like this:</p>
 
 <h3 id="byte-payloads">Byte payloads</h3>
 
-<p>Working with byte payloads is also possible but does require a little bit of knowledge about JavaScipt’s 
+<p>Working with byte payloads is also possible but does require a little bit of knowledge about JavaScript’s 
 <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/ArrayBuffer">ArrayBuffer</a> 
 <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray">TypedArrays</a> and
 <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/DataView">DataView</a>.</p>
@@ -2502,7 +2597,7 @@ with that helper.</p>
 <h3 id="text-payload-example">Text payload example</h3>
 
 <p>Let’s assume your device sends telemetry data via <a href="https://www.eclipse.org/hono/">Eclipse Hono’s</a> MQTT adapter 
-into the cloud. And that an example payload of your device is:</p>
+into the cloud. And, that an example payload of your device is:</p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
   </span><span class="s2">"temp"</span><span class="p">:</span><span class="w"> </span><span class="s2">"23.42 °C"</span><span class="p">,</span><span class="w">
