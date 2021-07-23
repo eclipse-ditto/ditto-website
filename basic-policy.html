@@ -1845,7 +1845,7 @@ The <code class="highlighter-rouge">sub</code> claim from the JWT and the config
 
 <h3 id="expiring-policy-subjects">Expiring Policy subjects</h3>
 
-<p>When a Policy subject contains an <code class="highlighter-rouge">"expiry"</code> timestamp (formatted as ISO-8601 string), this subject will get 
+<p>When a Policy subject contains an <code class="highlighter-rouge">"expiry"</code> timestamp (formatted as ISO-8601 string), this subject will be 
 automatically deleted once this timestamp was reached.</p>
 
 <p>When providing an <code class="highlighter-rouge">"expiry"</code> for a Policy subject, this timestamp is rounded up:</p>
@@ -1867,6 +1867,55 @@ automatically deleted once this timestamp was reached.</p>
 
 <p>Once an expired subject is deleted, it will immediately no longer have access to the resources protected by the policy
 it was deleted from.</p>
+
+<h3 id="subject-deletion-announcements">Subject deletion announcements</h3>
+
+<p>To get notified when a subject is deleted, the <code class="highlighter-rouge">"announcement"</code> object can be configured in the respective subject section.</p>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"my-subject"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"expiry"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2099-12-31T23:59:59Z"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"announcement"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"beforeExpiry"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1h"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"whenDeleted"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"requestedAcks"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"labels"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"my-connection:my-issued-acknowledgement"</span><span class="p">],</span><span class="w">
+      </span><span class="s2">"timeout"</span><span class="p">:</span><span class="w"> </span><span class="s2">"10s"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>Here are the meanings of the fields of <code class="highlighter-rouge">"announcement"</code>:</p>
+<ul>
+  <li><code class="highlighter-rouge">"beforeExpiry"</code>: The duration before expiration of the subject when a
+<a href="protocol-examples-policies-announcement-subjectDeletion.html">subject deletion announcement</a>
+should be published if no previous subject deletion announcement was acknowledged.<br />
+Supported unit suffixes:
+    <ul>
+      <li><code class="highlighter-rouge">"ms"</code>: for milliseconds</li>
+      <li><code class="highlighter-rouge">"s"</code>: for seconds</li>
+      <li><code class="highlighter-rouge">"m"</code>: for minutes</li>
+      <li><code class="highlighter-rouge">"h"</code>: for hours</li>
+    </ul>
+  </li>
+  <li><code class="highlighter-rouge">"whenDeleted"</code>: Boolean value to describe whether a
+<a href="protocol-examples-policies-announcement-subjectDeletion.html">subject deletion announcement</a>
+should be published whenever a subject is manually deleted (e.g. via overwrite of a policy entry) from a policy, 
+if no previous subject deletion announcement was acknowledged.</li>
+  <li><code class="highlighter-rouge">"requestedAcks"</code>: Settings for at-least-once delivery of announcements via
+<a href="basic-acknowledgements.html">acknowledgements</a>:
+    <ul>
+      <li><code class="highlighter-rouge">"labels"</code>: Array of <a href="basic-acknowledgements.html#requesting-acks">Requested acknowledgement labels</a> of the 
+websocket or connectivity channel from which the 
+<a href="basic-acknowledgements.html#issuing-acknowledgements">issued acknowledgement</a> is expected.</li>
+      <li><code class="highlighter-rouge">"timeout"</code>: Time in minutes (1m), seconds (60s), or milliseconds (600ms) how long to wait for acknowledgements 
+before retrying to publish a timed out announcement.</li>
+    </ul>
+  </li>
+</ul>
+
+<p>The subject deletion announcements are published to any websocket or connection that has subscribed for policy
+announcements and was <a href="basic-auth.html#authenticated-subjects">authenticated</a> with the relevant subject ID.</p>
 
 <h2 id="actions">Actions</h2>
 
@@ -2383,7 +2432,7 @@ query parameter.</li>
                     </div>
                     <p class="notice">
                         &copy;2021 Eclipse Ditto™.
-                         Site last generated: Jun 25, 2021 <br />
+                         Site last generated: Jul 23, 2021 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

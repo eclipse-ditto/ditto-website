@@ -1823,6 +1823,28 @@ as well. Following are some specifics for Apache Kafka 2.x connections:</p>
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
+<h4 id="source-header-mapping">Source header mapping</h4>
+
+<p>The Kafka protocol binding supports to map arbitrary headers from a consumed record to the message that is further 
+processed by Ditto (see <a href="connectivity-header-mapping.html">Header Mapping</a>).</p>
+
+<p>In addition, there are three special headers extracted from every received record that can be used in a payload or 
+header mapping:</p>
+<ul>
+  <li><code class="highlighter-rouge">kafka.topic</code>: contains the Kafka topic the record was received from</li>
+  <li><code class="highlighter-rouge">kafka.key</code>: contains the key of the received record (only set if key is available)</li>
+  <li><code class="highlighter-rouge">kafka.timestamp</code>: contains the timestamp of the received record</li>
+</ul>
+
+<p>These headers may be used in a source header mapping:</p>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"headerMapping"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"the-topic"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{{ header:kafka.topic }}"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"the-key"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{{ header:kafka.key }}"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
 <h3 id="target-format">Target format</h3>
 
 <p>A Kafka 2.x connection requires the protocol configuration target object to have an <code class="highlighter-rouge">address</code> property.
@@ -1904,6 +1926,7 @@ to the automatically created <a href="protocol-specification-acks.html#acknowled
   <li><code class="highlighter-rouge">debugEnabled</code>: determines whether for acknowledgements 
 <a href="#target-acknowledgement-handling">automatically issued by Kafka targets</a> additional debug information should be 
 included as payload or not - default: <code class="highlighter-rouge">false</code></li>
+  <li><code class="highlighter-rouge">groupId</code>: The consumer group ID to be used by the kafka consumer. If not defined the group ID will be equal to the connection ID.</li>
 </ul>
 
 <h2 id="establishing-connecting-to-an-apache-kafka-endpoint">Establishing connecting to an Apache Kafka endpoint</h2>
@@ -1975,7 +1998,7 @@ existing connections.</p>
                     </div>
                     <p class="notice">
                         &copy;2021 Eclipse Ditto™.
-                         Site last generated: Jun 25, 2021 <br />
+                         Site last generated: Jul 23, 2021 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">
