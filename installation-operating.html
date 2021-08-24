@@ -1951,6 +1951,7 @@ the akka-http ssl configuration.</p>
       <li>configure the amount of log files, and the total amount of space used for logs files via these two environment 
 variables:
         <ul>
+          <li><code class="highlighter-rouge">DITTO_LOGGING_FILE_NAME_PATTERN</code> (default: /var/log/ditto/<service-name>.log.%d{yyyy-MM-dd}.gz)</service-name></li>
           <li><code class="highlighter-rouge">DITTO_LOGGING_MAX_LOG_FILE_HISTORY_IN_DAYS</code> (default: 10)</li>
           <li><code class="highlighter-rouge">DITTO_LOGGING_TOTAL_LOG_FILE_SIZE</code> (default: 1GB)</li>
         </ul>
@@ -2049,6 +2050,27 @@ jvm_memory_bytes_sum{component="system-metrics",measure="used",segment="miscella
 <p>Have a look at the 
 <a href="https://github.com/eclipse/ditto/tree/master/deployment/operations/grafana-dashboards">example Grafana dashboards</a>
 and build and share new ones back to the Ditto community.</p>
+
+<h2 id="tracing">Tracing</h2>
+
+<p>Ditto supports reading and propagating <a href="https://www.w3.org/TR/trace-context/">W3C trace context</a> headers at the 
+edges of the Ditto service (e.g. Gateway and Connectivity service). Several spans are generated when a request is<br />
+processed and the tracing data is exported in <a href="https://opentelemetry.io/">OpenTelemetry</a> format using 
+kamon-opentelemetry library.</p>
+
+<p>Adjust the following environment variables to configure the Ditto services to produce traces:</p>
+<ul>
+  <li><code class="highlighter-rouge">DITTO_TRACING_ENABLED</code>: determines whether tracing is enabled (default:<code class="highlighter-rouge">false</code>)</li>
+  <li><code class="highlighter-rouge">DITTO_TRACING_SAMPLER</code>: defines the used sampler
+    <ul>
+      <li><code class="highlighter-rouge">always</code>: report all traces</li>
+      <li><code class="highlighter-rouge">never</code>:  don’t report any trace (default)</li>
+      <li><code class="highlighter-rouge">random</code>: randomly decide using the probability defined in the <code class="highlighter-rouge">DITTO_TRACING_RANDOM_SAMPLER_PROBABILITY</code> environment variable</li>
+      <li><code class="highlighter-rouge">adaptive</code>: keeps dynamic samplers for each operation while trying to achieve a set throughput goal (<code class="highlighter-rouge">DITTO_TRACING_ADAPTIVE_SAMPLER_THROUGHPUT</code>)</li>
+    </ul>
+  </li>
+  <li><code class="highlighter-rouge">OTEL_EXPORTER_OTLP_ENDPOINT</code>: the OTLP endpoint where to report the gathered traces (default: <code class="highlighter-rouge">http://localhost:4317</code>)</li>
+</ul>
 
 <h2 id="devops-commands">DevOps commands</h2>
 
@@ -2759,7 +2781,7 @@ to stop blocking messages to a namespace.</p>
                     </div>
                     <p class="notice">
                         &copy;2021 Eclipse Ditto™.
-                         Site last generated: Jul 23, 2021 <br />
+                         Site last generated: Aug 24, 2021 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">
