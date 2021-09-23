@@ -606,6 +606,12 @@
                       
                       
                       
+                      
+                      
+                      <li><a href="basic-enrichment.html">Signal enrichment</a></li>
+                      
+                      
+                      
                   </ul>
               </li>
               
@@ -649,7 +655,7 @@
               
               
               
-              <li><a href="basic-enrichment.html">Signal enrichment</a></li>
+              <li><a href="basic-conditional-requests.html">Conditional requests</a></li>
               
               
               
@@ -1779,21 +1785,18 @@ $('#toc').on('click', 'a', function() {
 
     
 
-  <h2 id="feature">Feature</h2>
-
-<p>A Feature is used to manage all data and functionality of a Thing that can be clustered in an outlined technical
+  <p>A Feature is used to manage all data and functionality of a Thing that can be clustered in an outlined technical
 context.</p>
 
 <p>For different contexts or aspects of a Thing different Features can be used which are all belonging to the same Thing
 and do not exist without this Thing.</p>
 
-<h3 id="feature-id">Feature ID</h3>
+<h2 id="feature-id">Feature ID</h2>
 <p>Within a Thing each Feature is identified by a unique string - the so called Feature ID.
 A Feature ID often needs to be set in the path of a HTTP request. Due to this fact we strongly recommend to use a
-restricted set of characters (e.g. those for
-<a href="https://www.ietf.org/rfc/rfc3986.txt">Uniform Resource Identifiers (URI)</a>).</p>
+restricted set of characters (e.g. those for <a href="https://www.ietf.org/rfc/rfc3986.txt">Uniform Resource Identifiers (URI)</a>).</p>
 
-<h3 id="feature-properties">Feature properties</h3>
+<h2 id="feature-properties">Feature properties</h2>
 
 <p>The <strong>data</strong> related to Features is managed in form of a <strong>list of properties</strong>. These properties can be categorized,
 e.g. to manage the status, the configuration or any fault information.
@@ -1801,7 +1804,7 @@ Feature properties are represented as one JSON object.</p>
 
 <p>Each property itself can be either a simple/scalar value or a complex object; allowed is any JSON value.</p>
 
-<h3 id="feature-desired-properties">Feature desired properties</h3>
+<h2 id="feature-desired-properties">Feature desired properties</h2>
 
 <p>Desired properties represent the desired state of the properties. They are a tool to represent the desired target state 
 of the properties. 
@@ -1814,71 +1817,45 @@ Feature desired properties are represented as one JSON object.</p>
 <p>Please note however, that besides persisting the desired properties, and indexing the fields for search requests, filtering 
 etc. for the time being, Ditto does not implement their further processing. Such functionality will come with future releases.</p>
 
-<h3 id="feature-definition">Feature definition</h3>
+<h2 id="feature-definition">Feature definition</h2>
 
 <p>Ditto supports specifying a definition for a feature in order to document how a feature’s state is structured
 (in <a href="#feature-properties">properties</a>), and which behavior/capabilities
-(<a href="basic-messages.html">messages related to features</a>) can be expected from such a feature.<br /></p>
+(<a href="basic-messages.html">messages related to features</a>) can be expected from such a feature.</p>
 
-<p>A feature’s definition is a list of definition identifiers containing a <em>namespace</em>, <em>name</em> and <em>version</em> separated 
-by colons: <code class="highlighter-rouge">namespace:name:version</code>. Thus the <em>definition</em> element can hold even multiple identifiers.</p>
+<p>A feature’s definition is a list of definition identifiers containing</p>
+<ul>
+  <li>either a <em>namespace</em>, <em>name</em> and <em>version</em> separated by colons: <code class="highlighter-rouge">&lt;namespace&gt;:&lt;name&gt;:&lt;version&gt;</code></li>
+  <li>or valid HTTP(s) URLs</li>
+</ul>
 
 <p>A Definition can be seen as some kind of type for features. The <a href="#feature-properties">properties</a> of a 
 feature containing a definition identifier <code class="highlighter-rouge">"org.eclipse.ditto:lamp:1.0.0"</code> can be expected to follow the structure
 described in the <code class="highlighter-rouge">lamp</code> type of namespace <code class="highlighter-rouge">org.eclipse.ditto</code> semantically versioned with version <code class="highlighter-rouge">1.0.0</code>.</p>
 
 <div class="alert alert-info" role="alert"><i class="fa fa-info-circle"></i> <b>Note:</b> Ditto does not contain a type system on its own and does not specify how to describe types. 
-   Tooling for editing such structures and type descriptors is provided by <a href="#the-link-to-eclipse-vorto">Eclipse Vorto</a>.</div>
-
-<p>Ditto aims to support contract-based development - by using feature definitions  - to ensure validity and 
-integrity of <strong>digital twins</strong>.</p>
+   You may either use <a href="#the-link-to-eclipse-vorto">Eclipse Vorto</a> or <a href="#the-link-to-w3c-web-of-things">W3C Web of Things</a>
+   to describe data structures and supported messages of Ditto features.</div>
 
 <div class="alert alert-danger" role="alert"><i class="fa fa-exclamation-circle"></i> <b>Warning:</b> Currently Ditto <strong>does not</strong> ensure that the <code class="highlighter-rouge">properties</code> or 
- <code class="highlighter-rouge">desiredProperties</code> of a feature or its supported
-   messages follow the type defined in the definition.</div>
+ <code class="highlighter-rouge">desiredProperties</code> of a feature or its supported messages follow the type defined in the definition.</div>
 
-<h2 id="example">Example</h2>
+<h3 id="the-link-to-eclipse-vorto">The link to Eclipse Vorto</h3>
 
-<p>The following snippet shows a Feature with the ID “arbitrary-feature” and a definition with the sole identifier
-“org.eclipse.ditto:complex-type:1.0.0”:</p>
+<p>If a <a href="#feature-definition">feature definition</a> has the form <code class="highlighter-rouge">&lt;namespace&gt;:&lt;name&gt;:&lt;version&gt;</code>, those 3 values may be
+interpreted as the link to an Eclipse Vorto “function block” model.</p>
 
-<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"arbitrary-feature"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"definition"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="s2">"org.eclipse.ditto:complex-type:1.0.0"</span><span class="w"> </span><span class="p">],</span><span class="w">
-    </span><span class="s2">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"connected"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"complexProperty"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-          </span><span class="s2">"street"</span><span class="p">:</span><span class="w"> </span><span class="s2">"my street"</span><span class="p">,</span><span class="w">
-          </span><span class="s2">"house no"</span><span class="p">:</span><span class="w"> </span><span class="mi">42</span><span class="w">
-        </span><span class="p">}</span><span class="w">
-      </span><span class="p">}</span><span class="w">
-    </span><span class="p">},</span><span class="w">
-    </span><span class="s2">"desiredProperties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"connected"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
-      </span><span class="p">}</span><span class="w">
-    </span><span class="p">}</span><span class="w">
-  </span><span class="p">}</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre></div></div>
-
-<h2 id="model-specification">Model specification</h2>
-
-<p>The feature model API version 2:</p>
-
-<h3 id="v2">V2</h3>
-<script src="docson/widget.js" data-schema="../jsonschema/feature_v2.json"></script>
-
-<h2 id="the-link-to-eclipse-vorto">The link to Eclipse Vorto</h2>
+<div class="alert alert-danger" role="alert"><i class="fa fa-exclamation-circle"></i> <b>Warning:</b> Ditto does not enforce structures and data types based on Eclipse Vorto models -
+a referenced Vorto model may be used in order to find out which data structures and messages a Ditto feature
+supports. Validation - if needed - must be done in another place.</div>
 
 <blockquote>
-  <p>Vorto is an open source tool that allows to create and manage technology agnostic, abstract device descriptions, 
+  <p>Vorto is an open source tool that allows to create and manage technology agnostic, abstract device descriptions,
 so called information models. Information models describe the attributes and the capabilities of real world devices.
 Source: <a href="http://www.eclipse.org/vorto/">http://www.eclipse.org/vorto/</a></p>
 </blockquote>
 
-<p>Ditto’s feature definition may be mapped to the Vorto type system which is defined by so called “information models” 
+<p>Ditto’s feature definition may be mapped to the Vorto type system which is defined by so called “information models”
 and “function blocks”:</p>
 <blockquote>
   <p>Information models represent the capabilities of a particular type of device entirely.
@@ -1892,10 +1869,10 @@ Thus, it is a consistent, self-contained set of (potentially re-usable) properti
 
 <figure><img class="docimage" src="images/pages/basic/ditto-thing-feature-definition-model.png" alt="Feature Definition Model" style="max-width: 250px" /><figcaption>One Thing can have many features. A feature may conform to a definition</figcaption></figure>
 
-<h3 id="mapping-vorto-function-block-elements">Mapping Vorto function block elements</h3>
+<h4 id="mapping-vorto-function-block-elements">Mapping Vorto function block elements</h4>
 
-<p>A Vorto function block consists of different sections defining state and capabilities 
-(see also <a href="https://www.eclipse.org/vorto/">Eclipse Vorto’s documentation</a>) of a device 
+<p>A Vorto function block consists of different sections defining state and capabilities
+(see also <a href="https://www.eclipse.org/vorto/">Eclipse Vorto’s documentation</a>) of a device
 (in our case of a feature):</p>
 <ul>
   <li><code class="highlighter-rouge">configuration</code>: Contains one or many configuration properties for the function block.</li>
@@ -1905,7 +1882,7 @@ Thus, it is a consistent, self-contained set of (potentially re-usable) properti
   <li><code class="highlighter-rouge">events</code>: Contains one or many events for the function block.</li>
 </ul>
 
-<h4 id="function-block-state">Function block state</h4>
+<h5 id="function-block-state">Function block state</h5>
 
 <p>The <code class="highlighter-rouge">configuration</code>, <code class="highlighter-rouge">status</code> and <code class="highlighter-rouge">fault</code> sections of a function block define the state of a feature in Ditto.</p>
 
@@ -1914,7 +1891,7 @@ following JSON structure of a Ditto feature:</p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
     </span><span class="s2">"feature-id"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"definition"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="s2">"namespace:name:version"</span><span class="w"> </span><span class="p">],</span><span class="w">
+        </span><span class="s2">"definition"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="s2">"&lt;namespace&gt;:&lt;name&gt;:&lt;version&gt;"</span><span class="w"> </span><span class="p">],</span><span class="w">
         </span><span class="s2">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
             </span><span class="s2">"configuration"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
             </span><span class="p">},</span><span class="w">
@@ -1927,10 +1904,10 @@ following JSON structure of a Ditto feature:</p>
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
-<p>The structure below <code class="highlighter-rouge">configuration, status, fault</code> is defined by the custom types of the Vorto function block. As these 
+<p>The structure below <code class="highlighter-rouge">configuration, status, fault</code> is defined by the custom types of the Vorto function block. As these
 can be simple types as well as complex types, the JSON structure follows the structure of the types.</p>
 
-<h4 id="function-block-capabilities">Function block capabilities</h4>
+<h5 id="function-block-capabilities">Function block capabilities</h5>
 
 <p>The <code class="highlighter-rouge">operations</code> and <code class="highlighter-rouge">events</code> sections of a function block define the capabilities or behavior of a Ditto feature.</p>
 
@@ -1940,10 +1917,7 @@ can be simple types as well as complex types, the JSON structure follows the str
   <li>A messages sent <strong>from</strong> a feature is mapped to an <code class="highlighter-rouge">event</code>.</li>
 </ul>
 
-<h3 id="vorto-example">Vorto example</h3>
-
-<div class="alert alert-danger" role="alert"><i class="fa fa-exclamation-circle"></i> <b>Warning:</b> Ditto has not yet included Eclipse Vorto in order to enforce types - the following
-   section can be seen as an <strong>outlook</strong> how Ditto would map Vorto concepts to features.</div>
+<h4 id="vorto-example">Vorto example</h4>
 
 <p>Here an example for a Vorto Function Block (in Vorto’s custom DSL) with the name <code class="highlighter-rouge">Lamp</code>.
 For the sake of giving an example for events this lamp has some additional capabilities like detecting movement and
@@ -2018,15 +1992,92 @@ smoke .</p>
 
 <p>The capabilities or behavior of this “lamp” feature would be defined as <a href="basic-messages.html">messages</a>:</p>
 <ul>
-  <li>Message with subject <code class="highlighter-rouge">smokeDetected</code> which is sent <code class="highlighter-rouge">FROM</code> a feature containing a JSON payload with an 
-  <code class="highlighter-rouge">intensity</code> and whether the detected smoke has reached a <code class="highlighter-rouge">critical</code> mass or not.</li>
+  <li>Message with subject <code class="highlighter-rouge">smokeDetected</code> which is sent <code class="highlighter-rouge">FROM</code> a feature containing a JSON payload with an
+<code class="highlighter-rouge">intensity</code> and whether the detected smoke has reached a <code class="highlighter-rouge">critical</code> mass or not.</li>
   <li>Message with subject <code class="highlighter-rouge">movementAlarm</code> which is sent <code class="highlighter-rouge">FROM</code> a feature with no payload.</li>
-  <li>Message with subject <code class="highlighter-rouge">blink</code> which is sent <code class="highlighter-rouge">TO</code> a feature containing a JSON payload of an <code class="highlighter-rouge">interval</code> 
-  (as JSON number) and a duration (also as JSON number) returning a JSON boolean.</li>
+  <li>Message with subject <code class="highlighter-rouge">blink</code> which is sent <code class="highlighter-rouge">TO</code> a feature containing a JSON payload of an <code class="highlighter-rouge">interval</code>
+(as JSON number) and a duration (also as JSON number) returning a JSON boolean.</li>
   <li>Message with subject <code class="highlighter-rouge">stopBlinking</code> which is sent <code class="highlighter-rouge">TO</code> a feature with no payload returning a JSON boolean.</li>
-  <li>Message with subject <code class="highlighter-rouge">changeColor</code> which is sent <code class="highlighter-rouge">TO</code> a feature containing a JSON payload which follows the type 
-  <code class="highlighter-rouge">Color</code> defined in another Vorto function block.</li>
+  <li>Message with subject <code class="highlighter-rouge">changeColor</code> which is sent <code class="highlighter-rouge">TO</code> a feature containing a JSON payload which follows the type
+<code class="highlighter-rouge">Color</code> defined in another Vorto function block.</li>
 </ul>
+
+<h3 id="the-link-to-w3c-web-of-things">The link to W3C Web of Things</h3>
+
+<p>If a <a href="#feature-definition">feature definition</a> has the form of an HTTP(s) URL, this URL pointing to a resource may be
+interpreted as the link to a <a href="https://www.w3.org/TR/wot-thing-description11/">W3C WoT (Web of Things)</a> 
+<a href="https://www.w3.org/TR/wot-thing-description11/#thing-model">Thing Model</a> in <a href="https://www.w3.org/TR/json-ld11/">JSON-LD</a> 
+format.</p>
+
+<h4 id="mapping-wot-thing-model-elements">Mapping WoT Thing Model elements</h4>
+
+<p>A WoT Thing Model describes the following elements a “thing” supports:</p>
+<ul>
+  <li>properties</li>
+  <li>actions</li>
+  <li>events</li>
+</ul>
+
+<p>The following table shows an overview of how those elements map to Ditto concepts:</p>
+
+<table>
+  <tbody>
+    <tr>
+      <td>WoT element</td>
+      <td>Ditto concept</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.w3.org/TR/wot-thing-description11/#thing">Thing</a></td>
+      <td>Feature.<br />In Ditto, a Feature is an aspect of a <a href="basic-thing.html">Ditto Thing</a>. As the feature is defined by its properties and messages it supports, it maps to a WoT Thing.</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.w3.org/TR/wot-thing-description11/#propertyaffordance">Properties</a></td>
+      <td>Feature <a href="#feature-properties">properties</a> and <a href="#feature-desired-properties">desired properties</a></td>
+    </tr>
+    <tr>
+      <td><a href="https://www.w3.org/TR/wot-thing-description11/#actionaffordance">Actions</a></td>
+      <td><a href="basic-messages.html#elements">Messages</a> with <strong>Direction</strong> <em>to</em> (“inbox”) of a Thing ID + Feature ID combination</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.w3.org/TR/wot-thing-description11/#eventaffordance">Events</a></td>
+      <td><a href="basic-messages.html#elements">Messages</a> with <strong>Direction</strong> <em>from</em> (“outbox”) of a Thing ID + Feature ID combination</td>
+    </tr>
+  </tbody>
+</table>
+
+<h1 id="example">Example</h1>
+
+<p>The following snippet shows a Feature with the ID “arbitrary-feature” and a definition with the sole identifier
+“org.eclipse.ditto:complex-type:1.0.0”:</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"arbitrary-feature"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"definition"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="s2">"org.eclipse.ditto:complex-type:1.0.0"</span><span class="w"> </span><span class="p">],</span><span class="w">
+    </span><span class="s2">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"connected"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"complexProperty"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="s2">"street"</span><span class="p">:</span><span class="w"> </span><span class="s2">"my street"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"house no"</span><span class="p">:</span><span class="w"> </span><span class="mi">42</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="s2">"desiredProperties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"connected"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h2 id="model-specification">Model specification</h2>
+
+<p>The feature model API version 2:</p>
+
+<h3 id="v2">V2</h3>
+<script src="docson/widget.js" data-schema="../jsonschema/feature_v2.json"></script>
+
 
 
     <div class="tags">
@@ -2053,7 +2104,7 @@ smoke .</p>
                     </div>
                     <p class="notice">
                         &copy;2021 Eclipse Ditto™.
-                         Site last generated: Aug 24, 2021 <br />
+                         Site last generated: Sep 23, 2021 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

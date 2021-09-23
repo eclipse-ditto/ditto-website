@@ -606,6 +606,12 @@
                       
                       
                       
+                      
+                      
+                      <li><a href="basic-enrichment.html">Signal enrichment</a></li>
+                      
+                      
+                      
                   </ul>
               </li>
               
@@ -649,7 +655,7 @@
               
               
               
-              <li><a href="basic-enrichment.html">Signal enrichment</a></li>
+              <li><a href="basic-conditional-requests.html">Conditional requests</a></li>
               
               
               
@@ -1779,14 +1785,29 @@ $('#toc').on('click', 'a', function() {
 
     
 
-  <p>Send messages to Apache Kafka via <a href="#target-format">targets</a>.</p>
+  <p>Consume messages from Apache Kafka brokers via <a href="#source-format">sources</a> and send messages to Apache Kafka brokers via
+<a href="#target-format">targets</a>.</p>
 
 <h2 id="content-type">Content-type</h2>
 
-<p>When Kafka messages are sent in <a href="protocol-overview.html">Ditto Protocol</a>, the payload should be <code class="highlighter-rouge">UTF-8</code> encoded strings.</p>
+<p>When messages are sent in <a href="protocol-overview.html">Ditto Protocol</a> (as <code class="highlighter-rouge">UTF-8</code> encoded String payload),
+the <code class="highlighter-rouge">content-type</code> of Apache Kafka messages must be set to:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>application/vnd.eclipse.ditto+json
+</code></pre></div></div>
 
 <p>If messages, which are not in Ditto Protocol, should be processed, a <a href="connectivity-mapping.html">payload mapping</a> must
 be configured for the connection in order to transform the messages.</p>
+
+<h2 id="global-kafka-client-configuration">Global Kafka client configuration</h2>
+
+<p>The behavior of the used Kafka client can be configured in the <a href="https://github.com/eclipse/ditto/blob/master/connectivity/service/src/main/resources/connectivity.conf">connectivity.conf</a>
+under key <code class="highlighter-rouge">ditto.connectivity.connection.kafka</code>:</p>
+<ul>
+  <li><code class="highlighter-rouge">consumer</code>: The Kafka consumer configuration applied when configuring <a href="#source-format">sources</a> in order to consume messages from Kafka</li>
+  <li><code class="highlighter-rouge">committer</code>: The Kafka committer configuration to apply when consuming messages, e.g. the <code class="highlighter-rouge">max-batch</code> size and <code class="highlighter-rouge">max-interval</code> duration</li>
+  <li><code class="highlighter-rouge">producer</code>: The Kafka producer configuration applied when configuring <a href="#target-format">targets</a> in order to publish messages to Kafka</li>
+</ul>
 
 <h2 id="specific-connection-configuration">Specific connection configuration</h2>
 
@@ -1796,12 +1817,20 @@ as well. Following are some specifics for Apache Kafka 2.x connections:</p>
 <h3 id="source-format">Source format</h3>
 <p>For a Kafka connection source “addresses” are Kafka topics to subscribe to. Legal characters are <code class="highlighter-rouge">[a-z]</code>, <code class="highlighter-rouge">[A-Z]</code>, <code class="highlighter-rouge">[0-9]</code>, <code class="highlighter-rouge">.</code>, <code class="highlighter-rouge">_</code> and <code class="highlighter-rouge">-</code>.</p>
 
-<p>All messages are consumed in an “At-Most-Once” manner. This means that the offset will be committed after ditto consumed the message from kafka, no matter if the message can be processed correctly or not. Ditto’s acknowledgement feature is right now not supported for Kafka consumers.</p>
+<p>Messages are either consumed in an “at-most-once” or “at-least-once” manner depending on the 
+configured <code class="highlighter-rouge">"qos"</code> (Quality of Service) value of the source:</p>
+<ul>
+  <li><code class="highlighter-rouge">"qos": 0</code> (at-most-once): This means that the offset will be committed after Ditto consumed the message from Kafka, 
+no matter if the message could be processed or not.</li>
+  <li><code class="highlighter-rouge">"qos": 1</code> (at-least-once): This means that the offset will only be committed after 
+<a href="basic-acknowledgements.html#requesting-acks">requested acknowledgements</a> were successfully issued.</li>
+</ul>
 
-<p>The following example shows a valid kafka source:</p>
+<p>The following example shows a valid Kafka source:</p>
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"addresses"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"theAddress"</span><span class="p">],</span><span class="w">
+  </span><span class="s2">"addresses"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"theTopic"</span><span class="p">],</span><span class="w">
   </span><span class="s2">"consumerCount"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"qos"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
   </span><span class="s2">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"ditto:inbound-auth-subject"</span><span class="p">],</span><span class="w">
   </span><span class="s2">"enforcement"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
     </span><span class="s2">"input"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{{ header:device_id }}"</span><span class="p">,</span><span class="w">
@@ -1811,17 +1840,32 @@ as well. Following are some specifics for Apache Kafka 2.x connections:</p>
   </span><span class="s2">"payloadMapping"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"Ditto"</span><span class="p">],</span><span class="w">
   </span><span class="s2">"replyTarget"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
     </span><span class="s2">"enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"theReplyAddress"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"theReplyTopic"</span><span class="p">,</span><span class="w">
     </span><span class="s2">"headerMapping"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
     </span><span class="s2">"expectedResponseTypes"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"response"</span><span class="p">,</span><span class="w"> </span><span class="s2">"error"</span><span class="p">,</span><span class="w"> </span><span class="s2">"nack"</span><span class="p">]</span><span class="w">
   </span><span class="p">},</span><span class="w">
   </span><span class="s2">"acknowledgementRequests"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"includes"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
-    </span><span class="s2">"filter"</span><span class="p">:</span><span class="w"> </span><span class="s2">"fn:filter(header:qos,</span><span class="se">\"</span><span class="s2">ne</span><span class="se">\"</span><span class="s2">,</span><span class="se">\"</span><span class="s2">0</span><span class="se">\"</span><span class="s2">)"</span><span class="w">
+    </span><span class="s2">"includes"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
   </span><span class="p">},</span><span class="w">
   </span><span class="s2">"declaredAcks"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
+
+<p>The shown example with the configured <code class="highlighter-rouge">"qos": 1</code> has the following behavior:</p>
+<ul>
+  <li>Kafka messages from the topic <code class="highlighter-rouge">"theAddress"</code> are consumed in an “at-least-once” fashion, e.g.
+<a href="basic-signals-command.html#modify-commands">twin modify commands</a> will implicitly request the 
+<a href="basic-acknowledgements.html#built-in-acknowledgement-labels">built-in acknowledgement label</a> <code class="highlighter-rouge">"twin-persisted"</code> meaning
+that the consumed message will only be committed to Kafka after it was successfully persisted by Ditto</li>
+  <li>When a consumed Kafka message could not be acknowledged by Ditto (e.g. because persisting a consumed command failed), 
+consuming from the Kafka source will be restarted which means that message consumption will restart from the last 
+committed offset of the Kafka topic, already successfully processed messages could be processed again as a result 
+(which is the “at-least-once” semantic).</li>
+</ul>
+
+<p>For Kafka sources, it is not possible to have different Quality of Service on a per message basis.
+Either all messages from a source are consumed in an “at-most-once” or in an “at-least-once” semantic, depending on the 
+configured <code class="highlighter-rouge">"qos"</code> value.</p>
 
 <h4 id="source-header-mapping">Source header mapping</h4>
 
@@ -1844,6 +1888,19 @@ header mapping:</p>
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
+
+<h4 id="message-expiration">Message expiration</h4>
+
+<p>In the Ditto implementation for consuming messages from Kafka we also added a feature for message expiration. This way a device can express for how long a message is valid to be processed.
+To use this feature, two headers are relevant:</p>
+<ul>
+  <li><code class="highlighter-rouge">creation-time</code>: Epoch millis value when the message was created.</li>
+  <li><code class="highlighter-rouge">ttl</code>: Number milliseconds the message should be considered as valid.</li>
+</ul>
+
+<p>When Ditto consumes such a message it checks whether the amount of milliseconds since <code class="highlighter-rouge">creation-time</code> is larger than specified by <code class="highlighter-rouge">ttl</code>.
+If so, the message will be ignored.
+If this is not the case or the headers are not specified at all, the message will be processed normally.</p>
 
 <h3 id="target-format">Target format</h3>
 
@@ -1950,7 +2007,30 @@ existing connections.</p>
       </span><span class="s2">"bootstrapServers"</span><span class="p">:</span><span class="w"> </span><span class="s2">"localhost:9092,other.host:9092"</span><span class="p">,</span><span class="w">
       </span><span class="s2">"saslMechanism"</span><span class="p">:</span><span class="w"> </span><span class="s2">"plain"</span><span class="w">
     </span><span class="p">},</span><span class="w">
-    </span><span class="s2">"sources"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+    </span><span class="s2">"sources"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+      </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"addresses"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"theTopic"</span><span class="p">],</span><span class="w">
+        </span><span class="s2">"consumerCount"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"qos"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"ditto:inbound-auth-subject"</span><span class="p">],</span><span class="w">
+        </span><span class="s2">"enforcement"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="s2">"input"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{{ header:device_id }}"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"filters"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"{{ entity:id }}"</span><span class="p">]</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="s2">"headerMapping"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
+        </span><span class="s2">"payloadMapping"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"Ditto"</span><span class="p">],</span><span class="w">
+        </span><span class="s2">"replyTarget"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="s2">"enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"theReplyTopic"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"headerMapping"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
+          </span><span class="s2">"expectedResponseTypes"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"response"</span><span class="p">,</span><span class="w"> </span><span class="s2">"error"</span><span class="p">,</span><span class="w"> </span><span class="s2">"nack"</span><span class="p">]</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="s2">"acknowledgementRequests"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="s2">"includes"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="s2">"declaredAcks"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">],</span><span class="w">
     </span><span class="s2">"targets"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
       </span><span class="p">{</span><span class="w">
         </span><span class="s2">"address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"topic/key"</span><span class="p">,</span><span class="w">
@@ -1958,7 +2038,7 @@ existing connections.</p>
           </span><span class="s2">"_/_/things/twin/events"</span><span class="p">,</span><span class="w">
           </span><span class="s2">"_/_/things/live/messages"</span><span class="w">
         </span><span class="p">],</span><span class="w">
-        </span><span class="s2">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"ditto:outbound-auth-subject"</span><span class="p">,</span><span class="w"> </span><span class="s2">"..."</span><span class="p">]</span><span class="w">
+        </span><span class="s2">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"ditto:outbound-auth-subject"</span><span class="p">]</span><span class="w">
       </span><span class="p">}</span><span class="w">
     </span><span class="p">]</span><span class="w">
   </span><span class="p">}</span><span class="w">
@@ -1998,7 +2078,7 @@ existing connections.</p>
                     </div>
                     <p class="notice">
                         &copy;2021 Eclipse Ditto™.
-                         Site last generated: Aug 24, 2021 <br />
+                         Site last generated: Sep 23, 2021 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">
