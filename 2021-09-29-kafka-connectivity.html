@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="">
 <meta name="keywords" content="blog,  ">
-<title>  Announcing Ditto Milestone 0.9.0-M1 </title>
+<title>  Completed Kafka Connectivity </title>
 
 <link rel="stylesheet" href="css/syntax.css">
 <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" crossorigin="anonymous">
@@ -183,7 +183,7 @@
                                 searchInput: document.getElementById('search-input'),
                                 resultsContainer: document.getElementById('results-container'),
                                 dataSource: 'search.json',
-                                searchResultTemplate: '<li><a href="{url}" title="Announcing Ditto Milestone 0.9.0-M1">{title}</a></li>',
+                                searchResultTemplate: '<li><a href="{url}" title="Completed Kafka Connectivity">{title}</a></li>',
                                 noResultsText: 'No results found.',
                                 limit: 10,
                                 fuzzy: true,
@@ -215,18 +215,18 @@
 <!---->
 <!--<span>-->
     <!--&lt;!&ndash; Mugshot. &ndash;&gt;-->
-    <!--<img src="https://www.gravatar.com/avatar/19a9fd49b6778aef898249fb4f11bd24?s=135" alt="A photo of Thomas Jäckle" />-->
+    <!--<img src="https://www.gravatar.com/avatar/d2b4eba8f1c947a3fb94be23d8b82d8b?s=135" alt="A photo of Yannic Klem" />-->
 
 <!--&lt;!&ndash; Personal Info. &ndash;&gt;-->
-    <!--Written by <a href="https://github.com/thjaeckle" target="_blank">Thomas Jäckle</a>-->
+    <!--Written by <a href="https://github.com/Yannic92" target="_blank">Yannic Klem</a>-->
 <!--</span>-->
 <!---->
 
 <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
 
     <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">Announcing Ditto Milestone 0.9.0-M1</h1>
-        <p class="post-meta">Published by <img src="https://www.gravatar.com/avatar/19a9fd49b6778aef898249fb4f11bd24?s=135" alt="A photo of Thomas Jäckle" style="width:50px;border-radius:50%;display:inline-block;margin-right:5px;" /><span itemprop="author" itemscope itemtype="http://schema.org/Person"><span itemprop="name"><a href="https://github.com/thjaeckle" target="_blank">Thomas Jäckle</a> </span></span> on <time datetime="2019-03-28T00:00:00+00:00" itemprop="datePublished">Mar 28, 2019</time> - Tags:
+        <h1 class="post-title" itemprop="name headline">Completed Kafka Connectivity</h1>
+        <p class="post-meta">Published by <img src="https://www.gravatar.com/avatar/d2b4eba8f1c947a3fb94be23d8b82d8b?s=135" alt="A photo of Yannic Klem" style="width:50px;border-radius:50%;display:inline-block;margin-right:5px;" /><span itemprop="author" itemscope itemtype="http://schema.org/Person"><span itemprop="name"><a href="https://github.com/Yannic92" target="_blank">Yannic Klem</a> </span></span> on <time datetime="2021-09-29T00:00:00+00:00" itemprop="datePublished">Sep 29, 2021</time> - Tags:
             
             
             
@@ -245,35 +245,108 @@
         
 
         
+        
+<!-- this handles the automatic toc. use ## for subheads to auto-generate the on-page minitoc. if you use html tags, you must supply an ID for the heading element in order for it to appear in the minitoc. -->
+<script>
+$( document ).ready(function() {
+  // Handler for .ready() called.
 
-        <p>Today the Ditto team is happy to announce the first milestone of the upcoming release 
-<a href="https://projects.eclipse.org/projects/iot.ditto/releases/0.9.0">0.9.0</a>.</p>
+$('#toc').toc({ minimumHeaders: 0, listType: 'ul', showSpeed: 0, headers: 'h2,h3,h4' });
 
-<p>Have a look at the Milestone <a href="release_notes_090-M1.html">0.9.0-M1 release notes</a> for what changed in detail.</p>
+/* this offset helps account for the space taken up by the floating toolbar. */
+$('#toc').on('click', 'a', function() {
+  var target = $(this.getAttribute('href'))
+    , scroll_target = target.offset().top
 
-<p>The main changes and new features since the last release <a href="release_notes_080.html">0.8.0</a> are</p>
+  $(window).scrollTop(scroll_target - 10);
+  return false
+})
+  
+});
+</script>
 
+<div id="toc"></div>
+
+        
+
+        <h2 id="consuming-messages-from-apache-kafka-in-eclipse-ditto">Consuming messages from Apache Kafka in Eclipse Ditto</h2>
+
+<p>Eclipse Ditto did support publishing events and messages to Apache Kafka for quite some time now.<br />
+The time has come to support consuming as well.</p>
+
+<p>A Kafka connection behaves slightly different from other consuming Connections in Ditto.<br />
+The following aspects are special:</p>
 <ul>
-  <li>memory optimizations when working with millions of digital twins</li>
-  <li>enhance connectivity to also be able to establish connections to Apache Kafka</li>
-  <li>providing more detailed metrics for connections</li>
-  <li>cluster bootstrapping stability improvements</li>
+  <li><a href="connectivity-protocol-bindings-kafka2.html#quality-of-service">Backpressure by using acknowledgements</a></li>
+  <li><a href="connectivity-protocol-bindings-kafka2.html#backpressure-by-using-acknowledgements">Preserve order of messages on redelivery due to failed acknowledgements</a></li>
+  <li><a href="connectivity-protocol-bindings-kafka2.html#message-expiry">Expiry of messages</a></li>
 </ul>
 
-<h2 id="artifacts">Artifacts</h2>
+<h3 id="scalability">Scalability</h3>
 
-<p>The new Java artifacts have been published at the <a href="https://repo.eclipse.org/content/repositories/ditto/">Eclipse Maven repository</a>
-as well as <a href="https://repo1.maven.org/maven2/org/eclipse/ditto/">Maven central</a>.</p>
+<p>Kafka’s way of horizontal scaling is to use partitions.
+The higher the load the more partitions should be configured.<br />
+On consumer side this means that a so-called consumer group can have as many consuming clients as number of partitions exist.<br />
+Each partition would then be consumed by one client.</p>
 
-<p>The Docker images have been pushed to Docker Hub:</p>
-<ul>
-  <li><a href="https://hub.docker.com/r/eclipse/ditto-policies/">eclipse/ditto-policies</a></li>
-  <li><a href="https://hub.docker.com/r/eclipse/ditto-things/">eclipse/ditto-things</a></li>
-  <li><a href="https://hub.docker.com/r/eclipse/ditto-things-search/">eclipse/ditto-things-search</a></li>
-  <li><a href="https://hub.docker.com/r/eclipse/ditto-gateway/">eclipse/ditto-gateway</a></li>
-  <li><a href="https://hub.docker.com/r/eclipse/ditto-connectivity/">eclipse/ditto-connectivity</a></li>
-  <li><a href="https://hub.docker.com/r/eclipse/ditto-concierge/">eclipse/ditto-concierge</a></li>
-</ul>
+<p>This perfectly matches with Ditto connections scaling, each Ditto connection builds such a consumer group.  <br />
+For a connection there are two ways of scaling:</p>
+<ol>
+  <li><code class="highlighter-rouge">clientCount</code> on <a href="basic-connections.html#connection-model">connection level</a></li>
+  <li><code class="highlighter-rouge">consumerCount</code> on <a href="basic-connections.html#sources">source level</a></li>
+</ol>
+
+<p>A connection client bundles all consumers for all sources and all publishers for all targets.
+It is guaranteed that for a single connection only one client can be instantiated per instance of the connectivity microservice.<br />
+This way Ditto provides horizontal scaling.</p>
+
+<p>Therefore, the <code class="highlighter-rouge">clientCount</code> should never be configured higher than the number of available connectivity instances.</p>
+
+<p>If the connectivity instance is not fully used by a single connection client, the <code class="highlighter-rouge">consumerCount</code> can be used to scale a 
+connection’s consumers vertically.
+The <code class="highlighter-rouge">consumerCount</code> of a source indicates how many consumers should be started for a single connection client for this source.
+Each consumer is a separate consuming client in the consumer group of the connection.</p>
+
+<p>This means that the number of partition should be greater or equal than <code class="highlighter-rouge">clientCount</code> multiplied by the highest 
+<code class="highlighter-rouge">consumerCount</code> of a source.</p>
+
+<h3 id="backpressure-and-quality-of-service">Backpressure and Quality of Service</h3>
+
+<p>Usually there is an application connected to Ditto which is consuming either messages or events of devices connected to Ditto.<br />
+These messages and events can now be issued by devices via Kafka.<br />
+What happens now when the connected application temporarily can’t process the messages emitted by Ditto in the rate the 
+devices publish their messages via Kafka into Ditto?<br />
+The answer is: “It depends.”</p>
+
+<p>There are two steps of increasing delivery guarantee for messages to the connected application.</p>
+<ol>
+  <li>Make use of <a href="basic-connections.html#source-acknowledgement-requests">acknowledgements</a></li>
+  <li>Configure the <code class="highlighter-rouge">qos</code> for the <a href="basic-connections.html#sources">source</a> to <code class="highlighter-rouge">1</code></li>
+</ol>
+
+<p>The first will introduce backpressure from the consuming application to the Kafka consumer in Ditto.<br />
+This means that the consumer will automatically slow down consuming messages when the performance of the connected 
+application slows down.
+This way the application has time to scale up, while the messages are buffered in Kafka.</p>
+
+<p>The second step can be used when it’s necessary to ensure that the application not just received but successfully 
+processed the message. If the message could not be processed successfully or if the acknowledgement didn’t arrive in time, 
+the Kafka consumer will restart consuming messages from the last successfully committed offset.</p>
+
+<h3 id="expiry">Expiry</h3>
+
+<p>Now that we know about backpressure we also know, that messages could remain in Kafka for some time.<br />
+The time can be limited by Kafka’s retention time, but this would be applied to all messages in the same way.
+What if some messages become invalid after some time, but others won’t?</p>
+
+<p>Ditto provides an <a href="connectivity-protocol-bindings-kafka2.html#message-expiry">expiry of messages on a per-message level</a>.
+That way Ditto filters such expired messages but still processes all others.</p>
+
+<h2 id="we-embrace-your-feedback">We embrace your feedback</h2>
+
+<p>Did you recognize a possible match of Ditto for some of your usecases?
+Do you miss something in this new feature?<br />
+We would love to get your <a href="feedback.html">feedback</a>.</p>
 
 <p><br />
 <br /></p>
