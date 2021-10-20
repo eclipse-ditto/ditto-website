@@ -1879,6 +1879,45 @@ When a Message is sent to or from a Thing, <strong>every</strong> connected WebS
 <p>If there is more than one response to a message received by multiple consumers, only the
 first response will be routed back to the initial issuer of a Message.</p>
 
+<h3 id="filtering-when-subscribing-for-messages">Filtering when subscribing for messages</h3>
+
+<p>In order to not receive all messages an <a href="basic-auth.html#authenticated-subjects">authenticated subject</a> is entitled to 
+receive when subscribing for messages, but to filter for specific criteria, messages may be filtered on the Ditto 
+backend side before they are sent to a message receiver.</p>
+
+<h4 id="filtering-messages-by-namespaces">Filtering messages by namespaces</h4>
+
+<p>Filtering messages may be done based on a namespace name. Each Ditto <a href="basic-thing.html">Thing</a> has an ID containing a 
+namespace (see also the conventions for a <a href="basic-thing.html#thing-id">Thing ID</a>).</p>
+
+<p>By providing the <code class="highlighter-rouge">namespaces</code> filter, a comma separated list of which namespaces to include in the result, only Things
+in namespaces of interest are considered and thus only messages of these Things are published to the message receiver.</p>
+
+<p>For example, one would only subscribe for messages occurring in 2 specific namespaces by defining:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>namespaces=org.eclipse.ditto.one,org.eclipse.ditto.two
+</code></pre></div></div>
+
+<h4 id="filtering-messages-by-rql-expression">Filtering messages by RQL expression</h4>
+
+<p>If filtering by namespaces is not sufficient, Ditto also allows to provide an <a href="basic-rql.html">RQL expression</a>
+specifying:</p>
+
+<ul>
+  <li>an <a href="basic-enrichment.html">enriched</a> Thing state based condition determining when messages should be delivered and when not</li>
+  <li>a filter based on the fields of the <a href="protocol-specification.html">Ditto Protocol</a> message which should be filtered,
+e.g.:
+    <ul>
+      <li>using the <code class="highlighter-rouge">topic:subject</code> placeholder as query property, filtering for the message’s subject 
+and other filter options on the <a href="protocol-specification-topic.html">Ditto Protocol topic</a> can be done</li>
+      <li>using the <code class="highlighter-rouge">resource:path</code> placeholder as query property, filtering based on the affected
+<a href="protocol-specification.html#path">Ditto Protocol path</a> of a Ditto Protocol message can be done, e.g. targeting a 
+specific message addressed to a certain feature ID</li>
+      <li>for all supported placeholders, please refer to the
+<a href="basic-placeholders.html#scope-rql-expressions-when-filtering-for-ditto-protocol-messages">placeholders documentation</a></li>
+    </ul>
+  </li>
+</ul>
+
 <h2 id="sending-messages">Sending Messages</h2>
 
 <p>If you want to send a Message to or from a Thing, you need <code class="highlighter-rouge">WRITE</code> permissions on that Thing.
@@ -1944,7 +1983,7 @@ is completely up to the receiver of the Claim Message e.g. after verifying the p
                     </div>
                     <p class="notice">
                         &copy;2021 Eclipse Ditto™.
-                         Site last generated: Sep 29, 2021 <br />
+                         Site last generated: Oct 20, 2021 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

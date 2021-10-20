@@ -1845,6 +1845,66 @@ may be used:</p>
   </tbody>
 </table>
 
+<h3 id="scope-rql-expressions-when-filtering-for-ditto-protocol-messages">Scope: RQL expressions when filtering for Ditto Protocol messages</h3>
+
+<p>When using <a href="basic-rql.html">RQL expressions</a> in scope of either <a href="basic-changenotifications.html">change notifications</a>
+or subscriptions for live messages, the following placeholders are available in general:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Placeholder</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="highlighter-rouge">topic:full</code></td>
+      <td>full <a href="protocol-specification-topic.html">Ditto Protocol topic path</a><br />in the form <code class="highlighter-rouge">{namespace}/{entityId}/{group}/</code><br /><code class="highlighter-rouge">{channel}/{criterion}/{action-subject}</code></td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">topic:namespace</code></td>
+      <td>Ditto Protocol <a href="protocol-specification-topic.html#namespace">topic namespace</a></td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">topic:entityName</code></td>
+      <td>Ditto Protocol <a href="protocol-specification-topic.html#entity-name">topic entity name</a></td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">topic:group</code></td>
+      <td>Ditto Protocol <a href="protocol-specification-topic.html#group">topic group</a></td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">topic:channel</code></td>
+      <td>Ditto Protocol <a href="protocol-specification-topic.html#channel">topic channel</a></td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">topic:criterion</code></td>
+      <td>Ditto Protocol <a href="protocol-specification-topic.html#criterion">topic criterion</a></td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">topic:action</code></td>
+      <td>Ditto Protocol <a href="protocol-specification-topic.html#action-optional">topic action</a></td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">topic:subject</code></td>
+      <td>Ditto Protocol <a href="protocol-specification-topic.html#messages-criterion-actions">topic subject</a> (for message commands)</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">topic:action-subject</code></td>
+      <td>either Ditto Protocol <a href="protocol-specification-topic.html#action-optional">topic action</a> or <a href="protocol-specification-topic.html#messages-criterion-actions">topic subject</a> (for message commands)</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">resource:type</code></td>
+      <td>the type of the Ditto Protocol <a href="protocol-specification.html#path">path</a> , one of: <code class="highlighter-rouge">"thing" "policy" "message" "connection"</code></td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">resource:path</code></td>
+      <td>the affected resource’s path being the Ditto Protocol <a href="protocol-specification.html#path">path</a> in JsonPointer notation, e.g. <code class="highlighter-rouge">/</code> when a complete thing was created/modified/deleted</td>
+    </tr>
+  </tbody>
+</table>
+
 <h3 id="scope-connections">Scope: Connections</h3>
 
 <p>In <a href="basic-connections.html">connections</a>, the following placeholders are available in general:</p>
@@ -1899,39 +1959,43 @@ may be used:</p>
     </tr>
     <tr>
       <td><code class="highlighter-rouge">{{ topic:namespace }}</code></td>
-      <td>Ditto Protocol <a href="protocol-specification-topic.html#namespace">Namespace</a></td>
-    </tr>
-    <tr>
-      <td><code class="highlighter-rouge">{{ topic:entityId }}</code></td>
-      <td>Deprecated. Use <code class="highlighter-rouge">{{ topic:entityName }}</code> instead.</td>
+      <td>Ditto Protocol <a href="protocol-specification-topic.html#namespace">topic namespace</a></td>
     </tr>
     <tr>
       <td><code class="highlighter-rouge">{{ topic:entityName }}</code></td>
-      <td>Ditto Protocol <a href="protocol-specification-topic.html#entity-name">Entity Name</a></td>
+      <td>Ditto Protocol <a href="protocol-specification-topic.html#entity-name">topic entity name</a></td>
     </tr>
     <tr>
       <td><code class="highlighter-rouge">{{ topic:group }}</code></td>
-      <td>Ditto Protocol <a href="protocol-specification-topic.html#group">Group</a></td>
+      <td>Ditto Protocol <a href="protocol-specification-topic.html#group">topic group</a></td>
     </tr>
     <tr>
       <td><code class="highlighter-rouge">{{ topic:channel }}</code></td>
-      <td>Ditto Protocol <a href="protocol-specification-topic.html#channel">Channel</a></td>
+      <td>Ditto Protocol <a href="protocol-specification-topic.html#channel">topic channel</a></td>
     </tr>
     <tr>
       <td><code class="highlighter-rouge">{{ topic:criterion }}</code></td>
-      <td>Ditto Protocol <a href="protocol-specification-topic.html#criterion">Criterion</a></td>
+      <td>Ditto Protocol <a href="protocol-specification-topic.html#criterion">topic criterion</a></td>
     </tr>
     <tr>
       <td><code class="highlighter-rouge">{{ topic:action }}</code></td>
-      <td>Ditto Protocol <a href="protocol-specification-topic.html#action-optional">Action</a></td>
+      <td>Ditto Protocol <a href="protocol-specification-topic.html#action-optional">topic action</a></td>
     </tr>
     <tr>
       <td><code class="highlighter-rouge">{{ topic:subject }}</code></td>
-      <td>Ditto Protocol <a href="protocol-specification-topic.html#messages-criterion-actions">Subject</a> (for message commands)</td>
+      <td>Ditto Protocol <a href="protocol-specification-topic.html#messages-criterion-actions">topic subject</a> (for message commands)</td>
     </tr>
     <tr>
       <td><code class="highlighter-rouge">{{ topic:action-subject }}</code></td>
-      <td>either Ditto Protocol <a href="protocol-specification-topic.html#action-optional">Action</a> or <a href="protocol-specification-topic.html#messages-criterion-actions">Subject</a> (for message commands)</td>
+      <td>either Ditto Protocol <a href="protocol-specification-topic.html#action-optional">topic action</a> or <a href="protocol-specification-topic.html#messages-criterion-actions">topic subject</a> (for message commands)</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">{{ resource:type }}</code></td>
+      <td>the type of the Ditto Protocol <a href="protocol-specification.html#path">path</a> , one of: <code class="highlighter-rouge">thing</code>, <code class="highlighter-rouge">policy</code>, <code class="highlighter-rouge">message</code> or <code class="highlighter-rouge">connection</code></td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">{{ resource:path }}</code></td>
+      <td>the affected resource’s path being the Ditto Protocol <a href="protocol-specification.html#path">path</a> in JsonPointer notation, e.g. <code class="highlighter-rouge">/</code> when a complete thing was created/modified/deleted</td>
     </tr>
   </tbody>
 </table>
@@ -2138,7 +2202,7 @@ be placeholders again.</p>
                     </div>
                     <p class="notice">
                         &copy;2021 Eclipse Ditto™.
-                         Site last generated: Sep 29, 2021 <br />
+                         Site last generated: Oct 20, 2021 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

@@ -1812,7 +1812,12 @@ for <code class="highlighter-rouge">foo="ditto"</code> and <code class="highligh
 two <a href="#relational-operators">relational operators</a> of which each consists of a <a href="#query-property">property</a>
 and a <a href="#query-value">value</a>.</p>
 
-<p>The following sections describe what the RQL syntax is capable of.</p>
+<p>The following sections describe what the RQL syntax is capable of and which RQL operators are supported in 
+Eclipse Ditto.</p>
+
+<div class="alert alert-info" role="alert"><i class="fa fa-info-circle"></i> <b>Note:</b> Please note that only the “normalized” RQL form, e.g. 
+    <code class="highlighter-rouge">eq(foo,3)</code>, is supported by Eclipse Ditto and that Ditto added more non-specified operators, e.g. 
+    <code class="highlighter-rouge">like</code> and <code class="highlighter-rouge">exists</code>.</div>
 
 <h2 id="rql-filter">RQL filter</h2>
 
@@ -1822,18 +1827,48 @@ and a <a href="#query-value">value</a>.</p>
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;property&gt; = url-encoded-string
 </code></pre></div></div>
 
-<p>To filter nested properties, Ditto uses the JSON Pointer notation (<a href="https://tools.ietf.org/html/rfc6901">RFC-6901</a>).</p>
+<p>When not starting with a prefix <code class="highlighter-rouge">&lt;some-prefix&gt;:</code>, the RQL query property specifies a field in the JSON representation 
+of a <a href="basic-thing.html#api-version-2">Thing</a>.<br />
+For example a query property <code class="highlighter-rouge">thingId</code> selects the Thing ID as property, a query property <code class="highlighter-rouge">attributes/location</code> selects
+an attribute with the name <code class="highlighter-rouge">location</code> as query property.</p>
 
-<p>The following example shows how to apply a filter for the sub property location of the parent property attributes with 
-a forward slash as separator:</p>
+<p>To filter nested properties, Ditto uses the JSON Pointer notation (<a href="https://tools.ietf.org/html/rfc6901">RFC-6901</a>), 
+where the property can also start with a slash <code class="highlighter-rouge">/</code> or omit it, so those 2 query properties are semantically the same:</p>
+
+<ul>
+  <li><code class="highlighter-rouge">/attributes/location</code></li>
+  <li><code class="highlighter-rouge">attributes/location</code></li>
+</ul>
+
+<p>The following example shows how to apply a filter for the sub property <code class="highlighter-rouge">location</code> of the parent property <code class="highlighter-rouge">attributes</code> 
+with a forward slash as separator:</p>
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>eq(attributes/location,"kitchen")
 </code></pre></div></div>
+
+<h4 id="placeholders-as-query-properties">Placeholders as query properties</h4>
+
+<p>When using an RQL expression in order to e.g. filter for certain 
+<a href="basic-changenotifications.html#by-rql-expression">change notifications</a>, the query property might be a 
+<a href="basic-placeholders.html#scope-rql-expressions-when-filtering-for-ditto-protocol-messages">placeholder</a> instead of a 
+field in JSON representation inside the Thing.</p>
+
+<p>Currently supported placeholders for RQL expressions are:</p>
+<ul>
+  <li></li>
+  <li><code class="highlighter-rouge">topic:&lt;placeholder-name&gt;</code></li>
+  <li><code class="highlighter-rouge">resource:&lt;placeholder-name&gt;</code></li>
+</ul>
+
+<p>The <a href="basic-placeholders.html#scope-rql-expressions-when-filtering-for-ditto-protocol-messages">placeholder</a> 
+documentation describes which placeholder names are supported.</p>
 
 <h3 id="query-value">Query value</h3>
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;value&gt; = &lt;number&gt;, &lt;string&gt;, true, false, null
 &lt;number&gt; = double, integer
-&lt;string&gt; = ", url-encoded-string, "
+&lt;string&gt; = "url-encoded-string", 'url-encoded-string'
 </code></pre></div></div>
+
+<p>String values may either be delimited using single or double quotes.</p>
 
 <p><strong>Comparison of string values</strong></p>
 
@@ -1844,7 +1879,7 @@ a forward slash as separator:</p>
 
 <p><strong>Comparison of other data types</strong></p>
 
-<div class="alert alert-info" role="alert"><i class="fa fa-info-circle"></i> <b>Note:</b> Please note that the comparison of other data types is is supported by the API, but it 
+<div class="alert alert-info" role="alert"><i class="fa fa-info-circle"></i> <b>Note:</b> Please note that the comparison of other data types is supported by the API, but it 
     only supports comparison of same data types, and does not do any conversion during comparison.</div>
 
 <h3 id="relational-operators">Relational operators</h3>
@@ -1929,10 +1964,14 @@ a forward slash as separator:</p>
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>like(&lt;property&gt;,&lt;value&gt;) 
 </code></pre></div></div>
 
+<div class="alert alert-info" role="alert"><i class="fa fa-info-circle"></i> <b>Note:</b> The <code class="highlighter-rouge">like</code> operator is not defined in the linked RQL grammar, it is a Ditto
+    specific operator.</div>
+
 <p><strong>Details concerning the like-operator</strong></p>
 
 <p>The <code class="highlighter-rouge">like</code> operator provides some regular expression capabilities for pattern matching Strings.<br />
 The following expressions are supported:</p>
+
 <ul>
   <li>*endswith =&gt; match at the end of a specific String.</li>
   <li>startswith* =&gt; match at the beginning of a specific String.</li>
@@ -1951,10 +1990,14 @@ like(attributes/key1,"just-som?-char?-unkn?wn")
 </code></pre></div></div>
 
 <h4 id="exists">exists</h4>
+
 <p>Filter property values which exist.</p>
 
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>exists(&lt;property&gt;)
 </code></pre></div></div>
+
+<div class="alert alert-info" role="alert"><i class="fa fa-info-circle"></i> <b>Note:</b> The <code class="highlighter-rouge">exists</code> operator is not defined in the linked RQL grammar, it is a Ditto
+    specific operator.</div>
 
 <p><strong>Example - filter things which have a feature with ID “feature_1”</strong></p>
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>exists(features/feature_1)
@@ -2065,7 +2108,7 @@ In case there are multiple things with the same location attribute, these are so
                     </div>
                     <p class="notice">
                         &copy;2021 Eclipse Ditto™.
-                         Site last generated: Sep 29, 2021 <br />
+                         Site last generated: Oct 20, 2021 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">
