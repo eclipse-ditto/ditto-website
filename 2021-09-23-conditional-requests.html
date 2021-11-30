@@ -443,36 +443,36 @@ Applying the following Ditto command to the existing thing will lead to the same
 <p>The conditional requests are also supported via the <a href="client-sdk-java.html">Ditto Java Client</a> 
 with the upcoming (<strong>Ditto Java Client version 2.1.0</strong>).</p>
 
-<p>Example for a conditional update of a thing with the ditto-client:</p>
+<p>Example for a conditional update of a thing with the Ditto Java client:</p>
 
-<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">final</span> <span class="n">String</span> <span class="n">THING_ID</span> <span class="o">=</span> <span class="s">"org.eclipse.ditto:coffeebrewer"</span><span class="o">;</span>
-<span class="kd">final</span> <span class="n">String</span> <span class="n">FEATURE_ID</span> <span class="o">=</span> <span class="s">"water-tank"</span><span class="o">;</span>
-<span class="kd">final</span> <span class="n">Feature</span> <span class="n">FEATURE</span> <span class="o">=</span> <span class="n">ThingsModelFactory</span><span class="o">.</span><span class="na">newFeatureBuilder</span><span class="o">()</span>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">String</span> <span class="n">thingId</span> <span class="o">=</span> <span class="s">"org.eclipse.ditto:coffeebrewer"</span><span class="o">;</span>
+<span class="n">String</span> <span class="n">featureId</span> <span class="o">=</span> <span class="s">"water-tank"</span><span class="o">;</span>
+<span class="n">Feature</span> <span class="n">feature</span> <span class="o">=</span> <span class="n">ThingsModelFactory</span><span class="o">.</span><span class="na">newFeatureBuilder</span><span class="o">()</span>
         <span class="o">.</span><span class="na">properties</span><span class="o">(</span><span class="n">ThingsModelFactory</span><span class="o">.</span><span class="na">newFeaturePropertiesBuilder</span><span class="o">()</span>
             <span class="o">.</span><span class="na">set</span><span class="o">(</span><span class="s">"status"</span><span class="o">,</span> <span class="n">JsonFactory</span><span class="o">.</span><span class="na">newObjectBuilder</span><span class="o">()</span>
                 <span class="o">.</span><span class="na">set</span><span class="o">(</span><span class="s">"temperature"</span><span class="o">,</span> <span class="mf">45.2</span><span class="o">)</span>
                 <span class="o">.</span><span class="na">set</span><span class="o">(</span><span class="s">"lastModified"</span><span class="o">,</span> <span class="n">Instant</span><span class="o">.</span><span class="na">now</span><span class="o">())</span>
                 <span class="o">.</span><span class="na">build</span><span class="o">())</span>
             <span class="o">.</span><span class="na">build</span><span class="o">())</span>
-        <span class="o">.</span><span class="na">withId</span><span class="o">(</span><span class="n">FEATURE_ID</span><span class="o">)</span>
+        <span class="o">.</span><span class="na">withId</span><span class="o">(</span><span class="n">featureId</span><span class="o">)</span>
         <span class="o">.</span><span class="na">build</span><span class="o">();</span>
 
-<span class="kd">final</span> <span class="n">Thing</span> <span class="n">THING</span> <span class="o">=</span> <span class="n">ThingsModelFactory</span><span class="o">.</span><span class="na">newThingBuilder</span><span class="o">()</span>
-        <span class="o">.</span><span class="na">setId</span><span class="o">(</span><span class="n">THING_ID</span><span class="o">)</span>
-        <span class="o">.</span><span class="na">setFeature</span><span class="o">(</span><span class="n">FEATURE</span><span class="o">)</span>
+<span class="n">Thing</span> <span class="n">thing</span> <span class="o">=</span> <span class="n">ThingsModelFactory</span><span class="o">.</span><span class="na">newThingBuilder</span><span class="o">()</span>
+        <span class="o">.</span><span class="na">setId</span><span class="o">(</span><span class="n">thingId</span><span class="o">)</span>
+        <span class="o">.</span><span class="na">setFeature</span><span class="o">(</span><span class="n">feature</span><span class="o">)</span>
         <span class="o">.</span><span class="na">build</span><span class="o">();</span>
 
 <span class="c1">// initialize the ditto-client</span>
-<span class="kd">final</span> <span class="n">DittoClient</span> <span class="n">dittoClient</span> <span class="o">=</span> <span class="o">...</span> <span class="o">;</span>
+<span class="n">DittoClient</span> <span class="n">dittoClient</span> <span class="o">=</span> <span class="o">...</span> <span class="o">;</span>
 
-<span class="n">dittoClient</span><span class="o">.</span><span class="na">twin</span><span class="o">().</span><span class="na">update</span><span class="o">(</span><span class="n">THING</span><span class="o">,</span> <span class="n">Options</span><span class="o">.</span><span class="na">condition</span><span class="o">(</span><span class="s">"gt(features/water-tank/properties/status/lastModified,"</span><span class="mi">22021</span><span class="o">-</span><span class="mi">09</span><span class="o">-</span><span class="mi">23</span><span class="nl">T07:</span><span class="mo">00</span><span class="o">:</span><span class="mo">00</span><span class="n">Z</span><span class="s">")"</span><span class="o">)).</span>
-        <span class="o">.</span><span class="na">whenComplete</span><span class="o">(((</span><span class="n">adaptable</span><span class="o">,</span> <span class="n">throwable</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="o">{</span>
+<span class="n">dittoClient</span><span class="o">.</span><span class="na">twin</span><span class="o">().</span><span class="na">update</span><span class="o">(</span><span class="n">thing</span><span class="o">,</span> <span class="n">Options</span><span class="o">.</span><span class="na">condition</span><span class="o">(</span><span class="s">"gt(features/water-tank/properties/status/lastModified,'2021-09-23T07:00:00Z')"</span><span class="o">))</span>
+        <span class="o">.</span><span class="na">whenComplete</span><span class="o">((</span><span class="n">adaptable</span><span class="o">,</span> <span class="n">throwable</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="o">{</span>
             <span class="k">if</span> <span class="o">(</span><span class="n">throwable</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
                 <span class="n">LOGGER</span><span class="o">.</span><span class="na">error</span><span class="o">(</span><span class="s">"Received error while sending conditional update: '{}' "</span><span class="o">,</span> <span class="n">throwable</span><span class="o">.</span><span class="na">toString</span><span class="o">());</span>
             <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
                 <span class="n">LOGGER</span><span class="o">.</span><span class="na">info</span><span class="o">(</span><span class="s">"Received response for conditional update: '{}'"</span><span class="o">,</span> <span class="n">adaptable</span><span class="o">);</span>
             <span class="o">}</span>
-        <span class="o">}));</span>
+        <span class="o">});</span>
 </code></pre></div></div>
 
 <p>After running this code snippet, the existing thing should look like the above result for the HTTP example.</p>
@@ -504,7 +504,7 @@ The Eclipse Ditto team</p>
                     </div>
                     <p class="notice">
                         &copy;2021 Eclipse Ditto™.
-                         Site last generated: Nov 22, 2021 <br />
+                         Site last generated: Nov 30, 2021 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">
