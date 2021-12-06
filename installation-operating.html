@@ -1830,14 +1830,14 @@ This section will cover some of Ditto’s config parameters.</p>
 the following environment variables in order to configure the connection to the MongoDB.</p>
 
 <ul>
-  <li>MONGO_DB_URI: Connection string to MongoDB</li>
-  <li>MONGO_DB_SSL_ENABLED: Enabled SSL connection to MongoDB</li>
-  <li>MONGO_DB_CONNECTION_MIN_POOL_SIZE: Configure MongoDB minimum connection pool size</li>
-  <li>MONGO_DB_CONNECTION_POOL_SIZE: Configure MongoDB connection pool size</li>
-  <li>MONGO_DB_READ_PREFERENCE: Configure MongoDB read preference</li>
-  <li>MONGO_DB_WRITE_CONCERN: Configure MongoDB write concern</li>
-  <li>AKKA_PERSISTENCE_MONGO_JOURNAL_WRITE_CONCERN: Configure Akka Persistence MongoDB journal write concern</li>
-  <li>AKKA_PERSISTENCE_MONGO_SNAPS_WRITE_CONCERN: Configure Akka Persistence MongoDB snapshot write concern</li>
+  <li><code class="highlighter-rouge">MONGO_DB_URI</code>: Connection string to MongoDB</li>
+  <li><code class="highlighter-rouge">MONGO_DB_SSL_ENABLED</code>: Enabled SSL connection to MongoDB</li>
+  <li><code class="highlighter-rouge">MONGO_DB_CONNECTION_MIN_POOL_SIZE</code>: Configure MongoDB minimum connection pool size</li>
+  <li><code class="highlighter-rouge">MONGO_DB_CONNECTION_POOL_SIZE</code>: Configure MongoDB connection pool size</li>
+  <li><code class="highlighter-rouge">MONGO_DB_READ_PREFERENCE</code>: Configure MongoDB read preference</li>
+  <li><code class="highlighter-rouge">MONGO_DB_WRITE_CONCERN</code>: Configure MongoDB write concern</li>
+  <li><code class="highlighter-rouge">AKKA_PERSISTENCE_MONGO_JOURNAL_WRITE_CONCERN</code>: Configure Akka Persistence MongoDB journal write concern</li>
+  <li><code class="highlighter-rouge">AKKA_PERSISTENCE_MONGO_SNAPS_WRITE_CONCERN</code>: Configure Akka Persistence MongoDB snapshot write concern</li>
 </ul>
 
 <h3 id="ditto-configuration">Ditto configuration</h3>
@@ -2316,7 +2316,7 @@ over the duration given in the query parameter <code class="highlighter-rouge">t
 <h3 id="piggyback-commands">Piggyback commands</h3>
 
 <p>You can use a DevOps command to send a command to another actor in the cluster.
-Those special commands are called piggyback commands.
+Those special commands are called piggyback commands.<br />
 A piggyback command must conform to the following schema:</p>
 
 <script src="docson/widget.js" data-schema="../jsonschema/piggyback-command.json"></script>
@@ -2332,6 +2332,98 @@ A piggyback command must conform to the following schema:</p>
         </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"connectivity.commands:createConnection"</span><span class="p">,</span><span class="w">
         </span><span class="err">...</span><span class="w">
     </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h4 id="managing-policies">Managing policies</h4>
+
+<p>Piggyback commands can be used for managing policies, e.g. in order to create, retrieve, modify, delete policies with 
+“devops” (super) user.</p>
+
+<p>All 
+<a href="https://github.com/eclipse/ditto/blob/master/policies/model/src/main/java/org/eclipse/ditto/policies/model/signals/commands/PolicyCommand.java">PolicyCommand</a>s
+may be sent via piggyback - however be aware that the internal JSON representation of the policy commands must be used 
+and not the <a href="protocol-specification-policies.html">Ditto Protocol</a>.</p>
+
+<p>The internal JSON representation can be found in the code, e.g. defined in the static <code class="highlighter-rouge">fromJson</code> methods of the commands.</p>
+
+<p>Example piggyback for 
+<a href="https://github.com/eclipse/ditto/blob/master/policies/model/src/main/java/org/eclipse/ditto/policies/model/signals/commands/modify/CreatePolicy.java">CreatePolicy</a>:</p>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"targetActorSelection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/system/sharding/policy"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"aggregate"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"is-group-topic"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="s2">"piggybackCommand"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"policies.commands:createPolicy"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"policy"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"policyId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;insert-the-policy-id-to-retrieve-here&gt;"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"entries"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="err">...</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>Example piggyback for 
+<a href="https://github.com/eclipse/ditto/blob/master/policies/model/src/main/java/org/eclipse/ditto/policies/model/signals/commands/query/RetrievePolicy.java">RetrievePolicy</a>:</p>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"targetActorSelection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/system/sharding/policy"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"aggregate"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"is-group-topic"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="s2">"piggybackCommand"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"policies.commands:retrievePolicy"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"policyId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;insert-the-policy-id-to-retrieve-here&gt;"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h4 id="managing-things">Managing things</h4>
+
+<p>Piggyback commands can be used for managing things, e.g. in order to create, retrieve, modify, delete things with
+“devops” (super) user.</p>
+
+<p>All
+<a href="https://github.com/eclipse/ditto/blob/master/things/model/src/main/java/org/eclipse/ditto/things/model/signals/commands/ThingCommand.java">ThingCommand</a>s
+may be sent via piggyback - however be aware that the internal JSON representation of the thing commands must be used
+and not the <a href="protocol-specification-things.html">Ditto Protocol</a>.</p>
+
+<p>The internal JSON representation can be found in the code, e.g. defined in the static <code class="highlighter-rouge">fromJson</code> methods of the commands.</p>
+
+<p>Example piggyback for
+<a href="https://github.com/eclipse/ditto/blob/master/things/model/src/main/java/org/eclipse/ditto/things/model/signals/commands/modify/CreateThing.java">CreateThing</a>:</p>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"targetActorSelection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/system/sharding/thing"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"aggregate"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"is-group-topic"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="s2">"piggybackCommand"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"things.commands:createThing"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"thing"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"thingId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;insert-the-thing-id-to-use-here&gt;"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"policyId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;insert-the-policy-id-to-use-here&gt;"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>Example piggyback for
+<a href="https://github.com/eclipse/ditto/blob/master/things/model/src/main/java/org/eclipse/ditto/things/model/signals/commands/query/RetrieveThing.java">RetrieveThing</a>:</p>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"targetActorSelection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/system/sharding/thing"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"aggregate"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"is-group-topic"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="s2">"piggybackCommand"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"things.commands:retrieveThing"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"thingId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;insert-the-thing-id-to-retrieve-here&gt;"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
@@ -2513,7 +2605,7 @@ scheduled after the <code class="highlighter-rouge">quiet-period</code> duration
 
 <p>Send a cleanup command by piggyback to the entity’s service and shard region to trigger removal of stale events and
 snapshots manually. Here is an example for things. Change the service name and shard region name accordingly for
-policies and connections. Typically in a docker based environment, use <code class="highlighter-rouge">INSTANCE_INDEX=1</code>.</p>
+policies and connections. Typically, in a docker based environment, use <code class="highlighter-rouge">INSTANCE_INDEX=1</code>.</p>
 
 <p><code class="highlighter-rouge">POST /devops/piggygack/things/&lt;INSTANCE_INDEX&gt;?timeout=10s</code></p>
 
@@ -2785,7 +2877,7 @@ to stop blocking messages to a namespace.</p>
                     </div>
                     <p class="notice">
                         &copy;2021 Eclipse Ditto™.
-                         Site last generated: Nov 30, 2021 <br />
+                         Site last generated: Dec 6, 2021 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">
