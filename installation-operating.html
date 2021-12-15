@@ -282,7 +282,21 @@
               
               
               
+              <li><a href="release_notes_221.html">2.2.1</a></li>
+              
+              
+              
+              
+              
+              
               <li><a href="release_notes_220.html">2.2.0</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="release_notes_213.html">2.1.3</a></li>
               
               
               
@@ -1966,6 +1980,73 @@ the akka-http ssl configuration.</p>
 }
 </code></pre></div></div>
 
+<h2 id="restricting-entity-creation">Restricting entity creation</h2>
+
+<p>By default, Ditto allows anyone to create a new entity (policy or thing) in any namespace. However, this behavior can
+be customized, and the ability to create new entities can be restricted.</p>
+
+<p>In the concierge service, you can re-configure the <code class="highlighter-rouge">entity-creation</code> section to suit your needs. The basic schema is:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ditto {
+  concierge {
+    enforcement {
+
+      # restrict entity creation
+      entity-creation {
+        grant = [
+            {
+                resource-types = [],
+                namespace = []
+                auth-subjects = []
+            }
+        ]
+        revoke = [
+            # same as "grant", but rejecting requests which already passed "grant"
+        ]
+      }
+
+    }
+  }
+}
+</code></pre></div></div>
+
+<p>When enforcing, the logic is:</p>
+
+<ul>
+  <li>Find a matching entry in the <code class="highlighter-rouge">grant</code> list</li>
+  <li>If one was found, ensure there is no matching entry in the <code class="highlighter-rouge">revoke</code> list</li>
+  <li>If that is the case, accept the request, otherwise deny it</li>
+</ul>
+
+<p>An entry matches, when all of the following conditions are met:</p>
+
+<ul>
+  <li>The resource types list is empty, or contains the requested resource type</li>
+  <li>The namespace wildcard list is empty, or contains a wildcard that matches the requested namespace</li>
+  <li>The auth subject wildcard list is empty, or contains at least one matching wildcard of the authorized subjects for the request</li>
+</ul>
+
+<p>This means, an existing entry, with all empty lists, will match. So the default configuration, allowing all access,
+can be as simple as:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>entity-creation {
+  grant = [{}]
+}
+</code></pre></div></div>
+
+<p>The resource types can be any of:</p>
+
+<ul>
+  <li><code class="highlighter-rouge">policy</code></li>
+  <li><code class="highlighter-rouge">thing</code></li>
+</ul>
+
+<p>The namespace wildcard list, is a list of wildcard patters, which must match the namespace. <code class="highlighter-rouge">*</code> will match any number
+of characters, and <code class="highlighter-rouge">?</code> will match exactly one character.</p>
+
+<p>The auth subject wildcard list requires only a single entry of the requests auth subjects to match, like <code class="highlighter-rouge">oauth:user-id</code>
+or <code class="highlighter-rouge">pre-authenticated:service</code>. <code class="highlighter-rouge">*</code> will match any number of characters, and <code class="highlighter-rouge">?</code> will match exactly one character.</p>
+
 <h2 id="logging">Logging</h2>
 
 <p>Gathering logs for a running Ditto installation can be achieved by:</p>
@@ -2877,7 +2958,7 @@ to stop blocking messages to a namespace.</p>
                     </div>
                     <p class="notice">
                         &copy;2021 Eclipse Ditto™.
-                         Site last generated: Dec 6, 2021 <br />
+                         Site last generated: Dec 15, 2021 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">
