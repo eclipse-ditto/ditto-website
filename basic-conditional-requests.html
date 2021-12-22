@@ -1894,12 +1894,12 @@ and Ditto Java Client which is based on the WebSocket protocol.</p>
 
 <p>Using the HTTP API it is possible to specify the condition via query parameter</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl -X PUT -H 'Content-Type: application/json' /api/2/things/org.eclipse.ditto:fancy-thing/features/temperature/properties/value?condition=gt(features/temperature/properties/lastModified,2021-08-10T15:10:02.592Z) -d 19.26
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl -X PUT -H 'Content-Type: application/json' /api/2/things/org.eclipse.ditto:fancy-thing/features/temperature/properties/value?condition=gt(features/temperature/properties/lastModified,'2021-08-10T15:10:02.592Z') -d 19.26
 </code></pre></div></div>
 
 <p>or via HTTP header</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl -X PUT -H 'Content-Type: application/json' -H 'condition: gt(features/temperature/properties/lastModified,2021-08-10T15:10:02.592Z)' /api/2/things/org.eclipse.ditto:fancy-thing/features/temperature/properties/value -d 19.26
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl -X PUT -H 'Content-Type: application/json' -H 'condition: gt(features/temperature/properties/lastModified,"2021-08-10T15:10:02.592Z")' /api/2/things/org.eclipse.ditto:fancy-thing/features/temperature/properties/value -d 19.26
 </code></pre></div></div>
 
 <h3 id="ditto-protocol">Ditto protocol</h3>
@@ -1935,6 +1935,51 @@ The following code snippet demonstrates how to achieve this.</p>
             <span class="o">}</span>
         <span class="o">});</span>
 </code></pre></div></div>
+
+<h2 id="live-channel-condition">Live channel condition</h2>
+
+<p>Ditto also supports retrieving thing data with an automatic approach for switching between 
+<a href="protocol-twinlive.html#twin">twin</a> and <a href="protocol-twinlive.html#live">live</a> channel.</p>
+
+<p>Conditions are defined with RQL as described <a href="#defining-conditions">before</a>. 
+If a condition is matched, the Thing data is retrieved from the device itself.</p>
+
+<p>Example: retrieve data from the device itself if a certain attribute is configured at the twin:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET .../things/{thingId}?live-channel-condition=eq(attributes/useLiveChannel,true)
+</code></pre></div></div>
+
+<p>Example: retrieve data from the device itself if the last modification timestamp is behind a specified timestamp:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET .../things/{thingId}?live-channel-condition=lt(_modified,"2021-12-24T12:23:42Z")
+</code></pre></div></div>
+
+<h3 id="live-channel-condition-headers">Live channel condition headers</h3>
+
+<p>Additionally, a strategy to handle timeouts for retrieving live thing data can be specified with the header
+<code class="highlighter-rouge">live-channel-timeout-strategy</code>.<br />
+The header value holds a <strong>strategy</strong> what to do in case a timeout (can also be specified as header) was encountered.</p>
+
+<ul>
+  <li>If the value cannot be retrieved live from the device itself during the specified timeout, the request will
+<code class="highlighter-rouge">fail</code> (which is the default strategy if not specified otherwise) with a status code 408.</li>
+  <li>Alternatively, if <code class="highlighter-rouge">use-twin</code> was defined as the <code class="highlighter-rouge">live-channel-timeout-strategy</code> strategy, the request will fall back 
+to the persisted twin and return the latest value stored in the digital twin.</li>
+</ul>
+
+<h3 id="live-channel-condition-response-headers">Live channel condition response headers</h3>
+
+<p>The response includes two additional headers to indicate which channel was used to retrieve the thing data:</p>
+
+<ul>
+  <li><code class="highlighter-rouge">live-channel-condition-matched</code> – value could be <code class="highlighter-rouge">true</code> or <code class="highlighter-rouge">false</code> and states whether the passed live-channel-condition was a match or not</li>
+  <li><code class="highlighter-rouge">channel</code> – value could be <code class="highlighter-rouge">twin</code> or <code class="highlighter-rouge">live</code> and defines which channel was the origin of the returned data.</li>
+</ul>
+
+<p>In line with the procedure described above on how to retrieve live data directly from a device, a new type of 
+pre-configured payload mapping, namely <a href="connectivity-mapping.html#updatetwinwithliveresponse-mapper">UpdateTwinWithLiveResponse</a>
+was introduced.</p>
+
+<p>Upon activation, the digital twin stored in Eclipse Ditto will implicitly be updated with the latest data from the 
+<em>live response</em> sent by the device.</p>
 
 <h2 id="further-reading-on-rql-expressions">Further reading on RQL expressions</h2>
 
@@ -1973,7 +2018,7 @@ The following code snippet demonstrates how to achieve this.</p>
                     </div>
                     <p class="notice">
                         &copy;2021 Eclipse Ditto™.
-                         Site last generated: Dec 20, 2021 <br />
+                         Site last generated: Dec 22, 2021 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

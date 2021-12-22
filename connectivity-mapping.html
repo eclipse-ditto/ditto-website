@@ -1925,6 +1925,12 @@ cloud in the structure and <a href="protocol-overview.html">protocol</a> Ditto r
       <td>✓</td>
       <td> </td>
     </tr>
+    <tr>
+      <td><a href="#updatetwinwithliveresponse-mapper">UpdateTwinWithLiveResponse</a></td>
+      <td>This mapper creates a <a href="protocol-specification-things-merge.html">merge Thing command</a> when a <a href="protocol-specification-things-retrieve.html">retrieve command</a> was received via the <a href="protocol-twinlive.html#live">live channel</a> patching exactly the retrieved “live” data into the twin.</td>
+      <td>✓</td>
+      <td> </td>
+    </tr>
   </tbody>
 </table>
 
@@ -2114,7 +2120,7 @@ Exclude to send it to the thing itself. Default to <code class="highlighter-roug
 
 <p>This mapper implicitly creates a new thing for an incoming message.</p>
 
-<p>The created thing contains the values defined in the template, configured in the <code class="highlighter-rouge">mappingDefinitions</code> <code class="highlighter-rouge">options</code>. &lt;/br&gt;</p>
+<p>The created thing contains the values defined in the template, configured in the <code class="highlighter-rouge">mappingDefinitions</code> <code class="highlighter-rouge">options</code>.</p>
 
 <h4 id="configuration-options-4">Configuration options</h4>
 
@@ -2124,22 +2130,83 @@ Exclude to send it to the thing itself. Default to <code class="highlighter-roug
 </ul>
 
 <p>Example of a template defined in  <code class="highlighter-rouge">options</code>:</p>
-<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="w"> </span><span class="p">{</span><span class="w">
-   </span><span class="s2">"thing"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-   </span><span class="s2">"thingId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{{ header:device_id }}"</span><span class="p">,</span><span class="w">
-   </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-     </span><span class="s2">"CreatedBy"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ImplicitThingCreation"</span><span class="w">
-   </span><span class="p">}</span><span class="w">
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"thing"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"thingId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{{ header:device_id }}"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"CreatedBy"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ImplicitThingCreation"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
   </span><span class="p">}</span><span class="w">
- </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h3 id="updatetwinwithliveresponse-mapper">UpdateTwinWithLiveResponse mapper</h3>
+
+<p>This mapper creates a <a href="protocol-specification-things-merge.html">merge Thing command</a> when a 
+<a href="protocol-specification-things-retrieve.html">retrieve command</a> was received via the 
+<a href="protocol-twinlive.html#live">live channel</a> patching exactly the retrieved “live” data into the twin.</p>
+
+<h4 id="configuration-options-5">Configuration options</h4>
+
+<ul>
+  <li><code class="highlighter-rouge">dittoHeadersForMerge</code> (optional): The Ditto headers to use for constructing the “merge thing”
+command for updating the twin, may for example add a condition to apply in order to update the twin
+(default applied Ditto headers if not configured: <code class="highlighter-rouge">"response-required": false</code>, <code class="highlighter-rouge">"if-match": "*"</code>).
+    <ul>
+      <li>
+        <p>in this configured headers, the following placeholders may be used:</p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Placeholder</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code class="highlighter-rouge">{{ header:&lt;header-name&gt; }}</code></td>
+              <td>header value from the external message, e.g. from protocol headers</td>
+            </tr>
+            <tr>
+              <td><code class="highlighter-rouge">{{ request:subjectId }}</code></td>
+              <td>the first authenticated subjectId which did the request - the one of the connection source in this case</td>
+            </tr>
+            <tr>
+              <td><code class="highlighter-rouge">{{ time:now }}</code></td>
+              <td>the current timestamp in ISO-8601 format as string in UTC timezone</td>
+            </tr>
+            <tr>
+              <td><code class="highlighter-rouge">{{ time:now_epoch_millis }}</code></td>
+              <td>the current timestamp in “milliseconds since epoch” formatted as string</td>
+            </tr>
+          </tbody>
+        </table>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<p>Example configuration:</p>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"dittoHeadersForMerge"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"if-match"</span><span class="p">:</span><span class="w"> </span><span class="s2">"*"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"response-required"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"put-metadata"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+      </span><span class="p">{</span><span class="s2">"key"</span><span class="p">:</span><span class="s2">"*/updated-by"</span><span class="p">,</span><span class="s2">"value"</span><span class="p">:</span><span class="s2">"{{ request:subjectId }}"</span><span class="p">},</span><span class="w">
+      </span><span class="p">{</span><span class="s2">"key"</span><span class="p">:</span><span class="s2">"*/updated-via"</span><span class="p">,</span><span class="s2">"value"</span><span class="p">:</span><span class="s2">"device-live-response"</span><span class="p">},</span><span class="w">
+      </span><span class="p">{</span><span class="s2">"key"</span><span class="p">:</span><span class="s2">"*/update-hint"</span><span class="p">,</span><span class="s2">"value"</span><span class="p">:</span><span class="s2">"{{ header:some-custom-hint }}"</span><span class="p">},</span><span class="w">
+      </span><span class="p">{</span><span class="s2">"key"</span><span class="p">:</span><span class="s2">"*/updated-at"</span><span class="p">,</span><span class="s2">"value"</span><span class="p">:</span><span class="s2">"{{ time:now }}"</span><span class="p">}</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
 <h2 id="example-connection-with-multiple-mappers">Example connection with multiple mappers</h2>
 
-<p>The following example connection defines a <code class="highlighter-rouge">ConnectionStatus</code> mapping with the ID <code class="highlighter-rouge">status</code> and references it in a
- source.<br />
- Messages received via this source will be mapped by the <code class="highlighter-rouge">Ditto</code> mapping and the <code class="highlighter-rouge">ConnectionStatus</code> mapping.<br /> 
- The <code class="highlighter-rouge">Ditto</code> mapping requires no options to be configured, so you can directly use its alias <code class="highlighter-rouge">Ditto</code>.</p>
+<p>The following example connection defines a <code class="highlighter-rouge">ConnectionStatus</code> mapping with the ID <code class="highlighter-rouge">status</code> and references it in a source.<br />
+Messages received via this source will be mapped by the <code class="highlighter-rouge">Ditto</code> mapping and the <code class="highlighter-rouge">ConnectionStatus</code> mapping.<br />
+The <code class="highlighter-rouge">Ditto</code> mapping requires no options to be configured, so you can directly use its alias <code class="highlighter-rouge">Ditto</code>.</p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w"> 
   </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"exampleConnection"</span><span class="p">,</span><span class="w">
@@ -2919,7 +2986,7 @@ connection’s <code class="highlighter-rouge">mappingDefinitions</code> and ref
                     </div>
                     <p class="notice">
                         &copy;2021 Eclipse Ditto™.
-                         Site last generated: Dec 20, 2021 <br />
+                         Site last generated: Dec 22, 2021 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">
