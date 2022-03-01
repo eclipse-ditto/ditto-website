@@ -284,6 +284,13 @@
               
               
               
+              <li><a href="release_notes_240.html">2.4.0</a></li>
+              
+              
+              
+              
+              
+              
               <li><a href="release_notes_232.html">2.3.2</a></li>
               
               
@@ -1893,6 +1900,68 @@ may be used:</p>
   </tbody>
 </table>
 
+<h3 id="scope-openid-connect-configuration">Scope: OpenID Connect configuration</h3>
+
+<p>When configuring <a href="installation-operating.html#openid-connect">OpenID connect</a> providers in a Ditto setup, the <code class="highlighter-rouge">jwt:</code>
+placeholder can be used in order to extract certain claims from the
+<a href="#" data-toggle="tooltip" data-original-title="JSON Web Token (JWT)">JWT</a> in order to use them as
+<a href="basic-policy.html#subjects">authorization subjects</a> for Ditto’s <a href="basic-policy.html">policy based authorization</a>.</p>
+
+<p>The following placeholders may be used inside the configuration file:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Placeholder</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="highlighter-rouge">{{ jwt:&lt;claim-pointer&gt; }}</code></td>
+      <td>Any standard or custom claims in the body of the authenticated JWT in JsonPointer notation - e.g., <code class="highlighter-rouge">jwt:sub</code> for the JWT “subject” or <code class="highlighter-rouge">jwt:extra/roles</code> for (potentially multiple) “roles” extracted from a JsonObject in the JWT named <code class="highlighter-rouge">extra</code>.<br />JWT claims being JSON arrays are expanded (each value of the array is added) and provided <a href="#function-expressions">functions</a> are performed on each array element.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>In combination with <a href="#function-expressions">functions</a>, use of this placeholder can provide and modify the subjects to
+extract from a JWT in a very powerful way.<br />
+The <code class="highlighter-rouge">fn:split(' ')</code> function may for example be used in order to further split the default claim “scope”, which is by 
+default a whitespace separated list of scopes, as an array, producing multiple entries for each provided scope.</p>
+
+<p><strong>Example</strong>:</p>
+
+<p>Assuming the provided JWT looks like this:</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"sub"</span><span class="p">:</span><span class="w"> </span><span class="s2">"u123456789"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"iss"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://&lt;the-issuer-domain&gt;/"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"exp"</span><span class="p">:</span><span class="w"> </span><span class="mi">1490922820</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"iat"</span><span class="p">:</span><span class="w"> </span><span class="mi">1490886820</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"john.doe@eclipse.org"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"aud"</span><span class="p">:</span><span class="w"> </span><span class="s2">"client-id-0815"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"scopes"</span><span class="p">:</span><span class="w"> </span><span class="s2">"openid email"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"extra"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"roles"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+      </span><span class="s2">"administrator"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"super-moderator"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"moderator"</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>Applied on the example JWT, the following <code class="highlighter-rouge">jwt:</code> placeholders in combination with <a href="#function-expressions">functions</a> 
+are resolved in the following way:</p>
+
+<ul>
+  <li><code class="highlighter-rouge">{{ jwt:sub }}</code> - resolves to <code class="highlighter-rouge">"u123456789"</code></li>
+  <li><code class="highlighter-rouge">{{ jwt:sub }}@{{ jwt:aud }}</code> - resolves to <code class="highlighter-rouge">"u123456789@client-id-0815"</code></li>
+  <li><code class="highlighter-rouge">{{ jwt:extra/roles }}</code> - resolves to 3 entries: <code class="highlighter-rouge">"administrator"</code>, <code class="highlighter-rouge">"super-moderator"</code> and <code class="highlighter-rouge">"moderator"</code></li>
+  <li><code class="highlighter-rouge">{{ jwt:scopes | fn:split(' ') }}</code> - resolves to 2 entries: <code class="highlighter-rouge">"openid"</code> and <code class="highlighter-rouge">"email"</code></li>
+  <li><code class="highlighter-rouge">{{ jwt:extra/roles | fn:filter('like','*moderator') }}@{{ jwt:aud }}</code> - resolves to 2 entries: <code class="highlighter-rouge">"super-moderator@client-id-0815"</code> and <code class="highlighter-rouge">"moderator@client-id-0815"</code></li>
+</ul>
+
 <h3 id="scope-policy-actions">Scope: Policy actions</h3>
 
 <p>In <a href="basic-policy.html#actions">policy actions</a>, the following placeholders are available in general:</p>
@@ -1910,8 +1979,8 @@ may be used:</p>
       <td>HTTP header values passed along the HTTP action request</td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge">{{ jwt:&lt;jwt-body-claim&gt; }}</code></td>
-      <td>any standard or custom claims in the body of the authenticated JWT - e.g., <code class="highlighter-rouge">jwt:sub</code> for the JWT “subject”</td>
+      <td><code class="highlighter-rouge">{{ jwt:&lt;claim-pointer&gt; }}</code></td>
+      <td>any standard or custom claims in the body of the authenticated JWT in JsonPointer notation - e.g., <code class="highlighter-rouge">jwt:sub</code> for the JWT “subject”</td>
     </tr>
     <tr>
       <td><code class="highlighter-rouge">{{ policy-entry:label }}</code></td>
@@ -1943,7 +2012,7 @@ or subscriptions for live messages, the following placeholders are available in 
   <tbody>
     <tr>
       <td><code class="highlighter-rouge">topic:full</code></td>
-      <td>full <a href="protocol-specification-topic.html">Ditto Protocol topic path</a><br />in the form <code class="highlighter-rouge">{namespace}/{entityName}/{group}/</code><br /><code class="highlighter-rouge">{channel}/{criterion}/{action-subject}</code></td>
+      <td>full <a href="protocol-specification-topic.html">Ditto Protocol topic path</a><br />in the form <code class="highlighter-rouge">{namespace}/{entityId}/{group}/</code><br /><code class="highlighter-rouge">{channel}/{criterion}/{action-subject}</code></td>
     </tr>
     <tr>
       <td><code class="highlighter-rouge">topic:namespace</code></td>
@@ -2046,7 +2115,7 @@ or subscriptions for live messages, the following placeholders are available in 
     </tr>
     <tr>
       <td><code class="highlighter-rouge">{{ topic:full }}</code></td>
-      <td>full <a href="protocol-specification-topic.html">Ditto Protocol topic path</a><br />in the form <code class="highlighter-rouge">{namespace}/{entityName}/{group}/</code><br /><code class="highlighter-rouge">{channel}/{criterion}/{action-subject}</code></td>
+      <td>full <a href="protocol-specification-topic.html">Ditto Protocol topic path</a><br />in the form <code class="highlighter-rouge">{namespace}/{entityId}/{group}/</code><br /><code class="highlighter-rouge">{channel}/{criterion}/{action-subject}</code></td>
     </tr>
     <tr>
       <td><code class="highlighter-rouge">{{ topic:namespace }}</code></td>
@@ -2234,8 +2303,8 @@ be placeholders again.</p>
     <tr>
       <td><code class="highlighter-rouge">fn:filter</code></td>
       <td><code class="highlighter-rouge">(String filterValue, String rqlFunction, String comparedValue)</code></td>
-      <td>Removes the result of the previous expression in the pipeline unless the condition specified by the parameters is satisfied.</td>
-      <td><code class="highlighter-rouge">fn:filter(header:response-required,'eq','true')</code> <br /> <code class="highlighter-rouge">fn:filter(header:response-required,'exists')</code> <br /> <code class="highlighter-rouge">fn:filter(header:response-required,'exists','false')</code></td>
+      <td>Removes the result of the previous expression in the pipeline unless the condition specified by the parameters is satisfied.<br />The first parameter <code class="highlighter-rouge">filterValue</code> may also be omitted in which case the 2 passed parameters will be appplied on the previous pipeline expression.</td>
+      <td><code class="highlighter-rouge">fn:filter('like','allowlist1|foobar|include')</code> <br /><code class="highlighter-rouge">fn:filter(header:response-required,'eq','true')</code> <br /> <code class="highlighter-rouge">fn:filter(header:response-required,'exists')</code> <br /> <code class="highlighter-rouge">fn:filter(header:response-required,'exists','false')</code></td>
     </tr>
     <tr>
       <td><code class="highlighter-rouge">fn:default</code></td>
@@ -2268,13 +2337,68 @@ be placeholders again.</p>
       <td><code class="highlighter-rouge">fn:upper()</code></td>
     </tr>
     <tr>
+      <td><code class="highlighter-rouge">fn:delete</code></td>
+      <td><code class="highlighter-rouge">()</code></td>
+      <td>Deletes the result of the previous pipeline expression unconditionally.</td>
+      <td><code class="highlighter-rouge">fn:delete()</code></td>
+    </tr>
+    <tr>
       <td><code class="highlighter-rouge">fn:replace</code></td>
       <td><code class="highlighter-rouge">(String from, String to)</code></td>
       <td>Replaces a string with another using Java’s <code class="highlighter-rouge">String::replace</code> method.</td>
       <td><code class="highlighter-rouge">fn:replace('foo', 'bar')</code></td>
     </tr>
+    <tr>
+      <td><code class="highlighter-rouge">fn:split</code></td>
+      <td><code class="highlighter-rouge">(String separator)</code></td>
+      <td>Splits the previous pipeline using the passed <code class="highlighter-rouge">separator</code> resulting an “array” pipeline output containing several elements.<br />May only be used in combination with the <a href="#scope-openid-connect-configuration">JWT placeholder</a> as input placeholder.</td>
+      <td><code class="highlighter-rouge">fn:split(' ')</code><br /><code class="highlighter-rouge">fn:split(',')</code></td>
+    </tr>
   </tbody>
 </table>
+
+<h3 id="rql-functions">RQL functions</h3>
+
+<p>The following RQL functions are available for <code class="highlighter-rouge">fn:filter</code></p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Signatures</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="highlighter-rouge">eq</code></td>
+      <td><code class="highlighter-rouge">(String filterValue, 'eq', String comparedValue)</code>, <br /><code class="highlighter-rouge">('eq', String comparedValue)</code></td>
+      <td>If 3 parameters are passed in, the function filters on the first parameter being equal to the last. <br />If 2 parameters are passed in, the function filters the previous pipeline element being equal to the last parameter.</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">ne</code></td>
+      <td><code class="highlighter-rouge">(String filterValue, 'ne', String comparedValue)</code>, <br /><code class="highlighter-rouge">('ne', String comparedValue)</code></td>
+      <td>If 3 parameters are passed in, the function filters on the first parameter being not equal to the last. <br />If 2 parameters are passed in, the function filters the previous pipeline element being not equal to the last parameter.</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">exists</code></td>
+      <td><code class="highlighter-rouge">(String filterValue, 'exists', String true|false)</code>,  <br /><code class="highlighter-rouge">('exists', String true/false)</code>, <br /><code class="highlighter-rouge">('exists')</code></td>
+      <td>If 3 parameters are passed in, the function filters on the first parameter being existent/non-existent. <br />If 2 parameters are passed in, the function filters the previous pipeline element being being existent/non-existent. <br />If 1 parameter is passed in, the function filters the previous pipeline element being true.</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">like</code></td>
+      <td><code class="highlighter-rouge">(String filterValue, 'like', String regex)</code>, <br /><code class="highlighter-rouge">('like', String regex)</code></td>
+      <td>If 3 parameters are passed in, the function filters on the first parameter matching the last. <br />If 2 parameters are passed in, the function filters the previous pipeline element matching the last parameter.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>The <code class="highlighter-rouge">like</code> function can be used with different expressions:</p>
+<ul>
+  <li><code class="highlighter-rouge">*</code> : One or more arbitrary characters</li>
+  <li><code class="highlighter-rouge">?</code> : One arbitrary character</li>
+  <li><code class="highlighter-rouge">|</code> : Element prior to the operator OR element after the operator</li>
+</ul>
 
 
     <div class="tags">
@@ -2301,7 +2425,7 @@ be placeholders again.</p>
                     </div>
                     <p class="notice">
                         &copy;2022 Eclipse Ditto™.
-                         Site last generated: Feb 8, 2022 <br />
+                         Site last generated: Mar 1, 2022 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">
