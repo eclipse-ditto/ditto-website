@@ -284,13 +284,6 @@
               
               
               
-              <li><a href="release_notes_240.html">2.4.0</a></li>
-              
-              
-              
-              
-              
-              
               <li><a href="release_notes_232.html">2.3.2</a></li>
               
               
@@ -751,6 +744,27 @@
               
               
               <li><a href="basic-acknowledgements.html">Acknowledgements / QoS</a></li>
+              
+              
+              
+              <li class="subfolders">
+                  <a href="#"><span></span>WoT (Web of Things)</a>
+                  <ul>
+                      
+                      
+                      
+                      <li><a href="basic-wot-integration.html">WoT integration</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="basic-wot-integration-example.html">WoT integration example</a></li>
+                      
+                      
+                      
+                  </ul>
+              </li>
               
               
               
@@ -1878,9 +1892,6 @@ the client can only be notified, it cannot send data back (it can use plain HTTP
 <p>For a detailed introduction into SSEs, please visit 
 the <a href="https://html.spec.whatwg.org/multipage/server-sent-events.html">HTML5 specification</a>.</p>
 
-<div class="alert alert-danger" role="alert"><i class="fa fa-exclamation-circle"></i> <b>Warning:</b> Although SSEs are a HTML5 standard, they still cannot be used with the Microsoft
-Internet Explorer on the client side or anything behind a Microsoft Azure Application Gateway on the server side.</div>
-
 <h3 id="sses-in-javascript">SSEs in JavaScript</h3>
 
 <p>Using the <code class="highlighter-rouge">EventSource</code> object in JavaScript is also covered in the <a href="https://html.spec.whatwg.org/multipage/server-sent-events.html#server-sent-events-intro">HTML5 specification</a>.</p>
@@ -1901,8 +1912,7 @@ the HTTP API on which they are invoked.</p>
 <a href="basic-changenotifications.html">change notifications</a> is created by Ditto and for each notification for which the 
 caller has READ permissions (see <a href="basic-auth.html#authorization">authorization</a>), an event is sent to the client.</p>
 
-<p>The format of the event at the <code class="highlighter-rouge">/things</code> endpoint is always in the form of a <a href="basic-thing.html#model-specification">Thing JSON</a>
-(in API 1 format or API 2 format depending on which endpoint the SSE was created).</p>
+<p>The format of the event at the <code class="highlighter-rouge">/things</code> endpoint is always in the form of a <a href="basic-thing.html#model-specification">Thing JSON</a>.</p>
 
 <p>For partial updates to a <code class="highlighter-rouge">Thing</code> however, only the changed part is sent back via the SSE, not the complete <code class="highlighter-rouge">Thing</code>.</p>
 
@@ -2027,6 +2037,68 @@ payload: true
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
+<h2 id="sse-api-thingsthingid">SSE API <code class="highlighter-rouge">/things/&lt;thingId&gt;</code></h2>
+
+<h3 id="subscribe-for-changes-of-a-single-thing">Subscribe for changes of a single Thing</h3>
+
+<p>Opening the SSE on the <code class="highlighter-rouge">/things/&lt;thingId&gt;</code> endpoint is used for connecting to the SSE stream in order to watch changes
+for only one specific thing:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http://localhost:8080/api/2/things/&lt;thingId&gt;
+</code></pre></div></div>
+
+<p>Example - only get the changes of the thing <code class="highlighter-rouge">org.eclipse.ditto:thing-1</code>:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http://localhost:8080/api/2/things/org.eclipse.ditto:thing-1
+</code></pre></div></div>
+
+<h3 id="subscribe-for-changes-of-a-specific-path-inside-a-thing">Subscribe for changes of a specific path inside a Thing</h3>
+
+<p>Opening the SSE on the <code class="highlighter-rouge">/things/&lt;thingId&gt;/&lt;jsonPointer&gt;</code> endpoint is used for connecting to the SSE stream in
+order to watch changes for only one specific thing on only a specific path in that thing:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http://localhost:8080/api/2/things/&lt;thingId&gt;/&lt;jsonPointer&gt;
+</code></pre></div></div>
+<p>The data contained in the event will be the same as when the endpoint would be queried via a normal HTTP <code class="highlighter-rouge">GET</code>.</p>
+
+<p>Example - only get the value of the attribute <code class="highlighter-rouge">location</code> whenever that changes:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http://localhost:8080/api/2/things/org.eclipse.ditto:thing-1/attributes/location
+</code></pre></div></div>
+
+<h3 id="subscribe-for-messages-for-a-specific-thing">Subscribe for messages for a specific Thing</h3>
+
+<p>Opening the SSE on the <code class="highlighter-rouge">/things/&lt;thingId&gt;/inbox/messages</code> or <code class="highlighter-rouge">/things/&lt;thingId&gt;/outbox/messages</code> endpoint is used for
+connecting to the SSE stream in order to receive <a href="basic-messages.html">messages</a> sent to or sent by the thing:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http://localhost:8080/api/2/things/&lt;thingId&gt;/inbox/messages
+http://localhost:8080/api/2/things/&lt;thingId&gt;/outbox/messages
+</code></pre></div></div>
+
+<p>In order to subscribe just for a specific <a href="basic-messages.html#elements">message subject</a>, just use the same path as
+you would for e.g. sending the message via HTTP <code class="highlighter-rouge">POST</code>:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http://localhost:8080/api/2/things/&lt;thingId&gt;/inbox/messages/&lt;subject&gt;
+http://localhost:8080/api/2/things/&lt;thingId&gt;/outbox/messages/&lt;subject&gt;
+</code></pre></div></div>
+
+<p>Example - receive whenever a device sends a “smoke-alarm” message to its outbox:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http://localhost:8080/api/2/things/org.eclipse.ditto:thing-1/outbox/messages/smoke-alarm
+</code></pre></div></div>
+
+<h3 id="subscribe-for-messages-of-a-specific-feature-of-a-specific-thing">Subscribe for messages of a specific Feature of a specific Thing</h3>
+
+<p>Opening the SSE on the <code class="highlighter-rouge">/things/&lt;thingId&gt;/features/&lt;featureId&gt;/inbox/messages</code> or
+<code class="highlighter-rouge">/things/&lt;thingId&gt;/features/&lt;featureId&gt;//outbox/messages</code> endpoint is used for
+connecting to the SSE stream in order to receive <a href="basic-messages.html">messages</a> sent to or sent by the thing feature:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http://localhost:8080/api/2/things/&lt;thingId&gt;/features/&lt;featureId&gt;/inbox/messages
+http://localhost:8080/api/2/things/&lt;thingId&gt;/features/&lt;featureId&gt;/outbox/messages
+</code></pre></div></div>
+
+<p>In order to subscribe just for a specific <a href="basic-messages.html#elements">message subject</a>, just use the same path as
+you would for e.g. sending the message via HTTP <code class="highlighter-rouge">POST</code>:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http://localhost:8080/api/2/things/&lt;thingId&gt;/features/&lt;featureId&gt;/inbox/messages/&lt;subject&gt;
+http://localhost:8080/api/2/things/&lt;thingId&gt;/features/&lt;featureId&gt;/outbox/messages/&lt;subject&gt;
+</code></pre></div></div>
+
+<p>Example - receive whenever a device sends a “ping” message to the outbox of its “Pinger” feature:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http://localhost:8080/api/2/things/org.eclipse.ditto:thing-1/features/Pinger/outbox/messages/ping
+</code></pre></div></div>
+
 <h2 id="sse-api-searchthings">SSE API <code class="highlighter-rouge">/search/things</code></h2>
 
 <p>The SSE API to stream search results is the <code class="highlighter-rouge">/search/things</code> endpoint:</p>
@@ -2142,7 +2214,7 @@ id:ditto:device7155
                     </div>
                     <p class="notice">
                         &copy;2022 Eclipse Ditto™.
-                         Site last generated: Mar 1, 2022 <br />
+                         Site last generated: Mar 3, 2022 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

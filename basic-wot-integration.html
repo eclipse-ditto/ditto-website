@@ -1,0 +1,2474 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="">
+<meta name="keywords" content="wot,  WoT, TD, TM, ThingDescription, ThingModel, W3C, Semantic, Model, definition, ThingDefinition, FeatureDefinition">
+<title>  WoT (Web of Things) integration • Eclipse Ditto™ • a digital twin framework</title>
+
+<link rel="stylesheet" href="css/syntax.css">
+<link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" crossorigin="anonymous">
+<link rel="stylesheet" href="css/modern-business.css">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" crossorigin="anonymous">
+<link rel="stylesheet" href="css/customstyles.css">
+<link rel="stylesheet" href="css/boxshadowproperties.css">
+<link rel="stylesheet" href="css/theme-ditto.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,700|Source+Code+Pro:300,600|Titillium+Web:400,600,700">
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js" crossorigin="anonymous"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" crossorigin="anonymous"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/anchor-js/2.0.0/anchor.min.js" crossorigin="anonymous"></script>
+<script src="js/toc.js"></script>
+<script src="js/customscripts.js"></script>
+
+<script type="application/ld+json">
+{
+  "@context": "http://schema.org",
+  "@type": "Organization",
+  "url": "https://eclipse.org/ditto/",
+  "logo": "https://eclipse.org/ditto/images/ditto.svg"
+}
+</script>
+
+<link rel="icon" type="image/png" href="images/favicon-16x16.png" sizes="16x16">
+<link rel="icon" type="image/png" href="images/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="images/favicon-96x96.png" sizes="96x96">
+
+<link rel="alternate" type="application/rss+xml" title="Eclipse Ditto Blog" href="https://www.eclipse.org/ditto/feed.xml">
+
+<!-- Eclipse Foundation cookie consent: -->
+<link rel="stylesheet" type="text/css" href="//www.eclipse.org/eclipse.org-common/themes/solstice/public/stylesheets/vendor/cookieconsent/cookieconsent.min.css" />
+<script src="//www.eclipse.org/eclipse.org-common/themes/solstice/public/javascript/vendor/cookieconsent/default.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            $("#tg-sb-link").click(function() {
+                $("#tg-sb-sidebar").toggle();
+                $("#tg-sb-content").toggleClass('col-md-9');
+                $("#tg-sb-content").toggleClass('col-md-12');
+                $("#tg-sb-icon").toggleClass('fa-toggle-on');
+                $("#tg-sb-icon").toggleClass('fa-toggle-off');
+            });
+        });
+    </script>
+</head>
+
+
+<script>
+    (function(w,d,s,l,i){
+        w[l]=w[l]||[];
+        w[l].push({'gtm.start':
+            new Date().getTime(),event:'gtm.js'});
+        var f=d.getElementsByTagName(s)[0],
+            j=d.createElement(s),
+            dl=l!='dataLayer'?'&l='+l:'';
+        j.async=true;
+        j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;
+        f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-5WLCZXC');
+</script>
+
+
+
+<body>
+<!-- Navigation -->
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container topnavlinks">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-ditto-home" href="index.html">&nbsp;<img src="images/ditto_allwhite_symbolonly.svg" class="ditto-navbar-symbol" alt="Home"> <img src="images/ditto_allwhite_textonly.svg" class="ditto-navbar-symbol-text" alt="Eclipse Ditto™"></a>
+        </div>
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <!-- toggle sidebar button -->
+                <!--<li><a id="tg-sb-link" href="#"><i id="tg-sb-icon" class="fa fa-toggle-on"></i> Nav</a></li>-->
+                <!-- entries without drop-downs appear here -->
+
+
+
+
+                
+                
+                
+                <li><a href="blog.html">Blog</a></li>
+                
+                
+                
+                <li><a href="intro-overview.html">Documentation</a></li>
+                
+                
+                
+                <li><a href="http-api-doc.html">HTTP API</a></li>
+                
+                
+                
+                <li><a href="sandbox.html">Sandbox</a></li>
+                
+                
+                
+                  
+                  <li><a href="https://github.com/eclipse/ditto" target="_blank">
+                    <img src="images/GitHub-Mark-Light-32px.png" alt="Sources at GitHub">
+                  </a></li>
+                  
+                
+                
+                
+                  
+                  <li><a href="https://github.com/eclipse/ditto-clients" target="_blank">
+                    <img src="images/GitHub-Mark-Light-32px.png" alt="SDK sources at GitHub">SDKs
+                  </a></li>
+                  
+                
+                
+                
+                  
+                  <li><a href="https://github.com/eclipse/ditto-examples" target="_blank">
+                    <img src="images/GitHub-Mark-Light-32px.png" alt="Example sources at GitHub">examples
+                  </a></li>
+                  
+                
+                
+                
+                <!-- entries with drop-downs appear here -->
+                <!-- conditional logic to control which topnav appears for the audience defined in the configuration file.-->
+                
+                
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Links<b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        
+                        
+                        <li><a href="https://projects.eclipse.org/projects/iot.ditto" target="_blank">Eclipse Ditto Project</a></li>
+                        
+                        
+                        
+                        <li><a href="https://www.eclipse.org/forums/index.php/f/364/" target="_blank">Forum</a></li>
+                        
+                        
+                        
+                        <li><a href="https://ci.eclipse.org/ditto/" target="_blank">Jenkins</a></li>
+                        
+                        
+                        
+                        <li><a href="https://dev.eclipse.org/mhonarc/lists/ditto-dev/" target="_blank">Mailing list archives</a></li>
+                        
+                        
+                        
+                        <li><a href="https://gitter.im/eclipse/ditto" target="_blank">Gitter.im chat</a></li>
+                        
+                        
+                    </ul>
+                </li>
+                
+                
+                
+                <!--comment out this block if you want to hide search-->
+                <li>
+                    <!--start search-->
+                    <div id="search-demo-container">
+                        <input type="text" id="search-input" placeholder="search...">
+                        <ul id="results-container"></ul>
+                    </div>
+                    <script src="//cdnjs.cloudflare.com/ajax/libs/simple-jekyll-search/0.0.9/jekyll-search.js" type="text/javascript"></script>
+                    <script type="text/javascript">
+                            SimpleJekyllSearch.init({
+                                searchInput: document.getElementById('search-input'),
+                                resultsContainer: document.getElementById('results-container'),
+                                dataSource: 'search.json',
+                                searchResultTemplate: '<li><a href="{url}" title="WoT (Web of Things) integration">{title}</a></li>',
+                                noResultsText: 'No results found.',
+                                limit: 10,
+                                fuzzy: true,
+                    })
+                    </script>
+                    <!--end search-->
+                </li>
+            </ul>
+        </div>
+    </div>
+    <!-- /.container -->
+</nav>
+
+<!-- Page Content -->
+<div class="container">
+  <div id="main">
+    <!-- Content Row -->
+    <div class="row">
+        
+        
+            <!-- Sidebar Column -->
+            <div class="col-md-3" id="tg-sb-sidebar">
+                
+
+<ul id="mysidebar" class="nav">
+  <li class="sidebarTitle">
+    <label for="docVersion">Eclipse Ditto™ version:</label>
+    <div class="select-wrapper">
+      <select id="docVersion" name="docVersion">
+        
+        <option value="">development</option>
+        
+        <option value="2.3">2.3</option>
+        
+        <option value="2.2">2.2</option>
+        
+        <option value="2.1">2.1</option>
+        
+        <option value="2.0">2.0</option>
+        
+        <option value="1.5">1.5</option>
+        
+        <option value="1.4">1.4</option>
+        
+        <option value="1.3">1.3</option>
+        
+        <option value="1.2">1.2</option>
+        
+        <option value="1.1">1.1</option>
+        
+        <option value="1.0">1.0</option>
+        
+      </select>
+    </div>
+    <div id="dev-warning">
+      <div markdown="span" class="alert alert-warning" role="alert" style="font-size:0.6em"><i class="fa fa-warning"></i> <b>Important:</b> This documentation reflects the latest 'development'. You might want to choose a released version.</div>
+    </div>
+  </li>
+  
+  
+  
+    
+        <li class="subfolders">
+          <a href="#"><span></span>Introduction</a>
+          <ul>
+              
+              
+              
+              <li><a href="intro-overview.html">Overview</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="intro-digitaltwins.html">Digital twins</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="intro-hello-world.html">Hello world</a></li>
+              
+              
+              
+              
+          </ul>
+        </li>
+    
+  
+  
+  
+    
+        <li class="subfolders">
+          <a href="#"><span></span>Release Notes</a>
+          <ul>
+              
+              
+              
+              <li><a href="release_notes_232.html">2.3.2</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="release_notes_231.html">2.3.1</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="release_notes_230.html">2.3.0</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="release_notes_222.html">2.2.2</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="release_notes_221.html">2.2.1</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="release_notes_220.html">2.2.0</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="release_notes_213.html">2.1.3</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="release_notes_212.html">2.1.2</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="release_notes_211.html">2.1.1</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="release_notes_210.html">2.1.0</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="release_notes_201.html">2.0.1</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="release_notes_200.html">2.0.0</a></li>
+              
+              
+              
+              <li class="subfolders">
+                  <a href="#"><span></span>Archive</a>
+                  <ul>
+                      
+                      
+                      
+                      <li><a href="release_notes_151.html">1.5.1</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_150.html">1.5.0</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_140.html">1.4.0</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_130.html">1.3.0</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_121.html">1.2.1</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_120.html">1.2.0</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_115.html">1.1.5</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_113.html">1.1.3</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_112.html">1.1.2</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_111.html">1.1.1</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_110.html">1.1.0</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_100.html">1.0.0</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_090.html">0.9.0</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_080.html">0.8.0</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_100-M2.html">1.0.0-M2</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_100-M1a.html">1.0.0-M1a</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_090-M2.html">0.9.0-M2</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_090-M1.html">0.9.0-M1</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_080-M3.html">0.8.0-M3</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_080-M2.html">0.8.0-M2</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_080-M1.html">0.8.0-M1</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_030-M2.html">0.3.0-M2</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_030-M1.html">0.3.0-M1</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_020-M1.html">0.2.0-M1</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_010-M3.html">0.1.0-M3</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_010-M1.html">0.1.0-M1</a></li>
+                      
+                      
+                      
+                  </ul>
+              </li>
+              
+              
+              
+              
+          </ul>
+        </li>
+    
+  
+  
+  
+    
+        <li class="subfolders">
+          <a href="#"><span></span>Installation</a>
+          <ul>
+              
+              
+              
+              <li><a href="installation-building.html">Building Ditto</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="installation-running.html">Running Ditto</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="installation-operating.html">Operating Ditto</a></li>
+              
+              
+              
+              
+          </ul>
+        </li>
+    
+  
+  
+  
+    
+        <li class="subfolders">
+          <a href="#"><span></span>Basic concepts</a>
+          <ul>
+              
+              
+              
+              <li><a href="basic-overview.html">Overview</a></li>
+              
+              
+              
+              <li class="subfolders">
+                  <a href="#"><span></span>Model entities</a>
+                  <ul>
+                      
+                      
+                      
+                      <li><a href="basic-thing.html">Thing</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="basic-feature.html">Feature</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="basic-policy.html">Policy</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="basic-namespaces-and-names.html">Namespaces and Names</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="basic-metadata.html">Thing Metadata</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="basic-errors.html">Errors</a></li>
+                      
+                      
+                      
+                  </ul>
+              </li>
+              
+              
+              
+              
+              
+              
+              <li><a href="basic-auth.html">Authentication and Authorization</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="basic-messages.html">Messages</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="basic-signals.html">Signals</a></li>
+              
+              
+              
+              <li class="subfolders">
+                  <a href="#"><span></span>Signal types</a>
+                  <ul>
+                      
+                      
+                      
+                      <li><a href="basic-signals-command.html">Command</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="basic-signals-commandresponse.html">Command response</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="basic-signals-errorresponse.html">Error response</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="basic-signals-event.html">Event</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="basic-signals-announcement.html">Announcement</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="basic-enrichment.html">Signal enrichment</a></li>
+                      
+                      
+                      
+                  </ul>
+              </li>
+              
+              
+              
+              
+              
+              
+              <li><a href="basic-apis.html">APIs</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="basic-connections.html">Connections</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="basic-placeholders.html">Placeholders</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="basic-changenotifications.html">Change notifications</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="basic-rql.html">RQL expressions</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="basic-conditional-requests.html">Conditional requests</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="basic-search.html">Search</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="basic-acknowledgements.html">Acknowledgements / QoS</a></li>
+              
+              
+              
+              <li class="subfolders">
+                  <a href="#"><span></span>WoT (Web of Things)</a>
+                  <ul>
+                      
+                      
+                      
+                      <li class="active"><a href="basic-wot-integration.html">WoT integration</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="basic-wot-integration-example.html">WoT integration example</a></li>
+                      
+                      
+                      
+                  </ul>
+              </li>
+              
+              
+              
+              
+          </ul>
+        </li>
+    
+  
+  
+  
+    
+        <li class="subfolders">
+          <a href="#"><span></span>Advanced concepts</a>
+          <ul>
+              
+              
+              
+              <li><a href="advanced-data-by-pass.html">Data By-Pass</a></li>
+              
+              
+              
+              
+          </ul>
+        </li>
+    
+  
+  
+  
+    
+        <li class="subfolders">
+          <a href="#"><span></span>Architecture</a>
+          <ul>
+              
+              
+              
+              <li><a href="architecture-overview.html">Overview</a></li>
+              
+              
+              
+              <li class="subfolders">
+                  <a href="#"><span></span>Services</a>
+                  <ul>
+                      
+                      
+                      
+                      <li><a href="architecture-services-policies.html">Policies</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="architecture-services-things.html">Things</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="architecture-services-things-search.html">Things-Search</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="architecture-services-connectivity.html">Connectivity</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="architecture-services-concierge.html">Concierge</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="architecture-services-gateway.html">Gateway</a></li>
+                      
+                      
+                      
+                  </ul>
+              </li>
+              
+              
+              
+              
+          </ul>
+        </li>
+    
+  
+  
+  
+    
+        <li class="subfolders">
+          <a href="#"><span></span>HTTP API</a>
+          <ul>
+              
+              
+              
+              <li><a href="httpapi-overview.html">Overview</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="httpapi-concepts.html">Concepts</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="httpapi-search.html">Search</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="httpapi-messages.html">Messages</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="httpapi-protocol-bindings-websocket.html">WebSocket protocol binding</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="httpapi-protocol-bindings-cloudevents.html">Cloud Events HTTP protocol binding</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="httpapi-sse.html">Server sent events</a></li>
+              
+              
+              
+              
+          </ul>
+        </li>
+    
+  
+  
+  
+    
+        <li class="subfolders">
+          <a href="#"><span></span>Connectivity API</a>
+          <ul>
+              
+              
+              
+              <li><a href="connectivity-overview.html">Overview</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="connectivity-manage-connections.html">Manage connections</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="connectivity-protocol-bindings-amqp091.html">AMQP 0.9.1 protocol binding</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="connectivity-protocol-bindings-amqp10.html">AMQP 1.0 protocol binding</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="connectivity-protocol-bindings-mqtt.html">MQTT 3.1.1 protocol binding</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="connectivity-protocol-bindings-mqtt5.html">MQTT 5 protocol binding</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="connectivity-protocol-bindings-http.html">HTTP 1.1 protocol binding</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="connectivity-protocol-bindings-kafka2.html">Kafka 2.x protocol binding</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="connectivity-mapping.html">Payload mapping</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="connectivity-header-mapping.html">Header mapping</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="connectivity-tls-certificates.html">TLS certificates</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="connectivity-ssh-tunneling.html">SSH tunneling</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="connectivity-hmac-signing.html">HMAC signing</a></li>
+              
+              
+              
+              
+          </ul>
+        </li>
+    
+  
+  
+  
+    
+        <li class="subfolders">
+          <a href="#"><span></span>Client SDK</a>
+          <ul>
+              
+              
+              
+              <li><a href="client-sdk-overview.html">Overview</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="client-sdk-java.html">Java</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="client-sdk-javascript.html">JavaScript</a></li>
+              
+              
+              
+              
+          </ul>
+        </li>
+    
+  
+  
+  
+    
+        <li class="subfolders">
+          <a href="#"><span></span>Ditto Protocol</a>
+          <ul>
+              
+              
+              
+              <li><a href="protocol-overview.html">Overview</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="protocol-twinlive.html">Twin/live channel</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="protocol-specification.html">Specification</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="protocol-specification-topic.html">Protocol topic</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="protocol-specification-errors.html">Errors</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="protocol-specification-things.html">Things group</a></li>
+              
+              
+              
+              <li class="subfolders">
+                  <a href="#"><span></span>→ commands/events</a>
+                  <ul>
+                      
+                      
+                      
+                      <li><a href="protocol-specification-things-create-or-modify.html">Create/Modify</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-specification-things-merge.html">Merge</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-specification-things-retrieve.html">Retrieve</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-specification-things-delete.html">Delete</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-specification-acks.html">Acknowledgements</a></li>
+                      
+                      
+                      
+                  </ul>
+              </li>
+              
+              
+              
+              <li class="subfolders">
+                  <a href="#"><span></span>→ search/messages</a>
+                  <ul>
+                      
+                      
+                      
+                      <li><a href="protocol-specification-things-search.html">Search</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-specification-things-messages.html">Messages</a></li>
+                      
+                      
+                      
+                  </ul>
+              </li>
+              
+              
+              
+              
+              
+              
+              <li><a href="protocol-specification-policies.html">Policies group</a></li>
+              
+              
+              
+              <li class="subfolders">
+                  <a href="#"><span></span>→ commands/announcements</a>
+                  <ul>
+                      
+                      
+                      
+                      <li><a href="protocol-specification-policies-create-or-modify.html">Create/Modify</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-specification-policies-retrieve.html">Retrieve</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-specification-policies-delete.html">Delete</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-specification-policies-announcement.html">Announcement</a></li>
+                      
+                      
+                      
+                  </ul>
+              </li>
+              
+              
+              
+              
+              
+              
+              <li><a href="protocol-specification-connections.html">Connections group</a></li>
+              
+              
+              
+              <li class="subfolders">
+                  <a href="#"><span></span>→ announcements</a>
+                  <ul>
+                      
+                      
+                      
+                      <li><a href="protocol-specification-connections-announcement.html">Announcement</a></li>
+                      
+                      
+                      
+                  </ul>
+              </li>
+              
+              
+              
+              
+              
+              
+              <li><a href="protocol-bindings.html">Bindings</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="protocol-examples.html">Examples</a></li>
+              
+              
+              
+              <li class="subfolders">
+                  <a href="#"><span></span>→ Things examples</a>
+                  <ul>
+                      
+                      
+                      
+                      <li><a href="protocol-examples-creatething.html">Create a Thing</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-deletething.html">Delete a Thing</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-modifything.html">Modify a Thing</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-retrievething.html">Retrieve a Thing</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-retrievethings.html">Retrieve multiple Things</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-modifypolicyid.html">Modify the Policy ID of a Thing</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-createattributes.html">Create Attributes</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-deleteattributes.html">Delete Attributes</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-modifyattributes.html">Modify Attributes</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-retrieveattributes.html">Retrieve Attributes</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-createattribute.html">Create a single Attribute</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-deleteattribute.html">Delete a single Attribute</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-modifyattribute.html">Modify a single Attribute</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-retrieveattribute.html">Retrieve a single Attribute</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-createthingdefinition.html">Create a Definition</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-deletethingdefinition.html">Delete a Definition</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-modifythingdefinition.html">Modify a Definition</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-retrievethingdefinition.html">Retrieve a Definition</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-createfeatures.html">Create Features</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-deletefeatures.html">Delete Features</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-modifyfeatures.html">Modify Features</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-retrievefeatures.html">Retrieve Features</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-createfeature.html">Create a single Feature</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-deletefeature.html">Delete a single Feature</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-modifyfeature.html">Modify a single Feature</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-retrievefeature.html">Retrieve a single Feature</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-createdefinition.html">Create Feature Definition</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-deletedefinition.html">Delete Feature Definition</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-modifydefinition.html">Modify Feature Definition</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-retrievedefinition.html">Retrieve Feature Definition</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-createproperties.html">Create Feature Properties</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-deleteproperties.html">Delete Feature Properties</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-modifyproperties.html">Modify Feature Properties</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-retrieveproperties.html">Retrieve Feature Properties</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-createproperty.html">Create a single Property</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-deleteproperty.html">Delete a single Property</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-modifyproperty.html">Modify a single Property</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-retrieveproperty.html">Retrieve a single Property</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-createdesiredproperties.html">Create desired Feature Properties</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-deletedesiredproperties.html">Delete desired Feature Properties</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-modifydesiredproperties.html">Modify desired Feature Properties</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-retrievedesiredproperties.html">Retrieve desired Feature Properties</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-createdesiredproperty.html">Create a single desired Property</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-deletedesiredproperty.html">Delete a single desired Property</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-modifydesiredproperty.html">Modify a single desired Property</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-retrievedesiredproperty.html">Retrieve a single desired Property</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-errorresponses.html">Error responses</a></li>
+                      
+                      
+                      
+                  </ul>
+              </li>
+              
+              
+              
+              <li class="subfolders">
+                  <a href="#"><span></span>→ Things merge examples</a>
+                  <ul>
+                      
+                      
+                      
+                      <li><a href="protocol-examples-mergething.html">Merge a Thing</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-mergepolicyid.html">Merge the Policy ID of a Thing</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-mergeattributes.html">Merge Attributes</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-mergeattribute.html">Merge a single Attribute</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-mergethingdefinition.html">Merge a Definition</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-mergefeatures.html">Merge Features</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-mergefeature.html">Merge a single Feature</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-mergefeaturedefinition.html">Merge Feature Definition</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-mergeproperties.html">Merge Feature Properties</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-mergeproperty.html">Merge a single Property</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-mergedesiredproperties.html">Merge desired Feature Properties</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-mergedesiredproperty.html">Merge a single desired Property</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-errorresponses.html">Error responses</a></li>
+                      
+                      
+                      
+                  </ul>
+              </li>
+              
+              
+              
+              <li class="subfolders">
+                  <a href="#"><span></span>→ Policies examples</a>
+                  <ul>
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-createpolicy.html">Create a Policy</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-deletepolicy.html">Delete a Policy</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-modifypolicy.html">Modify a Policy</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-retrievepolicy.html">Retrieve a Policy</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-modifypolicyentries.html">Modify entries</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-retrievepolicyentries.html">Retrieve entries</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-createpolicyentry.html">Create a single entry</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-deletepolicyentry.html">Delete a single entry</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-modifypolicyentry.html">Modify a single entry</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-retrievepolicyentry.html">Retrieve a single entry</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-modifysubjects.html">Modify subjects</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-retrievesubjects.html">Retrieve subjects</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-createsubject.html">Create a single subject</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-deletesubject.html">Delete a single subject</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-modifysubject.html">Modify a single subject</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-retrievesubject.html">Retrieve a single subject</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-modifyresources.html">Modify resources</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-retrieveresources.html">Retrieve resources</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-createresource.html">Create a single resource</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-deleteresource.html">Delete a single resource</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-modifyresource.html">Modify a single resource</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-retrieveresource.html">Retrieve a single resource</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-errorresponses.html">Error responses</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-announcement-subjectDeletion.html">Announcement for subject deletion</a></li>
+                      
+                      
+                      
+                  </ul>
+              </li>
+              
+              
+              
+              <li class="subfolders">
+                  <a href="#"><span></span>→ Connections examples</a>
+                  <ul>
+                      
+                      
+                      
+                      <li><a href="protocol-examples-connections-announcement-opened.html">Announcement for connection opened</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-connections-announcement-closed.html">Announcement for connection gracefully closed</a></li>
+                      
+                      
+                      
+                  </ul>
+              </li>
+              
+              
+              
+              
+              
+              
+              <li><a href="protocol-examples-search.html">→ Search examples</a></li>
+              
+              
+              
+              
+          </ul>
+        </li>
+    
+  
+  
+  
+    
+    <li><a href="sandbox.html">Sandbox</a></li>
+    
+  
+  
+  
+    
+    <li><a href="presentations.html">Presentations</a></li>
+    
+  
+  
+  
+    
+    <li><a href="glossary.html">Glossary</a></li>
+    
+  
+  
+  
+    
+    <li><a href="feedback.html">Feedback</a></li>
+    
+  
+  
+  
+    
+         <p class="external">
+             <a href="#" id="collapseAll">Collapse All</a> | <a href="#" id="expandAll">Expand All</a>
+         </p>
+    
+</ul>
+
+<!-- this highlights the active parent class in the sidebar. this is critical so that the parent expands when you're viewing a page. This must appear below the sidebar code above. Otherwise, if placed inside customscripts.js, the script runs before the sidebar code runs and the class never gets inserted.-->
+<script>$("li.active").parents('li').toggleClass("active");
+</script>
+
+            </div>
+            
+        
+
+        <!-- Content Column -->
+        <div class="col-md-9" id="tg-sb-content">
+            <div class="post-header">
+   <h1 class="post-title-main">WoT (Web of Things) integration</h1>
+</div>
+
+
+
+<div class="post-content">
+
+   
+
+    
+    
+<!-- this handles the automatic toc. use ## for subheads to auto-generate the on-page minitoc. if you use html tags, you must supply an ID for the heading element in order for it to appear in the minitoc. -->
+<script>
+$( document ).ready(function() {
+  // Handler for .ready() called.
+
+$('#toc').toc({ minimumHeaders: 0, listType: 'ul', showSpeed: 0, headers: 'h2,h3,h4' });
+
+/* this offset helps account for the space taken up by the floating toolbar. */
+$('#toc').on('click', 'a', function() {
+  var target = $(this.getAttribute('href'))
+    , scroll_target = target.offset().top
+
+  $(window).scrollTop(scroll_target - 10);
+  return false
+})
+  
+});
+</script>
+
+<div id="toc"></div>
+
+    
+
+
+    
+
+
+    
+
+  <p>Eclipse Ditto added support for <strong>optional</strong> WoT (Web of Things) integration in Ditto version <code class="highlighter-rouge">2.4.0</code>.<br />
+The integration is based on the
+<a href="https://www.w3.org/TR/wot-thing-description11/">Web of Things (WoT) Thing Description 1.1 - W3C Working Draft February/March 2022</a>.</p>
+
+<div class="alert alert-danger" role="alert"><i class="fa fa-exclamation-circle"></i> <b>Warning:</b> As WoT Thing Description version 1.1 was not yet published as “W3C Recommendation”, 
+    when Ditto <code class="highlighter-rouge">2.4.0</code> was released, the WoT integration is currently marked as <strong>experimental</strong>.<br />This means that 
+    aspects of the implementation, the behavior and the <strong>ditto-wot-module</strong> (Java module) are subject to change
+    without the guarantee of being backwards compatible.</div>
+
+<p>Because the integration is experimental, it must explicitly be activated via a “feature toggle”:<br />
+In order to activate the WoT integration, configure the following environment variable for all Ditto services:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">DITTO_DEVOPS_FEATURE_WOT_INTEGRATION_ENABLED</span><span class="o">=</span><span class="nb">true</span>
+</code></pre></div></div>
+
+<h2 id="web-of-things">Web of Things</h2>
+
+<blockquote>
+  <p>“The Web of Things seeks to counter the fragmentation of the IoT through standard 
+complementing building blocks (e.g., metadata and APIs) that enable easy integration across IoT platforms and 
+application domains.”</p>
+</blockquote>
+
+<p><a href="https://www.w3.org/groups/wg/wot">Source</a></p>
+
+<p>The W3C WoT (Web of Things) working group provides “building blocks” under the roof of the 
+“main international standards organization for the World Wide Web” to 
+“[…] simplify IoT application development by following the well-known and successful Web paradigm.”.</p>
+
+<p>Source: <a href="https://www.w3.org/WoT/documentation/">Web of Things in a Nutshell</a></p>
+
+<p>At its core, the specification of the so-called “WoT Thing Description” (TD) defines IoT device’s metadata and 
+interaction capabilities.<br />
+The idea of such a TD (Thing Description) is that a device (or e.g. a digital twin service acting as intermediate) 
+describes in a standardized way which capabilities in form of <code class="highlighter-rouge">properties</code>, <code class="highlighter-rouge">actions</code> and <code class="highlighter-rouge">events</code> a thing provides 
+and which input/output can be expected when interacting with the thing.</p>
+
+<p>Even more, a TD contains so called <code class="highlighter-rouge">forms</code> for the mentioned interaction capabilities which map those rather abstract
+concepts to actual endpoints, e.g. to HTTP endpoints, HTTP verbs and HTTP headers etc.<br />
+Developed under the roof of the W3C, web APIs are obviously well understood and are incorporated perfectly in the 
+“WoT Thing Description” specification.
+But also other protocol bindings may be defined in a <code class="highlighter-rouge">form</code>, e.g. MQTT or CoAP.</p>
+
+<p>The “WoT Thing Description” specification version 1.0 was already published as 
+<a href="https://www.w3.org/TR/wot-thing-description/">“W3C Recommendation” in April 2020</a>, the next version 1.1 adds the 
+concept of “Thing Models” (TM) which can be seen as a template for generating “Thing Descriptions” but without some of
+its mandatory fields, e.g. <code class="highlighter-rouge">forms</code> including the protocol bindings.</p>
+
+<p>With the addition of the “Thing Model” concept, WoT becomes a perfect fit for describing the capabilities of 
+<a href="intro-digitaltwins.html">Digital Twins</a> managed in Ditto.
+It is completely optional and even possible as “retrofit” model addition for already connected devices / already existing twins.</p>
+
+<p>The benefits of adding such a “Thing Model” reference to digital twins managed in Ditto are:</p>
+<ul>
+  <li>possibility to define model for data (Ditto Thing <code class="highlighter-rouge">attributes</code> + Ditto Feature <code class="highlighter-rouge">properties</code>), e.g. containing:
+    <ul>
+      <li>data type to expect</li>
+      <li>restrictions which apply (like e.g. possible min/max values)</li>
+      <li>default values to assume if data is not available</li>
+      <li>units of data entries</li>
+    </ul>
+  </li>
+  <li>possibility to define model for messages
+    <ul>
+      <li>same as above for data</li>
+      <li>in addition, describing possible input/output and also possible error situations when invoking a message</li>
+    </ul>
+  </li>
+  <li>capability to provide semantic context (using JSON-LD), e.g. by referencing to existing ontologies like:
+    <ul>
+      <li>saref: <a href="https://ontology.tno.nl/saref/">https://ontology.tno.nl/saref/</a></li>
+      <li>OM-2 “Ontology of units of measure”: <a href="http://www.ontology-of-units-of-measure.org/page/om-2">http://www.ontology-of-units-of-measure.org/page/om-2</a></li>
+      <li>or any other JSON-LD described ontology</li>
+    </ul>
+  </li>
+  <li>improves interoperability
+    <ul>
+      <li>different IoT systems and devices may engage with each other in a standardized way</li>
+      <li>models and included data formats are not proprietary, but are defined in an open standard</li>
+      <li>avoids vendor lock-in, even a lock-in to Ditto</li>
+    </ul>
+  </li>
+  <li>enables introspection of digital twins
+    <ul>
+      <li>Ditto managed twins can describe themselves</li>
+      <li>if backed by a WoT Thing Model, the twin will tell you as response exactly
+        <ul>
+          <li>what it is capable of</li>
+          <li>which HTTP endpoints to invoke to access data / send messages</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li>take advantage of an open standard
+    <ul>
+      <li>W3C are experts on the web, the WoT standard relies on already established other standards like HTTP, JSON, 
+JSON-LD, JsonSchema, JsonPointer, etc.</li>
+      <li>the standard is in active development</li>
+      <li>many eyes (e.g. well known industry players like Siemens, Intel, Oracle, Fujitsu, …) review additions, etc.</li>
+      <li>W3C perform a completely open specification process, no decision is made secretly, new versions evolve over years</li>
+    </ul>
+  </li>
+  <li>use the tooling landscape / open ecosystem evolving around the WoT standard, e.g.:
+    <ul>
+      <li>the <a href="https://eclipse.github.io/editdor/">Eclipse edi{TD}or</a> online-editor for WoT TDs and TMs</li>
+      <li>the <a href="https://github.com/eclipse/thingweb.node-wot">Eclipse thingweb.node-wot</a> project providing 
+<a href="https://www.npmjs.com/org/node-wot">node.wot NPM modules</a>, e.g. in order to “consume” Thing Descriptions in 
+Javascript</li>
+      <li>a <a href="https://flows.nodered.org/node/node-red-contrib-web-of-things">node-red library for WoT integration</a></li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="wot-thing-description">WoT Thing Description</h3>
+
+<p>A <a href="https://www.w3.org/TR/wot-thing-description11/#introduction-td">Thing Description</a> describes exactly one instance of 
+a device/thing.<br />
+This description contains not only the interaction capabilities (<code class="highlighter-rouge">properties</code> the devices provide, 
+<code class="highlighter-rouge">actions</code> which can be invoked by the devices and <code class="highlighter-rouge">events</code> the devices emit), but also contain concrete API endpoints 
+(via the <code class="highlighter-rouge">forms</code>) to invoke in order to actually interact with the devices.</p>
+
+<h3 id="wot-thing-model">WoT Thing Model</h3>
+
+<p>A <a href="https://www.w3.org/TR/wot-thing-description11/#introduction-tm">Thing Model</a> can be seen as the model 
+(or interface in OOP terminology) for a potentially huge population of instances (Thing Descriptions) all “implementing”
+this contract.<br />
+It does not need to contain the instance specific parts which a TD must include (e.g. <code class="highlighter-rouge">security</code> definitions or <code class="highlighter-rouge">forms</code>).
+It focuses on the possible interactions (<code class="highlighter-rouge">properties</code>, <code class="highlighter-rouge">actions</code>, <code class="highlighter-rouge">events</code>) and their data types / semantics in a more 
+abstract way.</p>
+
+<h4 id="thing-model-modeling-tips">Thing Model modeling tips</h4>
+
+<p>Here are some tips you should consider when writing new WoT Thing Models to describe the capabilities of your devices:</p>
+
+<ul>
+  <li>put a version in your Thing Model filename:
+    <ul>
+      <li>The WoT specification does not require you to put the version of the Thing Model in the filename, however you should
+really do so.</li>
+      <li>If you don’t use a version and provide the file as <code class="highlighter-rouge">lamp.tm.jsonld</code>, you will probably overwrite the file whenever
+you make a change to the model.</li>
+      <li>Think about an application consuming that model - one day a Thing would be correctly defined by the model,
+but the next day the Thing would no longer follow the model, even if the URL to the model was not changed.</li>
+    </ul>
+  </li>
+  <li>apply semantic versioning:
+    <ul>
+      <li>if you “fix a bug” in a model, increase the “micro” version: <code class="highlighter-rouge">1.0.X</code></li>
+      <li>if you add something new to a model without removing/renaming (breaking) existing definitions, increase the “minor” version: <code class="highlighter-rouge">1.X.0</code></li>
+      <li>if you need to break a model (e.g. by removing/renaming something or changing a datatype), increase the “major” version: <code class="highlighter-rouge">X.0.0</code></li>
+    </ul>
+  </li>
+  <li>treat published Thing Models as “immutable”:
+    <ul>
+      <li>never change a “released” TM once published and accessible via public HTTP endpoint</li>
+    </ul>
+  </li>
+  <li>provide a <code class="highlighter-rouge">title</code> and a <code class="highlighter-rouge">description</code> for your Thing Models
+    <ul>
+      <li>you as the model creator can add the most relevant human-readable descriptions</li>
+      <li>also define it for <code class="highlighter-rouge">properties</code>, <code class="highlighter-rouge">actions</code>, <code class="highlighter-rouge">events</code> and all defined data types</li>
+      <li>if you need internationalization, add those to <code class="highlighter-rouge">tiles</code> and <code class="highlighter-rouge">descriptions</code></li>
+    </ul>
+  </li>
+  <li>provide a semantic context by referencing ontologies in your JSON-LD <code class="highlighter-rouge">@context</code>
+    <ul>
+      <li>at some point, a machine learning or reasoning engine will try to make sense of your things and their data</li>
+      <li>support the machines to be able to understand your things semantics</li>
+      <li>find out more about Linked Data and JSON-LD here: <a href="https://json-ld.org">https://json-ld.org</a></li>
+      <li>e.g. make use of <a href="#public-available-ontologies-to-reference">public ontologies</a></li>
+    </ul>
+  </li>
+  <li>use the linked ontologies in order to describe your model in a semantic way, e.g. in the <code class="highlighter-rouge">properties</code> of a 
+“Temperature sensor” model 
+(see also the <a href="https://www.w3.org/TR/wot-thing-description11/#semantic-annotations-example-version-units">example in the TD specification</a>):
+    <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="w">  </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"currentTemperature"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"@type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"om2:CelsiusTemperature"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Current temperature"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"The last or current measured temperature in '°C'."</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"number"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"unit"</span><span class="p">:</span><span class="w"> </span><span class="s2">"om2:degreeCelsius"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"minimum"</span><span class="p">:</span><span class="w"> </span><span class="mf">-273.15</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span></code></pre></div>    </div>
+  </li>
+</ul>
+
+<h4 id="public-available-ontologies-to-reference">Public available ontologies to reference</h4>
+
+<p>Here we listed some ontologies which you can use in order to provide semantic context:</p>
+
+<p>To describe time related data (e.g. durations, timestamps) you can use: <a href="https://www.w3.org/TR/owl-time/">W3C Time Ontology</a></p>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"@context"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"https://www.w3.org/2022/wot/td/v1.1"</span><span class="p">,</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"time"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://www.w3.org/2006/time#"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>To describe geolocations you can use: <a href="https://www.w3.org/2003/01/geo/">W3C Basic Geo (WGS84 lat/long) Vocabulary</a>:</p>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"@context"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"https://www.w3.org/2022/wot/td/v1.1"</span><span class="p">,</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"geo"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://www.w3.org/2003/01/geo/wgs84_pos#"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>To describe units you can choose between:</p>
+<ul>
+  <li><a href="http://www.qudt.org">QUDT.org</a>
+    <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"@context"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"https://www.w3.org/2022/wot/td/v1.1"</span><span class="p">,</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"qudt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://qudt.org/schema/qudt/"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"unit"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://qudt.org/vocab/unit/"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"quantitykind"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://qudt.org/vocab/quantitykind/"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div>    </div>
+  </li>
+  <li><a href="http://www.ontology-of-units-of-measure.org/page/om-2">OM 2: Units of Measure</a>:
+    <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"@context"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"https://www.w3.org/2022/wot/td/v1.1"</span><span class="p">,</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"om2"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://www.ontology-of-units-of-measure.org/resource/om-2/"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div>    </div>
+  </li>
+</ul>
+
+<p>To describe “assets” you can use: <a href="https://ontology.tno.nl/saref/">SAREF</a></p>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"@context"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"https://www.w3.org/2022/wot/td/v1.1"</span><span class="p">,</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"saref"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://w3id.org/saref#"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h2 id="mapping-of-wot-concepts-to-ditto">Mapping of WoT concepts to Ditto</h2>
+
+<p>Mapping a WoT Thing Description (TD) to a Ditto <a href="basic-thing.html">Thing</a> can be done in different “complexity levels”:</p>
+<ol>
+  <li>the most simple mapping is that a WoT TD describes exactly one Ditto Thing</li>
+  <li>another possible mapping is that a WoT TD describes exactly one Ditto <a href="basic-feature.html">Feature</a> (being part of a Thing)</li>
+  <li>the most advanced option is that:
+    <ul>
+      <li>a WoT TD describes a Ditto Thing</li>
+      <li>and in addition contains “sub things” as Features of the Thing, all described by their own TD</li>
+    </ul>
+  </li>
+</ol>
+
+<p>The third option adds the possibility to provide common aspects which many similar devices support as part of the similar 
+devices, all implementing the same “contract” (Thing Model) with the same interaction capabilities 
+(<code class="highlighter-rouge">properties</code>, <code class="highlighter-rouge">actions</code> and <code class="highlighter-rouge">events</code>), the same data formats and semantic context.</p>
+
+<h3 id="thing-description-vs-thing-model">Thing Description vs. Thing Model</h3>
+
+<p>A WoT TD describes the instance (the Ditto Thing), a WoT TM provides the model of a Thing. The model can be referenced
+in the <a href="basic-thing.html#definition">Thing Definition</a> with its HTTP endpoint.
+Ditto supports adding a valid HTTP(s) URL in the <code class="highlighter-rouge">"definition"</code>.</p>
+
+<p>The same applies for the <a href="basic-feature.html#feature-definition">Feature Definition</a> which may also contain HTTP
+endpoints to a valid WoT Thing Model.</p>
+
+<p>Thing Descriptions are generated by the WoT integration in Ditto, based on the Thing Models referenced in a 
+<a href="basic-thing.html#definition">Thing Definition</a> and in <a href="basic-feature.html#feature-definition">Feature Definitions</a>.</p>
+
+<h3 id="thing-model-describing-a-ditto-thing">Thing Model describing a Ditto Thing</h3>
+
+<p>This table shows an overview of how those elements map to Ditto concepts for the “Thing” level:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>WoT element</th>
+      <th>Ditto concept</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><a href="https://www.w3.org/TR/wot-thing-description11/#thing">Thing</a></td>
+      <td><a href="basic-thing.html">Ditto Thing</a></td>
+    </tr>
+    <tr>
+      <td><a href="https://www.w3.org/TR/wot-thing-description11/#propertyaffordance">Properties</a></td>
+      <td>Thing <a href="basic-thing.html#attributes">attributes</a></td>
+    </tr>
+    <tr>
+      <td><a href="https://www.w3.org/TR/wot-thing-description11/#actionaffordance">Actions</a></td>
+      <td>Thing <a href="basic-messages.html#elements">messages</a> with <strong>Direction</strong> <em>to</em> (messages in the “inbox”) of a Thing ID.</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.w3.org/TR/wot-thing-description11/#eventaffordance">Events</a></td>
+      <td>Thing <a href="basic-messages.html#elements">messages</a> with <strong>Direction</strong> <em>from</em> (messages in the “outbox”) of a Thing ID.</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.w3.org/TR/wot-thing-description11/#thing-model-composition">Composition via <code class="highlighter-rouge">tm:submodel</code></a></td>
+      <td>Thing <a href="basic-thing.html#features">features</a> representing different aspects of a Ditto Thing.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="thing-model-describing-a-ditto-feature">Thing Model describing a Ditto Feature</h3>
+
+<p>This table shows an overview of how those elements map to Ditto concepts for the “Feature” level:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>WoT element</th>
+      <th>Ditto concept</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><a href="https://www.w3.org/TR/wot-thing-description11/#thing">Thing</a></td>
+      <td>Feature.<br />In Ditto, a Feature is an aspect of a <a href="basic-thing.html">Ditto Thing</a>. As the Feature is defined by its properties and messages it supports, it maps to a WoT Thing.</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.w3.org/TR/wot-thing-description11/#propertyaffordance">Properties</a></td>
+      <td>Feature <a href="basic-feature.html#feature-properties">properties</a></td>
+    </tr>
+    <tr>
+      <td><a href="https://www.w3.org/TR/wot-thing-description11/#actionaffordance">Actions</a></td>
+      <td>Feature <a href="basic-messages.html#elements">messages</a> with <strong>Direction</strong> <em>to</em> (messages in the “inbox”) of a Thing ID + Feature ID combination.</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.w3.org/TR/wot-thing-description11/#eventaffordance">Events</a></td>
+      <td>Feature <a href="basic-messages.html#elements">messages</a> with <strong>Direction</strong> <em>from</em> (messages in the “outbox”) of a Thing ID + Feature ID combination.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="integration-in-ditto">Integration in Ditto</h2>
+
+<p>The WoT integration in Ditto covers several aspects:</p>
+<ul>
+  <li>referencing HTTP(s) URLs to WoT Thing Models in <a href="basic-thing.html#definition">Thing Definitions</a> and in <a href="basic-feature.html#feature-definition">Feature Definitions</a></li>
+  <li>generation of WoT Thing Descriptions for Thing and Feature instances based on referenced Thing Models
+    <ul>
+      <li>resolving potential <a href="https://www.w3.org/TR/wot-thing-description11/#thing-model-extension-import">extensions via <code class="highlighter-rouge">tm:extends</code> and imports via <code class="highlighter-rouge">tm:ref</code></a></li>
+      <li>resolving potential Thing level <a href="https://www.w3.org/TR/wot-thing-description11/#thing-model-composition">compositions via <code class="highlighter-rouge">tm:submodel</code></a></li>
+      <li>resolving potential <a href="https://www.w3.org/TR/wot-thing-description11/#thing-model-td-placeholder">TM placeholders</a></li>
+    </ul>
+  </li>
+  <li>upon creation of new Things, generation of a “JSON skeleton” following the WoT Thing Model, including referenced TM submodels as Features of the Thing</li>
+</ul>
+
+<h3 id="thing-description-generation">Thing Description generation</h3>
+
+<p>WoT Thing Models are intended to be used as templates for generating (instance specific) Thing Descriptions, 
+the rules for doing that are specified: 
+<a href="https://www.w3.org/TR/wot-thing-description11/#thing-model-td-generation">Derivation of Thing Description Instances</a></p>
+
+<p>Prerequisites to use the Thing Description generation:</p>
+<ul>
+  <li>the feature toggle (environment variable <code class="highlighter-rouge">DITTO_DEVOPS_FEATURE_WOT_INTEGRATION_ENABLED=true</code>) is activated</li>
+  <li>HTTP content negotiation is applied, setting the <code class="highlighter-rouge">Accept</code> header to the registered WoT TD
+<a href="https://www.iana.org/assignments/media-types/application/td+json">IANA content type <code class="highlighter-rouge">application/td+json</code></a>
+when retrieving the Thing via HTTP <code class="highlighter-rouge">GET /api/2/&lt;namespace&gt;:&lt;thing-name&gt;</code></li>
+</ul>
+
+<p>The available configuration of the WoT integration can be found in the 
+<a href="https://github.com/eclipse/ditto/blob/master/things/service/src/main/resources/things.conf">things.conf</a>
+config file of the <a href="architecture-services-things.html">things</a> service at path <code class="highlighter-rouge">ditto.things.wot</code>.<br />
+There you can configure which <code class="highlighter-rouge">securityDefinitions</code> shall be added to the generated TDs and which <code class="highlighter-rouge">base</code> path 
+prefix to create into the TDs, depending on your public Ditto endpoint.</p>
+
+<h4 id="security-td-access--authorization">Security: TD access / authorization</h4>
+
+<p>For accessing Thing Descriptions created for Things and Features no special permission in the Thing’s 
+<a href="basic-policy.html">Policy</a> is required.</p>
+
+<p>As the Thing Model must be a publicly available resource and the Thing ID is also known for a user requesting the TD of 
+a Thing, there is no additional information to disclose.</p>
+
+<p>Accessing the <code class="highlighter-rouge">properties</code>, invoking <code class="highlighter-rouge">actions</code> and subscribing for <code class="highlighter-rouge">events</code> is of course authorized by the Thing’s 
+Policy via its <a href="basic-policy.html#thing">Thing</a>, <a href="basic-policy.html#feature">Feature</a> and 
+<a href="basic-policy.html#message">Message</a> resources.</p>
+
+<h4 id="td-generation-for-things">TD generation for Things</h4>
+
+<p>Additional prerequisites that a WoT TD is generated for a Ditto Thing:</p>
+<ul>
+  <li>the Thing references a valid WoT Thing Model in its <a href="basic-thing.html#definition">Thing Definition</a> and this TM is
+publicly downloadable via its HTTP(s) URL</li>
+</ul>
+
+<p>Function:</p>
+<ul>
+  <li>Ditto checks if the Thing Definition contains a valid HTTP(s) URL</li>
+  <li>Ditto downloads the referenced URL and checks if this is a valid WoT Thing Model</li>
+  <li>Ditto saves the downloaded TM to a local cache</li>
+  <li>Ditto generates a WoT Thing Description and returns it as JSON response
+    <ul>
+      <li>defined TM <code class="highlighter-rouge">tm:extends</code> extensions are resolved by downloading those TMs as well</li>
+      <li>defined TM <code class="highlighter-rouge">tm:refs</code> imports are also resolved by downloading those TMs as well</li>
+      <li>defined TM <code class="highlighter-rouge">tm:submodel</code>s are added to the <code class="highlighter-rouge">links</code> of the TD pointing to the TDs of the Features of the Thing</li>
+      <li>metadata available in the Thing or in the Ditto configuration is also included in the generated TD</li>
+    </ul>
+  </li>
+</ul>
+
+<p>Using cURL, the Thing Description for a Ditto Thing can be generated and fetched by invoking:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">-u</span> ditto:ditto <span class="s1">'http://localhost:8080/api/2/things/io.eclipsepojects.ditto:my-thing'</span> <span class="se">\</span>
+  <span class="nt">--header</span> <span class="s1">'Accept: application/td+json'</span>
+</code></pre></div></div>
+
+<h4 id="td-generation-for-features">TD generation for Features</h4>
+
+<p>Additional prerequisites that a WoT TD is generated for a Ditto Feature:</p>
+<ul>
+  <li>the Feature references at least one valid WoT Thing Model in its
+<a href="basic-feature.html#feature-definition">Feature Definition</a> and this TM is publicly downloadable via its HTTP(s) URL</li>
+</ul>
+
+<p>Function:</p>
+<ul>
+  <li>Ditto checks if the first Feature Definition in the list of definitions contains a valid HTTP(s) URL
+    <ul>
+      <li>additional Feature Definitions in the array are interpreted as extended TMs in order to specify the “extension hierarchy”</li>
+    </ul>
+  </li>
+  <li>Ditto downloads the referenced URL and checks if this is a valid WoT Thing Model</li>
+  <li>Ditto saves the downloaded TM to a local cache</li>
+  <li>Ditto generates a WoT Thing Description and returns it as JSON response
+    <ul>
+      <li>defined TM <code class="highlighter-rouge">tm:extends</code> extensions are resolved by downloading those TMs as well</li>
+      <li>defined TM <code class="highlighter-rouge">tm:refs</code> imports are also resolved by downloading those TMs as well</li>
+      <li>metadata available in the Thing or in the Ditto configuration is also included in the generated TD</li>
+    </ul>
+  </li>
+</ul>
+
+<p>Using cURL, the Thing Description for a Ditto Feature can be generated and fetched by invoking:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">-u</span> ditto:ditto <span class="s1">'http://localhost:8080/api/2/things/io.eclipsepojects.ditto:my-thing/features/my-feature-1'</span> <span class="se">\</span>
+  <span class="nt">--header</span> <span class="s1">'Accept: application/td+json'</span>
+</code></pre></div></div>
+
+<h4 id="resolving-thing-model-placeholders">Resolving Thing Model placeholders</h4>
+
+<p>WoT Thing Models may contain <a href="https://www.w3.org/TR/wot-thing-description11/#thing-model-td-placeholder">placeholders</a>
+which <strong>must</strong> be resolved during generation of the TD from a TM.</p>
+
+<p>In order to resolve TM placeholders, Ditto applies the following strategy:</p>
+<ul>
+  <li>when generating a TD for a Thing, it looks in the Things’ attribute <code class="highlighter-rouge">"model-placeholders"</code> (being a JsonObject) in
+ order to lookup placeholders</li>
+  <li>when generating a TD for a Feature, it looks in the Feature’s property <code class="highlighter-rouge">"model-placeholders"</code> (being a JsonObject) in
+ order to lookup placeholders</li>
+  <li>when a placeholder was not found in the <code class="highlighter-rouge">"model-placeholders"</code> of the Thing/Feature, a fallback to the Ditto 
+configuration is done:
+    <ul>
+      <li>placeholder fallbacks can be configured in Ditto via the 
+<a href="https://github.com/eclipse/ditto/blob/master/things/service/src/main/resources/things.conf">things.conf</a> 
+configuration file of the <a href="architecture-services-things.html">things</a> service at path 
+<code class="highlighter-rouge">ditto.things.wot.to-thing-description.placeholders</code>.<br /><br />
+This map may contain static values, but use and Json type as value (e.g. also a JsonObject), e.g.:
+        <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>FOO = "bar"
+TM_REQUIRED = [
+  "#/properties/status",
+  "#/actions/toggle"
+]
+</code></pre></div>        </div>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<div class="alert alert-danger" role="alert"><i class="fa fa-exclamation-circle"></i> <b>Warning:</b> Please be aware that placeholders put into the <code class="highlighter-rouge">"model-placeholders"</code> attribute/property 
+    of a Thing/Feature may be used in TM placeholders and therefore are not 
+    protected by any authorization check based on the Thing’s <a href="basic-policy.html">Policy</a> as TDs are available for all
+    authenticated users which know the Thing ID.</div>
+
+<h3 id="thing-skeleton-generation-upon-thing-creation">Thing skeleton generation upon Thing creation</h3>
+
+<p>Prerequisites to use the skeleton generation during Thing creation:</p>
+<ul>
+  <li>the feature toggle (environment variable <code class="highlighter-rouge">DITTO_DEVOPS_FEATURE_WOT_INTEGRATION_ENABLED=true</code>) is activated</li>
+  <li>the created Thing references a valid WoT Thing Model in its <a href="basic-thing.html#definition">Thing Definition</a> and this 
+TM is publicly downloadable via its HTTP(s) URL</li>
+</ul>
+
+<p>Function:</p>
+<ul>
+  <li>Ditto checks if the Thing Definition contains a valid HTTP(s) URL</li>
+  <li>Ditto downloads the referenced URL and checks if this is a valid WoT Thing Model</li>
+  <li>Ditto saves the downloaded TM to a local cache</li>
+  <li>Ditto uses the Thing Model as template for generating JSON elements:
+    <ul>
+      <li>attributes based on the contained TM <code class="highlighter-rouge">properties</code></li>
+      <li>features based on the contained TM <code class="highlighter-rouge">tm:submodel</code>s using the <code class="highlighter-rouge">instanceName</code> as Feature ID
+        <ul>
+          <li>properties based on the submodel <code class="highlighter-rouge">properties</code></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li>when a <code class="highlighter-rouge">default</code> is specified for the TM property, this default is used as value, otherwise the “neutral element” of 
+the datatype is used as initial value of the property</li>
+  <li>if any error happens during the skeleton creation (e.g. a Thing Model can’t be downloaded or is invalid),
+the Thing is created without the skeleton model, just containing the specified <code class="highlighter-rouge">"definition"</code></li>
+</ul>
+
+<h2 id="example">Example</h2>
+
+<p>The example can be found on a <a href="basic-wot-integration-example.html">dedicated page</a> as the JSONs included in the 
+example are quite long.</p>
+
+
+    <div class="tags">
+        
+        <b>Tags: </b>
+        
+        
+        
+        <a href="tag_wot.html" class="btn btn-default navbar-btn cursorNorm" role="button">wot</a>
+        
+        
+        
+    </div>
+
+</div>
+
+<hr class="shaded"/>
+
+<footer>
+            <div class="row">
+                <div class="col-lg-12 footer">
+                    <div class="logo">
+                        <a href="https://eclipse.org"><img src="images/eclipse_foundation_logo.svg" alt="Eclipse logo"/></a>
+                    </div>
+                    <p class="notice">
+                        &copy;2022 Eclipse Ditto™.
+                         Site last generated: Mar 3, 2022 <br />
+                    </p>
+                    <div class="quickLinks">
+                        <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">
+                            &gt; Privacy Policy
+                        </a>
+                        <a href="https://www.eclipse.org/legal/termsofuse.php" target="_blank">
+                            &gt; Terms of Use
+                        </a>
+                        <a href="https://www.eclipse.org/legal/copyright.php" target="_blank">
+                            &gt; Copyright Agent
+                        </a>
+                        <a href="https://www.eclipse.org/legal" target="_blank">
+                            &gt; Legal
+                        </a>
+                        <a href="https://www.eclipse.org/legal/epl-2.0/" target="_blank">
+                            &gt; License
+                        </a>
+                        <a href="https://eclipse.org/security" target="_blank">
+                            &gt; Report a Vulnerability
+                        </a>
+                    </div>
+                </div>
+            </div>
+</footer>
+
+
+        </div>
+    <!-- /.row -->
+</div>
+<!-- /.container -->
+</div>
+<!-- /#main -->
+    </div>
+
+</body>
+</html>

@@ -284,13 +284,6 @@
               
               
               
-              <li><a href="release_notes_240.html">2.4.0</a></li>
-              
-              
-              
-              
-              
-              
               <li><a href="release_notes_232.html">2.3.2</a></li>
               
               
@@ -751,6 +744,27 @@
               
               
               <li><a href="basic-acknowledgements.html">Acknowledgements / QoS</a></li>
+              
+              
+              
+              <li class="subfolders">
+                  <a href="#"><span></span>WoT (Web of Things)</a>
+                  <ul>
+                      
+                      
+                      
+                      <li><a href="basic-wot-integration.html">WoT integration</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="basic-wot-integration-example.html">WoT integration example</a></li>
+                      
+                      
+                      
+                  </ul>
+              </li>
               
               
               
@@ -2131,14 +2145,43 @@ ditto-message-feature-id: water-tank
 <ul>
   <li><code class="highlighter-rouge">outgoingContentType</code> (optional): The fallback content-type for outgoing message commands and responses without
 the content-type header. Default to <code class="highlighter-rouge">text/plain; charset=UTF-8</code>.</li>
-  <li><code class="highlighter-rouge">incomingMessageHeaders</code> (optional): A JSON object containing the following headers needed to construct a message
+  <li>
+    <p><code class="highlighter-rouge">incomingMessageHeaders</code> (optional): A JSON object containing the following headers needed to construct a message
 command or response envelope containing the incoming message as payload in the field <code class="highlighter-rouge">"value"</code>. 
-Placeholder expressions reading from the protocol headers of incoming messages may be used.
+The following placeholders may be used in the headers:</p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Placeholder</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code class="highlighter-rouge">{{ header:&lt;header-name&gt; }}</code></td>
+          <td>header value from the external message, e.g. from protocol headers</td>
+        </tr>
+        <tr>
+          <td><code class="highlighter-rouge">{{ request:subjectId }}</code></td>
+          <td>the first authenticated subjectId which did the request - the one of the connection source in this case</td>
+        </tr>
+        <tr>
+          <td><code class="highlighter-rouge">{{ time:now }}</code></td>
+          <td>the current timestamp in ISO-8601 format as string in UTC timezone</td>
+        </tr>
+        <tr>
+          <td><code class="highlighter-rouge">{{ time:now_epoch_millis }}</code></td>
+          <td>the current timestamp in “milliseconds since epoch” formatted as string</td>
+        </tr>
+      </tbody>
+    </table>
+
     <ul>
       <li><code class="highlighter-rouge">content-type</code> (optional): The content type with which to encode the incoming message as payload.
-Default to <code class="highlighter-rouge">{{ header:content-type | fn:default('application/octet-stream') }}</code>.
-If resolved to the Ditto protocol content type <code class="highlighter-rouge">application/vnd.eclipse.ditto+json</code>, then the entire payload
-is interpreted as a Ditto protocol message instead.</li>
+ Default to <code class="highlighter-rouge">{{ header:content-type | fn:default('application/octet-stream') }}</code>.
+ If resolved to the Ditto protocol content type <code class="highlighter-rouge">application/vnd.eclipse.ditto+json</code>, then the entire payload
+ is interpreted as a Ditto protocol message instead.</li>
       <li><code class="highlighter-rouge">status</code> (optional): Include for message responses. Exclude for message commands. Default to
 <code class="highlighter-rouge">{{ header:status }}</code>.</li>
       <li><code class="highlighter-rouge">subject</code> (mandatory for MQTT 3): Subject of the message. Default to <code class="highlighter-rouge">{{ header:subject }}</code>.
@@ -2163,17 +2206,107 @@ Exclude to send it to the thing itself. Default to <code class="highlighter-roug
 
 <ul>
   <li><code class="highlighter-rouge">thing</code> (required): The values of the thing that is created implicitly. It can either contain fixed values
- or header placeholders (e.g. <code class="highlighter-rouge">{{ header:device_id }}</code>).</li>
+ or header placeholders (e.g. <code class="highlighter-rouge">{{ header:device_id }}</code>).
+    <ul>
+      <li>
+        <p>the following placeholders may be used inside the <code class="highlighter-rouge">"thing"</code> JSON:</p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Placeholder</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code class="highlighter-rouge">{{ header:&lt;header-name&gt; }}</code></td>
+              <td>header value from the external message, e.g. from protocol headers</td>
+            </tr>
+            <tr>
+              <td><code class="highlighter-rouge">{{ request:subjectId }}</code></td>
+              <td>the first authenticated subjectId which did the request - the one of the connection source in this case</td>
+            </tr>
+            <tr>
+              <td><code class="highlighter-rouge">{{ time:now }}</code></td>
+              <td>the current timestamp in ISO-8601 format as string in UTC timezone</td>
+            </tr>
+            <tr>
+              <td><code class="highlighter-rouge">{{ time:now_epoch_millis }}</code></td>
+              <td>the current timestamp in “milliseconds since epoch” formatted as string</td>
+            </tr>
+          </tbody>
+        </table>
+      </li>
+      <li>
+        <p>The <code class="highlighter-rouge">"thing"</code> JSON may also include:</p>
+        <ul>
+          <li>an inline policy: <code class="highlighter-rouge">"_policy"</code> containing the <a href="basic-policy.html#model-specification">Policy JSON</a> to create a new policy
+from and link with the thing</li>
+          <li>a “copy policy from” statement: <code class="highlighter-rouge">"_copyPolicyFrom"</code> - see also <a href="protocol-examples-creatething.html#alternative-creatething-commands">create Thing alternatives</a>
+            <ul>
+              <li>either including a policyId to copy from</li>
+              <li>or containing the link to a thing to copy the policy from in the form: <code class="highlighter-rouge">{{ ref:things/&lt;theThingId&gt;/policyId }}</code></li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li><code class="highlighter-rouge">commandHeaders</code> (optional, default: <code class="highlighter-rouge">{"If-None-Match": "*"}</code>): The Ditto headers to use for constructing the “create thing” command for creating the
+twin and to use for creating errors.
+    <ul>
+      <li>
+        <p>in this configured headers, the following placeholders may be used:</p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Placeholder</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code class="highlighter-rouge">{{ header:&lt;header-name&gt; }}</code></td>
+              <td>header value from the external message, e.g. from protocol headers</td>
+            </tr>
+            <tr>
+              <td><code class="highlighter-rouge">{{ request:subjectId }}</code></td>
+              <td>the first authenticated subjectId which did the request - the one of the connection source in this case</td>
+            </tr>
+            <tr>
+              <td><code class="highlighter-rouge">{{ time:now }}</code></td>
+              <td>the current timestamp in ISO-8601 format as string in UTC timezone</td>
+            </tr>
+            <tr>
+              <td><code class="highlighter-rouge">{{ time:now_epoch_millis }}</code></td>
+              <td>the current timestamp in “milliseconds since epoch” formatted as string</td>
+            </tr>
+          </tbody>
+        </table>
+      </li>
+    </ul>
+  </li>
+  <li><code class="highlighter-rouge">allowPolicyLockout</code> (optional, default: <code class="highlighter-rouge">true</code>): whether it should be allowed to create policies without having <code class="highlighter-rouge">WRITE</code>
+permissions in the created policy for the subject which creates the policy 
+(the <a href="connectivity-manage-connections.html#authorization">authorizationContext</a> of the connection source which 
+received the message for which a thing should be created implicitly)</li>
 </ul>
 
-<p>Example of a template defined in  <code class="highlighter-rouge">options</code>:</p>
+<p>Example of a template defined in <code class="highlighter-rouge">options</code>:</p>
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
   </span><span class="s2">"thing"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
     </span><span class="s2">"thingId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{{ header:device_id }}"</span><span class="p">,</span><span class="w">
     </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
       </span><span class="s2">"CreatedBy"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ImplicitThingCreation"</span><span class="w">
     </span><span class="p">}</span><span class="w">
-  </span><span class="p">}</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="s2">"commandHeaders"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"If-None-Match"</span><span class="p">:</span><span class="w"> </span><span class="s2">"*"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"correlation-id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{{ header:correlation-id }}"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="s2">"allowPolicyLockout"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
@@ -3023,7 +3156,7 @@ connection’s <code class="highlighter-rouge">mappingDefinitions</code> and ref
                     </div>
                     <p class="notice">
                         &copy;2022 Eclipse Ditto™.
-                         Site last generated: Mar 1, 2022 <br />
+                         Site last generated: Mar 3, 2022 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

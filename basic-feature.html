@@ -284,13 +284,6 @@
               
               
               
-              <li><a href="release_notes_240.html">2.4.0</a></li>
-              
-              
-              
-              
-              
-              
               <li><a href="release_notes_232.html">2.3.2</a></li>
               
               
@@ -751,6 +744,27 @@
               
               
               <li><a href="basic-acknowledgements.html">Acknowledgements / QoS</a></li>
+              
+              
+              
+              <li class="subfolders">
+                  <a href="#"><span></span>WoT (Web of Things)</a>
+                  <ul>
+                      
+                      
+                      
+                      <li><a href="basic-wot-integration.html">WoT integration</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="basic-wot-integration-example.html">WoT integration example</a></li>
+                      
+                      
+                      
+                  </ul>
+              </li>
               
               
               
@@ -1910,7 +1924,7 @@ etc. for the time being, Ditto does not implement their further processing. Such
 <p>A feature’s definition is a list of definition identifiers containing</p>
 <ul>
   <li>either a <em>namespace</em>, <em>name</em> and <em>version</em> separated by colons: <code class="highlighter-rouge">&lt;namespace&gt;:&lt;name&gt;:&lt;version&gt;</code></li>
-  <li>or valid HTTP(s) URLs</li>
+  <li>or valid HTTP(s) URLs (e.g. in order to define that the Feature is described by <a href="basic-wot-integration.html#thing-model-describing-a-ditto-feature">WoT (Web of Things) Thing Models</a>)</li>
 </ul>
 
 <p>A Definition can be seen as some kind of type for features. The <a href="#feature-properties">properties</a> of a 
@@ -1918,7 +1932,7 @@ feature containing a definition identifier <code class="highlighter-rouge">"org.
 described in the <code class="highlighter-rouge">lamp</code> type of namespace <code class="highlighter-rouge">org.eclipse.ditto</code> semantically versioned with version <code class="highlighter-rouge">1.0.0</code>.</p>
 
 <div class="alert alert-info" role="alert"><i class="fa fa-info-circle"></i> <b>Note:</b> Ditto does not contain a type system on its own and does not specify how to describe types. 
-   You may either use <a href="#the-link-to-eclipse-vorto">Eclipse Vorto</a> or <a href="#the-link-to-w3c-web-of-things">W3C Web of Things</a>
+   You may either use <a href="#the-link-to-eclipse-vorto">Eclipse Vorto</a> or <a href="#the-link-to-w3c-wot-web-of-things">W3C Web of Things</a>
    to describe data structures and supported messages of Ditto features.</div>
 
 <div class="alert alert-danger" role="alert"><i class="fa fa-exclamation-circle"></i> <b>Warning:</b> Currently Ditto <strong>does not</strong> ensure that the <code class="highlighter-rouge">properties</code> or 
@@ -2086,48 +2100,15 @@ smoke .</p>
 <code class="highlighter-rouge">Color</code> defined in another Vorto function block.</li>
 </ul>
 
-<h3 id="the-link-to-w3c-web-of-things">The link to W3C Web of Things</h3>
+<h3 id="the-link-to-w3c-wot-web-of-things">The link to W3C WoT (Web of Things)</h3>
 
 <p>If a <a href="#feature-definition">feature definition</a> has the form of an HTTP(s) URL, this URL pointing to a resource may be
 interpreted as the link to a <a href="https://www.w3.org/TR/wot-thing-description11/">W3C WoT (Web of Things)</a> 
 <a href="https://www.w3.org/TR/wot-thing-description11/#thing-model">Thing Model</a> in <a href="https://www.w3.org/TR/json-ld11/">JSON-LD</a> 
 format.</p>
 
-<h4 id="mapping-wot-thing-model-elements">Mapping WoT Thing Model elements</h4>
-
-<p>A WoT Thing Model describes the following elements a “thing” supports:</p>
-<ul>
-  <li>properties</li>
-  <li>actions</li>
-  <li>events</li>
-</ul>
-
-<p>The following table shows an overview of how those elements map to Ditto concepts:</p>
-
-<table>
-  <tbody>
-    <tr>
-      <td>WoT element</td>
-      <td>Ditto concept</td>
-    </tr>
-    <tr>
-      <td><a href="https://www.w3.org/TR/wot-thing-description11/#thing">Thing</a></td>
-      <td>Feature.<br />In Ditto, a Feature is an aspect of a <a href="basic-thing.html">Ditto Thing</a>. As the feature is defined by its properties and messages it supports, it maps to a WoT Thing.</td>
-    </tr>
-    <tr>
-      <td><a href="https://www.w3.org/TR/wot-thing-description11/#propertyaffordance">Properties</a></td>
-      <td>Feature <a href="#feature-properties">properties</a> and <a href="#feature-desired-properties">desired properties</a></td>
-    </tr>
-    <tr>
-      <td><a href="https://www.w3.org/TR/wot-thing-description11/#actionaffordance">Actions</a></td>
-      <td><a href="basic-messages.html#elements">Messages</a> with <strong>Direction</strong> <em>to</em> (“inbox”) of a Thing ID + Feature ID combination</td>
-    </tr>
-    <tr>
-      <td><a href="https://www.w3.org/TR/wot-thing-description11/#eventaffordance">Events</a></td>
-      <td><a href="basic-messages.html#elements">Messages</a> with <strong>Direction</strong> <em>from</em> (“outbox”) of a Thing ID + Feature ID combination</td>
-    </tr>
-  </tbody>
-</table>
+<p>For a detailed explanation how WoT and its concepts link to Ditto, please have a look at the 
+<a href="basic-wot-integration.html">dedicated WoT integration documentation</a>.</p>
 
 <h1 id="example">Example</h1>
 
@@ -2188,7 +2169,7 @@ format.</p>
                     </div>
                     <p class="notice">
                         &copy;2022 Eclipse Ditto™.
-                         Site last generated: Mar 1, 2022 <br />
+                         Site last generated: Mar 3, 2022 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

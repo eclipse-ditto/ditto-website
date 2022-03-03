@@ -284,13 +284,6 @@
               
               
               
-              <li><a href="release_notes_240.html">2.4.0</a></li>
-              
-              
-              
-              
-              
-              
               <li><a href="release_notes_232.html">2.3.2</a></li>
               
               
@@ -751,6 +744,27 @@
               
               
               <li><a href="basic-acknowledgements.html">Acknowledgements / QoS</a></li>
+              
+              
+              
+              <li class="subfolders">
+                  <a href="#"><span></span>WoT (Web of Things)</a>
+                  <ul>
+                      
+                      
+                      
+                      <li><a href="basic-wot-integration.html">WoT integration</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="basic-wot-integration-example.html">WoT integration example</a></li>
+                      
+                      
+                      
+                  </ul>
+              </li>
               
               
               
@@ -2023,6 +2037,15 @@ the akka-http ssl configuration.</p>
 }
 </code></pre></div></div>
 
+<h3 id="rate-limiting">Rate limiting</h3>
+
+<p>Since Ditto <em>2.4.0</em> , by default <a href="basic-connections.html">connections</a> and <a href="httpapi-protocol-bindings-websocket.html">websockets</a>
+are no longer artificially throttled / rate limited when <em>consuming messages</em>.<br />
+There are however configuration options in place in order to enable throttling on a “per-connection” / “per-websocket”
+basis.<br />
+Please consult the available <code class="highlighter-rouge">throttling</code> configuration sections in the 
+<a href="#ditto-configuration">Ditto service configuration files</a>.</p>
+
 <h2 id="restricting-entity-creation">Restricting entity creation</h2>
 
 <p>By default, Ditto allows anyone to create a new entity (policy or thing) in any namespace. However, this behavior can
@@ -2108,12 +2131,15 @@ or <code class="highlighter-rouge">pre-authenticated:service</code>. <code class
   </li>
   <li>writing logs to log files: this can be done by setting the environment variable <code class="highlighter-rouge">DITTO_LOGGING_FILE_APPENDER</code> to <code class="highlighter-rouge">true</code>
     <ul>
-      <li>configure the amount of log files, and the total amount of space used for logs files via these two environment 
-variables:
+      <li>configure the amount of log files, and the total amount of space used for logs files via these environment 
+variables. It is also possible to clean up old log files and archives at start up.
+In case <code class="highlighter-rouge">DITTO_LOGGING_TOTAL_LOG_FILE_SIZE</code> is used it is necessary to configure also <code class="highlighter-rouge">DITTO_LOGGING_MAX_LOG_FILE_HISTORY</code>.
+The detailed meaning of these config values is described in the <a href="https://logback.qos.ch/manual/appenders.html#TimeBasedRollingPolicy">logback documentation</a>.
         <ul>
-          <li><code class="highlighter-rouge">DITTO_LOGGING_FILE_NAME_PATTERN</code> (default: /var/log/ditto/<service-name>.log.%d{yyyy-MM-dd}.gz)</service-name></li>
-          <li><code class="highlighter-rouge">DITTO_LOGGING_MAX_LOG_FILE_HISTORY_IN_DAYS</code> (default: 10)</li>
+          <li><code class="highlighter-rouge">DITTO_LOGGING_FILE_NAME_PATTERN</code> (default: /var/log/ditto/<service-name>.log.%d{yyyy-MM-dd}.gz) - the rollover period is inferred from the fileNamePattern</service-name></li>
+          <li><code class="highlighter-rouge">DITTO_LOGGING_MAX_LOG_FILE_HISTORY</code> (default: 10)</li>
           <li><code class="highlighter-rouge">DITTO_LOGGING_TOTAL_LOG_FILE_SIZE</code> (default: 1GB)</li>
+          <li><code class="highlighter-rouge">DITTO_LOGGING_CLEAN_HISTORY_ON_START</code> (default: false)</li>
         </ul>
       </li>
       <li>the format in which logging is done is “LogstashEncoder” format - that way the logfiles may easily be imported into
@@ -3031,7 +3057,7 @@ to stop blocking messages to a namespace.</p>
                     </div>
                     <p class="notice">
                         &copy;2022 Eclipse Ditto™.
-                         Site last generated: Mar 1, 2022 <br />
+                         Site last generated: Mar 3, 2022 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">
