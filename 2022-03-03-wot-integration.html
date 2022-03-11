@@ -280,6 +280,9 @@ $('#toc').on('click', 'a', function() {
         <p>The upcoming Eclipse Ditto <strong>version 2.4.0</strong> will add support for <a href="https://www.w3.org/WoT/">W3C WoT (Web of Things)</a> 
 integration by referencing WoT Thing Model in Ditto managed twins describing the Things’ capabilities.</p>
 
+<p>Using this integration, Ditto managed digital twins can be linked to WoT “Thing Models” from which Ditto can create 
+WoT “Thing Descriptions” containing the API descriptions of the twins.</p>
+
 <p>By integrating WoT, Ditto takes a big step forward towards:</p>
 <ul>
   <li>increased interoperability</li>
@@ -305,9 +308,9 @@ integration by referencing WoT Thing Model in Ditto managed twins describing the
   <li>referencing HTTP(s) URLs to WoT Thing Models in <a href="basic-thing.html#definition">Thing Definitions</a> and in <a href="basic-feature.html#feature-definition">Feature Definitions</a></li>
   <li>generation of WoT Thing Descriptions for Thing and Feature instances based on referenced Thing Models
     <ul>
-      <li>resolving potential <a href="https://www.w3.org/TR/wot-thing-description11/#thing-model-extension-import">extensions via <code class="highlighter-rouge">tm:extends</code> and imports via <code class="highlighter-rouge">tm:ref</code></a></li>
-      <li>resolving potential Thing level <a href="https://www.w3.org/TR/wot-thing-description11/#thing-model-composition">compositions via <code class="highlighter-rouge">tm:submodel</code></a></li>
-      <li>resolving potential <a href="https://www.w3.org/TR/wot-thing-description11/#thing-model-td-placeholder">TM placeholders</a></li>
+      <li>resolving potential <a href="https://www.w3.org/TR/2022/WD-wot-thing-description11-20220311/#thing-model-extension-import">extensions via <code class="highlighter-rouge">tm:extends</code> and imports via <code class="highlighter-rouge">tm:ref</code></a></li>
+      <li>resolving potential Thing level <a href="https://www.w3.org/TR/2022/WD-wot-thing-description11-20220311/#thing-model-composition">compositions via <code class="highlighter-rouge">tm:submodel</code></a></li>
+      <li>resolving potential <a href="https://www.w3.org/TR/2022/WD-wot-thing-description11-20220311/#thing-model-td-placeholder">TM placeholders</a></li>
     </ul>
   </li>
   <li>upon creation of new Things, generation of a “JSON skeleton” following the WoT Thing Model, including referenced 
@@ -330,9 +333,9 @@ TM submodels as Features of the Thing</li>
 
 <p>To summarize:</p>
 <ul>
-  <li>“link” a Thing with a public available WoT Thing Model by specifying the URL in its <a href="basic-thing.html#definition">Thing Definition</a>.</li>
+  <li>“link” a Thing with a publicly available WoT Thing Model by specifying the URL in its <a href="basic-thing.html#definition">Thing Definition</a>.</li>
   <li>creation of a new Thing can use a Thing Model (e.g. the example model <a href="https://eclipse.github.io/ditto-examples/wot/models/floor-lamp-1.0.0.tm.jsonld">https://eclipse.github.io/ditto-examples/wot/models/floor-lamp-1.0.0.tm.jsonld</a>) in order to generate a JSON skeleton:
-    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  curl <span class="nt">--location</span> <span class="nt">--request</span> PUT <span class="nt">-u</span> ditto:ditto <span class="s1">'http://localhost:8080/api/2/things/io.eclipseprojects.ditto:floor-lamp-0815'</span> <span class="se">\</span>
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  curl <span class="nt">--location</span> <span class="nt">--request</span> PUT <span class="nt">-u</span> ditto:ditto <span class="s1">'https://ditto.eclipseprojects.io/api/2/things/io.eclipseprojects.ditto:floor-lamp-0815'</span> <span class="se">\</span>
   <span class="nt">--header</span> <span class="s1">'Content-Type: application/json'</span> <span class="se">\</span>
   <span class="nt">--data-raw</span> <span class="s1">'{
       "definition": "https://eclipse.github.io/ditto-examples/wot/models/floor-lamp-1.0.0.tm.jsonld"
@@ -440,12 +443,12 @@ TM submodels as Features of the Thing</li>
   <li>the WoT Thing Description of Things containing a Thing Model in their <code class="highlighter-rouge">"definition"</code> may then be retrieved by invoking 
 the existing endpoint<br />
 <code class="highlighter-rouge">GET /api/2/things/&lt;thingId&gt;</code> with the <code class="highlighter-rouge">Accept</code> header <code class="highlighter-rouge">application/td+json</code>:
-    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">--location</span> <span class="nt">--request</span> GET <span class="nt">-u</span> ditto:ditto <span class="s1">'http://localhost:8080/api/2/things/io.eclipseprojects.ditto:floor-lamp-0815'</span> <span class="se">\</span>
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">--location</span> <span class="nt">--request</span> GET <span class="nt">-u</span> ditto:ditto <span class="s1">'https://ditto.eclipseprojects.io/api/2/things/io.eclipseprojects.ditto:floor-lamp-0815'</span> <span class="se">\</span>
 <span class="nt">--header</span> <span class="s1">'Accept: application/td+json'</span>
 </code></pre></div>    </div>
   </li>
   <li>Features of Things are handled as WoT “submodels” and also can describe themselves with the same approach, e.g.:
-    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">--location</span> <span class="nt">--request</span> GET <span class="nt">-u</span> ditto:ditto <span class="s1">'http://localhost:8080/api/2/things/io.eclipseprojects.ditto:floor-lamp-0815/features/Spot1'</span> <span class="se">\</span>
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">--location</span> <span class="nt">--request</span> GET <span class="nt">-u</span> ditto:ditto <span class="s1">'https://ditto.eclipseprojects.io/api/2/things/io.eclipseprojects.ditto:floor-lamp-0815/features/Spot1'</span> <span class="se">\</span>
 <span class="nt">--header</span> <span class="s1">'Accept: application/td+json'</span>
 </code></pre></div>    </div>
   </li>
@@ -494,7 +497,7 @@ The Eclipse Ditto team</p>
                     </div>
                     <p class="notice">
                         &copy;2022 Eclipse Ditto™.
-                         Site last generated: Mar 3, 2022 <br />
+                         Site last generated: Mar 11, 2022 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

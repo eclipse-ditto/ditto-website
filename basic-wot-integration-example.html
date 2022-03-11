@@ -1948,7 +1948,7 @@ For this example, Ditto added a model into its <code class="highlighter-rouge">d
 <p>To create a Thing (instance) and create the Thing JSON skeleton following the WoT Thing Model, simply create 
 a Thing via the Ditto HTTP API (e.g. <code class="highlighter-rouge">PUT /api/2/things/&lt;thingId&gt;</code>):</p>
 
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">--location</span> <span class="nt">--request</span> PUT <span class="nt">-u</span> ditto:ditto <span class="s1">'http://localhost:8080/api/2/things/io.eclipseprojects.ditto:floor-lamp-0815'</span> <span class="se">\</span>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">--location</span> <span class="nt">--request</span> PUT <span class="nt">-u</span> ditto:ditto <span class="s1">'https://ditto.eclipseprojects.io/api/2/things/io.eclipseprojects.ditto:floor-lamp-0815'</span> <span class="se">\</span>
 <span class="nt">--header</span> <span class="s1">'Content-Type: application/json'</span> <span class="se">\</span>
 <span class="nt">--data-raw</span> <span class="s1">'{
     "definition": "https://eclipse.github.io/ditto-examples/wot/models/floor-lamp-1.0.0.tm.jsonld"
@@ -2065,7 +2065,7 @@ a Thing via the Ditto HTTP API (e.g. <code class="highlighter-rouge">PUT /api/2/
 
 <p>The Thing we just created can now be asked for its capabilities / interaction affordances by sending the following request:</p>
 
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">--location</span> <span class="nt">--request</span> GET <span class="nt">-u</span> ditto:ditto <span class="s1">'http://localhost:8080/api/2/things/io.eclipseprojects.ditto:floor-lamp-0815'</span> <span class="se">\</span>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">--location</span> <span class="nt">--request</span> GET <span class="nt">-u</span> ditto:ditto <span class="s1">'https://ditto.eclipseprojects.io/api/2/things/io.eclipseprojects.ditto:floor-lamp-0815'</span> <span class="se">\</span>
 <span class="nt">--header</span> <span class="s1">'Accept: application/td+json'</span>
 </code></pre></div></div>
 
@@ -2085,7 +2085,7 @@ a Thing via the Ditto HTTP API (e.g. <code class="highlighter-rouge">PUT /api/2/
     </span><span class="s2">"instance"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1.0.0"</span><span class="w">
   </span><span class="p">},</span><span class="w">
   </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"urn:io.eclipseprojects.ditto:floor-lamp-0815"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"base"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://localhost:8080/api/2/things/io.eclipseprojects.ditto:floor-lamp-0815"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"base"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://ditto.eclipseprojects.io/api/2/things/io.eclipseprojects.ditto:floor-lamp-0815"</span><span class="p">,</span><span class="w">
   </span><span class="s2">"links"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
     </span><span class="p">{</span><span class="w">
       </span><span class="s2">"rel"</span><span class="p">:</span><span class="w"> </span><span class="s2">"type"</span><span class="p">,</span><span class="w">
@@ -2427,7 +2427,7 @@ a Thing via the Ditto HTTP API (e.g. <code class="highlighter-rouge">PUT /api/2/
 
 <p>In order to inspect which capabilities / interaction affordances now a Feature provides, simply perform such a query:</p>
 
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">--location</span> <span class="nt">--request</span> GET <span class="nt">-u</span> ditto:ditto <span class="s1">'http://localhost:8080/api/2/things/io.eclipseprojects.ditto:floor-lamp-0815/features/Spot1'</span> <span class="se">\</span>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">--location</span> <span class="nt">--request</span> GET <span class="nt">-u</span> ditto:ditto <span class="s1">'https://ditto.eclipseprojects.io/api/2/things/io.eclipseprojects.ditto:floor-lamp-0815/features/Spot1'</span> <span class="se">\</span>
 <span class="nt">--header</span> <span class="s1">'Accept: application/td+json'</span>
 </code></pre></div></div>
 
@@ -2445,11 +2445,11 @@ a Thing via the Ditto HTTP API (e.g. <code class="highlighter-rouge">PUT /api/2/
     </span><span class="s2">"instance"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1.0.0"</span><span class="w">
   </span><span class="p">},</span><span class="w">
   </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"urn:io.eclipseprojects.ditto:floor-lamp-0815/features/Spot1"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"base"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://localhost:8080/api/2/things/io.eclipseprojects.ditto:floor-lamp-0815/features/Spot1"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"base"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://ditto.eclipseprojects.io/api/2/things/io.eclipseprojects.ditto:floor-lamp-0815/features/Spot1"</span><span class="p">,</span><span class="w">
   </span><span class="s2">"links"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
     </span><span class="p">{</span><span class="w">
       </span><span class="s2">"rel"</span><span class="p">:</span><span class="w"> </span><span class="s2">"collection"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"href"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://localhost:8080/api/2/things/io.eclipseprojects.ditto:floor-lamp-0815"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"href"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://ditto.eclipseprojects.io/api/2/things/io.eclipseprojects.ditto:floor-lamp-0815"</span><span class="p">,</span><span class="w">
       </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"application/td+json"</span><span class="w">
     </span><span class="p">},</span><span class="w">
     </span><span class="p">{</span><span class="w">
@@ -2909,7 +2909,7 @@ a Thing via the Ditto HTTP API (e.g. <code class="highlighter-rouge">PUT /api/2/
                     </div>
                     <p class="notice">
                         &copy;2022 Eclipse Ditto™.
-                         Site last generated: Mar 3, 2022 <br />
+                         Site last generated: Mar 11, 2022 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

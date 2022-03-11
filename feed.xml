@@ -5,14 +5,17 @@
         <description>Announcements, tutorials and examples around Eclipse Ditto and Digital Twins</description>
         <link>https://www.eclipse.org/ditto/</link>
         <atom:link href="https://www.eclipse.org/ditto/feed.xml" rel="self" type="application/rss+xml"/>
-        <pubDate>Thu, 03 Mar 2022 13:44:16 +0000</pubDate>
-        <lastBuildDate>Thu, 03 Mar 2022 13:44:16 +0000</lastBuildDate>
+        <pubDate>Fri, 11 Mar 2022 09:50:32 +0000</pubDate>
+        <lastBuildDate>Fri, 11 Mar 2022 09:50:32 +0000</lastBuildDate>
         <generator>Jekyll v3.6.2</generator>
         
         <item>
             <title>W3C WoT (Web of Things) integration</title>
             <description>&lt;p&gt;The upcoming Eclipse Ditto &lt;strong&gt;version 2.4.0&lt;/strong&gt; will add support for &lt;a href=&quot;https://www.w3.org/WoT/&quot;&gt;W3C WoT (Web of Things)&lt;/a&gt; 
 integration by referencing WoT Thing Model in Ditto managed twins describing the Things’ capabilities.&lt;/p&gt;
+
+&lt;p&gt;Using this integration, Ditto managed digital twins can be linked to WoT “Thing Models” from which Ditto can create 
+WoT “Thing Descriptions” containing the API descriptions of the twins.&lt;/p&gt;
 
 &lt;p&gt;By integrating WoT, Ditto takes a big step forward towards:&lt;/p&gt;
 &lt;ul&gt;
@@ -39,9 +42,9 @@ integration by referencing WoT Thing Model in Ditto managed twins describing the
   &lt;li&gt;referencing HTTP(s) URLs to WoT Thing Models in &lt;a href=&quot;basic-thing.html#definition&quot;&gt;Thing Definitions&lt;/a&gt; and in &lt;a href=&quot;basic-feature.html#feature-definition&quot;&gt;Feature Definitions&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;generation of WoT Thing Descriptions for Thing and Feature instances based on referenced Thing Models
     &lt;ul&gt;
-      &lt;li&gt;resolving potential &lt;a href=&quot;https://www.w3.org/TR/wot-thing-description11/#thing-model-extension-import&quot;&gt;extensions via &lt;code class=&quot;highlighter-rouge&quot;&gt;tm:extends&lt;/code&gt; and imports via &lt;code class=&quot;highlighter-rouge&quot;&gt;tm:ref&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;resolving potential Thing level &lt;a href=&quot;https://www.w3.org/TR/wot-thing-description11/#thing-model-composition&quot;&gt;compositions via &lt;code class=&quot;highlighter-rouge&quot;&gt;tm:submodel&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;resolving potential &lt;a href=&quot;https://www.w3.org/TR/wot-thing-description11/#thing-model-td-placeholder&quot;&gt;TM placeholders&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;resolving potential &lt;a href=&quot;https://www.w3.org/TR/2022/WD-wot-thing-description11-20220311/#thing-model-extension-import&quot;&gt;extensions via &lt;code class=&quot;highlighter-rouge&quot;&gt;tm:extends&lt;/code&gt; and imports via &lt;code class=&quot;highlighter-rouge&quot;&gt;tm:ref&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;resolving potential Thing level &lt;a href=&quot;https://www.w3.org/TR/2022/WD-wot-thing-description11-20220311/#thing-model-composition&quot;&gt;compositions via &lt;code class=&quot;highlighter-rouge&quot;&gt;tm:submodel&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;resolving potential &lt;a href=&quot;https://www.w3.org/TR/2022/WD-wot-thing-description11-20220311/#thing-model-td-placeholder&quot;&gt;TM placeholders&lt;/a&gt;&lt;/li&gt;
     &lt;/ul&gt;
   &lt;/li&gt;
   &lt;li&gt;upon creation of new Things, generation of a “JSON skeleton” following the WoT Thing Model, including referenced 
@@ -64,9 +67,9 @@ TM submodels as Features of the Thing&lt;/li&gt;
 
 &lt;p&gt;To summarize:&lt;/p&gt;
 &lt;ul&gt;
-  &lt;li&gt;“link” a Thing with a public available WoT Thing Model by specifying the URL in its &lt;a href=&quot;basic-thing.html#definition&quot;&gt;Thing Definition&lt;/a&gt;.&lt;/li&gt;
+  &lt;li&gt;“link” a Thing with a publicly available WoT Thing Model by specifying the URL in its &lt;a href=&quot;basic-thing.html#definition&quot;&gt;Thing Definition&lt;/a&gt;.&lt;/li&gt;
   &lt;li&gt;creation of a new Thing can use a Thing Model (e.g. the example model &lt;a href=&quot;https://eclipse.github.io/ditto-examples/wot/models/floor-lamp-1.0.0.tm.jsonld&quot;&gt;https://eclipse.github.io/ditto-examples/wot/models/floor-lamp-1.0.0.tm.jsonld&lt;/a&gt;) in order to generate a JSON skeleton:
-    &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  curl &lt;span class=&quot;nt&quot;&gt;--location&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--request&lt;/span&gt; PUT &lt;span class=&quot;nt&quot;&gt;-u&lt;/span&gt; ditto:ditto &lt;span class=&quot;s1&quot;&gt;'http://localhost:8080/api/2/things/io.eclipseprojects.ditto:floor-lamp-0815'&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  curl &lt;span class=&quot;nt&quot;&gt;--location&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--request&lt;/span&gt; PUT &lt;span class=&quot;nt&quot;&gt;-u&lt;/span&gt; ditto:ditto &lt;span class=&quot;s1&quot;&gt;'https://ditto.eclipseprojects.io/api/2/things/io.eclipseprojects.ditto:floor-lamp-0815'&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
   &lt;span class=&quot;nt&quot;&gt;--header&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'Content-Type: application/json'&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
   &lt;span class=&quot;nt&quot;&gt;--data-raw&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'{
       &quot;definition&quot;: &quot;https://eclipse.github.io/ditto-examples/wot/models/floor-lamp-1.0.0.tm.jsonld&quot;
@@ -174,12 +177,12 @@ TM submodels as Features of the Thing&lt;/li&gt;
   &lt;li&gt;the WoT Thing Description of Things containing a Thing Model in their &lt;code class=&quot;highlighter-rouge&quot;&gt;&quot;definition&quot;&lt;/code&gt; may then be retrieved by invoking 
 the existing endpoint&lt;br /&gt;
 &lt;code class=&quot;highlighter-rouge&quot;&gt;GET /api/2/things/&amp;lt;thingId&amp;gt;&lt;/code&gt; with the &lt;code class=&quot;highlighter-rouge&quot;&gt;Accept&lt;/code&gt; header &lt;code class=&quot;highlighter-rouge&quot;&gt;application/td+json&lt;/code&gt;:
-    &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;curl &lt;span class=&quot;nt&quot;&gt;--location&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--request&lt;/span&gt; GET &lt;span class=&quot;nt&quot;&gt;-u&lt;/span&gt; ditto:ditto &lt;span class=&quot;s1&quot;&gt;'http://localhost:8080/api/2/things/io.eclipseprojects.ditto:floor-lamp-0815'&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;curl &lt;span class=&quot;nt&quot;&gt;--location&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--request&lt;/span&gt; GET &lt;span class=&quot;nt&quot;&gt;-u&lt;/span&gt; ditto:ditto &lt;span class=&quot;s1&quot;&gt;'https://ditto.eclipseprojects.io/api/2/things/io.eclipseprojects.ditto:floor-lamp-0815'&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
 &lt;span class=&quot;nt&quot;&gt;--header&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'Accept: application/td+json'&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
   &lt;/li&gt;
   &lt;li&gt;Features of Things are handled as WoT “submodels” and also can describe themselves with the same approach, e.g.:
-    &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;curl &lt;span class=&quot;nt&quot;&gt;--location&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--request&lt;/span&gt; GET &lt;span class=&quot;nt&quot;&gt;-u&lt;/span&gt; ditto:ditto &lt;span class=&quot;s1&quot;&gt;'http://localhost:8080/api/2/things/io.eclipseprojects.ditto:floor-lamp-0815/features/Spot1'&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;curl &lt;span class=&quot;nt&quot;&gt;--location&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--request&lt;/span&gt; GET &lt;span class=&quot;nt&quot;&gt;-u&lt;/span&gt; ditto:ditto &lt;span class=&quot;s1&quot;&gt;'https://ditto.eclipseprojects.io/api/2/things/io.eclipseprojects.ditto:floor-lamp-0815/features/Spot1'&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
 &lt;span class=&quot;nt&quot;&gt;--header&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'Accept: application/td+json'&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
   &lt;/li&gt;
