@@ -572,6 +572,13 @@
               
               
               
+              
+              
+              <li><a href="installation-extending.html">Extending Ditto</a></li>
+              
+              
+              
+              
           </ul>
         </li>
     
@@ -838,12 +845,6 @@
                       
                       
                       <li class="active"><a href="architecture-services-connectivity.html">Connectivity</a></li>
-                      
-                      
-                      
-                      
-                      
-                      <li><a href="architecture-services-concierge.html">Concierge</a></li>
                       
                       
                       
@@ -1910,10 +1911,10 @@ connectivity service offers a flexible and customizable <a href="protocol-specif
 <p>Other services can communicate with the connectivity service via:</p>
 
 <ul>
-  <li><a href="https://github.com/eclipse/ditto/tree/master/connectivity/model/src/main/java/org/eclipse/ditto/connectivity/model/signals/commands">commands</a>:
-containing commands and command responses which are processed by this service</li>
-  <li><a href="https://github.com/eclipse/ditto/tree/master/connectivity/model/src/main/java/org/eclipse/ditto/connectivity/model/signals/events">events</a>:
-containing events which are emitted when entities managed by this service were modified</li>
+  <li><a href="https://github.com/eclipse/ditto/tree/master/connectivity/model/src/main/java/org/eclipse/ditto/connectivity/model/signals/commands/ConnectivityCommand.java">ConnectivityCommands</a>:
+implementing classes provide commands which are processed by this service</li>
+  <li><a href="https://github.com/eclipse/ditto/tree/master/connectivity/model/src/main/java/org/eclipse/ditto/connectivity/model/signals/events/ConnectivityEvent.java">ConnectivityEvents</a>:
+implementing classes represent events which are emitted when entities managed by this service were modified</li>
 </ul>
 
 <h2 id="persistence">Persistence</h2>
@@ -1921,6 +1922,11 @@ containing events which are emitted when entities managed by this service were m
 <p>The connectivity service uses <a href="https://doc.akka.io/docs/akka/current/persistence.html?language=java">Akka persistence</a> and 
 with that <a href="basic-signals.html#architectural-style">Event sourcing</a> in order to persist changes to 
 and restore persisted <a href="basic-connections.html">connections</a>.</p>
+
+<h2 id="enforcement">Enforcement</h2>
+
+<p>The connectivity service does not enforce/authorize <a href="#signals">connection signals</a> by a <a href="basic-policy.html">policy</a> as 
+the connection does not contain a <code class="highlighter-rouge">policyId</code>.</p>
 
 <h2 id="tasks">Tasks</h2>
 
@@ -1963,7 +1969,7 @@ and translate <a href="basic-signals-commandresponse.html">command responses</a>
                     </div>
                     <p class="notice">
                         &copy;2022 Eclipse Ditto™.
-                         Site last generated: Jul 13, 2022 <br />
+                         Site last generated: Aug 10, 2022 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

@@ -572,6 +572,13 @@
               
               
               
+              
+              
+              <li><a href="installation-extending.html">Extending Ditto</a></li>
+              
+              
+              
+              
           </ul>
         </li>
     
@@ -838,12 +845,6 @@
                       
                       
                       <li><a href="architecture-services-connectivity.html">Connectivity</a></li>
-                      
-                      
-                      
-                      
-                      
-                      <li><a href="architecture-services-concierge.html">Concierge</a></li>
                       
                       
                       
@@ -1924,7 +1925,6 @@ configuration files of Ditto’s microservices:</p>
   <li>Policies: <a href="https://github.com/eclipse/ditto/blob/master/policies/service/src/main/resources/policies.conf">policies.conf</a></li>
   <li>Things: <a href="https://github.com/eclipse/ditto/blob/master/things/service/src/main/resources/things.conf">things.conf</a></li>
   <li>Things-Search: <a href="https://github.com/eclipse/ditto/blob/master/thingsearch/service/src/main/resources/things-search.conf">things-search.conf</a></li>
-  <li>Concierge: <a href="https://github.com/eclipse/ditto/blob/master/concierge/service/src/main/resources/concierge.conf">concierge.conf</a></li>
   <li>Connectivity: <a href="https://github.com/eclipse/ditto/blob/master/connectivity/service/src/main/resources/connectivity.conf">connectivity.conf</a></li>
   <li>Gateway: <a href="https://github.com/eclipse/ditto/blob/master/gateway/service/src/main/resources/gateway.conf">gateway.conf</a></li>
 </ul>
@@ -2060,28 +2060,21 @@ Please consult the available <code class="highlighter-rouge">throttling</code> c
 <p>By default, Ditto allows anyone to create a new entity (policy or thing) in any namespace. However, this behavior can
 be customized, and the ability to create new entities can be restricted.</p>
 
-<p>In the concierge service, you can re-configure the <code class="highlighter-rouge">entity-creation</code> section to suit your needs. The basic schema is:</p>
+<p>In the <code class="highlighter-rouge">ditto-entity-creation.conf</code>, you can re-configure the <code class="highlighter-rouge">entity-creation</code> section to suit your needs.<br />
+The basic schema is:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ditto {
-  concierge {
-    enforcement {
-
-      # restrict entity creation
-      entity-creation {
-        grant = [
-            {
-                resource-types = [],
-                namespace = []
-                auth-subjects = []
-            }
-        ]
-        revoke = [
-            # same as "grant", but rejecting requests which already passed "grant"
-        ]
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># restrict entity creation
+ditto.entity-creation {
+   grant = [
+      {
+         resource-types = [],
+         namespace = []
+         auth-subjects = []
       }
-
-    }
-  }
+   ]
+   revoke = [
+      # same as "grant", but rejecting requests which already passed "grant"
+   ]
 }
 </code></pre></div></div>
 
@@ -2104,7 +2097,7 @@ be customized, and the ability to create new entities can be restricted.</p>
 <p>This means, an existing entry, with all empty lists, will match. So the default configuration, allowing all access,
 can be as simple as:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>entity-creation {
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ditto.entity-creation {
   grant = [{}]
 }
 </code></pre></div></div>
@@ -2234,7 +2227,6 @@ jvm_memory_bytes_sum{component="system-metrics",measure="used",segment="miscella
       <li>roundtrip times</li>
     </ul>
   </li>
-  <li>cache metrics for <a href="architecture-services-concierge.html">concierge-service</a></li>
   <li>connection metrics for <a href="architecture-services-connectivity.html">connectivity-service</a>
     <ul>
       <li>processed messages</li>
@@ -2368,8 +2360,8 @@ since the cause of the problem could be lost on service restart.</p>
 
 <h4 id="change-a-specific-log-level-for-one-service">Change a specific log level for one service</h4>
 
-<p>Example request payload to change the log level of logger <code class="highlighter-rouge">org.eclipse.ditto</code> in all
-instances of gateway-service to <code class="highlighter-rouge">DEBUG</code>:</p>
+<p>Example request payload to change the log level of logger <code class="highlighter-rouge">org.eclipse.ditto</code> in all instances of gateway-service to 
+<code class="highlighter-rouge">DEBUG</code>:</p>
 
 <p><code class="highlighter-rouge">PUT /devops/logging/gateway</code></p>
 
@@ -2484,7 +2476,7 @@ To have control this there are two headers which can be used for piggyback comma
     <table>
       <tbody>
         <tr>
-          <td>is-group-topic: <code class="highlighter-rouge">true</code></td>
+          <td><code class="highlighter-rouge">"is-group-topic"</code>: <code class="highlighter-rouge">true</code></td>
           <td><code class="highlighter-rouge">false</code> - Default: <code class="highlighter-rouge">false</code></td>
         </tr>
       </tbody>
@@ -2494,7 +2486,7 @@ To have control this there are two headers which can be used for piggyback comma
     <table>
       <tbody>
         <tr>
-          <td>aggregate: <code class="highlighter-rouge">true</code></td>
+          <td><code class="highlighter-rouge">"aggregate"</code>: <code class="highlighter-rouge">true</code></td>
           <td><code class="highlighter-rouge">false</code> - Default: <code class="highlighter-rouge">true</code></td>
         </tr>
       </tbody>
@@ -2502,9 +2494,12 @@ To have control this there are two headers which can be used for piggyback comma
   </li>
 </ul>
 
-<p>The <code class="highlighter-rouge">is-group-topic</code> header indicates if the piggyback command should be forwarded to only one actor or all actors of a group.
-The <code class="highlighter-rouge">aggregate</code> header indicates if the responses should be aggregated or not. 
+<p>The <code class="highlighter-rouge">"is-group-topic"</code> header indicates if the piggyback command should be forwarded to only one actor or all actors of a group.
+The <code class="highlighter-rouge">"aggregate"</code> header indicates if the responses should be aggregated or not. 
 If <code class="highlighter-rouge">false</code> the first response is sent back and all other responses are ignored (if <code class="highlighter-rouge">is-group-topic</code> was <code class="highlighter-rouge">false</code>).</p>
+
+<p>Additionally, the <code class="highlighter-rouge">"ditto-sudo"</code> header can be used in order to bypass any enforcement/authorization the service performs
+when processing commands. By explicitly setting this header to <code class="highlighter-rouge">true</code>, you bypass enforcement.</p>
 
 <p>Example:</p>
 
@@ -2512,7 +2507,8 @@ If <code class="highlighter-rouge">false</code> the first response is sent back 
   </span><span class="s2">"targetActorSelection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/system/sharding/connection"</span><span class="p">,</span><span class="w">
   </span><span class="s2">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
     </span><span class="s2">"aggregate"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"is-group-topic"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+    </span><span class="s2">"is-group-topic"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"ditto-sudo"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
   </span><span class="p">},</span><span class="w">
   </span><span class="s2">"piggybackCommand"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
     </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"connectivity.commands:createConnection"</span><span class="p">,</span><span class="w">
@@ -2539,12 +2535,13 @@ and not the <a href="protocol-specification-policies.html">Ditto Protocol</a>.</
   </span><span class="s2">"targetActorSelection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/system/sharding/policy"</span><span class="p">,</span><span class="w">
   </span><span class="s2">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
     </span><span class="s2">"aggregate"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"is-group-topic"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+    </span><span class="s2">"is-group-topic"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"ditto-sudo"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
   </span><span class="p">},</span><span class="w">
   </span><span class="s2">"piggybackCommand"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
     </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"policies.commands:createPolicy"</span><span class="p">,</span><span class="w">
     </span><span class="s2">"policy"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"policyId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;insert-the-policy-id-to-retrieve-here&gt;"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"policyId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;insert-the-policy-id-to-create-here&gt;"</span><span class="p">,</span><span class="w">
       </span><span class="s2">"entries"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
         </span><span class="err">...</span><span class="w">
       </span><span class="p">}</span><span class="w">
@@ -2559,7 +2556,8 @@ and not the <a href="protocol-specification-policies.html">Ditto Protocol</a>.</
   </span><span class="s2">"targetActorSelection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/system/sharding/policy"</span><span class="p">,</span><span class="w">
   </span><span class="s2">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
     </span><span class="s2">"aggregate"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"is-group-topic"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+    </span><span class="s2">"is-group-topic"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"ditto-sudo"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
   </span><span class="p">},</span><span class="w">
   </span><span class="s2">"piggybackCommand"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
     </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"policies.commands:retrievePolicy"</span><span class="p">,</span><span class="w">
@@ -2586,12 +2584,13 @@ and not the <a href="protocol-specification-things.html">Ditto Protocol</a>.</p>
   </span><span class="s2">"targetActorSelection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/system/sharding/thing"</span><span class="p">,</span><span class="w">
   </span><span class="s2">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
     </span><span class="s2">"aggregate"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"is-group-topic"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+    </span><span class="s2">"is-group-topic"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"ditto-sudo"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
   </span><span class="p">},</span><span class="w">
   </span><span class="s2">"piggybackCommand"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
     </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"things.commands:createThing"</span><span class="p">,</span><span class="w">
     </span><span class="s2">"thing"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"thingId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;insert-the-thing-id-to-use-here&gt;"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"thingId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;insert-the-thing-id-to-create-here&gt;"</span><span class="p">,</span><span class="w">
       </span><span class="s2">"policyId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;insert-the-policy-id-to-use-here&gt;"</span><span class="w">
     </span><span class="p">}</span><span class="w">
   </span><span class="p">}</span><span class="w">
@@ -2604,7 +2603,8 @@ and not the <a href="protocol-specification-things.html">Ditto Protocol</a>.</p>
   </span><span class="s2">"targetActorSelection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/system/sharding/thing"</span><span class="p">,</span><span class="w">
   </span><span class="s2">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
     </span><span class="s2">"aggregate"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"is-group-topic"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+    </span><span class="s2">"is-group-topic"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"ditto-sudo"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
   </span><span class="p">},</span><span class="w">
   </span><span class="s2">"piggybackCommand"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
     </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"things.commands:retrieveThing"</span><span class="p">,</span><span class="w">
@@ -2628,11 +2628,11 @@ process.</p>
 <p>Each command is sent to the actor selection <code class="highlighter-rouge">/user/&lt;SERVICE_NAME&gt;Root/persistenceCleanup</code>, where
 <code class="highlighter-rouge">SERVICE_NAME</code> is <code class="highlighter-rouge">things</code>, <code class="highlighter-rouge">policies</code> or <code class="highlighter-rouge">connectivity</code>:</p>
 
-<p><code class="highlighter-rouge">POST /devops/piggygack/&lt;SERVICE_NAME&gt;?timeout=10s</code></p>
+<p><code class="highlighter-rouge">POST /devops/piggyback/&lt;SERVICE_NAME&gt;?timeout=10s</code></p>
 
 <h5 id="query-background-cleanup-coordinator-state">Query background cleanup coordinator state</h5>
 
-<p><code class="highlighter-rouge">POST /devops/piggygack/&lt;SERVICE_NAME&gt;?timeout=10s</code></p>
+<p><code class="highlighter-rouge">POST /devops/piggyback/&lt;SERVICE_NAME&gt;?timeout=10s</code></p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
   </span><span class="s2">"targetActorSelection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/user/&lt;SERVICE_NAME&gt;Root/persistenceCleanup"</span><span class="p">,</span><span class="w">
@@ -2669,7 +2669,7 @@ process.</p>
 
 <h5 id="query-background-cleanup-coordinator-configuration">Query background cleanup coordinator configuration</h5>
 
-<p><code class="highlighter-rouge">POST /devops/piggygack/&lt;SERVICE_NAME&gt;?timeout=10s</code></p>
+<p><code class="highlighter-rouge">POST /devops/piggyback/&lt;SERVICE_NAME&gt;?timeout=10s</code></p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
   </span><span class="s2">"targetActorSelection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/user/&lt;SERVICE_NAME&gt;Root/persistenceCleanup"</span><span class="p">,</span><span class="w">
@@ -2705,7 +2705,7 @@ process. All subsequent cleanup processes will use the new configuration. The on
 Configurations absent in the payload of the piggyback command remain unchanged.
 Set the special key <code class="highlighter-rouge">last-pid</code> to set the lower bound of PIDs to clean up in the next run.</p>
 
-<p><code class="highlighter-rouge">POST /devops/piggygack/&lt;SERVICE_NAME&gt;?timeout=10s</code></p>
+<p><code class="highlighter-rouge">POST /devops/piggyback/&lt;SERVICE_NAME&gt;?timeout=10s</code></p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
   </span><span class="s2">"targetActorSelection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/user/&lt;SERVICE_NAME&gt;Root/persistenceCleanup"</span><span class="p">,</span><span class="w">
@@ -2743,41 +2743,13 @@ The field <code class="highlighter-rouge">last-pid</code> is not a part of the c
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
-<h5 id="shutdown-background-cleanup-coordinator">Shutdown background cleanup coordinator</h5>
-
-<p>Send a piggyback command of type <code class="highlighter-rouge">common.commands:shutdown</code> to stop the background cleanup process. The next process is
-scheduled after the <code class="highlighter-rouge">quiet-period</code> duration in the coordinator’s configuration.</p>
-
-<p><code class="highlighter-rouge">POST /devops/piggygack/concierge/&lt;INSTANCE_INDEX&gt;?timeout=10s</code></p>
-
-<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"targetActorSelection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/user/conciergeRoot/eventSnapshotCleanupCoordinatorProxy"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"aggregate"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"is-grouped-topic"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
-  </span><span class="p">},</span><span class="w">
-  </span><span class="s2">"piggybackCommand"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"common.commands:shutdown"</span><span class="w">
-  </span><span class="p">}</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre></div></div>
-
-<p>Response example:</p>
-
-<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"common.responses:shutdown"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="mi">200</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Restarting stream in &lt;PT5760H30M5S&gt;."</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre></div></div>
-
 <h5 id="cleanup-events-and-snapshots-of-an-entity">Cleanup events and snapshots of an entity</h5>
 
 <p>Send a cleanup command by piggyback to the entity’s service and shard region to trigger removal of stale events and
 snapshots manually. Here is an example for things. Change the service name and shard region name accordingly for
 policies and connections. Typically, in a docker based environment, use <code class="highlighter-rouge">INSTANCE_INDEX=1</code>.</p>
 
-<p><code class="highlighter-rouge">POST /devops/piggygack/things/&lt;INSTANCE_INDEX&gt;?timeout=10s</code></p>
+<p><code class="highlighter-rouge">POST /devops/piggyback/things/&lt;INSTANCE_INDEX&gt;?timeout=10s</code></p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
   </span><span class="s2">"targetActorSelection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/system/sharding/thing"</span><span class="p">,</span><span class="w">
@@ -2785,7 +2757,7 @@ policies and connections. Typically, in a docker based environment, use <code cl
     </span><span class="s2">"aggregate"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
   </span><span class="p">},</span><span class="w">
   </span><span class="s2">"piggybackCommand"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"cleanup.commands:cleanupPersistence"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"cleanup.sudo.commands:cleanupPersistence"</span><span class="p">,</span><span class="w">
     </span><span class="s2">"entityId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ditto:thing1"</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
@@ -2794,7 +2766,7 @@ policies and connections. Typically, in a docker based environment, use <code cl
 <p>Response example:</p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"cleanup.responses:cleanupPersistence"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"cleanup.sudo.responses:cleanupPersistence"</span><span class="p">,</span><span class="w">
   </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="mi">200</span><span class="p">,</span><span class="w">
   </span><span class="s2">"entityId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"thing:ditto:thing1"</span><span class="w">
 </span><span class="p">}</span><span class="w">
@@ -2806,10 +2778,10 @@ policies and connections. Typically, in a docker based environment, use <code cl
 of the search index. The actor operates in the same manner as the background cleanup coordinator and responds to
 the same commands.</p>
 
-<p><code class="highlighter-rouge">POST /devops/piggygack/things-search/&lt;INSTANCE_INDEX&gt;?timeout=10s</code></p>
+<p><code class="highlighter-rouge">POST /devops/piggyback/search/&lt;INSTANCE_INDEX&gt;?timeout=10s</code></p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"targetActorSelection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/user/thingsWildcardSearchRoot/searchUpdaterRoot/backgroundSyncProxy"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"targetActorSelection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/user/thingsWildcardSearchRoot/searchUpdaterRoot/backgroundSync/singleton"</span><span class="p">,</span><span class="w">
   </span><span class="s2">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
     </span><span class="s2">"aggregate"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
     </span><span class="s2">"is-grouped-topic"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
@@ -2838,7 +2810,7 @@ the same commands.</p>
 of any inconsistencies detected at query time. Nevertheless, you can trigger search index update
 for a particular thing by a DevOp-command and bring the entry up-to-date immediately.</p>
 
-<p><code class="highlighter-rouge">POST /devops/piggygack/things-search/&lt;INSTANCE_INDEX&gt;?timeout=0</code></p>
+<p><code class="highlighter-rouge">POST /devops/piggyback/search/&lt;INSTANCE_INDEX&gt;?timeout=0</code></p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
   </span><span class="s2">"targetActorSelection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/user/thingsWildcardSearchRoot/searchUpdaterRoot/thingsUpdater"</span><span class="p">,</span><span class="w">
@@ -2847,7 +2819,7 @@ for a particular thing by a DevOp-command and bring the entry up-to-date immedia
     </span><span class="s2">"is-grouped-topic"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
   </span><span class="p">},</span><span class="w">
   </span><span class="s2">"piggybackCommand"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"thing-search.commands:updateThing"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"thing-search.sudo.commands:sudoUpdateThing"</span><span class="p">,</span><span class="w">
     </span><span class="s2">"thingId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;THING-ID&gt;"</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
@@ -2876,7 +2848,7 @@ so that the old namespace could be reused at a later point in time.</li>
 <p>Send a piggyback command to <a href="https://doc.akka.io/docs/akka/current/distributed-pub-sub.html">Akka’s pub-sub-mediator</a> with type <code class="highlighter-rouge">namespaces.commands:blockNamespace</code>
 to block all messages sent to actors belonging to a namespace.</p>
 
-<p><code class="highlighter-rouge">PUT /devops/piggygack?timeout=10s</code></p>
+<p><code class="highlighter-rouge">PUT /devops/piggyback?timeout=10s</code></p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
   </span><span class="s2">"targetActorSelection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/system/distributedPubSubMediator"</span><span class="p">,</span><span class="w">
@@ -2908,7 +2880,7 @@ or until you proceed with <a href="#unblock-messages-to-a-namespace">step 4</a>,
 to request all actors in a namespace to shut down. The value of <code class="highlighter-rouge">piggybackCommand/reason/type</code> must be
 <code class="highlighter-rouge">purge-namespace</code>; otherwise, the namespace’s actors will not stop themselves.</p>
 
-<p><code class="highlighter-rouge">PUT /devops/piggygack?timeout=0</code></p>
+<p><code class="highlighter-rouge">PUT /devops/piggyback?timeout=0</code></p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
   </span><span class="s2">"targetActorSelection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/system/distributedPubSubMediator"</span><span class="p">,</span><span class="w">
@@ -2938,7 +2910,7 @@ all its actors so that no data is written in the namespace while erasing is ongo
 <p>The erasure may take a long time if the namespace has a lot of data associated with it or if the persistent storage is
 slow. Set the timeout to a safe margin above the estimated erasure time in milliseconds.</p>
 
-<p><code class="highlighter-rouge">PUT /devops/piggygack?timeout=10s</code></p>
+<p><code class="highlighter-rouge">PUT /devops/piggyback?timeout=10s</code></p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
   </span><span class="s2">"targetActorSelection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/system/distributedPubSubMediator"</span><span class="p">,</span><span class="w">
@@ -2988,7 +2960,7 @@ Note that to see responses from multiple resource types, the header <code class=
 <p>Send a piggyback command to <a href="https://doc.akka.io/docs/akka/current/distributed-pub-sub.html">Akka’s pub-sub-mediator</a> with type <code class="highlighter-rouge">namespaces.commands:unblockNamespace</code>
 to stop blocking messages to a namespace.</p>
 
-<p><code class="highlighter-rouge">PUT /devops/piggygack?timeout=10s</code></p>
+<p><code class="highlighter-rouge">PUT /devops/piggyback?timeout=10s</code></p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
   </span><span class="s2">"targetActorSelection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/system/distributedPubSubMediator"</span><span class="p">,</span><span class="w">
@@ -3037,7 +3009,7 @@ to stop blocking messages to a namespace.</p>
                     </div>
                     <p class="notice">
                         &copy;2022 Eclipse Ditto™.
-                         Site last generated: Jul 13, 2022 <br />
+                         Site last generated: Aug 10, 2022 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

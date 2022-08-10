@@ -572,6 +572,13 @@
               
               
               
+              
+              
+              <li><a href="installation-extending.html">Extending Ditto</a></li>
+              
+              
+              
+              
           </ul>
         </li>
     
@@ -838,12 +845,6 @@
                       
                       
                       <li><a href="architecture-services-connectivity.html">Connectivity</a></li>
-                      
-                      
-                      
-                      
-                      
-                      <li><a href="architecture-services-concierge.html">Concierge</a></li>
                       
                       
                       
@@ -1904,10 +1905,10 @@ $('#toc').on('click', 'a', function() {
 <p>Other services can communicate with the things service via:</p>
 
 <ul>
-  <li><a href="https://github.com/eclipse/ditto/tree/master/things/model/src/main/java/org/eclipse/ditto/things/model/signals/commands">commands</a>:
-containing commands and command responses which are processed by this service</li>
-  <li><a href="https://github.com/eclipse/ditto/tree/master/things/model/src/main/java/org/eclipse/ditto/things/model/signals/events">events</a>:
-containing events which are emitted when entities managed by this service were modified</li>
+  <li><a href="https://github.com/eclipse/ditto/tree/master/things/model/src/main/java/org/eclipse/ditto/things/model/signals/commands/ThingCommand.java">ThingCommands</a>:
+implementing classes provide commands which are processed by this service</li>
+  <li><a href="https://github.com/eclipse/ditto/tree/master/things/model/src/main/java/org/eclipse/ditto/things/model/signals/events/ThingEvent.java">ThingEvents</a>:
+implementing classes represent events which are emitted when entities managed by this service were modified</li>
 </ul>
 
 <h2 id="persistence">Persistence</h2>
@@ -1916,6 +1917,10 @@ containing events which are emitted when entities managed by this service were m
 with that <a href="basic-signals.html#architectural-style">Event sourcing</a> in order to persist changes to 
 and restore persisted <a href="basic-thing.html">things</a>.</p>
 
+<h2 id="enforcement">Enforcement</h2>
+
+<p>The things service enforces/authorizes <a href="#signals">thing signals</a> by the via <code class="highlighter-rouge">policyId</code> referenced 
+<a href="basic-policy.html">policy</a>.</p>
 
 
     <div class="tags">
@@ -1942,7 +1947,7 @@ and restore persisted <a href="basic-thing.html">things</a>.</p>
                     </div>
                     <p class="notice">
                         &copy;2022 Eclipse Ditto™.
-                         Site last generated: Jul 13, 2022 <br />
+                         Site last generated: Aug 10, 2022 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

@@ -572,6 +572,13 @@
               
               
               
+              
+              
+              <li><a href="installation-extending.html">Extending Ditto</a></li>
+              
+              
+              
+              
           </ul>
         </li>
     
@@ -838,12 +845,6 @@
                       
                       
                       <li><a href="architecture-services-connectivity.html">Connectivity</a></li>
-                      
-                      
-                      
-                      
-                      
-                      <li><a href="architecture-services-concierge.html">Concierge</a></li>
                       
                       
                       
@@ -1925,7 +1926,8 @@ See <a href="basic-auth.html#authorization-context-in-devops-commands">Basic Aut
   </span><span class="s2">"targetActorSelection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/system/sharding/connection"</span><span class="p">,</span><span class="w">
   </span><span class="s2">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
     </span><span class="s2">"aggregate"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"is-group-topic"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+    </span><span class="s2">"is-group-topic"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"ditto-sudo"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
   </span><span class="p">},</span><span class="w">
   </span><span class="s2">"piggybackCommand"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
     </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"connectivity.commands:createConnection"</span><span class="p">,</span><span class="w">
@@ -1947,7 +1949,8 @@ For protocol specific examples, consult the <a href="connectivity-protocol-bindi
   </span><span class="s2">"targetActorSelection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/system/sharding/connection"</span><span class="p">,</span><span class="w">
   </span><span class="s2">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
     </span><span class="s2">"aggregate"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"is-group-topic"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+    </span><span class="s2">"is-group-topic"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"ditto-sudo"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
   </span><span class="p">},</span><span class="w">
   </span><span class="s2">"piggybackCommand"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
     </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"connectivity.commands:modifyConnection"</span><span class="p">,</span><span class="w">
@@ -1966,7 +1969,8 @@ For protocol specific examples, consult the <a href="connectivity-protocol-bindi
   </span><span class="s2">"targetActorSelection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/system/sharding/connection"</span><span class="p">,</span><span class="w">
   </span><span class="s2">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
     </span><span class="s2">"aggregate"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"is-group-topic"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+    </span><span class="s2">"is-group-topic"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"ditto-sudo"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
   </span><span class="p">},</span><span class="w">
   </span><span class="s2">"piggybackCommand"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
     </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"connectivity.commands:retrieveConnection"</span><span class="p">,</span><span class="w">
@@ -2030,7 +2034,7 @@ For protocol specific examples, consult the <a href="connectivity-protocol-bindi
 
 <h2 id="helper-commands">Helper commands</h2>
 
-<p>The following commands are available to help creating connections and retrieving the status of existing connections:</p>
+<p>The following commands are available to help to create connections and retrieving the status of existing connections:</p>
 
 <ul>
   <li><a href="#test-connection">test connection</a></li>
@@ -2073,10 +2077,10 @@ command, it requires a full connection configuration in the piggyback command.</
 <p>This command returns the ids of all connections.</p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"targetActorSelection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/user/connectivityRoot/connectionIdsRetrieval/singleton"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"targetActorSelection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/user/connectivityRoot/connectionIdsRetrieval"</span><span class="p">,</span><span class="w">
   </span><span class="s2">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
     </span><span class="s2">"aggregate"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"is-group-topic"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+    </span><span class="s2">"is-group-topic"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
   </span><span class="p">},</span><span class="w">
   </span><span class="s2">"piggybackCommand"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
     </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"connectivity.commands:retrieveAllConnectionIds"</span><span class="w">
@@ -2318,7 +2322,7 @@ is used as the default.</p>
                     </div>
                     <p class="notice">
                         &copy;2022 Eclipse Ditto™.
-                         Site last generated: Jul 13, 2022 <br />
+                         Site last generated: Aug 10, 2022 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

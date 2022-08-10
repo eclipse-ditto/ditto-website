@@ -572,6 +572,13 @@
               
               
               
+              
+              
+              <li><a href="installation-extending.html">Extending Ditto</a></li>
+              
+              
+              
+              
           </ul>
         </li>
     
@@ -838,12 +845,6 @@
                       
                       
                       <li><a href="architecture-services-connectivity.html">Connectivity</a></li>
-                      
-                      
-                      
-                      
-                      
-                      <li><a href="architecture-services-concierge.html">Concierge</a></li>
                       
                       
                       
@@ -1897,22 +1898,27 @@ which responsibilities.</p>
 <p>This overview shows the Ditto services (components), the externally provided and consumed API endpoints, 
 the external dependencies (MongoDB and nginx) and the relations of the services to each other.</p>
 
-<figure><img class="docimage" src="images/pages/architecture/context-overview.png" alt="Ditto services and context" style="max-width: 800px" /><figcaption>Ditto services in blue and context with nginx as reverse proxy and MongoDB</figcaption></figure>
+<figure><img class="docimage" src="images/pages/architecture/ditto-architecture-overview-2022.png" alt="Ditto services and context" style="max-width: 800px" /><figcaption>Ditto services in blue and context with nginx as reverse proxy and MongoDB</figcaption></figure>
 
 <p>The components have the following tasks:</p>
 
 <ul>
-  <li><a href="architecture-services-policies.html">Policies</a>: persistence of <a href="basic-policy.html">Policies</a></li>
-  <li><a href="architecture-services-things.html">Things</a>: persistence of <a href="basic-thing.html">Things</a> and <a href="basic-feature.html">Features</a></li>
+  <li><a href="architecture-services-policies.html">Policies</a>: persistence + enforcement (authorization) of <a href="basic-policy.html">Policies</a></li>
+  <li><a href="architecture-services-things.html">Things</a>: persistence + enforcement (authorization) of <a href="basic-thing.html">Things</a> 
+and <a href="basic-feature.html">Features</a></li>
   <li><a href="architecture-services-things-search.html">Things-Search</a>: tracking changes to <code class="highlighter-rouge">Things</code>, <code class="highlighter-rouge">Features</code>, <code class="highlighter-rouge">Policies</code> and 
 updating an optimized search index + executes queries on this search index</li>
-  <li><a href="architecture-services-concierge.html">Concierge</a>: orchestrates and authorizes the backing persistence services</li>
   <li><a href="architecture-services-gateway.html">Gateway</a>: provides HTTP and WebSocket API</li>
   <li><a href="architecture-services-connectivity.html">Connectivity</a>:
-sends <a href="protocol-overview.html">Ditto Protocol</a> messages to external message brokers and receives messages from them. <br />
-Supported transport protocols are AMQP 1.0 (e.g. <a href="https://eclipse.org/hono/">Eclipse Hono</a>),
-AMQP 0.9.1 (e.g. RabbitMQ), MQTT 3.1.1 (e.g. <a href="https://www.eclipse.org/mosquitto/">Eclipse Mosquitto</a>), plain HTTP or Apache Kafka 2.x.</li>
+    <ul>
+      <li>persistence of <a href="basic-connections.html">Connections</a></li>
+      <li>sends <a href="protocol-overview.html">Ditto Protocol</a> messages to external message brokers and receives messages from them</li>
+    </ul>
+  </li>
 </ul>
+
+<p>All services run in the same <a href="https://doc.akka.io/docs/akka/current/typed/cluster-concepts.html">Akka cluster</a> and can
+reach each other via TCP without the need for an additional message broker in between.</p>
 
 <h2 id="components">Components</h2>
 
@@ -1932,9 +1938,7 @@ AMQP 0.9.1 (e.g. RabbitMQ), MQTT 3.1.1 (e.g. <a href="https://www.eclipse.org/mo
 <a href="https://doc.akka.io/docs/akka/current/general/remoting.html">Akka remoting</a> which means that each service acts as server, 
 providing a TCP endpoint, as well as client sending data to other services.</p>
 
-<p>Therefore, it is required that all Ditto microservices can reach each others port <code class="highlighter-rouge">2551</code>.</p>
-
-<p>Another consequence is that all messages which are sent between Ditto microservices are in a way serializable and deserializable.
+<p>All messages which are sent between Ditto microservices must in a way be serializable and deserializable.<br />
 All Ditto <a href="basic-signals.html">signals</a> can be serialized from Java objects to JSON representation and deserialized back 
 from JSON to Java objects.</p>
 
@@ -1963,7 +1967,7 @@ from JSON to Java objects.</p>
                     </div>
                     <p class="notice">
                         &copy;2022 Eclipse Ditto™.
-                         Site last generated: Jul 13, 2022 <br />
+                         Site last generated: Aug 10, 2022 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

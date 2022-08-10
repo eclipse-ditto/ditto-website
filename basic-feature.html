@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="">
-<meta name="keywords" content="model,  definition, properties, desiredProperties, entity, feature, functionblock, informationmodel, model, vorto">
+<meta name="keywords" content="model,  definition, properties, desiredProperties, entity, feature, functionblock, informationmodel, model">
 <title>  Feature • Eclipse Ditto™ • a digital twin framework</title>
 
 <link rel="stylesheet" href="css/syntax.css">
@@ -572,6 +572,13 @@
               
               
               
+              
+              
+              <li><a href="installation-extending.html">Extending Ditto</a></li>
+              
+              
+              
+              
           </ul>
         </li>
     
@@ -838,12 +845,6 @@
                       
                       
                       <li><a href="architecture-services-connectivity.html">Connectivity</a></li>
-                      
-                      
-                      
-                      
-                      
-                      <li><a href="architecture-services-concierge.html">Concierge</a></li>
                       
                       
                       
@@ -1895,12 +1896,19 @@ context.</p>
 <p>For different contexts or aspects of a Thing different Features can be used which are all belonging to the same Thing
 and do not exist without this Thing.</p>
 
+<h2 id="model-specification">Model specification</h2>
+
+<p>The feature model in API version 2:</p>
+
+<script src="docson/widget.js" data-schema="../jsonschema/feature_v2.json"></script>
+
 <h2 id="feature-id">Feature ID</h2>
-<p>Within a Thing each Feature is identified by a unique string - the so-called Feature ID.
-A Feature ID often needs to be set in the path of a HTTP request. Due to this fact we strongly recommend using a
+
+<p>Within a Thing each Feature is identified by a unique string - the so-called Feature ID.<br />
+A Feature ID often needs to be set in the path of an HTTP request. Due to this fact we strongly recommend using a
 restricted set of characters (e.g. those for <a href="https://www.ietf.org/rfc/rfc3986.txt">Uniform Resource Identifiers (URI)</a>).</p>
 
-<p>The Feature ID may not be the wildcard operator ‘*’ because it has a special meaning and can lead to unexpected
+<p>The Feature ID may not be the wildcard operator <code class="highlighter-rouge">*</code> because it has a special meaning and can lead to unexpected
 results when retrieving or searching for things/features.</p>
 
 <h2 id="feature-properties">Feature properties</h2>
@@ -1932,35 +1940,50 @@ etc. for the time being, Ditto does not implement their further processing. Such
 
 <p>A feature’s definition is a list of definition identifiers containing</p>
 <ul>
-  <li>either a <em>namespace</em>, <em>name</em> and <em>version</em> separated by colons: <code class="highlighter-rouge">&lt;namespace&gt;:&lt;name&gt;:&lt;version&gt;</code></li>
-  <li>or valid HTTP(s) URLs (e.g. in order to define that the Feature is described by <a href="basic-wot-integration.html#thing-model-describing-a-ditto-feature">WoT (Web of Things) Thing Models</a>)</li>
+  <li>either valid HTTP(s) URLs (e.g. in order to define that the Feature is described by <a href="basic-wot-integration.html#thing-model-describing-a-ditto-feature">WoT (Web of Things) Thing Models</a>)</li>
+  <li>or a <em>namespace</em>, <em>name</em> and <em>version</em> separated by colons: <code class="highlighter-rouge">&lt;namespace&gt;:&lt;name&gt;:&lt;version&gt;</code>
+    <ul>
+      <li>in that case the “knowledge” where to look up the definition must be managed somewhere else</li>
+    </ul>
+  </li>
 </ul>
 
-<p>A Definition can be seen as some kind of type for features. The <a href="#feature-properties">properties</a> of a 
+<p>A definition can be seen as a type for features. The <a href="#feature-properties">properties</a> of a 
 feature containing a definition identifier <code class="highlighter-rouge">"org.eclipse.ditto:lamp:1.0.0"</code> can be expected to follow the structure
 described in the <code class="highlighter-rouge">lamp</code> type of namespace <code class="highlighter-rouge">org.eclipse.ditto</code> semantically versioned with version <code class="highlighter-rouge">1.0.0</code>.</p>
 
 <div class="alert alert-info" role="alert"><i class="fa fa-info-circle"></i> <b>Note:</b> Ditto does not contain a type system on its own and does not specify how to describe types. 
-   You may either use <a href="#the-link-to-eclipse-vorto">Eclipse Vorto</a> or <a href="#the-link-to-w3c-wot-web-of-things">W3C Web of Things</a>
+   You may either use the official <a href="#the-link-to-w3c-wot-web-of-things">W3C Web of Things (WoT)</a> standard or 
+   <a href="#the-link-to-eclipse-vorto">Eclipse Vorto</a> (which defines a non-standardized DSL for defining digital twin models)
    to describe data structures and supported messages of Ditto features.</div>
 
-<div class="alert alert-danger" role="alert"><i class="fa fa-exclamation-circle"></i> <b>Warning:</b> Currently Ditto <strong>does not</strong> ensure that the <code class="highlighter-rouge">properties</code> or 
- <code class="highlighter-rouge">desiredProperties</code> of a feature or its supported messages follow the type defined in the definition.</div>
+<p>Currently, Ditto <strong>does not</strong> ensure that the <code class="highlighter-rouge">properties</code> or <code class="highlighter-rouge">desiredProperties</code> of a feature or its supported messages 
+must follow the type defined in the definition.<br />
+This can be ensured e.g. before sending a property to Ditto or before sending a message.</p>
+
+<h3 id="the-link-to-w3c-wot-web-of-things">The link to W3C WoT (Web of Things)</h3>
+
+<p>If a <a href="#feature-definition">feature definition</a> has the form of an HTTP(s) URL, this URL pointing to a resource may be
+interpreted as the link to a <a href="https://www.w3.org/TR/2022/WD-wot-thing-description11-20220311/">W3C WoT (Web of Things)</a> 
+<a href="https://www.w3.org/TR/2022/WD-wot-thing-description11-20220311/#thing-model">Thing Model</a> in <a href="https://www.w3.org/TR/json-ld11/">JSON-LD</a> 
+format.</p>
+
+<p>For a detailed explanation how WoT and its concepts link to Ditto, please consult the 
+<a href="basic-wot-integration.html">dedicated WoT integration documentation</a>.</p>
 
 <h3 id="the-link-to-eclipse-vorto">The link to Eclipse Vorto</h3>
 
-<p>If a <a href="#feature-definition">feature definition</a> has the form <code class="highlighter-rouge">&lt;namespace&gt;:&lt;name&gt;:&lt;version&gt;</code>, those 3 values may be
-interpreted as the link to an Eclipse Vorto “function block” model.</p>
-
-<div class="alert alert-danger" role="alert"><i class="fa fa-exclamation-circle"></i> <b>Warning:</b> Ditto does not enforce structures and data types based on Eclipse Vorto models -
-a referenced Vorto model may be used in order to find out which data structures and messages a Ditto feature
-supports. Validation - if needed - must be done in another place.</div>
+<p>A <a href="#feature-definition">feature definition</a> may also take the form <code class="highlighter-rouge">&lt;namespace&gt;:&lt;name&gt;:&lt;version&gt;</code>, those 3 values can 
+then be interpreted as the link to an Eclipse Vorto “function block” model.</p>
 
 <blockquote>
   <p>Vorto is an open source tool that allows to create and manage technology agnostic, abstract device descriptions,
 so called information models. Information models describe the attributes and the capabilities of real world devices.
 Source: <a href="http://www.eclipse.org/vorto/">http://www.eclipse.org/vorto/</a></p>
 </blockquote>
+
+<div class="alert alert-danger" role="alert"><i class="fa fa-exclamation-circle"></i> <b>Warning:</b> The Eclipse Vorto project is no longer actively maintained, so it can be seen
+  as feature complete.</div>
 
 <p>Ditto’s feature definition may be mapped to the Vorto type system which is defined by so called “information models”
 and “function blocks”:</p>
@@ -1984,14 +2007,13 @@ Thus, it is a consistent, self-contained set of (potentially re-usable) properti
 <ul>
   <li><code class="highlighter-rouge">configuration</code>: Contains one or many configuration properties for the function block.</li>
   <li><code class="highlighter-rouge">status</code>: Contains one or many status properties for the function block.</li>
-  <li><code class="highlighter-rouge">fault</code>: Contains one or many fault properties for the function block.</li>
   <li><code class="highlighter-rouge">operations</code>: Contains one or many operations for the function block.</li>
   <li><code class="highlighter-rouge">events</code>: Contains one or many events for the function block.</li>
 </ul>
 
 <h5 id="function-block-state">Function block state</h5>
 
-<p>The <code class="highlighter-rouge">configuration</code>, <code class="highlighter-rouge">status</code> and <code class="highlighter-rouge">fault</code> sections of a function block define the state of a feature in Ditto.</p>
+<p>The <code class="highlighter-rouge">configuration</code> and <code class="highlighter-rouge">status</code> sections of a function block define the state of a feature in Ditto.</p>
 
 <p>They are mapped to a corresponding JSON object inside the feature <a href="#feature-properties">properties</a> which gets us
 following JSON structure of a Ditto feature:</p>
@@ -2003,15 +2025,13 @@ following JSON structure of a Ditto feature:</p>
             </span><span class="s2">"configuration"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
             </span><span class="p">},</span><span class="w">
             </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-            </span><span class="p">},</span><span class="w">
-            </span><span class="s2">"fault"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
             </span><span class="p">}</span><span class="w">
         </span><span class="p">}</span><span class="w">
     </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
-<p>The structure below <code class="highlighter-rouge">configuration, status, fault</code> is defined by the custom types of the Vorto function block. As these
+<p>The structure below <code class="highlighter-rouge">configuration, status</code> is defined by the custom types of the Vorto function block. As these
 can be simple types as well as complex types, the JSON structure follows the structure of the types.</p>
 
 <h5 id="function-block-capabilities">Function block capabilities</h5>
@@ -2109,49 +2129,13 @@ smoke .</p>
 <code class="highlighter-rouge">Color</code> defined in another Vorto function block.</li>
 </ul>
 
-<h3 id="the-link-to-w3c-wot-web-of-things">The link to W3C WoT (Web of Things)</h3>
-
-<p>If a <a href="#feature-definition">feature definition</a> has the form of an HTTP(s) URL, this URL pointing to a resource may be
-interpreted as the link to a <a href="https://www.w3.org/TR/2022/WD-wot-thing-description11-20220311/">W3C WoT (Web of Things)</a> 
-<a href="https://www.w3.org/TR/2022/WD-wot-thing-description11-20220311/#thing-model">Thing Model</a> in <a href="https://www.w3.org/TR/json-ld11/">JSON-LD</a> 
-format.</p>
-
-<p>For a detailed explanation how WoT and its concepts link to Ditto, please have a look at the 
-<a href="basic-wot-integration.html">dedicated WoT integration documentation</a>.</p>
-
 <h1 id="example">Example</h1>
 
-<p>The following snippet shows a Feature with the ID “arbitrary-feature” and a definition with the sole identifier
-“org.eclipse.ditto:complex-type:1.0.0”:</p>
-
-<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"arbitrary-feature"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"definition"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="s2">"org.eclipse.ditto:complex-type:1.0.0"</span><span class="w"> </span><span class="p">],</span><span class="w">
-    </span><span class="s2">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"connected"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"complexProperty"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-          </span><span class="s2">"street"</span><span class="p">:</span><span class="w"> </span><span class="s2">"my street"</span><span class="p">,</span><span class="w">
-          </span><span class="s2">"house no"</span><span class="p">:</span><span class="w"> </span><span class="mi">42</span><span class="w">
-        </span><span class="p">}</span><span class="w">
-      </span><span class="p">}</span><span class="w">
-    </span><span class="p">},</span><span class="w">
-    </span><span class="s2">"desiredProperties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"connected"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
-      </span><span class="p">}</span><span class="w">
-    </span><span class="p">}</span><span class="w">
-  </span><span class="p">}</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre></div></div>
-
-<h2 id="model-specification">Model specification</h2>
-
-<p>The feature model API version 2:</p>
-
-<h3 id="v2">V2</h3>
-<script src="docson/widget.js" data-schema="../jsonschema/feature_v2.json"></script>
-
+<p>Please inspect the following separate pages for the WoT integration and an example:</p>
+<ul>
+  <li><a href="basic-wot-integration.html">WoT (Web of Things) integration</a></li>
+  <li><a href="basic-wot-integration-example.html">WoT (Web of Things) example</a></li>
+</ul>
 
 
     <div class="tags">
@@ -2178,7 +2162,7 @@ format.</p>
                     </div>
                     <p class="notice">
                         &copy;2022 Eclipse Ditto™.
-                         Site last generated: Jul 13, 2022 <br />
+                         Site last generated: Aug 10, 2022 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

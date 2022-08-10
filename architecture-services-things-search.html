@@ -572,6 +572,13 @@
               
               
               
+              
+              
+              <li><a href="installation-extending.html">Extending Ditto</a></li>
+              
+              
+              
+              
           </ul>
         </li>
     
@@ -838,12 +845,6 @@
                       
                       
                       <li><a href="architecture-services-connectivity.html">Connectivity</a></li>
-                      
-                      
-                      
-                      
-                      
-                      <li><a href="architecture-services-concierge.html">Concierge</a></li>
                       
                       
                       
@@ -1895,7 +1896,8 @@ $('#toc').on('click', 'a', function() {
   <li>updating an optimized search index of <code class="highlighter-rouge">Things</code> based on the <a href="basic-signals-event.html">events</a> emitted by the 
 <a href="architecture-services-things.html">things</a> and <a href="architecture-services-policies.html">policies</a> services when entities
 are changed there</li>
-  <li>executing search queries against the search index in order to find out which <code class="highlighter-rouge">Things</code> match a given search</li>
+  <li>executing search queries against the search index in order to find out which <code class="highlighter-rouge">Things</code> (which <code class="highlighter-rouge">thingId</code>s) match a 
+given search</li>
 </ul>
 
 <h2 id="model">Model</h2>
@@ -1927,35 +1929,11 @@ provide a full search on arbitrary <code class="highlighter-rouge">Thing</code> 
 <p>Things-Search creates the following MongoDB collections:</p>
 
 <ul>
-  <li><code class="highlighter-rouge">searchThings</code>: The search index.</li>
-  <li><code class="highlighter-rouge">searchThingsSyncThings</code>: A single-document capped collection containing the instant until which <code class="highlighter-rouge">Thing</code> events are
-indexed for sure; expected to be 30 minutes before the current time.</li>
-  <li><code class="highlighter-rouge">searchThingsSyncPolicies</code>: A single-document capped collection containing the instant until which <code class="highlighter-rouge">Policy</code> events
-are indexed for sure; expected to be 30 minutes before the current time.</li>
+  <li><code class="highlighter-rouge">search</code>: The search index.</li>
+  <li><code class="highlighter-rouge">searchSync</code>: A single-document capped collection containing the instant until which <code class="highlighter-rouge">Thing</code> events are
+indexed for sure.</li>
 </ul>
 
-<h2 id="migration-from-ditto-090-m1">Migration from Ditto 0.9.0-M1</h2>
-
-<p>The index schema has changed since Ditto version 0.9.0-M1. Data migration is obligatory to upgrade an existing
-installation running Ditto version 0.9.0-M1 or earlier. Expected duration of data migration is 1/60th of the lifetime
-of the Ditto installation.</p>
-
-<ol>
-  <li><em>After</em> stopping the cluster of Ditto 0.9.0-M1, drop unnecessary collections:
-    <div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">db</span><span class="p">.</span><span class="nx">getCollection</span><span class="p">(</span><span class="s1">'thingEntities'</span><span class="p">).</span><span class="nx">drop</span><span class="p">();</span>
-<span class="nx">db</span><span class="p">.</span><span class="nx">getCollection</span><span class="p">(</span><span class="s1">'policyBasedSearchIndex'</span><span class="p">).</span><span class="nx">drop</span><span class="p">();</span>
-<span class="nx">db</span><span class="p">.</span><span class="nx">getCollection</span><span class="p">(</span><span class="s1">'thingsSearchSyncStatePolicies'</span><span class="p">).</span><span class="nx">drop</span><span class="p">();</span>
-</code></pre></div>    </div>
-  </li>
-  <li><em>Before</em> starting the upgraded Ditto cluster, write into <code class="highlighter-rouge">searchThingsSyncThings</code> the timestamp when the Ditto cluster started for the first time:
-    <div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">var</span> <span class="nx">startingTimestamp</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Date</span><span class="p">(</span><span class="nx">TIMESTAMP</span><span class="o">-</span><span class="nx">WHEN</span><span class="o">-</span><span class="nx">DITTO</span><span class="o">-</span><span class="nx">CLUSTER</span><span class="o">-</span><span class="nx">STARTED</span><span class="o">-</span><span class="nx">FOR</span><span class="o">-</span><span class="nx">THE</span><span class="o">-</span><span class="nx">FIRST</span><span class="o">-</span><span class="nx">TIME</span><span class="p">);</span> <span class="c1">// e.g. new Date('2019-01-01T00:00:00.000Z')</span>
-<span class="nx">db</span><span class="p">.</span><span class="nx">getCollection</span><span class="p">(</span><span class="s1">'thingsSearchSyncStateThings'</span><span class="p">).</span><span class="nx">renameCollection</span><span class="p">(</span><span class="s1">'searchThingsSyncThings'</span><span class="p">);</span>
-<span class="nx">db</span><span class="p">.</span><span class="nx">getCollection</span><span class="p">(</span><span class="s1">'searchThingsSyncThings'</span><span class="p">).</span><span class="nx">insert</span><span class="p">({</span><span class="s1">'ts'</span><span class="p">:</span><span class="nx">startingTimestamp</span><span class="p">});</span>
-</code></pre></div>    </div>
-  </li>
-  <li>Start the upgraded Ditto cluster. All <code class="highlighter-rouge">Thing</code> events persisted after the timestamp in <code class="highlighter-rouge">searchThingsSyncThings</code> 
-will be indexed in the background.</li>
-</ol>
 
 
     <div class="tags">
@@ -1986,7 +1964,7 @@ will be indexed in the background.</li>
                     </div>
                     <p class="notice">
                         &copy;2022 Eclipse Ditto™.
-                         Site last generated: Jul 13, 2022 <br />
+                         Site last generated: Aug 10, 2022 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">
