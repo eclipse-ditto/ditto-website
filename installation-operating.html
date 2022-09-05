@@ -36,7 +36,7 @@
 <link rel="icon" type="image/png" href="images/favicon-32x32.png" sizes="32x32">
 <link rel="icon" type="image/png" href="images/favicon-96x96.png" sizes="96x96">
 
-<link rel="alternate" type="application/rss+xml" title="Eclipse Ditto Blog" href="https://www.eclipse.org/ditto/feed.xml">
+<link rel="alternate" type="application/rss+xml" title="Eclipse Ditto Blog" href="https://websites.eclipseprojects.io/ditto/feed.xml">
 
 <!-- Eclipse Foundation cookie consent: -->
 <link rel="stylesheet" type="text/css" href="//www.eclipse.org/eclipse.org-common/themes/solstice/public/stylesheets/vendor/cookieconsent/cookieconsent.min.css" />
@@ -1981,12 +1981,17 @@ proxy_set_header              x-ditto-pre-authenticated "nginx:${remote_user}";
 
 <h3 id="openid-connect">OpenID Connect</h3>
 
-<p>The authentication provider must be added to the ditto-gateway configuration.
-<code class="highlighter-rouge">auth-subjects</code>, an optional field, takes a list of placeholders that will be
-evaluated against incoming JWTs.
-For each entry in <code class="highlighter-rouge">auth-subjects</code> and authorization subject will be generated.
+<p>The authentication provider must be added to the ditto-gateway configuration with unique configuration key 
+(e.g. <code class="highlighter-rouge">myprovier</code> in the example below).</p>
+
+<p>Either <code class="highlighter-rouge">issuer</code> as single supported JWT <code class="highlighter-rouge">"iss"</code> claim or <code class="highlighter-rouge">issuers</code> (as a list of supported JWT <code class="highlighter-rouge">"iss"</code> claims) has to be 
+configured. If <code class="highlighter-rouge">issuers</code> is configured, this list has priority and the value configured in <code class="highlighter-rouge">issuer</code> will be ignored.</p>
+
+<p>The configured <code class="highlighter-rouge">auth-subjects</code>, an optional field, takes a list of placeholders that will be
+evaluated against incoming JWTs.<br />
+For each entry in <code class="highlighter-rouge">auth-subjects</code> an authorization subject will be generated.
 If the entry contains unresolvable placeholders, it will be ignored in full.
-When <code class="highlighter-rouge">auth-subjects</code> is not provided, the “sub” claim (<code class="highlighter-rouge">{{ jwt:sub }}</code>) is used by default.</p>
+When <code class="highlighter-rouge">auth-subjects</code> is not provided, the <code class="highlighter-rouge">"sub"</code> claim (<code class="highlighter-rouge">{{ jwt:sub }}</code>) is used by default.</p>
 
 <p>Please read <a href="basic-placeholders.html#scope-openid-connect-configuration">more details on the OpenId Connect configuration placeholder</a>
 to find out what is possible when defining the <code class="highlighter-rouge">auth-subjects</code>.</p>
@@ -1996,6 +2001,10 @@ to find out what is possible when defining the <code class="highlighter-rouge">a
       openid-connect-issuers = {
         myprovider = {
           issuer = "localhost:9000"
+          #issuers = [
+          #  "localhost:9000/one"
+          #  "localhost:9000/two"
+          #]
           auth-subjects = [
             "{{ jwt:sub }}",
             "{{ jwt:sub }}/{{ jwt:scp }}",
@@ -3016,7 +3025,7 @@ to stop blocking messages to a namespace.</p>
                     </div>
                     <p class="notice">
                         &copy;2022 Eclipse Ditto™.
-                         Site last generated: Aug 25, 2022 <br />
+                         Site last generated: Sep 5, 2022 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">
