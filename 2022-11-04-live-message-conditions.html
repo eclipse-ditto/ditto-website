@@ -296,84 +296,82 @@ For all three ways there is an example provided in this blog post.</p>
 send an alarm live message to the corresponding device, if the particle level is over 10.
 To achieve this the following HTTP request can be used:</p>
 
-<p>```http request
-POST /api/2/things/org.eclipse.ditto:coffeebrewer/inbox/mesages/co-alarm?condition=gt(features/carbon-monoxide-level/properties/ppm,10)</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>POST /api/2/things/org.eclipse.ditto:coffeebrewer/inbox/mesages/co-alarm?condition=gt(features/carbon-monoxide-level/properties/ppm,10)
 
-<p>CO Level too high! Open your windows!</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
-Conditions can be specified using [RQL syntax](basic-rql.html) to check if a thing has a specific attribute
-or feature property value.
+CO Level too high! Open your windows!
+</code></pre></div></div>
 
-In case the condition does not match to the actual state of the thing, the request will fail with
-HTTP status code **412 - Precondition Failed**. And the message will not be processed.
+<p>Conditions can be specified using <a href="basic-rql.html">RQL syntax</a> to check if a thing has a specific attribute
+or feature property value.</p>
 
-If the given condition is invalid, the request will fail with HTTP status code **400 - Bad Request**.
+<p>In case the condition does not match to the actual state of the thing, the request will fail with
+HTTP status code <strong>412 - Precondition Failed</strong>. And the message will not be processed.</p>
 
-More documentation for this feature can be found here: [Conditional Requests](basic-conditional-requests.html)
+<p>If the given condition is invalid, the request will fail with HTTP status code <strong>400 - Bad Request</strong>.</p>
 
-### Permissions for conditional requests
+<p>More documentation for this feature can be found here: <a href="basic-conditional-requests.html">Conditional Requests</a></p>
 
-In order to execute a conditional request, the authorized subject needs to have WRITE permission at the resource
-that should be changed by the request.
+<h3 id="permissions-for-conditional-requests">Permissions for conditional requests</h3>
 
-Additionally, the authorized subject needs to have READ permission at the resource used in the specified condition.
-Given the condition from the introduction `gt(features/carbon-monoxide-level/properties/ppm,10)`,
+<p>In order to execute a conditional request, the authorized subject needs to have WRITE permission at the resource
+that should be changed by the request.</p>
+
+<p>Additionally, the authorized subject needs to have READ permission at the resource used in the specified condition.
+Given the condition from the introduction <code class="highlighter-rouge">gt(features/carbon-monoxide-level/properties/ppm,10)</code>,
 read access on the single attribute would be sufficient.
 However, the condition can also be more complex, or include other sub-structures of the thing.
-Then of course, the authorized subject needs READ permission on all parameters of the specified condition.
+Then of course, the authorized subject needs READ permission on all parameters of the specified condition.</p>
 
-## Examples
-The following subsections will show how to use conditional requests via the HTTP API, Ditto protocol,
-and Ditto Java Client.
+<h2 id="examples">Examples</h2>
+<p>The following subsections will show how to use conditional requests via the HTTP API, Ditto protocol,
+and Ditto Java Client.</p>
 
-To demonstrate the new conditional request, we assume that the following thing already exists:
+<p>To demonstrate the new conditional request, we assume that the following thing already exists:</p>
 
-```json
-{
-  "thingId": "org.eclipse.ditto:carbon-monoxide-alarm",
-  "policyId": "org.eclipse.ditto:carbon-monoxide-alarm",
-  "attributes": {
-    "manufacturer": "ACME demo corp.",
-    "location": "Wonderland",
-    "serialno": "42"
-  },
-  "features": {
-    "carbon-monoxide-level": {
-      "properties": {
-        "ppm,": 2
-      }
-    },
-    "alarm": {
-      "properties": {
-        "lastTriggered": "2021-09-23T07:01:56Z",
-        "confirmed": false
-      }
-    }
-  },
-  "ConnectionStatus": {
-    "definition": [
-      "org.eclipse.ditto:ConnectionStatus:1.0.0"
-    ],
-    "properties": {
-      "status": {
-        "readySince": "2022-11-04T14:35:02.643Z",
-        "readyUntil": "2022-11-04T16:35:03.643Z"
-      }
-    }
-  }
-}
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"thingId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"org.eclipse.ditto:carbon-monoxide-alarm"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"policyId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"org.eclipse.ditto:carbon-monoxide-alarm"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"manufacturer"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ACME demo corp."</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"location"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Wonderland"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"serialno"</span><span class="p">:</span><span class="w"> </span><span class="s2">"42"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="s2">"features"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"carbon-monoxide-level"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"ppm,"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="s2">"alarm"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"lastTriggered"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2021-09-23T07:01:56Z"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"confirmed"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="s2">"ConnectionStatus"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"definition"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+      </span><span class="s2">"org.eclipse.ditto:ConnectionStatus:1.0.0"</span><span class="w">
+    </span><span class="p">],</span><span class="w">
+    </span><span class="s2">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"readySince"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2022-11-04T14:35:02.643Z"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"readyUntil"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2022-11-04T16:35:03.643Z"</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
 
-</code></pre></div></div>
+</span></code></pre></div></div>
 
 <h3 id="condition-based-on-alarmconfirmed">Condition based on alarm/confirmed</h3>
 <p>In this example a live alarm message from the device should only be sent, if the alarm confirmed property is set to 
-false by the end user application. This is done to prevent duplicate received alarms by the customer.
-```http request
-POST /api/2/things/org.eclipse.ditto:carbon-monoxide-alarm/inbox/mesages/co-alarm?condition=and(gt(features/carbon-monoxide-level/properties/ppm,10),eq(features/alarm/properties/confirmed/,false))</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
-Another use case could be to i.e. only send a message to a device when the device is connected:
-```http request
-POST /api/2/things/org.eclipse.ditto:carbon-monoxide-alarm/inbox/messages/doSomething?condition=gt(features/ConnectionStatus/properties/status/readyUntil,time:now)
+false by the end user application. This is done to prevent duplicate received alarms by the customer.</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>POST /api/2/things/org.eclipse.ditto:carbon-monoxide-alarm/inbox/mesages/co-alarm?condition=and(gt(features/carbon-monoxide-level/properties/ppm,10),eq(features/alarm/properties/confirmed,false))
+</code></pre></div></div>
+
+<p>Another use case could be to i.e. only send a message to a device when the device is connected:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>POST /api/2/things/org.eclipse.ditto:carbon-monoxide-alarm/inbox/messages/doSomething?condition=gt(features/ConnectionStatus/properties/status/readyUntil,time:now)
 </code></pre></div></div>
 
 <h3 id="permissions-to-execute-the-example">Permissions to execute the example</h3>
@@ -385,16 +383,15 @@ However, it is only necessary on the path <em>thing:/features/alarm/properties/c
 In this section, we will show how to use both options.</p>
 
 <h3 id="conditional-request-with-http-header">Conditional request with HTTP Header</h3>
-<p>```http request
-POST /api/2/things/org.eclipse.ditto:carbon-monoxide-alarm/outbox/messages/co-alarm
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>POST /api/2/things/org.eclipse.ditto:carbon-monoxide-alarm/outbox/messages/co-alarm
 Content-Type: application/json
-condition: eq(features/alarm/properties/confirmed/,false)</p>
+condition: eq(features/alarm/properties/confirmed,false)
 
-<p>CO Level too high! Open your windows!</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
-### Conditional request with HTTP query parameter
-```http request
-POST /api/2/things/org.eclipse.ditto:carbon-monoxide-alarm/outbox/messages/co-alarm?condition=eq(features/alarm/properties/confirmed/,false)
+CO Level too high! Open your windows!
+</code></pre></div></div>
+
+<h3 id="conditional-request-with-http-query-parameter">Conditional request with HTTP query parameter</h3>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>POST /api/2/things/org.eclipse.ditto:carbon-monoxide-alarm/outbox/messages/co-alarm?condition=eq(features/alarm/properties/confirmed,false)
 Content-Type: application/json
 
 CO Level too high! Open your windows!
@@ -408,7 +405,7 @@ Applying the following Ditto command to the existing thing will lead to the same
   </span><span class="s2">"topic"</span><span class="p">:</span><span class="w"> </span><span class="s2">"org.eclipse.ditto/carbon-monoxide-alarm/things/live/messages/co-alarm"</span><span class="p">,</span><span class="w">
   </span><span class="s2">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
     </span><span class="s2">"content-type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"application/json"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"condition"</span><span class="p">:</span><span class="w"> </span><span class="s2">"eq(features/alarm/properties/confirmed/,false)"</span><span class="w">
+    </span><span class="s2">"condition"</span><span class="p">:</span><span class="w"> </span><span class="s2">"eq(features/alarm/properties/confirmed,false)"</span><span class="w">
   </span><span class="p">},</span><span class="w">
   </span><span class="s2">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/outbox/messages/co-alarm"</span><span class="p">,</span><span class="w">
   </span><span class="s2">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"CO Level to high! Open your windows!"</span><span class="w">
@@ -426,7 +423,7 @@ with the upcoming (<strong>Ditto Java Client version 3.1.0</strong>).</p>
 <span class="c1">// initialize the ditto-client</span>
 <span class="n">DittoClient</span> <span class="n">dittoClient</span> <span class="o">=</span> <span class="o">...</span> <span class="o">;</span>
 
-<span class="n">dittoClient</span><span class="o">.</span><span class="na">live</span><span class="o">().</span><span class="na">message</span><span class="o">(</span><span class="n">Options</span><span class="o">.</span><span class="na">condition</span><span class="o">(</span><span class="s">"eq(features/alarm/properties/confirmed/,false)"</span><span class="o">))</span>
+<span class="n">dittoClient</span><span class="o">.</span><span class="na">live</span><span class="o">().</span><span class="na">message</span><span class="o">(</span><span class="n">Options</span><span class="o">.</span><span class="na">condition</span><span class="o">(</span><span class="s">"eq(features/alarm/properties/confirmed,false)"</span><span class="o">))</span>
         <span class="o">.</span><span class="na">from</span><span class="o">(</span><span class="n">thingId</span><span class="o">)</span>
         <span class="o">.</span><span class="na">subject</span><span class="o">(</span><span class="s">"co-alarm"</span><span class="o">)</span>
         <span class="o">.</span><span class="na">payload</span><span class="o">(</span><span class="s">"CO Level to high! Open your windows!"</span><span class="o">)</span>
