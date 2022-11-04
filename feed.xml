@@ -5,9 +5,195 @@
         <description>Announcements, tutorials and examples around Eclipse Ditto and Digital Twins</description>
         <link>https://www.eclipse.org/ditto/</link>
         <atom:link href="https://www.eclipse.org/ditto/feed.xml" rel="self" type="application/rss+xml"/>
-        <pubDate>Wed, 02 Nov 2022 10:33:48 +0000</pubDate>
-        <lastBuildDate>Wed, 02 Nov 2022 10:33:48 +0000</lastBuildDate>
+        <pubDate>Fri, 04 Nov 2022 15:50:16 +0000</pubDate>
+        <lastBuildDate>Fri, 04 Nov 2022 15:50:16 +0000</lastBuildDate>
         <generator>Jekyll v3.6.2</generator>
+        
+        <item>
+            <title>Support conditional requests for live messages</title>
+            <description>&lt;p&gt;With the upcoming release of Eclipse Ditto &lt;strong&gt;version 3.1.0&lt;/strong&gt; it will be possible to process live messages based on 
+conditions.&lt;/p&gt;
+
+&lt;h2 id=&quot;conditional-live-messages&quot;&gt;Conditional live messages&lt;/h2&gt;
+&lt;p&gt;Ditto now supports conditional message sending based on a specified condition in the request.
+This functionality can be used via the HTTP API with an HTTP header or query parameter, as well as via the Ditto protocol,
+and the Ditto Java Client.
+For all three ways there is an example provided in this blog post.&lt;/p&gt;
+
+&lt;p&gt;This turns useful, if you want for example to send a message to your device, but only if its digital twin has a specific attribute set.&lt;/p&gt;
+
+&lt;p&gt;To be more concrete let’s say we have a thing with a feature that is measuring carbon monoxide levels, and we only want to
+send an alarm live message to the corresponding device, if the particle level is over 10.
+To achieve this the following HTTP request can be used:&lt;/p&gt;
+
+&lt;p&gt;```http request
+POST /api/2/things/org.eclipse.ditto:coffeebrewer/inbox/mesages/co-alarm?condition=gt(features/carbon-monoxide-level/properties/ppm,10)&lt;/p&gt;
+
+&lt;p&gt;CO Level too high! Open your windows!&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;
+Conditions can be specified using [RQL syntax](basic-rql.html) to check if a thing has a specific attribute
+or feature property value.
+
+In case the condition does not match to the actual state of the thing, the request will fail with
+HTTP status code **412 - Precondition Failed**. And the message will not be processed.
+
+If the given condition is invalid, the request will fail with HTTP status code **400 - Bad Request**.
+
+More documentation for this feature can be found here: [Conditional Requests](basic-conditional-requests.html)
+
+### Permissions for conditional requests
+
+In order to execute a conditional request, the authorized subject needs to have WRITE permission at the resource
+that should be changed by the request.
+
+Additionally, the authorized subject needs to have READ permission at the resource used in the specified condition.
+Given the condition from the introduction `gt(features/carbon-monoxide-level/properties/ppm,10)`,
+read access on the single attribute would be sufficient.
+However, the condition can also be more complex, or include other sub-structures of the thing.
+Then of course, the authorized subject needs READ permission on all parameters of the specified condition.
+
+## Examples
+The following subsections will show how to use conditional requests via the HTTP API, Ditto protocol,
+and Ditto Java Client.
+
+To demonstrate the new conditional request, we assume that the following thing already exists:
+
+```json
+{
+  &quot;thingId&quot;: &quot;org.eclipse.ditto:carbon-monoxide-alarm&quot;,
+  &quot;policyId&quot;: &quot;org.eclipse.ditto:carbon-monoxide-alarm&quot;,
+  &quot;attributes&quot;: {
+    &quot;manufacturer&quot;: &quot;ACME demo corp.&quot;,
+    &quot;location&quot;: &quot;Wonderland&quot;,
+    &quot;serialno&quot;: &quot;42&quot;
+  },
+  &quot;features&quot;: {
+    &quot;carbon-monoxide-level&quot;: {
+      &quot;properties&quot;: {
+        &quot;ppm,&quot;: 2
+      }
+    },
+    &quot;alarm&quot;: {
+      &quot;properties&quot;: {
+        &quot;lastTriggered&quot;: &quot;2021-09-23T07:01:56Z&quot;,
+        &quot;confirmed&quot;: false
+      }
+    }
+  },
+  &quot;ConnectionStatus&quot;: {
+    &quot;definition&quot;: [
+      &quot;org.eclipse.ditto:ConnectionStatus:1.0.0&quot;
+    ],
+    &quot;properties&quot;: {
+      &quot;status&quot;: {
+        &quot;readySince&quot;: &quot;2022-11-04T14:35:02.643Z&quot;,
+        &quot;readyUntil&quot;: &quot;2022-11-04T16:35:03.643Z&quot;
+      }
+    }
+  }
+}
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;condition-based-on-alarmconfirmed&quot;&gt;Condition based on alarm/confirmed&lt;/h3&gt;
+&lt;p&gt;In this example a live alarm message from the device should only be sent, if the alarm confirmed property is set to 
+false by the end user application. This is done to prevent duplicate received alarms by the customer.
+```http request
+POST /api/2/things/org.eclipse.ditto:carbon-monoxide-alarm/inbox/mesages/co-alarm?condition=and(gt(features/carbon-monoxide-level/properties/ppm,10),eq(features/alarm/properties/confirmed/,false))&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;
+Another use case could be to i.e. only send a message to a device when the device is connected:
+```http request
+POST /api/2/things/org.eclipse.ditto:carbon-monoxide-alarm/inbox/messages/doSomething?condition=gt(features/ConnectionStatus/properties/status/readyUntil,time:now)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;permissions-to-execute-the-example&quot;&gt;Permissions to execute the example&lt;/h3&gt;
+&lt;p&gt;For this example, the authorized subject could have READ and WRITE permissions on the complete thing resource.
+However, it is only necessary on the path &lt;em&gt;thing:/features/alarm/properties/confirmed&lt;/em&gt; and &lt;em&gt;thing:features/carbon-monoxide-level/properties/ppm&lt;/em&gt;.&lt;/p&gt;
+
+&lt;h2 id=&quot;conditional-requests-via-http-api&quot;&gt;Conditional requests via HTTP API&lt;/h2&gt;
+&lt;p&gt;Using the HTTP API the condition can either be specified via HTTP Header or via HTTP query parameter.&lt;br /&gt;
+In this section, we will show how to use both options.&lt;/p&gt;
+
+&lt;h3 id=&quot;conditional-request-with-http-header&quot;&gt;Conditional request with HTTP Header&lt;/h3&gt;
+&lt;p&gt;```http request
+POST /api/2/things/org.eclipse.ditto:carbon-monoxide-alarm/outbox/messages/co-alarm
+Content-Type: application/json
+condition: eq(features/alarm/properties/confirmed/,false)&lt;/p&gt;
+
+&lt;p&gt;CO Level too high! Open your windows!&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;
+### Conditional request with HTTP query parameter
+```http request
+POST /api/2/things/org.eclipse.ditto:carbon-monoxide-alarm/outbox/messages/co-alarm?condition=eq(features/alarm/properties/confirmed/,false)
+Content-Type: application/json
+
+CO Level too high! Open your windows!
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;conditional-request-via-ditto-protocol&quot;&gt;Conditional request via Ditto protocol&lt;/h2&gt;
+&lt;p&gt;It is also possible to use conditional requests via the Ditto protocol.
+Applying the following Ditto command to the existing thing will lead to the same result as in the above HTTP example.&lt;/p&gt;
+
+&lt;div class=&quot;language-json highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;topic&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;org.eclipse.ditto/carbon-monoxide-alarm/things/live/messages/co-alarm&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;headers&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;content-type&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;application/json&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;condition&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;eq(features/alarm/properties/confirmed/,false)&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;path&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;/outbox/messages/co-alarm&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;value&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;CO Level to high! Open your windows!&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;using-conditional-requests-in-the-ditto-java-client&quot;&gt;Using conditional requests in the Ditto Java Client&lt;/h2&gt;
+&lt;p&gt;The conditional requests are also supported via the &lt;a href=&quot;client-sdk-java.html&quot;&gt;Ditto Java Client&lt;/a&gt;
+with the upcoming (&lt;strong&gt;Ditto Java Client version 3.1.0&lt;/strong&gt;).&lt;/p&gt;
+
+&lt;p&gt;Example for a conditional update of a thing with the Ditto Java client:&lt;/p&gt;
+
+&lt;div class=&quot;language-java highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;thingId&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;org.eclipse.ditto:carbon-monoxide-alarm&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;// initialize the ditto-client&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;DittoClient&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;dittoClient&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;...&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;dittoClient&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;live&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;().&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;message&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Options&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;condition&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;eq(features/alarm/properties/confirmed/,false)&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;))&lt;/span&gt;
+        &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;from&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;thingId&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;subject&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;co-alarm&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;payload&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;CO Level to high! Open your windows!&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;send&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;class&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;response&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;throwable&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;throwable&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;!=&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;LOGGER&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;error&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Received error while sending conditional update: '{}' &quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;throwable&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;toString&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;());&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;LOGGER&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;info&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Received response for conditional update: '{}'&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;response&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;});&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;feedback&quot;&gt;Feedback?&lt;/h2&gt;
+
+&lt;p&gt;Please &lt;a href=&quot;feedback.html&quot;&gt;get in touch&lt;/a&gt; if you have feedback or questions towards this new functionality.&lt;/p&gt;
+
+&lt;p&gt;&lt;br /&gt;
+&lt;br /&gt;&lt;/p&gt;
+&lt;figure&gt;&lt;img class=&quot;docimage&quot; src=&quot;images/ditto.svg&quot; alt=&quot;Ditto&quot; style=&quot;max-width: 500px&quot; /&gt;&lt;/figure&gt;
+
+&lt;p&gt;–&lt;br /&gt; 
+The Eclipse Ditto team&lt;/p&gt;
+</description>
+            <pubDate>Fri, 04 Nov 2022 00:00:00 +0000</pubDate>
+            <link>https://www.eclipse.org/ditto/2022-11-04-live-message-conditions.html</link>
+            <guid isPermaLink="true">https://www.eclipse.org/ditto/2022-11-04-live-message-conditions.html</guid>
+            
+            <category>blog</category>
+            
+            <category>http</category>
+            
+            <category>protocol</category>
+            
+            <category>rql</category>
+            
+            
+        </item>
         
         <item>
             <title>Announcing Eclipse Ditto Release 3.0.0</title>
@@ -1212,103 +1398,6 @@ The Eclipse Ditto team&lt;/p&gt;
             <category>architecture</category>
             
             <category>connectivity</category>
-            
-            
-        </item>
-        
-        <item>
-            <title>Completed Kafka Connectivity</title>
-            <description>&lt;h2 id=&quot;consuming-messages-from-apache-kafka-in-eclipse-ditto&quot;&gt;Consuming messages from Apache Kafka in Eclipse Ditto&lt;/h2&gt;
-
-&lt;p&gt;Eclipse Ditto did support publishing events and messages to Apache Kafka for quite some time now.&lt;br /&gt;
-The time has come to support consuming as well.&lt;/p&gt;
-
-&lt;p&gt;A Kafka connection behaves slightly different from other consuming Connections in Ditto.&lt;br /&gt;
-The following aspects are special:&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;connectivity-protocol-bindings-kafka2.html#quality-of-service&quot;&gt;Backpressure by using acknowledgements&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;connectivity-protocol-bindings-kafka2.html#backpressure-by-using-acknowledgements&quot;&gt;Preserve order of messages on redelivery due to failed acknowledgements&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;connectivity-protocol-bindings-kafka2.html#message-expiry&quot;&gt;Expiry of messages&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;scalability&quot;&gt;Scalability&lt;/h3&gt;
-
-&lt;p&gt;Kafka’s way of horizontal scaling is to use partitions.
-The higher the load the more partitions should be configured.&lt;br /&gt;
-On consumer side this means that a so-called consumer group can have as many consuming clients as number of partitions exist.&lt;br /&gt;
-Each partition would then be consumed by one client.&lt;/p&gt;
-
-&lt;p&gt;This perfectly matches with Ditto connections scaling, each Ditto connection builds such a consumer group.  &lt;br /&gt;
-For a connection there are two ways of scaling:&lt;/p&gt;
-&lt;ol&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;clientCount&lt;/code&gt; on &lt;a href=&quot;basic-connections.html#connection-model&quot;&gt;connection level&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;consumerCount&lt;/code&gt; on &lt;a href=&quot;basic-connections.html#sources&quot;&gt;source level&lt;/a&gt;&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;A connection client bundles all consumers for all sources and all publishers for all targets.
-It is guaranteed that for a single connection only one client can be instantiated per instance of the connectivity microservice.&lt;br /&gt;
-This way Ditto provides horizontal scaling.&lt;/p&gt;
-
-&lt;p&gt;Therefore, the &lt;code class=&quot;highlighter-rouge&quot;&gt;clientCount&lt;/code&gt; should never be configured higher than the number of available connectivity instances.&lt;/p&gt;
-
-&lt;p&gt;If the connectivity instance is not fully used by a single connection client, the &lt;code class=&quot;highlighter-rouge&quot;&gt;consumerCount&lt;/code&gt; can be used to scale a 
-connection’s consumers vertically.
-The &lt;code class=&quot;highlighter-rouge&quot;&gt;consumerCount&lt;/code&gt; of a source indicates how many consumers should be started for a single connection client for this source.
-Each consumer is a separate consuming client in the consumer group of the connection.&lt;/p&gt;
-
-&lt;p&gt;This means that the number of partition should be greater or equal than &lt;code class=&quot;highlighter-rouge&quot;&gt;clientCount&lt;/code&gt; multiplied by the highest 
-&lt;code class=&quot;highlighter-rouge&quot;&gt;consumerCount&lt;/code&gt; of a source.&lt;/p&gt;
-
-&lt;h3 id=&quot;backpressure-and-quality-of-service&quot;&gt;Backpressure and Quality of Service&lt;/h3&gt;
-
-&lt;p&gt;Usually there is an application connected to Ditto which is consuming either messages or events of devices connected to Ditto.&lt;br /&gt;
-These messages and events can now be issued by devices via Kafka.&lt;br /&gt;
-What happens now when the connected application temporarily can’t process the messages emitted by Ditto in the rate the 
-devices publish their messages via Kafka into Ditto?&lt;br /&gt;
-The answer is: “It depends.”&lt;/p&gt;
-
-&lt;p&gt;There are two steps of increasing delivery guarantee for messages to the connected application.&lt;/p&gt;
-&lt;ol&gt;
-  &lt;li&gt;Make use of &lt;a href=&quot;basic-connections.html#source-acknowledgement-requests&quot;&gt;acknowledgements&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;Configure the &lt;code class=&quot;highlighter-rouge&quot;&gt;qos&lt;/code&gt; for the &lt;a href=&quot;basic-connections.html#sources&quot;&gt;source&lt;/a&gt; to &lt;code class=&quot;highlighter-rouge&quot;&gt;1&lt;/code&gt;&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;The first will introduce backpressure from the consuming application to the Kafka consumer in Ditto.&lt;br /&gt;
-This means that the consumer will automatically slow down consuming messages when the performance of the connected 
-application slows down.
-This way the application has time to scale up, while the messages are buffered in Kafka.&lt;/p&gt;
-
-&lt;p&gt;The second step can be used when it’s necessary to ensure that the application not just received but successfully 
-processed the message. If the message could not be processed successfully or if the acknowledgement didn’t arrive in time, 
-the Kafka consumer will restart consuming messages from the last successfully committed offset.&lt;/p&gt;
-
-&lt;h3 id=&quot;expiry&quot;&gt;Expiry&lt;/h3&gt;
-
-&lt;p&gt;Now that we know about backpressure we also know, that messages could remain in Kafka for some time.&lt;br /&gt;
-The time can be limited by Kafka’s retention time, but this would be applied to all messages in the same way.
-What if some messages become invalid after some time, but others won’t?&lt;/p&gt;
-
-&lt;p&gt;Ditto provides an &lt;a href=&quot;connectivity-protocol-bindings-kafka2.html#message-expiry&quot;&gt;expiry of messages on a per-message level&lt;/a&gt;.
-That way Ditto filters such expired messages but still processes all others.&lt;/p&gt;
-
-&lt;h2 id=&quot;we-embrace-your-feedback&quot;&gt;We embrace your feedback&lt;/h2&gt;
-
-&lt;p&gt;Did you recognize a possible match of Ditto for some of your usecases?
-Do you miss something in this new feature?&lt;br /&gt;
-We would love to get your &lt;a href=&quot;feedback.html&quot;&gt;feedback&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;&lt;br /&gt;
-&lt;br /&gt;&lt;/p&gt;
-&lt;figure&gt;&lt;img class=&quot;docimage&quot; src=&quot;images/ditto.svg&quot; alt=&quot;Ditto&quot; style=&quot;max-width: 500px&quot; /&gt;&lt;/figure&gt;
-
-&lt;p&gt;–&lt;br /&gt;
-The Eclipse Ditto team&lt;/p&gt;
-</description>
-            <pubDate>Wed, 29 Sep 2021 00:00:00 +0000</pubDate>
-            <link>https://www.eclipse.org/ditto/2021-09-29-kafka-connectivity.html</link>
-            <guid isPermaLink="true">https://www.eclipse.org/ditto/2021-09-29-kafka-connectivity.html</guid>
-            
-            <category>blog</category>
             
             
         </item>
