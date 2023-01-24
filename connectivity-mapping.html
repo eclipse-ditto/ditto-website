@@ -2650,6 +2650,26 @@ them in a mapping function. See <a href="http://mozilla.github.io/rhino/compat/e
   <li><a href="https://github.com/dcodeIO/long.js">long.js</a> for representing a 64-bit two’s-complement integer value</li>
 </ul>
 
+<h3 id="adding-additional-js-libraries">Adding additional JS libraries</h3>
+
+<p>The used <a href="https://github.com/mozilla/rhino">Rhino JS engine</a> allows making use of “CommonJS” in order to load JS
+modules via <code class="highlighter-rouge">require('')</code> into the engine.<br />
+This feature is exposed to Ditto, configuring the configuration key <code class="highlighter-rouge">commonJsModulePath</code> or environment variable 
+<code class="highlighter-rouge">CONNECTIVITY_MESSAGE_MAPPING_JS_COMMON_JS_MODULE_PATH</code> of the connectivity service to a path in the
+connectivity Docker container where to load additional CommonJS modules from - e.g. use a volume mount in order to get
+additional JS modules into the container.</p>
+
+<p>For example, configure this variable to a folder to which you add (our mount) JavaScript libraries:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>CONNECTIVITY_MESSAGE_MAPPING_JS_COMMON_JS_MODULE_PATH=/opt/commonjs-modules/
+</code></pre></div></div>
+
+<p>Then, for example, put <a href="https://www.npmjs.com/package/pbf"><code class="highlighter-rouge">pbf.js</code></a> (or any other JS library you want to use) 
+into that folder.</p>
+
+<p>Afterwards, the library can be used in your JS snippet using:</p>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">var</span> <span class="nx">Pbf</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'pbf'</span><span class="p">);</span>
+</code></pre></div></div>
+
 <h3 id="helper-functions">Helper functions</h3>
 
 <p>Ditto comes with a few helper functions, which makes writing the mapping scripts easier. They are available under the
@@ -3306,7 +3326,8 @@ which eases implementation of a custom mapper.</p>
     <span class="o">}</span>
 
     <span class="nd">@Override</span>
-    <span class="kd">protected</span> <span class="kt">void</span> <span class="nf">doConfigure</span><span class="o">(</span><span class="n">Connection</span> <span class="n">connection</span><span class="o">,</span> <span class="n">MappingConfig</span> <span class="n">mappingConfig</span><span class="o">,</span> <span class="n">MessageMapperConfiguration</span> <span class="n">configuration</span><span class="o">)</span> <span class="o">{</span>
+    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">doConfigure</span><span class="o">(</span><span class="n">Connection</span> <span class="n">connection</span><span class="o">,</span> <span class="n">MappingConfig</span> <span class="n">mappingConfig</span><span class="o">,</span>
+            <span class="n">MessageMapperConfiguration</span> <span class="n">configuration</span><span class="o">)</span> <span class="o">{</span>
         <span class="c1">// extract configuration if needed</span>
     <span class="o">}</span>
 <span class="o">}</span>
@@ -3388,7 +3409,7 @@ connectivity service for mapping a custom domain specific Protbuf encoded payloa
                     </div>
                     <p class="notice">
                         &copy;2023 Eclipse Ditto™.
-                         Site last generated: Jan 5, 2023 <br />
+                         Site last generated: Jan 24, 2023 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">
