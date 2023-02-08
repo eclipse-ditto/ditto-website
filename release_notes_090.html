@@ -114,7 +114,7 @@
                 
                 
                   
-                  <li><a href="https://github.com/eclipse/ditto" target="_blank">
+                  <li><a href="https://github.com/eclipse-ditto/ditto" target="_blank">
                     <img src="images/GitHub-Mark-Light-32px.png" alt="Sources at GitHub">
                   </a></li>
                   
@@ -122,7 +122,7 @@
                 
                 
                   
-                  <li><a href="https://github.com/eclipse/ditto-clients" target="_blank">
+                  <li><a href="https://github.com/eclipse-ditto/ditto-clients" target="_blank">
                     <img src="images/GitHub-Mark-Light-32px.png" alt="SDK sources at GitHub">SDKs
                   </a></li>
                   
@@ -130,7 +130,7 @@
                 
                 
                   
-                  <li><a href="https://github.com/eclipse/ditto-examples" target="_blank">
+                  <li><a href="https://github.com/eclipse-ditto/ditto-examples" target="_blank">
                     <img src="images/GitHub-Mark-Light-32px.png" alt="Example sources at GitHub">examples
                   </a></li>
                   
@@ -275,6 +275,13 @@
         <li class="subfolders">
           <a href="#"><span></span>Release Notes</a>
           <ul>
+              
+              
+              
+              <li><a href="release_notes_312.html">3.1.2</a></li>
+              
+              
+              
               
               
               
@@ -774,6 +781,13 @@
               
               
               
+              <li><a href="basic-history.html">History capabilities</a></li>
+              
+              
+              
+              
+              
+              
               <li><a href="basic-acknowledgements.html">Acknowledgements / QoS</a></li>
               
               
@@ -1261,6 +1275,13 @@
                       
                   </ul>
               </li>
+              
+              
+              
+              
+              
+              
+              <li><a href="protocol-specification-streaming-subscription.html">Streaming subscriptions (history)</a></li>
               
               
               
@@ -2006,7 +2027,7 @@ bugfixes were added.</p>
 
 <h4 id="changes">Changes</h4>
 
-<h5 id="streamline-configuration"><a href="https://github.com/eclipse/ditto/issues/350">Streamline configuration</a></h5>
+<h5 id="streamline-configuration"><a href="https://github.com/eclipse-ditto/ditto/issues/350">Streamline configuration</a></h5>
 
 <p>In this release, we changed how internally the configuration is determined in Ditto’s microservices. This should not 
 have any impact on a user of Eclipse Ditto. As however some configuration keys were remanded or restructured, some
@@ -2014,18 +2035,18 @@ adjustments when manually configuring Ditto could be required.</p>
 
 <h4 id="new-features">New features</h4>
 
-<h5 id="introduce-cursor-based-paging-for-search-requests"><a href="https://github.com/eclipse/ditto/pull/407">Introduce cursor-based paging for search requests</a></h5>
+<h5 id="introduce-cursor-based-paging-for-search-requests"><a href="https://github.com/eclipse-ditto/ditto/pull/407">Introduce cursor-based paging for search requests</a></h5>
 
 <p>In order to provide a constant performance for using pagination for the <code class="highlighter-rouge">things-search</code> miscroservice across even large 
 result sets (100s of thousands or more) of digital twins, a new cursor-based approach was added in addition to the 
 old <code class="highlighter-rouge">offset/limit</code> approach which gets slower for each page.</p>
 
-<h5 id="simple-throttling-for-amqp-10-consumers"><a href="https://github.com/eclipse/ditto/pull/420">Simple throttling for amqp 1.0 consumers</a></h5>
+<h5 id="simple-throttling-for-amqp-10-consumers"><a href="https://github.com/eclipse-ditto/ditto/pull/420">Simple throttling for amqp 1.0 consumers</a></h5>
 
 <p>Added a simple throttling mechanism for amqp 1.0 consumers.
 The throttling is configurable by defining the number of messages allowed per time interval.</p>
 
-<h5 id="collect-connectivity-log-entries-and-provide-via-devops-command"><a href="https://github.com/eclipse/ditto/issues/318">Collect connectivity log entries and provide via devops command</a></h5>
+<h5 id="collect-connectivity-log-entries-and-provide-via-devops-command"><a href="https://github.com/eclipse-ditto/ditto/issues/318">Collect connectivity log entries and provide via devops command</a></h5>
 
 <p>In order to let a user analyze failures / unexpected behavior in his connections (e.g. to an MQTT or AMQP broker) 
 without giving him full access to the log-files of Ditto, a connection scoped mechanism for retrieving connectivity logs 
@@ -2033,21 +2054,21 @@ was added.</p>
 
 <h4 id="bugfixes">Bugfixes</h4>
 
-<h5 id="memory-and-performance-fixes-in-concierge-gateway"><a href="https://github.com/eclipse/ditto/pull/400">Memory and performance fixes in concierge, gateway</a></h5>
+<h5 id="memory-and-performance-fixes-in-concierge-gateway"><a href="https://github.com/eclipse-ditto/ditto/pull/400">Memory and performance fixes in concierge, gateway</a></h5>
 
 <p>Ditto’s <code class="highlighter-rouge">concierge</code> service did use a sharding approach for enforcing authorization information which lead to huge 
 amounts of memory required when managing multi million of digital twins.</p>
 
 <p>That, in addition to some memory fixes in the gateway and addition of metrics, was fixed in this PR.</p>
 
-<h5 id="ensure-ordering-for-processed-commands"><a href="https://github.com/eclipse/ditto/pull/417">Ensure ordering for processed commands</a></h5>
+<h5 id="ensure-ordering-for-processed-commands"><a href="https://github.com/eclipse-ditto/ditto/pull/417">Ensure ordering for processed commands</a></h5>
 
 <p>In previous versions of Ditto the order in which command were processed not guaranteed to be maintained. As maintaining
 the order however is the expected behavior, we decided to treat that as bug and added to the <code class="highlighter-rouge">concierge</code> service (where
 the order could be lost) to sequentially process commands issues via HTTP/WebSocket and connections.</p>
 
 <p>This release contains several bugfixes, this is a complete list of the 
-<a href="https://github.com/eclipse/ditto/pulls?q=is%3Apr+milestone%3A0.9.0+">merged pull requests</a>.</p>
+<a href="https://github.com/eclipse-ditto/ditto/pulls?q=is%3Apr+milestone%3A0.9.0+">merged pull requests</a>.</p>
 
 <h2 id="api-stability">API stability</h2>
 
@@ -2094,7 +2115,7 @@ a 1.0.0 release.</p>
                     </div>
                     <p class="notice">
                         &copy;2023 Eclipse Ditto™.
-                         Site last generated: Jan 26, 2023 <br />
+                         Site last generated: Feb 8, 2023 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

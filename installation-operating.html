@@ -114,7 +114,7 @@
                 
                 
                   
-                  <li><a href="https://github.com/eclipse/ditto" target="_blank">
+                  <li><a href="https://github.com/eclipse-ditto/ditto" target="_blank">
                     <img src="images/GitHub-Mark-Light-32px.png" alt="Sources at GitHub">
                   </a></li>
                   
@@ -122,7 +122,7 @@
                 
                 
                   
-                  <li><a href="https://github.com/eclipse/ditto-clients" target="_blank">
+                  <li><a href="https://github.com/eclipse-ditto/ditto-clients" target="_blank">
                     <img src="images/GitHub-Mark-Light-32px.png" alt="SDK sources at GitHub">SDKs
                   </a></li>
                   
@@ -130,7 +130,7 @@
                 
                 
                   
-                  <li><a href="https://github.com/eclipse/ditto-examples" target="_blank">
+                  <li><a href="https://github.com/eclipse-ditto/ditto-examples" target="_blank">
                     <img src="images/GitHub-Mark-Light-32px.png" alt="Example sources at GitHub">examples
                   </a></li>
                   
@@ -275,6 +275,13 @@
         <li class="subfolders">
           <a href="#"><span></span>Release Notes</a>
           <ul>
+              
+              
+              
+              <li><a href="release_notes_312.html">3.1.2</a></li>
+              
+              
+              
               
               
               
@@ -774,6 +781,13 @@
               
               
               
+              <li><a href="basic-history.html">History capabilities</a></li>
+              
+              
+              
+              
+              
+              
               <li><a href="basic-acknowledgements.html">Acknowledgements / QoS</a></li>
               
               
@@ -1261,6 +1275,13 @@
                       
                   </ul>
               </li>
+              
+              
+              
+              
+              
+              
+              <li><a href="protocol-specification-streaming-subscription.html">Streaming subscriptions (history)</a></li>
               
               
               
@@ -2000,11 +2021,11 @@ the following environment variables in order to configure the connection to the 
 <p>In order to have a look at all possible configuration options and what default values they have, here are the 
 configuration files of Ditto’s microservices:</p>
 <ul>
-  <li>Policies: <a href="https://github.com/eclipse/ditto/blob/master/policies/service/src/main/resources/policies.conf">policies.conf</a></li>
-  <li>Things: <a href="https://github.com/eclipse/ditto/blob/master/things/service/src/main/resources/things.conf">things.conf</a></li>
-  <li>Things-Search: <a href="https://github.com/eclipse/ditto/blob/master/thingsearch/service/src/main/resources/things-search.conf">things-search.conf</a></li>
-  <li>Connectivity: <a href="https://github.com/eclipse/ditto/blob/master/connectivity/service/src/main/resources/connectivity.conf">connectivity.conf</a></li>
-  <li>Gateway: <a href="https://github.com/eclipse/ditto/blob/master/gateway/service/src/main/resources/gateway.conf">gateway.conf</a></li>
+  <li>Policies: <a href="https://github.com/eclipse-ditto/ditto/blob/master/policies/service/src/main/resources/policies.conf">policies.conf</a></li>
+  <li>Things: <a href="https://github.com/eclipse-ditto/ditto/blob/master/things/service/src/main/resources/things.conf">things.conf</a></li>
+  <li>Things-Search: <a href="https://github.com/eclipse-ditto/ditto/blob/master/thingsearch/service/src/main/resources/things-search.conf">things-search.conf</a></li>
+  <li>Connectivity: <a href="https://github.com/eclipse-ditto/ditto/blob/master/connectivity/service/src/main/resources/connectivity.conf">connectivity.conf</a></li>
+  <li>Gateway: <a href="https://github.com/eclipse-ditto/ditto/blob/master/gateway/service/src/main/resources/gateway.conf">gateway.conf</a></li>
 </ul>
 
 <p>Whenever you find the syntax <code class="highlighter-rouge">${?UPPER_CASE_ENV_NAME}</code> in the configuration files, you may overwrite the default value
@@ -2118,9 +2139,12 @@ to find out what is possible when defining the <code class="highlighter-rouge">a
 <p>As of the OAuth2.0 and OpenID Connect standards Ditto expects the headers <code class="highlighter-rouge">Authorization: Bearer &lt;JWT&gt;</code> and
 <code class="highlighter-rouge">Content-Type: application/json</code>, containing the issued token of the provider.</p>
 
-<p><strong>The token has to be issued beforehand. The required logic is not provided by Ditto.</strong> When using
-the OIDC provider <a href="https://www.keycloak.org/">keycloak</a>, a project like <a href="https://github.com/keycloak/keycloak-gatekeeper">keycloak-gatekeeper</a>
-may be put in front of Ditto to handle the token-logic.</p>
+<p><strong>The token has to be issued beforehand. The required logic is not provided by Ditto.</strong></p>
+
+<p>This can e.g. be done by an OIDC provider like <a href="https://www.keycloak.org/">Keycloak</a>.<br />
+A project like <a href="https://github.com/oauth2-proxy/oauth2-proxy">oauth2-proxy</a>
+may be put in front of Ditto to handle the token-logic like e.g. loading/saving the token from/to a Cookie and passing
+it to Ditto as <code class="highlighter-rouge">Authorization</code> header.</p>
 
 <p><strong>If the chosen OIDC provider uses a self-signed certificate</strong>, the certificate has to be retrieved and configured for 
 the akka-http ssl configuration.</p>
@@ -2186,7 +2210,7 @@ Values that are valid URIs are treated specially and only the password of the us
 encrypted.</p>
 
 <p>Configuration can be seen at <a href="#ditto-configuration">Ditto service configuration files</a> in
-the <a href="https://github.com/eclipse/ditto/blob/master/connectivity/service/src/main/resources/connectivity.conf">connectivity.conf</a>
+the <a href="https://github.com/eclipse-ditto/ditto/blob/master/connectivity/service/src/main/resources/connectivity.conf">connectivity.conf</a>
 at “ditto.connectivity.connection.encryption” section of the config.</p>
 
 <p>If at some point encryption is decided to be disabled the symmetric key is important to be kept in the 
@@ -2393,7 +2417,7 @@ jvm_memory_bytes_sum{component="system-metrics",measure="used",segment="miscella
 </ul>
 
 <p>Have a look at the 
-<a href="https://github.com/eclipse/ditto/tree/master/deployment/operations/grafana-dashboards">example Grafana dashboards</a>
+<a href="https://github.com/eclipse-ditto/ditto/tree/master/deployment/operations/grafana-dashboards">example Grafana dashboards</a>
 and build and share new ones back to the Ditto community.</p>
 
 <h2 id="tracing">Tracing</h2>
@@ -2688,14 +2712,14 @@ when processing commands. By explicitly setting this header to <code class="high
 “devops” (super) user.</p>
 
 <p>All 
-<a href="https://github.com/eclipse/ditto/blob/master/policies/model/src/main/java/org/eclipse/ditto/policies/model/signals/commands/PolicyCommand.java">PolicyCommand</a>s
+<a href="https://github.com/eclipse-ditto/ditto/blob/master/policies/model/src/main/java/org/eclipse/ditto/policies/model/signals/commands/PolicyCommand.java">PolicyCommand</a>s
 may be sent via piggyback - however be aware that the internal JSON representation of the policy commands must be used 
 and not the <a href="protocol-specification-policies.html">Ditto Protocol</a>.</p>
 
 <p>The internal JSON representation can be found in the code, e.g. defined in the static <code class="highlighter-rouge">fromJson</code> methods of the commands.</p>
 
 <p>Example piggyback for 
-<a href="https://github.com/eclipse/ditto/blob/master/policies/model/src/main/java/org/eclipse/ditto/policies/model/signals/commands/modify/CreatePolicy.java">CreatePolicy</a>:</p>
+<a href="https://github.com/eclipse-ditto/ditto/blob/master/policies/model/src/main/java/org/eclipse/ditto/policies/model/signals/commands/modify/CreatePolicy.java">CreatePolicy</a>:</p>
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
   </span><span class="s2">"targetActorSelection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/system/sharding/policy"</span><span class="p">,</span><span class="w">
   </span><span class="s2">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
@@ -2716,7 +2740,7 @@ and not the <a href="protocol-specification-policies.html">Ditto Protocol</a>.</
 </span></code></pre></div></div>
 
 <p>Example piggyback for 
-<a href="https://github.com/eclipse/ditto/blob/master/policies/model/src/main/java/org/eclipse/ditto/policies/model/signals/commands/query/RetrievePolicy.java">RetrievePolicy</a>:</p>
+<a href="https://github.com/eclipse-ditto/ditto/blob/master/policies/model/src/main/java/org/eclipse/ditto/policies/model/signals/commands/query/RetrievePolicy.java">RetrievePolicy</a>:</p>
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
   </span><span class="s2">"targetActorSelection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/system/sharding/policy"</span><span class="p">,</span><span class="w">
   </span><span class="s2">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
@@ -2737,14 +2761,14 @@ and not the <a href="protocol-specification-policies.html">Ditto Protocol</a>.</
 “devops” (super) user.</p>
 
 <p>All
-<a href="https://github.com/eclipse/ditto/blob/master/things/model/src/main/java/org/eclipse/ditto/things/model/signals/commands/ThingCommand.java">ThingCommand</a>s
+<a href="https://github.com/eclipse-ditto/ditto/blob/master/things/model/src/main/java/org/eclipse/ditto/things/model/signals/commands/ThingCommand.java">ThingCommand</a>s
 may be sent via piggyback - however be aware that the internal JSON representation of the thing commands must be used
 and not the <a href="protocol-specification-things.html">Ditto Protocol</a>.</p>
 
 <p>The internal JSON representation can be found in the code, e.g. defined in the static <code class="highlighter-rouge">fromJson</code> methods of the commands.</p>
 
 <p>Example piggyback for
-<a href="https://github.com/eclipse/ditto/blob/master/things/model/src/main/java/org/eclipse/ditto/things/model/signals/commands/modify/CreateThing.java">CreateThing</a>:</p>
+<a href="https://github.com/eclipse-ditto/ditto/blob/master/things/model/src/main/java/org/eclipse/ditto/things/model/signals/commands/modify/CreateThing.java">CreateThing</a>:</p>
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
   </span><span class="s2">"targetActorSelection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/system/sharding/thing"</span><span class="p">,</span><span class="w">
   </span><span class="s2">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
@@ -2763,7 +2787,7 @@ and not the <a href="protocol-specification-things.html">Ditto Protocol</a>.</p>
 </span></code></pre></div></div>
 
 <p>Example piggyback for
-<a href="https://github.com/eclipse/ditto/blob/master/things/model/src/main/java/org/eclipse/ditto/things/model/signals/commands/query/RetrieveThing.java">RetrieveThing</a>:</p>
+<a href="https://github.com/eclipse-ditto/ditto/blob/master/things/model/src/main/java/org/eclipse/ditto/things/model/signals/commands/query/RetrieveThing.java">RetrieveThing</a>:</p>
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
   </span><span class="s2">"targetActorSelection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/system/sharding/thing"</span><span class="p">,</span><span class="w">
   </span><span class="s2">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
@@ -2785,9 +2809,89 @@ and not the <a href="protocol-specification-things.html">Ditto Protocol</a>.</p>
 
 <h4 id="managing-background-cleanup">Managing background cleanup</h4>
 
-<p>Ditto deletes unnecessary events and snapshots in the background according to database load. Each Things, Policies and
-Connectivity instance has an actor coordinating a portion of the background cleanup process. The actor responds to
-piggyback-commands to query its state and configuration, modify its configuration, and restart the background cleanup
+<p>Ditto deletes unnecessary events and snapshots in the background according to database load.</p>
+
+<h5 id="configuration-of-background-cleanup">Configuration of background cleanup</h5>
+
+<p>The background cleanup configuration is available for:</p>
+<ul>
+  <li>Policies: <a href="https://github.com/eclipse/ditto/blob/master/policies/service/src/main/resources/policies.conf">policies.conf</a></li>
+  <li>Things: <a href="https://github.com/eclipse/ditto/blob/master/things/service/src/main/resources/things.conf">things.conf</a></li>
+  <li>Connectivity: <a href="https://github.com/eclipse/ditto/blob/master/connectivity/service/src/main/resources/connectivity.conf">connectivity.conf</a></li>
+</ul>
+
+<p>And has the following config parameters:</p>
+<pre><code class="language-hocon">cleanup {
+  # enabled configures whether background cleanup is enabled or not
+  # If enabled, stale "snapshot" and "journal" entries will be cleaned up from the MongoDB by a background process
+  enabled = true
+  enabled = ${?CLEANUP_ENABLED}
+
+  # history-retention-duration configures the duration of how long to "keep" events and snapshots before being
+  # allowed to remove them in scope of cleanup.
+  # If this e.g. is set to 30d - then effectively an event history of 30 days would be available via the read
+  # journal.
+  history-retention-duration = 3d
+  history-retention-duration = ${?CLEANUP_HISTORY_RETENTION_DURATION}
+
+  # quiet-period defines how long to stay in a state where the background cleanup is not yet started
+  # Applies after:
+  # - starting the service
+  # - each "completed" background cleanup run (all entities were cleaned up)
+  quiet-period = 5m
+  quiet-period = ${?CLEANUP_QUIET_PERIOD}
+
+  # interval configures how often a "credit decision" is made.
+  # The background cleanup works with a credit system and does only generate new "cleanup credits" if the MongoDB
+  # currently has capacity to do cleanups.
+  interval = 3s
+  interval = ${?CLEANUP_INTERVAL}
+
+  # timer-threshold configures the maximum database latency to give out credit for cleanup actions.
+  # If write operations to the MongoDB within the last `interval` had a `max` value greater to the configured
+  # threshold, no new cleanup credits will be issued for the next `interval`.
+  # Which throttles cleanup when MongoDB is currently under heavy (write) load.
+  timer-threshold = 150ms
+  timer-threshold = ${?CLEANUP_TIMER_THRESHOLD}
+
+  # credits-per-batch configures how many "cleanup credits" should be generated per `interval` as long as the
+  # write operations to the MongoDB are less than the configured `timer-threshold`.
+  # Limits the rate of cleanup actions to this many per credit decision interval.
+  # One credit means that the "journal" and "snapshot" entries of one entity are cleaned up each `interval`.
+  credits-per-batch = 3
+  credits-per-batch = ${?CLEANUP_CREDITS_PER_BATCH}
+
+  # reads-per-query configures the number of snapshots to scan per MongoDB query.
+  # Configuring this to high values will reduce the need to query MongoDB too often - it should however be aligned
+  # with the amount of "cleanup credits" issued per `interval` - in order to avoid long running queries.
+  reads-per-query = 100
+  reads-per-query = ${?CLEANUP_READS_PER_QUERY}
+
+  # writes-per-credit configures the number of documents to delete for each credit.
+  # If for example one entity would have 1000 journal entries to cleanup, a `writes-per-credit` of 100 would lead
+  # to 10 delete operations performed against MongoDB.
+  writes-per-credit = 100
+  writes-per-credit = ${?CLEANUP_WRITES_PER_CREDIT}
+
+  # delete-final-deleted-snapshot configures whether for a deleted entity, the final snapshot (containing the
+  # "deleted" information) should be deleted or not.
+  # If the final snapshot is not deleted, re-creating the entity will cause that the recreated entity starts with
+  # a revision number 1 higher than the previously deleted entity. If the final snapshot is deleted as well,
+  # recreation of an entity with the same ID will lead to revisionNumber=1 after its recreation.
+  delete-final-deleted-snapshot = false
+  delete-final-deleted-snapshot = ${?CLEANUP_DELETE_FINAL_DELETED_SNAPSHOT}
+}
+</code></pre>
+
+<p>By default, background cleanup is enabled for all entities and the retention duration is configured to <code class="highlighter-rouge">0d</code> (0 days), 
+meaning that no history will be kept for a longer time.</p>
+
+<p>In order to use Ditto’s <a href="basic-history.html">history capabilities</a>, the configuration has to be adjusted accordingly.</p>
+
+<h5 id="adjustment-of-background-cleanup-during-runtime">Adjustment of background cleanup during runtime</h5>
+
+<p>Each Things, Policies and Connectivity instance has an actor coordinating a portion of the background cleanup process. 
+The actor responds to piggyback-commands to query its state and configuration, modify its configuration, and restart the background cleanup
 process.</p>
 
 <p>Each command is sent to the actor selection <code class="highlighter-rouge">/user/&lt;SERVICE_NAME&gt;Root/persistenceCleanup</code>, where
@@ -3224,7 +3328,7 @@ to stop blocking messages to a namespace.</p>
                     </div>
                     <p class="notice">
                         &copy;2023 Eclipse Ditto™.
-                         Site last generated: Jan 26, 2023 <br />
+                         Site last generated: Feb 8, 2023 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">
