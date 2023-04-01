@@ -280,6 +280,13 @@
               
               
               
+              <li><a href="release_notes_321.html">3.2.1</a></li>
+              
+              
+              
+              
+              
+              
               <li><a href="release_notes_320.html">3.2.0</a></li>
               
               
@@ -312,30 +319,27 @@
               
               
               
-              
-              
-              
-              <li><a href="release_notes_242.html">2.4.2</a></li>
-              
-              
-              
-              
-              
-              
-              <li><a href="release_notes_241.html">2.4.1</a></li>
-              
-              
-              
-              
-              
-              
-              <li><a href="release_notes_240.html">2.4.0</a></li>
-              
-              
-              
               <li class="subfolders">
                   <a href="#"><span></span>Archive</a>
                   <ul>
+                      
+                      
+                      
+                      <li><a href="release_notes_242.html">2.4.2</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_241.html">2.4.1</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_240.html">2.4.0</a></li>
+                      
+                      
                       
                       
                       
@@ -1998,7 +2002,7 @@ $('#toc').on('click', 'a', function() {
 
     
 
-  <p>After <a href="installation-running.html">starting Ditto</a>, we have a HTTP and WebSocket API for your
+  <p>After <a href="installation-running.html">starting Ditto</a>, we have an HTTP and WebSocket API for your
 <a href="intro-digitaltwins.html">digital twins</a> at our hands.</p>
 
 <h2 id="example">Example</h2>
@@ -2007,35 +2011,101 @@ $('#toc').on('click', 'a', function() {
 The state data should change as often as its real world counterpart does.</p>
 
 <p>Those static and dynamic types of data are mapped in the Ditto model to “attributes” (for static metadata), “features” 
-(for dynamic state data) and “definition” (to link a model the thing follows, 
-e.g. an <a href="https://www.eclipse.org/vorto/">Eclipse Vorto</a> “information model”).
+(for dynamic state data) and “definition” (to link a model the thing follows, e.g. a 
+<a href="basic-wot-integration.html">WoT (Web of Things)</a> “Thing Model”).<br />
 A JSON representation of some metadata and state data could for example look like this:</p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"definition"</span><span class="p">:</span><span class="w"> </span><span class="s2">"digitaltwin:DigitaltwinExample:1.0.0"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"thingId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"io.eclipseprojects.ditto:floor-lamp-0815"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"policyId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"io.eclipseprojects.ditto:floor-lamp-0815"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"definition"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://eclipse-ditto.github.io/ditto-examples/wot/models/floor-lamp-1.0.0.tm.jsonld"</span><span class="p">,</span><span class="w">
   </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"manufacturer"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ACME"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"VIN"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0815666337"</span><span class="w">
+    </span><span class="s2">"manufacturer"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"serialNo"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="w">
   </span><span class="p">},</span><span class="w">
   </span><span class="s2">"features"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"transmission"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"Spot1"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"definition"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"https://eclipse-ditto.github.io/ditto-examples/wot/models/dimmable-colored-lamp-1.0.0.tm.jsonld"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"https://eclipse-ditto.github.io/ditto-examples/wot/models/colored-lamp-1.0.0.tm.jsonld"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"https://eclipse-ditto.github.io/ditto-examples/wot/models/switchable-1.0.0.tm.jsonld"</span><span class="w">
+      </span><span class="p">],</span><span class="w">
       </span><span class="s2">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"automatic"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"mode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"eco"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"cur_speed"</span><span class="p">:</span><span class="w"> </span><span class="mi">90</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"gear"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="w">
+        </span><span class="s2">"dimmer-level"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"color"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="s2">"r"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"g"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"b"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="s2">"on"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
       </span><span class="p">}</span><span class="w">
     </span><span class="p">},</span><span class="w">
-    </span><span class="s2">"environment-scanner"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"Spot2"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"definition"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"https://eclipse-ditto.github.io/ditto-examples/wot/models/dimmable-colored-lamp-1.0.0.tm.jsonld"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"https://eclipse-ditto.github.io/ditto-examples/wot/models/colored-lamp-1.0.0.tm.jsonld"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"https://eclipse-ditto.github.io/ditto-examples/wot/models/switchable-1.0.0.tm.jsonld"</span><span class="w">
+      </span><span class="p">],</span><span class="w">
       </span><span class="s2">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"temperature"</span><span class="p">:</span><span class="w"> </span><span class="mf">20.8</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"humidity"</span><span class="p">:</span><span class="w"> </span><span class="mi">73</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"barometricPressure"</span><span class="p">:</span><span class="w"> </span><span class="mf">970.7</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"location"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-          </span><span class="s2">"longitude"</span><span class="p">:</span><span class="w"> </span><span class="mf">47.682170</span><span class="p">,</span><span class="w">
-          </span><span class="s2">"latitude"</span><span class="p">:</span><span class="w"> </span><span class="mf">9.386372</span><span class="w">
+        </span><span class="s2">"dimmer-level"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"color"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="s2">"r"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"g"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"b"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w">
         </span><span class="p">},</span><span class="w">
-        </span><span class="s2">"altitude"</span><span class="p">:</span><span class="w"> </span><span class="mi">399</span><span class="w">
+        </span><span class="s2">"on"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="s2">"Spot3"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"definition"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"https://eclipse-ditto.github.io/ditto-examples/wot/models/dimmable-colored-lamp-1.0.0.tm.jsonld"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"https://eclipse-ditto.github.io/ditto-examples/wot/models/colored-lamp-1.0.0.tm.jsonld"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"https://eclipse-ditto.github.io/ditto-examples/wot/models/switchable-1.0.0.tm.jsonld"</span><span class="w">
+      </span><span class="p">],</span><span class="w">
+      </span><span class="s2">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"dimmer-level"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"color"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="s2">"r"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"g"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"b"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="s2">"on"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="s2">"ConnectionStatus"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"definition"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"https://eclipse-ditto.github.io/ditto-examples/wot/models/connection-status-1.0.0.tm.jsonld"</span><span class="w">
+      </span><span class="p">],</span><span class="w">
+      </span><span class="s2">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"readySince"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"readyUntil"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="s2">"PowerConsumptionAwareness"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"definition"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"https://eclipse-ditto.github.io/ditto-examples/wot/models/power-consumption-aware-1.0.0.tm.jsonld"</span><span class="w">
+      </span><span class="p">],</span><span class="w">
+      </span><span class="s2">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"reportPowerConsumption"</span><span class="p">:</span><span class="w"> </span><span class="p">{}</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="s2">"SmokeDetection"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"definition"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"https://eclipse-ditto.github.io/ditto-examples/wot/models/smoke-detector-1.0.0.tm.jsonld"</span><span class="w">
+      </span><span class="p">]</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="s2">"Status-LED"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"definition"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"https://eclipse-ditto.github.io/ditto-examples/wot/models/colored-lamp-1.0.0.tm.jsonld"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"https://eclipse-ditto.github.io/ditto-examples/wot/models/switchable-1.0.0.tm.jsonld"</span><span class="w">
+      </span><span class="p">],</span><span class="w">
+      </span><span class="s2">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"color"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="s2">"r"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"g"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"b"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="s2">"on"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
       </span><span class="p">}</span><span class="w">
     </span><span class="p">}</span><span class="w">
   </span><span class="p">}</span><span class="w">
@@ -2046,7 +2116,7 @@ A JSON representation of some metadata and state data could for example look lik
 
 <p>Inside “attributes” (the metadata) we can add as much JSON keys as we like with any JSON value we need.</p>
 
-<p>Inside “features” (the state data) we can add as much features as we like - but each feature needs to have 
+<p>Inside “features” (the state data) we can add as many features as we like - but each feature needs to have 
 a “properties” JSON object. Inside that JSON object we can add as much JSON keys as we like with any JSON value we need.</p>
 
 <p>Inside “definition” we can add one JSON string value.</p>
@@ -2057,38 +2127,16 @@ a “properties” JSON object. Inside that JSON object we can add as much JSON 
 Those credentials have been created by default in the <a href="https://github.com/nginx/nginx">nginx</a> started via “docker”. 
 (See <a href="https://github.com/eclipse-ditto/ditto/blob/master/deployment/docker/README.md">ditto/deployment/docker/README.md</a>)</p>
 
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">-u</span> ditto:ditto <span class="nt">-X</span> PUT <span class="nt">-H</span> <span class="s1">'Content-Type: application/json'</span> <span class="nt">-d</span> <span class="s1">'{
-   "definition": "digitaltwin:DigitaltwinExample:1.0.0",
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">-u</span> ditto:ditto <span class="nt">-X</span> POST <span class="nt">-H</span> <span class="s1">'Content-Type: application/json'</span> <span class="nt">-d</span> <span class="s1">'{
+   "definition": "https://eclipse-ditto.github.io/ditto-examples/wot/models/floor-lamp-1.0.0.tm.jsonld",
    "attributes": {
      "manufacturer": "ACME",
      "VIN": "0815666337"
-   },
-   "features": {
-     "transmission": {
-       "properties": {
-         "automatic": true, 
-         "mode": "eco",
-         "cur_speed": 90, 
-         "gear": 5
-       }
-     },
-     "environment-scanner": {
-       "properties": {
-         "temperature": 20.8,
-         "humidity": 73,
-         "barometricPressure": 970.7,
-         "location": {
-           "longitude": 47.682170,
-           "latitude": 9.386372
-         },
-         "altitude": 399
-       }
-     }
    }
- }'</span> <span class="s1">'http://localhost:8080/api/2/things/org.eclipse.ditto:fancy-car'</span>
+ }'</span> <span class="s1">'http://localhost:8080/api/2/things'</span>
 </code></pre></div></div>
 
-<p>The result is a digital twin in Thing notation. The Thing ID is <code class="highlighter-rouge">org.eclipse.ditto:fancy-car</code>. 
+<p>The result is a digital twin in Thing notation. The Thing ID is generated when using the <code class="highlighter-rouge">POST</code> HTTP verb.<br />
 An ID must always contain a namespace before the <code class="highlighter-rouge">:</code>. That way Things are easier to organize.</p>
 
 <h2 id="querying-an-existing-thing">Querying an existing Thing</h2>
@@ -2099,6 +2147,9 @@ our Thing.</p>
 <p>For Things we know the ID of, we can simply query them by their ID:</p>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">-u</span> ditto:ditto <span class="nt">-X</span> GET <span class="s1">'http://localhost:8080/api/2/things/org.eclipse.ditto:fancy-car'</span>
+
+<span class="c"># if you have jq installed, that's how to get a prettier response:</span>
+curl <span class="nt">-u</span> ditto:ditto <span class="nt">-X</span> GET <span class="s1">'http://localhost:8080/api/2/things/org.eclipse.ditto:fancy-car'</span> | jq
 
 <span class="c"># if you have python installed, that's how to get a prettier response:</span>
 curl <span class="nt">-u</span> ditto:ditto <span class="nt">-X</span> GET <span class="s1">'http://localhost:8080/api/2/things/org.eclipse.ditto:fancy-car'</span> | python <span class="nt">-m</span> json.tool
@@ -2153,7 +2204,7 @@ e.g. searching all Things with the same <code class="highlighter-rouge">manufact
                     </div>
                     <p class="notice">
                         &copy;2023 Eclipse Ditto™.
-                         Site last generated: Mar 8, 2023 <br />
+                         Site last generated: Apr 1, 2023 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">
