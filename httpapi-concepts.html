@@ -2382,6 +2382,78 @@ interpreted as delete in contrast to <code class="highlighter-rouge">PUT</code> 
 <p>Like <code class="highlighter-rouge">PUT</code> requests, <code class="highlighter-rouge">PATCH</code> requests can be applied at any level of the JSON structure of a thing, e.g. patching a
 complete thing at root level or patching a single property value at property level.</p>
 
+<h3 id="removing-fields-in-a-merge-update-with-a-regex">Removing fields in a merge update with a regex</h3>
+
+<div class="alert alert-info" role="alert"><i class="fa fa-info-circle"></i> <b>Note:</b> This is an addition to the JSON merge patch (RFC-7396), enhancing using <code class="highlighter-rouge">null</code> values
+    for deleting certain parts of JSON objects specified with a regular expression before applying new fields to it.</div>
+
+<p>The merge patch functionality in Ditto solves a common problem to the JSON merge patch (RFC-7396): whenever a JSON object
+shall be patched, all the old json fields are merged with all the new json fields, unless the exact field names are 
+specified in the patch with <code class="highlighter-rouge">"&lt;field&gt;": null</code>.<br />
+This would however require to know all existing fields upfront, which for a merge patch can not be assumed.</p>
+
+<p>The solution is a little enhancement to Ditto’s merge patch functionality: The ability to delete arbitrary parts from
+JSON objects using a regular expression <strong>before</strong> applying all other patch values.</p>
+
+<p>The syntax for this function is rather specific (so that no “normally” occurring JSON keys match the same syntax):</p>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"{{ /.*/ }}"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>When such a <code class="highlighter-rouge">{{ /&lt;regex&gt;/ }}</code> with the value <code class="highlighter-rouge">null</code> is detected in the merge patch, the content between the 2 <code class="highlighter-rouge">/</code> is 
+interpreted as regular expression to apply for finding keys to delete from the target object.<br />
+As a result, using <code class="highlighter-rouge">"{{ /.*/ }}": null</code> would delete all the values inside a JSON object before applying the new 
+values provided in the patch.</p>
+
+<p>Example:<br />
+Assuming that inside a JSON object every month some aggregated data is stored with the year and month:</p>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"thingId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{thingId}"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"policyId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{policyId}"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"features"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"aggregated-history"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"2022-11"</span><span class="p">:</span><span class="w"> </span><span class="mf">42.3</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"2022-12"</span><span class="p">:</span><span class="w"> </span><span class="mf">54.3</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"2023-01"</span><span class="p">:</span><span class="w"> </span><span class="mf">80.2</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"2023-02"</span><span class="p">:</span><span class="w"> </span><span class="mf">99.9</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>Then the data from “last year” could be purged with the following patch, while adding a new value to the existing ones
+of this year:</p>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"features"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"aggregated-history"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"{{ /2022-.*/ }}"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"2023-03"</span><span class="p">:</span><span class="w"> </span><span class="mf">105.21</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>The resulting Thing JSON after applying the patch would then look like:</p>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"thingId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{thingId}"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"policyId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{policyId}"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"features"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"aggregated-history"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"2023-01"</span><span class="p">:</span><span class="w"> </span><span class="mf">80.2</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"2023-02"</span><span class="p">:</span><span class="w"> </span><span class="mf">99.9</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"2023-03"</span><span class="p">:</span><span class="w"> </span><span class="mf">105.21</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
 <h3 id="permissions-required-for-merge-update">Permissions required for merge update</h3>
 
 <p>To successfully execute merge update the authorized subject needs to have <em>WRITE</em> permission on <em>all</em> resources 
@@ -2559,6 +2631,18 @@ resource as <code class="highlighter-rouge">ETag</code> header</li>
       </li>
     </ul>
   </li>
+  <li><code class="highlighter-rouge">if-equal</code>:
+    <ul>
+      <li>The <code class="highlighter-rouge">if-equal</code> header can take the values <code class="highlighter-rouge">'update'</code> (which is the default if omitted) or <code class="highlighter-rouge">'skip'</code></li>
+      <li>Write the resource only
+        <ul>
+          <li>in case <code class="highlighter-rouge">if-equal: 'update'</code> is defined - even if the entity is equal before the update.</li>
+          <li>in case <code class="highlighter-rouge">if-equal: 'skip'</code> is defined, the entity will not be updated if it is equal before the update.<br />
+In this case a ‘Not Modified’ 304 status is returned.</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
 </ul>
 
 <p>Note that the Ditto HTTP API always provides a <code class="highlighter-rouge">strong</code> entity-tag in the <code class="highlighter-rouge">ETag</code> header, thus you will never receive a
@@ -2718,7 +2802,7 @@ the meantime.</li>
                     </div>
                     <p class="notice">
                         &copy;2023 Eclipse Ditto™.
-                         Site last generated: Apr 1, 2023 <br />
+                         Site last generated: Jun 13, 2023 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">
