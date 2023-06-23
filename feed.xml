@@ -5,9 +5,104 @@
         <description>Announcements, tutorials and examples around Eclipse Ditto and Digital Twins</description>
         <link>https://www.eclipse.org/ditto/</link>
         <atom:link href="https://www.eclipse.org/ditto/feed.xml" rel="self" type="application/rss+xml"/>
-        <pubDate>Tue, 13 Jun 2023 16:12:29 +0000</pubDate>
-        <lastBuildDate>Tue, 13 Jun 2023 16:12:29 +0000</lastBuildDate>
+        <pubDate>Fri, 23 Jun 2023 06:44:17 +0000</pubDate>
+        <lastBuildDate>Fri, 23 Jun 2023 06:44:17 +0000</lastBuildDate>
         <generator>Jekyll v3.6.2</generator>
+        
+        <item>
+            <title>Announcing Eclipse Ditto Release 3.3.0</title>
+            <description>&lt;p&gt;The Eclipse Ditto teams is proud to announce the availability of Eclipse Ditto 
+&lt;a href=&quot;https://projects.eclipse.org/projects/iot.ditto/releases/3.3.0&quot;&gt;3.3.0&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Version 3.3.0 contains features improving &lt;strong&gt;merge/PATCH&lt;/strong&gt; commands, &lt;strong&gt;skipping modifications&lt;/strong&gt; of a twin if the
+value would be equal after the modification and a more production ready Ditto Helm chart.&lt;/p&gt;
+
+&lt;h2 id=&quot;adoption&quot;&gt;Adoption&lt;/h2&gt;
+
+&lt;p&gt;Companies are willing to show their adoption of Eclipse Ditto publicly: 
+&lt;a href=&quot;https://iot.eclipse.org/adopters/?#iot.ditto&quot;&gt;https://iot.eclipse.org/adopters/?#iot.ditto&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;When you use Eclipse Ditto it would be great to support the project by putting your logo there.&lt;/p&gt;
+
+&lt;h2 id=&quot;changelog&quot;&gt;Changelog&lt;/h2&gt;
+
+&lt;p&gt;The main improvements and additions of Ditto 3.3.0 are:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Support &lt;strong&gt;replacing certain json objects&lt;/strong&gt; in a &lt;strong&gt;merge/PATCH command&lt;/strong&gt; instead of merging their fields&lt;/li&gt;
+  &lt;li&gt;Implicitly &lt;strong&gt;convert a merge/PATCH command&lt;/strong&gt; to a &lt;strong&gt;“Create Thing”&lt;/strong&gt; if thing is &lt;strong&gt;not yet existing&lt;/strong&gt;&lt;/li&gt;
+  &lt;li&gt;Provide option to &lt;strong&gt;skip a modification&lt;/strong&gt; in the “twin” &lt;strong&gt;if the value “is equal”&lt;/strong&gt; to the previous value&lt;/li&gt;
+  &lt;li&gt;Addition of the &lt;strong&gt;DevOps API endpoints&lt;/strong&gt; to Ditto’s &lt;strong&gt;OpenAPI&lt;/strong&gt; definition&lt;/li&gt;
+  &lt;li&gt;Improve DittoProtocol MessagePath to be aware of message subject&lt;/li&gt;
+  &lt;li&gt;Support alternative way of specifying &lt;strong&gt;“list” query parameters&lt;/strong&gt;&lt;/li&gt;
+  &lt;li&gt;UI enhancements:
+    &lt;ul&gt;
+      &lt;li&gt;Enhance Ditto-UI to dynamically configure log levels of Ditto&lt;/li&gt;
+      &lt;li&gt;Building and packaging the UI with esbuild&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The following non-functional enhancements are also included:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Provide &lt;strong&gt;official Eclipse Ditto Helm chart&lt;/strong&gt; via &lt;strong&gt;Docker Hub&lt;/strong&gt; and move its sources to Ditto Git repository
+    &lt;ul&gt;
+      &lt;li&gt;In addition, provide a lot more configuration options and hardening of the chart to make it more feasible
+for productive use&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The following notable fixes are included:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Fix that redeliveries for acknowledgeable connectivity messages were issued too often&lt;/li&gt;
+  &lt;li&gt;Fix WoT dispatcher starvation by adding timeouts to fetch models&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Please have a look at the &lt;a href=&quot;release_notes_330.html&quot;&gt;3.3.0 release notes&lt;/a&gt; for a more detailed information on the release.&lt;/p&gt;
+
+&lt;h2 id=&quot;artifacts&quot;&gt;Artifacts&lt;/h2&gt;
+
+&lt;p&gt;The new Java artifacts have been published at the &lt;a href=&quot;https://repo.eclipse.org/content/repositories/ditto/&quot;&gt;Eclipse Maven repository&lt;/a&gt;
+as well as &lt;a href=&quot;https://repo1.maven.org/maven2/org/eclipse/ditto/&quot;&gt;Maven central&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;The Ditto JavaScript client release was published on &lt;a href=&quot;https://www.npmjs.com/~eclipse_ditto&quot;&gt;npmjs.com&lt;/a&gt;:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.npmjs.com/package/@eclipse-ditto/ditto-javascript-client-dom&quot;&gt;@eclipse-ditto/ditto-javascript-client-dom&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.npmjs.com/package/@eclipse-ditto/ditto-javascript-client-node&quot;&gt;@eclipse-ditto/ditto-javascript-client-node&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The Docker images have been pushed to Docker Hub:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://hub.docker.com/r/eclipse/ditto-policies/&quot;&gt;eclipse/ditto-policies&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://hub.docker.com/r/eclipse/ditto-things/&quot;&gt;eclipse/ditto-things&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://hub.docker.com/r/eclipse/ditto-things-search/&quot;&gt;eclipse/ditto-things-search&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://hub.docker.com/r/eclipse/ditto-gateway/&quot;&gt;eclipse/ditto-gateway&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://hub.docker.com/r/eclipse/ditto-connectivity/&quot;&gt;eclipse/ditto-connectivity&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The Ditto Helm chart has been published to Docker Hub:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://hub.docker.com/r/eclipse/ditto/&quot;&gt;eclipse/ditto&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;br /&gt;
+&lt;br /&gt;&lt;/p&gt;
+&lt;figure&gt;&lt;img class=&quot;docimage&quot; src=&quot;images/ditto.svg&quot; alt=&quot;Ditto&quot; style=&quot;max-width: 500px&quot; /&gt;&lt;/figure&gt;
+
+&lt;p&gt;–&lt;br /&gt;
+The Eclipse Ditto team&lt;/p&gt;
+</description>
+            <pubDate>Fri, 23 Jun 2023 00:00:00 +0000</pubDate>
+            <link>https://www.eclipse.org/ditto/2023-06-23-release-announcement-330.html</link>
+            <guid isPermaLink="true">https://www.eclipse.org/ditto/2023-06-23-release-announcement-330.html</guid>
+            
+            <category>blog</category>
+            
+            
+        </item>
         
         <item>
             <title>Announcing Eclipse Ditto Release 3.2.0</title>
@@ -1112,171 +1207,6 @@ The Eclipse Ditto team&lt;/p&gt;
             <pubDate>Wed, 22 Dec 2021 00:00:00 +0000</pubDate>
             <link>https://www.eclipse.org/ditto/2021-12-22-live-channel-condition.html</link>
             <guid isPermaLink="true">https://www.eclipse.org/ditto/2021-12-22-live-channel-condition.html</guid>
-            
-            <category>blog</category>
-            
-            <category>http</category>
-            
-            
-        </item>
-        
-        <item>
-            <title>Sending live channel commands via HTTP to devices</title>
-            <description>&lt;p&gt;The upcoming release of Eclipse Ditto &lt;strong&gt;version 2.3.0&lt;/strong&gt; will support sending commands via the HTTP API 
-directly to devices using the &lt;a href=&quot;protocol-twinlive.html#live&quot;&gt;live channel&lt;/a&gt; by just adding the &lt;code class=&quot;highlighter-rouge&quot;&gt;channel=live&lt;/code&gt; 
-query parameter to the same HTTP API request which would target the &lt;a href=&quot;protocol-twinlive.html#twin&quot;&gt;twin&lt;/a&gt;.&lt;/p&gt;
-
-&lt;h2 id=&quot;http-live-channel&quot;&gt;HTTP Live channel&lt;/h2&gt;
-
-&lt;p&gt;Ditto supports sending all kind of &lt;a href=&quot;protocol-specification-things.html#commands&quot;&gt;Thing commands&lt;/a&gt; via
-the &lt;code class=&quot;highlighter-rouge&quot;&gt;live&lt;/code&gt; channel directly to devices.
-When sending a &lt;code class=&quot;highlighter-rouge&quot;&gt;live&lt;/code&gt; command to  a device, the device is responsible for sending a correlated and correct response 
-in &lt;a href=&quot;protocol-overview.html&quot;&gt;Ditto Protocol&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;Ditto supports two types of &lt;code class=&quot;highlighter-rouge&quot;&gt;channel&lt;/code&gt;s for communication.&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;protocol-twinlive.html#twin&quot;&gt;twin&lt;/a&gt;: The default value of the channel parameter is &lt;code class=&quot;highlighter-rouge&quot;&gt;twin&lt;/code&gt; 
-to communicate with the persisted &lt;strong&gt;twin&lt;/strong&gt; representation.&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;protocol-twinlive.html#live&quot;&gt;live&lt;/a&gt;: The &lt;code class=&quot;highlighter-rouge&quot;&gt;channel&lt;/code&gt; parameter can be changed to &lt;code class=&quot;highlighter-rouge&quot;&gt;live&lt;/code&gt; 
-to communicate with the real device.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;div class=&quot;alert alert-info&quot; role=&quot;alert&quot;&gt;&lt;i class=&quot;fa fa-info-circle&quot;&gt;&lt;/i&gt; &lt;b&gt;Note:&lt;/b&gt; In order to use the live channel, the device receiving live commands must be able to understand
-  and answer in &lt;a href=&quot;protocol-specification.html&quot;&gt;Ditto Protocol messages&lt;/a&gt; with the
-&lt;a href=&quot;protocol-specification-topic.html#live-channel&quot;&gt;topic’s channel being &lt;code class=&quot;highlighter-rouge&quot;&gt;live&lt;/code&gt;&lt;/a&gt;.&lt;/div&gt;
-
-&lt;p&gt;When using the &lt;code class=&quot;highlighter-rouge&quot;&gt;twin&lt;/code&gt; channel, the command is routed to the Ditto backend and handled by the &lt;strong&gt;twin&lt;/strong&gt; persistence.
-Before using the &lt;code class=&quot;highlighter-rouge&quot;&gt;live&lt;/code&gt; channel, it is necessary to create the &lt;strong&gt;digital twin&lt;/strong&gt; of the device in the 
-Ditto backend.&lt;/p&gt;
-
-&lt;p&gt;If the &lt;code class=&quot;highlighter-rouge&quot;&gt;live&lt;/code&gt; channel is used, the command is directly routed to the device. In this case the device is 
-responsible for answering the command and sending back a response. In case no response is sent back, the Ditto HTTP API 
-is responding with &lt;code class=&quot;highlighter-rouge&quot;&gt;408 Request Timeout&lt;/code&gt;.&lt;br /&gt;
-The default timeout for live commands is &lt;code class=&quot;highlighter-rouge&quot;&gt;10s&lt;/code&gt; but it can be changed by setting the &lt;code class=&quot;highlighter-rouge&quot;&gt;timeout&lt;/code&gt; parameter to the 
-desired value.&lt;/p&gt;
-
-&lt;p&gt;Ditto ensures that the &lt;code class=&quot;highlighter-rouge&quot;&gt;correlation ID&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;entity ID&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;path&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;command response type&lt;/code&gt; of the command response 
-is the same as in the sending command. If this is not the case, Ditto is dropping the response and the caller of the 
-HTTP request will get a &lt;code class=&quot;highlighter-rouge&quot;&gt;408 Request Timeout&lt;/code&gt; with a message that the timeout was caused by an incompatible
-command response from the device.&lt;/p&gt;
-
-&lt;h3 id=&quot;permissions-for-live-commands&quot;&gt;Permissions for live commands&lt;/h3&gt;
-
-&lt;p&gt;Sending live commands to devices is restricted by the policy of the thing.&lt;br /&gt;
-Thus Ditto ensures that only authorized parties with &lt;code class=&quot;highlighter-rouge&quot;&gt;WRITE&lt;/code&gt; permission are able to send commands or messages.&lt;br /&gt;
-Ditto also filters responses from the device based on the policy. This ensures that the requester only gets the data
-where he/she has &lt;code class=&quot;highlighter-rouge&quot;&gt;READ&lt;/code&gt; permission on.&lt;/p&gt;
-
-&lt;p&gt;For retrieve commands, the &lt;a href=&quot;basic-auth.html#authenticated-subjects&quot;&gt;authenticated subject&lt;/a&gt; needs to have 
-(at least partial) &lt;code class=&quot;highlighter-rouge&quot;&gt;READ&lt;/code&gt; permission at the resource which is requested.&lt;br /&gt;
-In case a &lt;code class=&quot;highlighter-rouge&quot;&gt;RetrieveThing&lt;/code&gt; (via HTTP a &lt;code class=&quot;highlighter-rouge&quot;&gt;GET /api/2/things/&amp;lt;thing-id&amp;gt;&lt;/code&gt;) command is sent to a real device and the 
-requester only has partial &lt;code class=&quot;highlighter-rouge&quot;&gt;READ&lt;/code&gt; permission on the thing, the response is filtered based on the policy 
-and only the fields where &lt;code class=&quot;highlighter-rouge&quot;&gt;READ&lt;/code&gt; permission is granted are returned.&lt;/p&gt;
-
-&lt;h3 id=&quot;live-commands-via-http-api&quot;&gt;Live commands via HTTP API&lt;/h3&gt;
-
-&lt;p&gt;When using the HTTP API the &lt;code class=&quot;highlighter-rouge&quot;&gt;channel&lt;/code&gt; parameter can either be specified via HTTP Header or via HTTP query parameter.&lt;br /&gt;
-In the examples below both ways are possible to specify the channel parameter.&lt;/p&gt;
-
-&lt;h4 id=&quot;live-command-with-http-header&quot;&gt;Live command with HTTP Header&lt;/h4&gt;
-
-&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;curl &lt;span class=&quot;nt&quot;&gt;-X&lt;/span&gt; GET &lt;span class=&quot;nt&quot;&gt;-H&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'channel: live'&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-H&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'timeout: 30s'&lt;/span&gt; /api/2/things/org.eclipse.ditto:coffeebrewer&lt;span class=&quot;s1&quot;&gt;'
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h4 id=&quot;live-command-with-http-query-parameter&quot;&gt;Live command with HTTP query parameter&lt;/h4&gt;
-
-&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;curl &lt;span class=&quot;nt&quot;&gt;-X&lt;/span&gt; GET /api/2/things/org.eclipse.ditto:coffeebrewer?channel&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;live&amp;amp;timeout&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;30s&lt;span class=&quot;s1&quot;&gt;'
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h2 id=&quot;example&quot;&gt;Example&lt;/h2&gt;
-
-&lt;p&gt;The following section provides an example how to use the HTTP &lt;code class=&quot;highlighter-rouge&quot;&gt;live&lt;/code&gt; channel together with the Ditto Java client.&lt;/p&gt;
-
-&lt;p&gt;For demonstration purpose, we assume that the thing with ID &lt;code class=&quot;highlighter-rouge&quot;&gt;org.eclipse.ditto:outdoor-sensor&lt;/code&gt; already exists.&lt;/p&gt;
-
-&lt;p&gt;In this example we want to retrieve the live state of the device by sending a &lt;code class=&quot;highlighter-rouge&quot;&gt;RetrieveThing&lt;/code&gt; command via
-the &lt;code class=&quot;highlighter-rouge&quot;&gt;live&lt;/code&gt; channel directly to the device.&lt;/p&gt;
-
-&lt;h3 id=&quot;permissions-to-execute-the-example&quot;&gt;Permissions to execute the example&lt;/h3&gt;
-
-&lt;p&gt;For this example, the &lt;a href=&quot;basic-auth.html#authenticated-subjects&quot;&gt;authenticated subject&lt;/a&gt; has
-&lt;code class=&quot;highlighter-rouge&quot;&gt;READ&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;WRITE&lt;/code&gt; permissions on the complete thing resource to send the command and retrieve the full response.&lt;/p&gt;
-
-&lt;h3 id=&quot;executing-the-example&quot;&gt;Executing the example&lt;/h3&gt;
-
-&lt;p&gt;When sending a command over the &lt;code class=&quot;highlighter-rouge&quot;&gt;live&lt;/code&gt; channel to a device, the device needs to take action and send back a response.&lt;br /&gt;
-The response from the device is routed back to the initial requester of the &lt;code class=&quot;highlighter-rouge&quot;&gt;live&lt;/code&gt; command at the HTTP API.&lt;/p&gt;
-
-&lt;p&gt;In this example the &lt;a href=&quot;client-sdk-java.html&quot;&gt;Ditto Java Client&lt;/a&gt; acts as device and sends back the response.&lt;br /&gt;
-The following snippet shows how to register for retrieve thing live commands and send back a &lt;code class=&quot;highlighter-rouge&quot;&gt;RetrieveThingResponse&lt;/code&gt;.&lt;/p&gt;
-
-&lt;div class=&quot;language-java highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;thingId&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;org.eclipse.ditto:outdoor-sensor&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;featureId&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;environment-sensor&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;Attributes&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;attributes&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Attributes&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;newBuilder&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt;
-  &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;set&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;location&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;outdoor in the woods&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-  &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;build&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;Feature&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;feature&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ThingsModelFactory&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;newFeatureBuilder&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt;
-  &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;properties&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ThingsModelFactory&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;newFeaturePropertiesBuilder&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt;
-    &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;set&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;temperature&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;9.2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-    &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;set&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;humidity&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;56.3&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-    &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;build&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;())&lt;/span&gt;
-  &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;withId&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;featureId&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-  &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;build&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
-
-&lt;span class=&quot;n&quot;&gt;Thing&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;thing&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ThingsModelFactory&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;newThingBuilder&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt;
-  &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;setId&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;thingId&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-  &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;setFeature&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;feature&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-  &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;setAttributes&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;attributes&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-  &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;build&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
-
-&lt;span class=&quot;c1&quot;&gt;// initialize the ditto-client and startConsumption() of live commands&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;DittoClient&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;dittoClient&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;...&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
-
-&lt;span class=&quot;n&quot;&gt;dittoClient&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;live&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt;
-  &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;forId&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;thingId&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-  &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;handleRetrieveThingCommandsFunction&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;retrieveThingLiveCommand&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
-      &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;retrieveThingLiveCommand&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;answer&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt;
-                  &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;withResponse&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;response&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;response&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;retrieved&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;thing&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;));&lt;/span&gt;
-  &lt;span class=&quot;o&quot;&gt;});&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;When the above shown code snippet is running and the following HTTP request is sent out:&lt;/p&gt;
-&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;curl &lt;span class=&quot;nt&quot;&gt;-X&lt;/span&gt; GET /api/2/things/org.eclipse.ditto:outdoor-sensor?channel&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;live&amp;amp;timeout&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;15s
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;The received HTTP response payload should look like this:&lt;/p&gt;
-&lt;div class=&quot;language-json highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-  &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;thingId&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;org.eclipse.ditto:outdoor-sensor&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-  &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;_namespace&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;org.eclipse.ditto&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-  &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;attributes&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;location&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;outdoor in the woods&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-  &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;features&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;environment-sensor&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-      &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;properties&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-        &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;temperature&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;9.2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-        &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;humidity&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;56.3&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-      &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h2 id=&quot;feedback&quot;&gt;Feedback?&lt;/h2&gt;
-
-&lt;p&gt;Please &lt;a href=&quot;feedback.html&quot;&gt;get in touch&lt;/a&gt; if you have feedback or questions towards this new functionality.&lt;/p&gt;
-
-&lt;p&gt;&lt;br /&gt;
-&lt;br /&gt;&lt;/p&gt;
-&lt;figure&gt;&lt;img class=&quot;docimage&quot; src=&quot;images/ditto.svg&quot; alt=&quot;Ditto&quot; style=&quot;max-width: 500px&quot; /&gt;&lt;/figure&gt;
-
-&lt;p&gt;–&lt;br /&gt; 
-The Eclipse Ditto team&lt;/p&gt;
-</description>
-            <pubDate>Mon, 20 Dec 2021 00:00:00 +0000</pubDate>
-            <link>https://www.eclipse.org/ditto/2021-12-20-http-live-channel.html</link>
-            <guid isPermaLink="true">https://www.eclipse.org/ditto/2021-12-20-http-live-channel.html</guid>
             
             <category>blog</category>
             
