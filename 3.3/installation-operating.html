@@ -274,6 +274,13 @@
               
               
               
+              <li><a href="release_notes_334.html">3.3.4</a></li>
+              
+              
+              
+              
+              
+              
               <li><a href="release_notes_333.html">3.3.3</a></li>
               
               
@@ -2260,16 +2267,24 @@ The basic schema is:</p>
 
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># restrict entity creation
 ditto.entity-creation {
-   grant = [
-      {
-         resource-types = [],
-         namespace = []
-         auth-subjects = []
-      }
-   ]
-   revoke = [
-      # same as "grant", but rejecting requests which already passed "grant"
-   ]
+   # this default entry allows every authenticated "auth-subject" to create any "resource-type" in any "namespace":
+  grant = [
+    {
+      resource-types = [
+//        "policy"
+//        "thing"
+      ]
+      namespaces = [
+//        "org.eclipse.ditto*"
+      ]
+      auth-subjects = [
+//        "pre:ditto-*"
+      ]
+    }
+  ]
+  revoke = [
+    # same as "grant", but rejecting requests which already passed "grant"
+  ]
 }
 </code></pre></div></div>
 
@@ -3352,7 +3367,7 @@ to stop blocking messages to a namespace.</p>
                     </div>
                     <p class="notice">
                         &copy;2023 Eclipse Ditto™.
-                         Site last generated: Jul 7, 2023 <br />
+                         Site last generated: Jul 11, 2023 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">
