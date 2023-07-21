@@ -274,6 +274,13 @@
               
               
               
+              <li><a href="release_notes_335.html">3.3.5</a></li>
+              
+              
+              
+              
+              
+              
               <li><a href="release_notes_334.html">3.3.4</a></li>
               
               
@@ -2035,7 +2042,7 @@ $('#toc').on('click', 'a', function() {
 
 <p>In order to start Ditto, you’ll need:</p>
 <ul>
-  <li>a <a href="https://github.com/mongodb/mongo">MongoDB</a> service or container with version <strong>4.2</strong> as backing datastore of Ditto.
+  <li>a <a href="https://github.com/mongodb/mongo">MongoDB</a> service or container with version greater or equal <strong>4.2</strong> as backing datastore of Ditto.
 (if you want to use a managed MongoDB service have a look in the <a href="#managed-mongodb-service">section</a> below)
     <ul>
       <li>Supported MongoDB versions:
@@ -2045,6 +2052,8 @@ $('#toc').on('click', 'a', function() {
           <li>5.0</li>
         </ul>
       </li>
+      <li>Alternatively, <a href="https://aws.amazon.com/documentdb/">Amazon DocumentDB (with MongoDB compatibility)</a> may also be used,
+however with some limitations, see the <a href="#managed-amazon-documentdb--with-mongodb-compatibility-">section about DocumentDB below</a></li>
     </ul>
   </li>
   <li>the built Docker images of Ditto
@@ -2098,6 +2107,75 @@ After completing the deployment of your choice Ditto should be up &amp; running.
   <li>Daily Backups</li>
 </ul>
 
+<h3 id="managed-amazon-documentdb-with-mongodb-compatibility">Managed Amazon DocumentDB (with MongoDB compatibility)</h3>
+
+<p>DocumentDB provides a MongoDB 4.0 compatible replacement for MongoDB.<br />
+Eclipse Ditto supports running against MongoDB 4.0 compatible mode, however with restrictions.</p>
+
+<h4 id="configuration">Configuration</h4>
+
+<p>If DocumentDB compatibility mode shall be enabled, the following environment variable has to be configured for all Ditto
+services:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>MONGO_DB_DOCUMENTDB_COMPATIBILITY_MODE=true
+</code></pre></div></div>
+
+<p>Effects:</p>
+<ul>
+  <li>That configuration will change a behavior in Ditto’s <code class="highlighter-rouge">MongoReadJournal</code> concerning the sorting based on priority of 
+connections to recover after a “cold start” of Ditto (e.g. after a “recreate” deployment)
+    <ul>
+      <li>as DocumentDB does not support configuring 
+<a href="https://www.mongodb.com/docs/v4.2/reference/collation/"><code class="highlighter-rouge">collation</code> and <code class="highlighter-rouge">numericOrdering=true</code></a>, a workaround was 
+added which disables this configuration</li>
+      <li>the workaround for DocumentDB only correctly sorts connection priorities less than 1000 - connections with higher 
+priorities will be started in an order not reflected by their priority value</li>
+      <li>this limitation is only relevant if many (e.g. several hundreds) connections are managed by Ditto</li>
+    </ul>
+  </li>
+  <li>That configuration will also prevent that the <a href="https://www.mongodb.com/docs/manual/core/index-wildcard/">wildcard index</a>
+in Ditto’s search collection is created - in order to prevent errors upon index creation as this index type is not
+supported by DocumentDB
+    <ul>
+      <li>for more information on the effects of that, please have a look at the <a href="#documentdb-restriction-regarding-search">following section</a></li>
+    </ul>
+  </li>
+</ul>
+
+<h4 id="documentdb-restriction-regarding-search">DocumentDB restriction regarding search</h4>
+
+<p>As DocumentDB does not support the in Mongo 4.2 added
+<a href="https://www.mongodb.com/docs/manual/core/index-wildcard/">wildcard index</a> which Ditto’s
+<a href="architecture-services-things-search.html">search service</a> makes use of, the search functionality - when Ditto
+runs against DocumentDB - can have a poor performance.</p>
+
+<p>Without the index, every performed query will basically have to search through all documents in the search collection.<br />
+The amount of documents to search in however can significantly be reduced by executing the search with users 
+(<a href="basic-auth.html#authenticated-subjects">authenticated subjects</a>) which are only allowed to <code class="highlighter-rouge">READ</code> a smaller set of 
+things.<br />
+That is due to the fact, that every “authenticated subject” which is allowed to <code class="highlighter-rouge">READ</code> any field in a thing, is added 
+in an indexed field in the <code class="highlighter-rouge">search</code> collection. And the query planner always uses this index in absence of the 
+“wildcard index”.</p>
+
+<p>For example:</p>
+<ul>
+  <li>assuming you in total have 300.000 things persisted</li>
+  <li>if you use a single user which is allowed to <code class="highlighter-rouge">READ</code> all of those 300k things
+    <ul>
+      <li>if you do a search, all the 300k documents have to be scanned</li>
+      <li>the search query performance will be really poor, probably &gt; 15 seconds, maybe even worse</li>
+    </ul>
+  </li>
+  <li>if you instead have 1.000 users from which every user is only allowed to <code class="highlighter-rouge">READ</code> 300 things
+    <ul>
+      <li>only 300 documents have to be scanned</li>
+      <li>the search query performance will be quite good, probably &lt; 1 second, maybe even better</li>
+    </ul>
+  </li>
+</ul>
+
+<p>If that restriction fits you use case, or if search queries are not needed at all, Amazon DocumentDB can be a good
+replacement for MongoDB as backing persistence for Ditto.</p>
+
 
     <div class="tags">
         
@@ -2127,7 +2205,7 @@ After completing the deployment of your choice Ditto should be up &amp; running.
                     </div>
                     <p class="notice">
                         &copy;2023 Eclipse Ditto™.
-                         Site last generated: Jul 11, 2023 <br />
+                         Site last generated: Jul 21, 2023 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">
