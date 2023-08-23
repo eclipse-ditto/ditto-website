@@ -4,9 +4,9 @@
     <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="Version 3.3.5 of Eclipse Ditto, released on 21.07.2023">
+<meta name="description" content="Version 3.3.6 of Eclipse Ditto, released on 23.08.2023">
 <meta name="keywords" content="release_notes,  release notes, announcements, changelog">
-<title>  Release notes 3.3.5 • Eclipse Ditto™ • a digital twin framework</title>
+<title>  Release notes 3.3.6 • Eclipse Ditto™ • a digital twin framework</title>
 
 <link rel="stylesheet" href="css/syntax.css">
 <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" crossorigin="anonymous">
@@ -183,7 +183,7 @@
                                 searchInput: document.getElementById('search-input'),
                                 resultsContainer: document.getElementById('results-container'),
                                 dataSource: 'search.json',
-                                searchResultTemplate: '<li><a href="{url}" title="Release notes 3.3.5">{title}</a></li>',
+                                searchResultTemplate: '<li><a href="{url}" title="Release notes 3.3.6">{title}</a></li>',
                                 noResultsText: 'No results found.',
                                 limit: 10,
                                 fuzzy: true,
@@ -274,14 +274,14 @@
               
               
               
-              <li><a href="release_notes_336.html">3.3.6</a></li>
+              <li class="active"><a href="release_notes_336.html">3.3.6</a></li>
               
               
               
               
               
               
-              <li class="active"><a href="release_notes_335.html">3.3.5</a></li>
+              <li><a href="release_notes_335.html">3.3.5</a></li>
               
               
               
@@ -1988,7 +1988,7 @@
         <!-- Content Column -->
         <div class="col-md-9" id="tg-sb-content">
             <div class="post-header">
-   <h1 class="post-title-main">Release notes 3.3.5</h1>
+   <h1 class="post-title-main">Release notes 3.3.6</h1>
 </div>
 
 
@@ -1996,7 +1996,7 @@
 <div class="post-content">
 
    
-    <div class="summary">Version 3.3.5 of Eclipse Ditto, released on 21.07.2023</div>
+    <div class="summary">Version 3.3.6 of Eclipse Ditto, released on 23.08.2023</div>
    
 
     
@@ -2028,7 +2028,7 @@ $('#toc').on('click', 'a', function() {
     
     
 
-    <a target="_blank" href="https://github.com/eclipse/ditto/edit/master/documentation/src/main/resources/pages/ditto/release_notes_335.md" class="btn btn-default githubEditButton" role="button"><i class="fa fa-github fa-lg"></i> Edit this page</a>
+    <a target="_blank" href="https://github.com/eclipse/ditto/edit/master/documentation/src/main/resources/pages/ditto/release_notes_336.md" class="btn btn-default githubEditButton" role="button"><i class="fa fa-github fa-lg"></i> Edit this page</a>
 
     
     
@@ -2036,49 +2036,40 @@ $('#toc').on('click', 'a', function() {
 
     
 
-  <p>This is a bugfix release, no new features since <a href="release_notes_334.html">3.3.4</a> were added.</p>
+  <p>This is a bugfix release, no new features since <a href="release_notes_335.html">3.3.5</a> were added.</p>
 
 <h2 id="changelog">Changelog</h2>
 
-<p>Compared to the latest release <a href="release_notes_334.html">3.3.4</a>, the following changes and bugfixes were added.</p>
+<p>Compared to the latest release <a href="release_notes_335.html">3.3.5</a>, the following changes and bugfixes were added.</p>
 
 <h3 id="changes">Changes</h3>
 
 <h3 id="bugfixes">Bugfixes</h3>
 
 <p>This is a complete list of the
-<a href="https://github.com/eclipse-ditto/ditto/pulls?q=is%3Apr+milestone%3A3.3.5">merged pull requests</a>.</p>
+<a href="https://github.com/eclipse-ditto/ditto/pulls?q=is%3Apr+milestone%3A3.3.6">merged pull requests</a>.</p>
 
-<h4 id="fix-filtering-of-live-message-with-empty-resolved-extrafields"><a href="https://github.com/eclipse-ditto/ditto/pull/1694">Fix filtering of live message with empty resolved extraFields</a></h4>
+<h4 id="fixed-providing-ditto-adaptable-information-in-the-_context-of-an-sse-event"><a href="https://github.com/eclipse-ditto/ditto/pull/1716">Fixed providing Ditto Adaptable information in the “_context” of an SSE event</a></h4>
 
-<p>When selected <code class="highlighter-rouge">extraFields</code> were not present when enriching a “live message” in a connection, the filtering dropped
-the message.<br />
-This is now fixed and the message is sent also when the <code class="highlighter-rouge">extraFields</code> are not existing.</p>
+<p>Previously, the optional <code class="highlighter-rouge">_context</code> of an SSE subscription only contained the headers.</p>
 
-<h4 id="fixed-persisting-inline-_policy-in-thingmerged-events"><a href="https://github.com/eclipse-ditto/ditto/pull/1695">Fixed persisting inline “_policy” in ThingMerged events</a></h4>
+<p>The fix also adds (same as for the <a href="connectivity-mapping.html#normalized-mapper"><code class="highlighter-rouge">NormalizedMessageMapper</code></a>) the <code class="highlighter-rouge">topic</code>
+and <code class="highlighter-rouge">path</code> of the underlying Ditto protocol message.</p>
 
-<p>Since 3.3.0 it is possible to create a thing with a MergeThing (PATCH Thing) command - and it also is possible to 
-provide an inline policy to be created for the “create thing” case.</p>
+<h4 id="fixed-using-cloudevents-endpoint-for-other-entities-than-things"><a href="https://github.com/eclipse-ditto/ditto/pull/1724">Fixed using “/cloudevents” endpoint for other entities than things</a></h4>
 
-<p>This <code class="highlighter-rouge">"_policy"</code> field however was persisted in the Things event journal - which is definitely not wanted.</p>
-
-<h4 id="use-correct-http-status-code-for-if-equal-skip-on-equality"><a href="https://github.com/eclipse-ditto/ditto/pull/1695">Use correct HTTP status code for “if-equal”: skip on equality</a></h4>
-
-<p>When modifying a thing and setting the (in Ditto 3.3.0 added) header <code class="highlighter-rouge">if-equal: skip</code> the HTTP status code if the 
-outcome would be equal to the provided value is: <code class="highlighter-rouge">304 (Not Modified)</code>.<br />
-This status code is however only allowed to be returned for “safe” methods like GET and HEAD.<br />
-Instead now (same as for the If-Match headers) a <code class="highlighter-rouge">412 (Precondition failed)</code> is used.</p>
+<p>When sending <code class="highlighter-rouge">Policy</code> commands via the <code class="highlighter-rouge">POST /cloudevents</code> endpoint, the HTTP response was never completed successfully, 
+as the cloudevents implementation made the assumption to always handle thing commands only.<br />
+This has been fixed, now also Policy commands may be sent via the Cloud Events endpoint.</p>
 
 <h3 id="helm-chart">Helm Chart</h3>
 
 <p>The <a href="https://github.com/eclipse-ditto/ditto/tree/master/deployment/helm">Ditto Helm Chart</a>, which was enhanced and changed 
 a lot for version 3.3.0, contained some configuration bugs which are also addressed with this bugfix release.</p>
 
-<h4 id="fix-that-in-helm-config-jwtonlyfalse-will-enable-pre-authentication-in-ditto"><a href="https://github.com/eclipse-ditto/ditto/pull/1697">Fix that in Helm config jwtOnly=false will enable pre-authentication in Ditto</a></h4>
+<h4 id="support-for-basic-nginx-ingress-authentication"><a href="https://github.com/eclipse-ditto/ditto/pull/1702">Support for basic nginx-ingress authentication</a></h4>
 
-<p>By default, the Ditto Helm chart now enabled authentication with nginx when <code class="highlighter-rouge">jwtOnly</code> is configured to be <code class="highlighter-rouge">false</code>, 
-which is the default.</p>
-
+<p>When using “Ingress” in the Ditto Helm chart, now also users via nginx “Basic auth” can be authenticated.</p>
 
 
     <div class="tags">
