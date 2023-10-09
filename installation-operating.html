@@ -2062,8 +2062,8 @@ the following environment variables in order to configure the connection to the 
   <li><code class="highlighter-rouge">MONGO_DB_CONNECTION_POOL_SIZE</code>: Configure MongoDB connection pool size</li>
   <li><code class="highlighter-rouge">MONGO_DB_READ_PREFERENCE</code>: Configure MongoDB read preference</li>
   <li><code class="highlighter-rouge">MONGO_DB_WRITE_CONCERN</code>: Configure MongoDB write concern</li>
-  <li><code class="highlighter-rouge">AKKA_PERSISTENCE_MONGO_JOURNAL_WRITE_CONCERN</code>: Configure Akka Persistence MongoDB journal write concern</li>
-  <li><code class="highlighter-rouge">AKKA_PERSISTENCE_MONGO_SNAPS_WRITE_CONCERN</code>: Configure Akka Persistence MongoDB snapshot write concern</li>
+  <li><code class="highlighter-rouge">PEKKO_PERSISTENCE_MONGO_JOURNAL_WRITE_CONCERN</code>: Configure Pekko Persistence MongoDB journal write concern</li>
+  <li><code class="highlighter-rouge">PEKKO_PERSISTENCE_MONGO_SNAPS_WRITE_CONCERN</code>: Configure Pekko Persistence MongoDB snapshot write concern</li>
 </ul>
 
 <h3 id="ditto-configuration">Ditto configuration</h3>
@@ -2199,7 +2199,7 @@ may be put in front of Ditto to handle the token-logic like e.g. loading/saving 
 it to Ditto as <code class="highlighter-rouge">Authorization</code> header.</p>
 
 <p><strong>If the chosen OIDC provider uses a self-signed certificate</strong>, the certificate has to be retrieved and configured for 
-the akka-http ssl configuration.</p>
+the pekko-http ssl configuration.</p>
 
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ssl-config {
   trustManager = {
@@ -3224,7 +3224,7 @@ so that the old namespace could be reused at a later point in time.</li>
 
 <h5 id="block-all-messages-to-a-namespace">Block all messages to a namespace</h5>
 
-<p>Send a piggyback command to <a href="https://doc.akka.io/docs/akka/current/distributed-pub-sub.html">Akka’s pub-sub-mediator</a> with type <code class="highlighter-rouge">namespaces.commands:blockNamespace</code>
+<p>Send a piggyback command to <a href="https://pekko.apache.org/docs/pekko/current/distributed-pub-sub.html">Pekko’s pub-sub-mediator</a> with type <code class="highlighter-rouge">namespaces.commands:blockNamespace</code>
 to block all messages sent to actors belonging to a namespace.</p>
 
 <p><code class="highlighter-rouge">PUT /devops/piggyback?timeout=10s</code></p>
@@ -3255,7 +3255,7 @@ or until you proceed with <a href="#unblock-messages-to-a-namespace">step 4</a>,
 
 <h5 id="shutdown-all-actors-in-a-namespace">Shutdown all actors in a namespace</h5>
 
-<p>Send a piggyback command to <a href="https://doc.akka.io/docs/akka/current/distributed-pub-sub.html">Akka’s pub-sub-mediator</a> with type <code class="highlighter-rouge">common.commands:shutdown</code>
+<p>Send a piggyback command to <a href="https://pekko.apache.org/docs/pekko/current/distributed-pub-sub.html">Pekko’s pub-sub-mediator</a> with type <code class="highlighter-rouge">common.commands:shutdown</code>
 to request all actors in a namespace to shut down. The value of <code class="highlighter-rouge">piggybackCommand/reason/type</code> must be
 <code class="highlighter-rouge">purge-namespace</code>; otherwise, the namespace’s actors will not stop themselves.</p>
 
@@ -3279,7 +3279,7 @@ Feel free to send the shutdown command several times to make sure.</p>
 
 <h5 id="erase-all-data-in-a-namespace-from-the-persistence">Erase all data in a namespace from the persistence</h5>
 
-<p>Send a piggyback command to <a href="https://doc.akka.io/docs/akka/current/distributed-pub-sub.html">Akka’s pub-sub-mediator</a> with type <code class="highlighter-rouge">namespaces.commands:purgeNamespace</code>
+<p>Send a piggyback command to <a href="https://pekko.apache.org/docs/pekko/current/distributed-pub-sub.html">Pekko’s pub-sub-mediator</a> with type <code class="highlighter-rouge">namespaces.commands:purgeNamespace</code>
 to erase all data from the persistence.
 It is better to purge a namespace after
 <a href="#block-all-messages-to-a-namespace">blocking</a> it and
@@ -3336,7 +3336,7 @@ Note that to see responses from multiple resource types, the header <code class=
 
 <h5 id="unblock-messages-to-a-namespace">Unblock messages to a namespace</h5>
 
-<p>Send a piggyback command to <a href="https://doc.akka.io/docs/akka/current/distributed-pub-sub.html">Akka’s pub-sub-mediator</a> with type <code class="highlighter-rouge">namespaces.commands:unblockNamespace</code>
+<p>Send a piggyback command to <a href="https://pekko.apache.org/docs/pekko/current/distributed-pub-sub.html">Pekko’s pub-sub-mediator</a> with type <code class="highlighter-rouge">namespaces.commands:unblockNamespace</code>
 to stop blocking messages to a namespace.</p>
 
 <p><code class="highlighter-rouge">PUT /devops/piggyback?timeout=10s</code></p>
@@ -3388,7 +3388,7 @@ to stop blocking messages to a namespace.</p>
                     </div>
                     <p class="notice">
                         &copy;2023 Eclipse Ditto™.
-                         Site last generated: Sep 18, 2023 <br />
+                         Site last generated: Oct 9, 2023 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

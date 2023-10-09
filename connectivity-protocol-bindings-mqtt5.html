@@ -2062,6 +2062,7 @@ be configured for the connection in order to transform the messages.</p>
   <li><code class="highlighter-rouge">8 (0x08) Response Topic</code>: The MQTT topic a requests response is expected in.
 If a command sets the header <code class="highlighter-rouge">reply-to</code>, then its response is published at the topic equal to the header value.</li>
   <li><code class="highlighter-rouge">3 (0x03) Content Type</code>: The UTF-8 encoded string representation of the payloads content MIME type.</li>
+  <li><code class="highlighter-rouge">2 (0x02) Message Expiry Interval</code>: Lifetime of the message in seconds.</li>
 </ul>
 
 <h2 id="specific-connection-configuration">Specific connection configuration</h2>
@@ -2104,6 +2105,7 @@ In addition, Ditto extracts the following headers from each consumed message:</p
   <li><code class="highlighter-rouge">mqtt.topic</code>: contains the MQTT topic on which a message was received</li>
   <li><code class="highlighter-rouge">mqtt.qos</code>: contains the MQTT QoS value of a received message</li>
   <li><code class="highlighter-rouge">mqtt.retain</code>: contains the MQTT retain flag of a received message</li>
+  <li><code class="highlighter-rouge">mqtt.message-expiry-interval</code>: contains the MQTT 5 message expiry interval of a received message</li>
   <li><code class="highlighter-rouge">correlation-id</code>: contains the MQTT 5 “correlation data” value</li>
   <li><code class="highlighter-rouge">reply-to</code>: contains the MQTT 5 “response topic” value</li>
   <li><code class="highlighter-rouge">content-type</code>: contains the MQTT 5 “content type” value</li>
@@ -2208,6 +2210,7 @@ the user defined properties.</p>
   <li><code class="highlighter-rouge">mqtt.topic</code>: overwrites the topic configured for the target</li>
   <li><code class="highlighter-rouge">mqtt.qos</code>: overwrites the qos level configured in the target</li>
   <li><code class="highlighter-rouge">mqtt.retain</code>: controls whether the MQTT retain flag is set on the published message</li>
+  <li><code class="highlighter-rouge">mqtt.message-expiry-interval</code>: sets MQTT 5 message expiry interval of the published message</li>
 </ul>
 
 <h4 id="target-acknowledgement-handling">Target acknowledgement handling</h4>
@@ -2489,7 +2492,7 @@ for how to set it up.</p>
                     </div>
                     <p class="notice">
                         &copy;2023 Eclipse Ditto™.
-                         Site last generated: Sep 18, 2023 <br />
+                         Site last generated: Oct 9, 2023 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

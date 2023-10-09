@@ -2097,6 +2097,23 @@ Which placeholder values are available depends on the context where the placehol
   </tbody>
 </table>
 
+<h3 id="thing-json-placeholder">Thing JSON Placeholder</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Placeholder</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="highlighter-rouge">{{ thing-json:&lt;json-pointer&gt; }}</code></td>
+      <td>Value (in string representation) of the JSON identified by the provided ‘‘json-pointer’’ in JsonPointer notation - e.g., <code class="highlighter-rouge">thing-json:attributes/location</code> for the “location” attribute or <code class="highlighter-rouge">thing-json:features/temperature/properties/value</code> for the temperature property.</td>
+    </tr>
+  </tbody>
+</table>
+
 <h3 id="feature-placeholder">Feature Placeholder</h3>
 
 <table>
@@ -2410,7 +2427,7 @@ Note that in RQL expressions placeholders must not be surrounded by curly braces
 </ul>
 
 <h3 id="scope-sse-signal-enrichment">Scope: SSE Signal Enrichment</h3>
-<p>When <a href="basic-enrichment.html">declaring extra fields</a> which should be enriched to a published signal for a Websocket connection, the following placeholders are available in general:</p>
+<p>When <a href="basic-enrichment.html">declaring extra fields</a> which should be enriched to a published signal for an SSE subscription, the following placeholders are available in general:</p>
 <ul>
   <li><a href="#entity-placeholder">entity placeholder</a></li>
   <li><a href="#thing-placeholder">thing placeholder</a></li>
@@ -2429,6 +2446,7 @@ Note that in RQL expressions placeholders must not be surrounded by curly braces
 <ul>
   <li><a href="#entity-placeholder">entity placeholder</a></li>
   <li><a href="#thing-placeholder">thing placeholder</a></li>
+  <li><a href="#thing-json-placeholder">thing-json placeholder</a></li>
   <li><a href="#policy-placeholder">policy placeholder</a></li>
   <li><a href="#connection-placeholder">connection placeholder</a></li>
   <li><a href="#feature-placeholder">feature placeholder</a></li>
@@ -2609,6 +2627,36 @@ be placeholders again.</p>
       <td><code class="highlighter-rouge">fn:upper()</code></td>
     </tr>
     <tr>
+      <td><code class="highlighter-rouge">fn:trim</code></td>
+      <td><code class="highlighter-rouge">()</code></td>
+      <td>Trims the String result of the previous expression, removing leading and trailing whitespaces.</td>
+      <td><code class="highlighter-rouge">fn:trim()</code></td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">fn:url-encode</code></td>
+      <td><code class="highlighter-rouge">()</code></td>
+      <td>Applies URL encoding to the String result of the previous expression.</td>
+      <td><code class="highlighter-rouge">fn:url-encode()</code></td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">fn:url-decode</code></td>
+      <td><code class="highlighter-rouge">()</code></td>
+      <td>Applies URL decoding to the String result of the previous expression.</td>
+      <td><code class="highlighter-rouge">fn:url-decode()</code></td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">fn:base64-encode</code></td>
+      <td><code class="highlighter-rouge">()</code></td>
+      <td>Applies Base64 encoding to the String result of the previous expression.</td>
+      <td><code class="highlighter-rouge">fn:base64-encode()</code></td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">fn:base64-decode</code></td>
+      <td><code class="highlighter-rouge">()</code></td>
+      <td>Applies Base64 decoding to the String result of the previous expression.</td>
+      <td><code class="highlighter-rouge">fn:base64-decode()</code></td>
+    </tr>
+    <tr>
       <td><code class="highlighter-rouge">fn:delete</code></td>
       <td><code class="highlighter-rouge">()</code></td>
       <td>Deletes the result of the previous pipeline expression unconditionally. Any following expressions are ignored.</td>
@@ -2625,6 +2673,12 @@ be placeholders again.</p>
       <td><code class="highlighter-rouge">(String separator)</code></td>
       <td>Splits the previous pipeline using the passed <code class="highlighter-rouge">separator</code> resulting an “array” pipeline output containing several elements.<br />May only be used in combination with the <a href="#scope-openid-connect-configuration">JWT placeholder</a> as input placeholder.</td>
       <td><code class="highlighter-rouge">fn:split(' ')</code><br /><code class="highlighter-rouge">fn:split(',')</code></td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">fn:join</code></td>
+      <td><code class="highlighter-rouge">(String delimiter)</code></td>
+      <td>Joins the previous pipeline elements (when they were an array) resulting a single string pipeline output delimited with the passed <code class="highlighter-rouge">delimiter</code>.</td>
+      <td><code class="highlighter-rouge">fn:join(':')</code><br /><code class="highlighter-rouge">fn:join(',')</code></td>
     </tr>
   </tbody>
 </table>
@@ -2697,7 +2751,7 @@ be placeholders again.</p>
                     </div>
                     <p class="notice">
                         &copy;2023 Eclipse Ditto™.
-                         Site last generated: Sep 18, 2023 <br />
+                         Site last generated: Oct 9, 2023 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

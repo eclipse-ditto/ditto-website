@@ -1,0 +1,900 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="">
+<meta name="keywords" content="blog,  ">
+<title>  Eclipse Ditto Benchmark • Eclipse Ditto™</title>
+
+<link rel="stylesheet" href="css/syntax.css">
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" crossorigin="anonymous">
+<link rel="stylesheet" href="css/modern-business.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" crossorigin="anonymous">
+<link rel="stylesheet" href="css/customstyles.css">
+<link rel="stylesheet" href="css/boxshadowproperties.css">
+<link rel="stylesheet" href="css/theme-ditto.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,700|Source+Code+Pro:300,600|Titillium+Web:400,600,700">
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/2.0.0/anchor.min.js" crossorigin="anonymous"></script>
+<script src="js/toc.js"></script>
+<script src="js/customscripts.js"></script>
+
+<script type="application/ld+json">
+{
+  "@context": "http://schema.org",
+  "@type": "Organization",
+  "url": "https://www.eclipse.dev/ditto/",
+  "logo": "https://www.eclipse.dev/ditto/images/ditto.svg"
+}
+</script>
+
+<link rel="icon" type="image/png" href="images/favicon-16x16.png" sizes="16x16">
+<link rel="icon" type="image/png" href="images/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="images/favicon-96x96.png" sizes="96x96">
+
+<link rel="alternate" type="application/rss+xml" title="Eclipse Ditto Blog" href="https://www.eclipse.dev/ditto/feed.xml">
+
+<!-- Eclipse Foundation cookie consent: -->
+<link rel="stylesheet" type="text/css" href="https://www.eclipse.org/eclipse.org-common/themes/solstice/public/stylesheets/vendor/cookieconsent/cookieconsent.min.css" />
+<script src="https://www.eclipse.org/eclipse.org-common/themes/solstice/public/javascript/vendor/cookieconsent/default.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            $("#tg-sb-link").click(function() {
+                $("#tg-sb-sidebar").toggle();
+                $("#tg-sb-content").toggleClass('col-md-9');
+                $("#tg-sb-content").toggleClass('col-md-12');
+                $("#tg-sb-icon").toggleClass('fa-toggle-on');
+                $("#tg-sb-icon").toggleClass('fa-toggle-off');
+            });
+        });
+    </script>
+</head>
+
+
+<script>
+    (function(w,d,s,l,i){
+        w[l]=w[l]||[];
+        w[l].push({'gtm.start':
+            new Date().getTime(),event:'gtm.js'});
+        var f=d.getElementsByTagName(s)[0],
+            j=d.createElement(s),
+            dl=l!='dataLayer'?'&l='+l:'';
+        j.async=true;
+        j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;
+        f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-5WLCZXC');
+</script>
+
+
+
+<body>
+<!-- Navigation -->
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container topnavlinks">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-ditto-home" href="index.html">&nbsp;<img src="images/ditto_allwhite_symbolonly.svg" class="ditto-navbar-symbol" alt="Home"> <img src="images/ditto_allwhite_textonly.svg" class="ditto-navbar-symbol-text" alt="Eclipse Ditto™"></a>
+        </div>
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <!-- toggle sidebar button -->
+                <!--<li><a id="tg-sb-link" href="#"><i id="tg-sb-icon" class="fa fa-toggle-on"></i> Nav</a></li>-->
+                <!-- entries without drop-downs appear here -->
+
+
+
+
+                
+                
+                
+                <li><a href="blog.html">Blog</a></li>
+                
+                
+                
+                <li><a href="intro-overview.html">Documentation</a></li>
+                
+                
+                
+                <li><a href="http-api-doc.html">HTTP API</a></li>
+                
+                
+                
+                <li><a href="sandbox.html">Sandbox</a></li>
+                
+                
+                
+                  
+                  <li><a href="https://github.com/eclipse-ditto/ditto" target="_blank">
+                    <img src="images/GitHub-Mark-Light-32px.png" alt="Sources at GitHub">
+                  </a></li>
+                  
+                
+                
+                
+                  
+                  <li><a href="https://github.com/eclipse-ditto/ditto-clients" target="_blank">
+                    <img src="images/GitHub-Mark-Light-32px.png" alt="SDK sources at GitHub">SDKs
+                  </a></li>
+                  
+                
+                
+                
+                  
+                  <li><a href="https://github.com/eclipse-ditto/ditto-examples" target="_blank">
+                    <img src="images/GitHub-Mark-Light-32px.png" alt="Example sources at GitHub">examples
+                  </a></li>
+                  
+                
+                
+                
+                <!-- entries with drop-downs appear here -->
+                <!-- conditional logic to control which topnav appears for the audience defined in the configuration file.-->
+                
+                
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Links<b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        
+                        
+                        <li><a href="https://projects.eclipse.org/projects/iot.ditto" target="_blank">Eclipse Ditto Project</a></li>
+                        
+                        
+                        
+                        <li><a href="https://www.eclipse.org/forums/index.php/f/364/" target="_blank">Forum</a></li>
+                        
+                        
+                        
+                        <li><a href="https://ci.eclipse.org/ditto/" target="_blank">Jenkins</a></li>
+                        
+                        
+                        
+                        <li><a href="https://dev.eclipse.org/mhonarc/lists/ditto-dev/" target="_blank">Mailing list archives</a></li>
+                        
+                        
+                        
+                        <li><a href="https://gitter.im/eclipse/ditto" target="_blank">Gitter.im chat</a></li>
+                        
+                        
+                    </ul>
+                </li>
+                
+                
+                
+                <!--comment out this block if you want to hide search-->
+                <li>
+                    <!--start search-->
+                    <div id="search-demo-container">
+                        <input type="text" id="search-input" placeholder="search...">
+                        <ul id="results-container"></ul>
+                    </div>
+                    <script src="https://cdnjs.cloudflare.com/ajax/libs/simple-jekyll-search/0.0.9/jekyll-search.js" type="text/javascript"></script>
+                    <script type="text/javascript">
+                            SimpleJekyllSearch.init({
+                                searchInput: document.getElementById('search-input'),
+                                resultsContainer: document.getElementById('results-container'),
+                                dataSource: 'search.json',
+                                searchResultTemplate: '<li><a href="{url}" title="Eclipse Ditto Benchmark">{title}</a></li>',
+                                noResultsText: 'No results found.',
+                                limit: 10,
+                                fuzzy: true,
+                    })
+                    </script>
+                    <!--end search-->
+                </li>
+            </ul>
+        </div>
+    </div>
+    <!-- /.container -->
+</nav>
+
+<!-- Page Content -->
+<div class="container">
+  <div id="main">
+    <!-- Content Row -->
+    <div class="row">
+        
+        
+
+        <!-- Content Column -->
+        <div class="col-md-12" id="tg-sb-content">
+            <!-- Look the author details up from the site config. -->
+
+
+<!-- Output author details if some exist. -->
+<!-- Output author details if some exist. -->
+<!---->
+<!--<span>-->
+    <!--&lt;!&ndash; Mugshot. &ndash;&gt;-->
+    <!--<img src="https://www.gravatar.com/avatar/877067af0633f9343fa17913c44b39fc?s=135" alt="A photo of Vasil Vasilev" />-->
+
+<!--&lt;!&ndash; Personal Info. &ndash;&gt;-->
+    <!--Written by <a href="https://github.com/vvasilevbosch" target="_blank">Vasil Vasilev</a>-->
+<!--</span>-->
+<!---->
+
+<article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+    <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">Eclipse Ditto Benchmark</h1>
+        <p class="post-meta">Published by <img src="https://www.gravatar.com/avatar/877067af0633f9343fa17913c44b39fc?s=135" alt="A photo of Vasil Vasilev" style="width:50px;border-radius:50%;display:inline-block;margin-right:5px;" /><span itemprop="author" itemscope itemtype="http://schema.org/Person"><span itemprop="name"><a href="https://github.com/vvasilevbosch" target="_blank">Vasil Vasilev</a> </span></span> on <time datetime="2023-10-09T00:00:00+00:00" itemprop="datePublished">Oct 9, 2023</time> - Tags:
+            
+            
+            
+            <a href="tag_blog.html">blog</a>
+            
+            
+            
+
+        </p>
+
+
+    </header>
+
+    <div class="post-content" itemprop="articleBody">
+
+        
+
+        
+        
+<!-- this handles the automatic toc. use ## for subheads to auto-generate the on-page minitoc. if you use html tags, you must supply an ID for the heading element in order for it to appear in the minitoc. -->
+<script>
+$( document ).ready(function() {
+  // Handler for .ready() called.
+
+$('#toc').toc({ minimumHeaders: 0, listType: 'ul', showSpeed: 0, headers: 'h2,h3,h4' });
+
+/* this offset helps account for the space taken up by the floating toolbar. */
+$('#toc').on('click', 'a', function() {
+  var target = $(this.getAttribute('href'))
+    , scroll_target = target.offset().top
+
+  $(window).scrollTop(scroll_target - 10);
+  return false
+})
+  
+});
+</script>
+
+<div id="toc"></div>
+
+        
+
+        <p>This blog post is presenting a benchmark of Eclipse Ditto. It consists of a few scenarios to cover most important ditto functionalities, test the performance and provide a tuning guide. This benchmark is done via the <a href="https://github.com/eclipse/ditto/tree/master/benchmark-tool">benchmark-tool</a>, based on <a href="https://k6.io/">k6</a> load testing tool</p>
+
+<h2 id="setup-and-used-tools">Setup and used tools</h2>
+
+<ul>
+  <li>
+    <p>EKS cluster using <a href="https://aws.amazon.com/ec2/instance-types/m5/">m5.4xlarge</a> nodes.</p>
+  </li>
+  <li>
+    <p>Deployed Ditto using <a href="https://github.com/eclipse-ditto/ditto/tree/master/deployment/helm">ditto’s official helm chart</a>, version 3.0.0, ditto version 3.3.5.</p>
+  </li>
+  <li>
+    <p>Deployed <a href="https://bitnami.com/stack/kafka/helm">bitnami</a> kafka helm chart, version 23.0.7, kafka version 3.4.0.</p>
+  </li>
+  <li>
+    <p>Deployed <a href="https://github.com/jmartin82/mmock">MMock</a> instance - used as a ‘dummy’ receiver for ditto events and device commands.</p>
+  </li>
+  <li>
+    <p><a href="https://k6.io/">k6</a> - load testing tool, used to implement the benchmark scenarios.</p>
+  </li>
+  <li>
+    <p>Deployed <a href="https://github.com/grafana/k6-operator">k6-operator</a> - Kubernetes operator for running distributed k6 tests.</p>
+  </li>
+  <li>
+    <p><a href="https://cloud.mongodb.com/">MongoDB</a> instance of type <a href="https://www.mongodb.
+com/docs/atlas/manage-clusters/#nvme-considerations">M50</a>, version 5.0.21</p>
+  </li>
+</ul>
+
+<h2 id="scenarios">Scenarios</h2>
+
+<p>The benchmark test consists of 4 test scenarios that can be executed independently and in parallel:</p>
+
+<ul>
+  <li>
+    <p><a href="#read-things">READ_THINGS</a> - read things via HTTP ( get things by id )</p>
+  </li>
+  <li>
+    <p><a href="#search-things">SEARCH_THINGS</a> - search things via HTTP ( get things by applying search filter )</p>
+  </li>
+  <li>
+    <p><a href="#modify-things">MODIFY_THINGS</a> - Modify things by sending ditto protocol kafka messages to specfic topic. Ditto kafka connection is reading from this topic and processes the messages. Ditto HTTP push connection is configured in ditto, which sends events from topic <strong>/things/twin/events?filter=eq(topic:action,’modified’)</strong> to a monster mock endpoint, which replies with HTTP status code 204.</p>
+  </li>
+  <li>
+    <p><a href="#device-live-messagescommands">DEVICE_LIVE_MESSAGES</a> - Send live messages to things via HTTP. Ditto HTTP push connection is configured, which sends events from topic <strong>/things/live/messages</strong> to a monster mock endpoint, which replies with predefined ditto protocol message.</p>
+  </li>
+</ul>
+
+<h2 id="preparation">Preparation</h2>
+
+<p>1 000 000 things are created with the <a href="https://github.com/eclipse/ditto/tree/master/benchmark-tool">benchmark-tool</a> by sending Ditto protocol messages to the topic that a Ditto Kafka connection is configured to read from. This connection has an <a href="connectivity-mapping.html#implicitthingcreation-mapper">implicitThingCreation mapper</a> configured.</p>
+
+<p>The thing template, configured in the connection mapper looks like the following:</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"thing"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"thingId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{{ header:device_id }}"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"_policy"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"entries"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"DEVICE"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="s2">"subjects"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"nginx:ditto"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+              </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"does-not-matter"</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+          </span><span class="p">},</span><span class="w">
+          </span><span class="s2">"resources"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"policy:/"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+              </span><span class="s2">"revoke"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+              </span><span class="s2">"grant"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                </span><span class="s2">"READ"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"WRITE"</span><span class="w">
+              </span><span class="p">]</span><span class="w">
+            </span><span class="p">},</span><span class="w">
+            </span><span class="s2">"thing:/"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+              </span><span class="s2">"revoke"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+              </span><span class="s2">"grant"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                </span><span class="s2">"READ"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"WRITE"</span><span class="w">
+              </span><span class="p">]</span><span class="w">
+            </span><span class="p">},</span><span class="w">
+            </span><span class="s2">"message:/"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+              </span><span class="s2">"revoke"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+              </span><span class="s2">"grant"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                </span><span class="s2">"READ"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"WRITE"</span><span class="w">
+              </span><span class="p">]</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+          </span><span class="p">}</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="s2">"definition"</span><span class="p">:</span><span class="w"> </span><span class="s2">"org.eclipse.ditto:coffeebrewer:0.1.0"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"location"</span><span class="p">:</span><span class="w"> </span><span class="s2">"test location"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"model"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Speaking coffee machine"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="s2">"features"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"coffee-brewer"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="s2">"brewed-coffees"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>Example created thing looks like the following:</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"thingId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"org.eclipse.ditto:test-thing-1"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"policyId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"org.eclipse.ditto:test-thing-1"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"definition"</span><span class="p">:</span><span class="w"> </span><span class="s2">"org.eclipse.ditto:coffeebrewer:0.1.0"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"location"</span><span class="p">:</span><span class="w"> </span><span class="s2">"test location"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"model"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Speaking coffee machine"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="s2">"features"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"coffee-brewer"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="s2">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="s2">"brewed-coffees"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h2 id="warmup">Warmup</h2>
+
+<p>Before executing the scenarios, a special ‘warmup’ scenario is executed.  It is making ‘GET’ requests so that entities are loaded in memory and caches are populated in order to provide optimal performance.</p>
+
+<p>Heap memory needed according to number of things:</p>
+
+<ul>
+  <li>
+    <p>10 000 hot things ~1.8GB for things service and ~1GB for policies service.</p>
+  </li>
+  <li>
+    <p>100 000 hot things - ~3.5GB for things service and ~3GB policies</p>
+  </li>
+  <li>
+    <p>300 000 hot things - ~5GB for things service and ~5GB for policies service</p>
+  </li>
+  <li>
+    <p>1 000 000 hot things - ~16GB for things service and ~15GB for policies service</p>
+  </li>
+</ul>
+
+<p>The size varies, depending on the size of the things and policies.</p>
+
+<p>The scenarios are run with 100 000 warmed up things.</p>
+
+<h2 id="scenarios-run">Scenarios run</h2>
+
+<p>All services use the following java vm options:</p>
+
+<p><code class="highlighter-rouge">-XX:InitialHeapSize=5g</code></p>
+
+<p><code class="highlighter-rouge">-XX:MaxHeapSize=5g</code></p>
+
+<p><code class="highlighter-rouge">-XX:MaxRAMPercentage=75</code></p>
+
+<p><code class="highlighter-rouge">-XX:ActiveProcessorCount=16</code></p>
+
+<p>The scenarios run for 10 minutes each, screenshots are taken from Grafana, from exposed ditto metrics.</p>
+
+<style>
+td, th {
+  border: 1px solid #dddddd;
+}
+</style>
+
+<h3 id="read-things">Read things</h3>
+
+<p>This scenario executes HTTP GET requests for reading things by id, like so:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>${DITTO_BASE_URI}/things/org.eclipse.ditto:test-thing-1
+</code></pre></div></div>
+
+<p>The tests show that with single instance of each service, it is possible to perform ~2800 reads/s. Attempting more, results in high garbage collection time and drop in performance which can be seen in the “GC” and “Gateway Traces” dashboards.</p>
+
+<table>
+    <tr>
+        <th><figure><img class="docimage" src="images/blog/benchmark/read-things-scenario/3000/gateway.png" alt="Gateway" /></figure>
+</th>
+        <th><figure><img class="docimage" src="images/blog/benchmark/read-things-scenario/3000/gc.png" alt="Garbage Collection Time" /></figure>
+</th>
+    </tr>
+</table>
+
+<p>Scaling gateway to 2 instances results in only ~3500 reads/s, because of high GC time for things service - ~5s. Scaling things service to 2 instances results in ~5600 reads/s. A maximum of 8400 reads/s was possible with 3 gateways and 2 things instances.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">Setup</th>
+      <th style="text-align: left">1 instance of each service</th>
+      <th>2 gateway, 1 instance each else</th>
+      <th style="text-align: left">2 gateway, 2 things, 1 instance each else</th>
+      <th style="text-align: left">3 gateway, 2 things, 1 instance each else</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left">Reads/s</td>
+      <td style="text-align: left">~2800</td>
+      <td>~3500</td>
+      <td style="text-align: left">~5600</td>
+      <td style="text-align: left">~8400</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Command Processing Time(ms)</td>
+      <td style="text-align: left">~80</td>
+      <td>~2000</td>
+      <td style="text-align: left">~50</td>
+      <td style="text-align: left">~70</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="search-things">Search things</h3>
+
+<p>This scenario executes HTTP GET requests for searching things by id like so:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>${DITTO_BASE_URI}/search/things?filter=eq(thingId, 'org.eclipse.ditto:test-thing-1')
+</code></pre></div></div>
+
+<p>In this scenario, things-search service is used to perform a search query for things, based on the provided filter.</p>
+
+<p>The tests show that with single instance of each service, it is possible to perform ~1700 searches/s. Attempting more results in high garbage collection time and drop in performance, as can be seen in “GC” and “Gateway Traces” dashboards.</p>
+
+<table>
+    <tr>
+        <th><figure><img class="docimage" src="images/blog/benchmark/search-things-scenario/1800/gateway.png" alt="Gateway" /></figure>
+</th>
+        <th><figure><img class="docimage" src="images/blog/benchmark/search-things-scenario/1800/gc.png" alt="Garbage Collection Time" /></figure>
+</th>
+    </tr>
+</table>
+
+<p>With single instance of things service and 2 instances of gateway service, a maximum of ~2400 searches/s can be performed, with high GC time for things service - ~3s. Scaling things to 2 instances results in ~3400 searches/s. Scaling to 3 gateways does not show expected performance, because the nodes things pods run on have high CPU usage - ~90%. To perform more searches, nodes with more CPUs are needed.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">Setup</th>
+      <th style="text-align: left">1 instance of each service</th>
+      <th>2 gateway, 1 instance each else</th>
+      <th style="text-align: left">2 gateway, 2 things, 1 instance each else</th>
+      <th style="text-align: left">3 gateway, 2 things, 1 instance each else</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left">Searches/s</td>
+      <td style="text-align: left">~1700</td>
+      <td>~2400</td>
+      <td style="text-align: left">~3400</td>
+      <td style="text-align: left">~4900</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Command Processing Time(ms)</td>
+      <td style="text-align: left">~70</td>
+      <td>~100</td>
+      <td style="text-align: left">~50</td>
+      <td style="text-align: left">~100</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="modify-things">Modify things</h3>
+
+<p>This scenario sends ditto protocol kafka messages, which cause twin modifies.</p>
+
+<p>Example message:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>device_id:org.eclipse.ditto:test-thing-1,ditto_message:y!{"topic":"org.eclipse.ditto/test-thing-1/things/twin/commands/modify","path":"features/coffee-brewer/properties/brewed-coffees","value":"10"}
+</code></pre></div></div>
+
+<p>In this scenario, connectivity service is used to create a ditto kafka connection, which reads messages from the provided topic, maps them to a ditto modify command and forwards it to things service. The things service then executes mongodb update query and generates the <a href="protocol-specification-things-create-or-modify.html#event">thing modified event</a>, which is pushed to the MMock service instance via an HTTP Push connection. Also, the kafka connection is configured with <a href="connectivity-protocol-bindings-kafka2.html#quality-of-service">qos=1</a>, which means if there is no acknowledgement that the thing is persisted, the operation will be retried.</p>
+
+<p>The HTTP Push connection looks like the following:</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"a70c0749-261a-474b-9fb2-8fff7bd84fb4"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http-push-connection"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"connectionType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http-push"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"connectionStatus"</span><span class="p">:</span><span class="w"> </span><span class="s2">"open"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"uri"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://mmock-service:80"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"sources"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+  </span><span class="s2">"targets"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"POST:/{{ thing:id }}"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"topics"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"_/_/things/twin/events?filter=eq(topic:action,'modified')"</span><span class="w">
+      </span><span class="p">],</span><span class="w">
+      </span><span class="s2">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"nginx:ditto"</span><span class="w">
+      </span><span class="p">],</span><span class="w">
+      </span><span class="s2">"headerMapping"</span><span class="p">:</span><span class="w"> </span><span class="p">{}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">],</span><span class="w">
+  </span><span class="s2">"clientCount"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"failoverEnabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"validateCertificates"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"processorPoolSize"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"specificConfig"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"parallelism"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="s2">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="s2">"benchmark"</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>The kafka connection looks like the following:</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"4cd191cc-aabb-4965-a1b4-dfe8ae8674bc"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"kafka-source"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"connectionType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"kafka"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"connectionStatus"</span><span class="p">:</span><span class="w"> </span><span class="s2">"open"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"uri"</span><span class="p">:</span><span class="w"> </span><span class="s2">"tcp://bitnami-kafka:9092"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"sources"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"addresses"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"create-update"</span><span class="w">
+      </span><span class="p">],</span><span class="w">
+      </span><span class="s2">"consumerCount"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"qos"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"nginx:ditto"</span><span class="w">
+      </span><span class="p">],</span><span class="w">
+      </span><span class="s2">"enforcement"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"input"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{{ header:device_id }}"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"filters"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+          </span><span class="s2">"{{ entity:id }}"</span><span class="w">
+        </span><span class="p">]</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="s2">"headerMapping"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
+      </span><span class="s2">"payloadMapping"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"ditto"</span><span class="w">
+      </span><span class="p">],</span><span class="w">
+      </span><span class="s2">"replyTarget"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">],</span><span class="w">
+  </span><span class="s2">"targets"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+  </span><span class="s2">"clientCount"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"failoverEnabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"validateCertificates"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"processorPoolSize"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"specificConfig"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"saslMechanism"</span><span class="p">:</span><span class="w"> </span><span class="s2">"plain"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"bootstrapServers"</span><span class="p">:</span><span class="w"> </span><span class="s2">"bitnami-kafka:9092"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="s2">"mappingDefinitions"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"ditto"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"mappingEngine"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Ditto"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"options"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"thingId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{{ header:device_id }}"</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="s2">"incomingConditions"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"sampleCondition"</span><span class="p">:</span><span class="w"> </span><span class="s2">"fn:filter(header:ditto_message,'exists')"</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="s2">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="s2">"benchmark"</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>By default, the ditto kafka consumer is throttled with limit of 100 number of messages/s per consumer. This is configured by the <strong>KAFKA_CONSUMER_THROTTLING_LIMIT</strong> env variable. This value is changed to 1000, since with the current setup, more than 500 messages can be processed. Single connectivity instance is able to perform ~800 modifies/s. However, “Outbound Message rates” panel shows failed published messages from our HTTP Push connection, and the following is observed from our connection logs:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Ran into a failure when publishing signal: Outgoing HTTP request aborted: There are too many in-flight requests. This can have the following reasons:\na) The HTTP endpoint does not consume the messages fast enough.\nb) The client count and/or the parallelism of this connection is not configured high enough.
+</code></pre></div></div>
+
+<table>
+  <tr>
+    <th><figure><img class="docimage" src="images/blog/benchmark/modify-things-scenario/800/outbound.png" alt="Outbound messages rates" /></figure>
+</th>
+  </tr>
+</table>
+
+<p>Increasing the connection parallelism from 1(default) to 2 solves this issue and all outbound messages are sent without fails.</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">...</span><span class="w">
+</span><span class="s2">"connectionType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http-push"</span><span class="p">,</span><span class="w">
+</span><span class="s2">"specificConfig"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"parallelism"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+</span><span class="err">...</span><span class="w">
+</span></code></pre></div></div>
+
+<p>Attempting more modifies/s does not result in better performance, the ditto kafka connection consumes at the same rate of 800 messages/s.</p>
+
+<p>Scaling connectivity instance and changing our connection to have <strong>clientCount</strong> equal to number of connectivity instances solves the GC issue. Performing 1600 modifies/s also results in high garbage collection time(~2s) for things and things-search services. This is the maximum that can be achieved with single things and things-search services. Scaling things and things-search solves the GC issue. Further scaling of connectivity results in only ~1800 modifies/s, because MongoDB’s write tickets get exhausted, as can be seen in the MongoDB ‘Tickets Available’ metric. Scaling MongoDB to higher CPU instance(M50 General, 8 cpu) solves the issue and ~2400 modifies/s are possible.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Setup</th>
+      <th>1 instance of each service</th>
+      <th>2 connectivity, 1 instance each else</th>
+      <th>3 connectivity, 2 things, 2 things-search, 1 instance each else</th>
+      <th>4 connectivity, 2 things, 2 things-search, 1 instance each else</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Modifies/s</td>
+      <td>~800</td>
+      <td>~1600</td>
+      <td>~2400</td>
+      <td>~3200</td>
+    </tr>
+    <tr>
+      <td>Signal Processing Times(ms)</td>
+      <td>~15</td>
+      <td>~80</td>
+      <td>~10</td>
+      <td>~20</td>
+    </tr>
+    <tr>
+      <td>ACK Times(ms)</td>
+      <td>~40</td>
+      <td>~250</td>
+      <td>~50</td>
+      <td>~100</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="device-live-messagescommands">Device live messages(commands)</h3>
+
+<p>This scenario executes HTTP POST requests to ditto’s <a href="protocol-twinlive.html#live">live channel</a>. An HTTP Push connection is subscribed for them and in turn pushes to a MMock instance that acts as a ‘dummy’ device receiver of live messages/commands and simply responds with pre-configured ditto response.</p>
+
+<p>The HTTP POST request looks like the following:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>URL: ${DITTO_THINGS_URI}/org.eclipse.ditto:test-thing-1/inbox/messages/someSubject
+Request Body: "anyMessage"
+</code></pre></div></div>
+
+<p>MMock pre-configured response looks like the following:</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"topic"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{{request.body.topic}}"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"200"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ok"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{{request.body.path}}"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"correlation-id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{{request.body.headers.correlation-id}}"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"content-type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"application/json"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>The HTTP Push connection looks like the following:</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"a70c0749-261a-474b-9fb2-8fff7bd84fb4"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http-push-connection"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"connectionType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http-push"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"connectionStatus"</span><span class="p">:</span><span class="w"> </span><span class="s2">"open"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"uri"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://mmock-service:80"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"sources"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+  </span><span class="s2">"targets"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"POST:/live_messages"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"topics"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"_/_/things/live/messages"</span><span class="w">
+      </span><span class="p">],</span><span class="w">
+      </span><span class="s2">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"nginx:ditto"</span><span class="w">
+      </span><span class="p">],</span><span class="w">
+      </span><span class="s2">"headerMapping"</span><span class="p">:</span><span class="w"> </span><span class="p">{}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">],</span><span class="w">
+  </span><span class="s2">"clientCount"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"failoverEnabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"validateCertificates"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"processorPoolSize"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"specificConfig"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"parallelism"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="s2">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="s2">"benchmark"</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>The tests show that a single connectivity instance is able to perform ~600 live messages/s. Attempting more results in high garbage collection time and high Command Processing Time, as can be seen in “GC” and “Gateway Traces” dashboards.</p>
+
+<table>
+    <tr>
+        <th><figure><img class="docimage" src="images/blog/benchmark/device-live-messages-scenario/800/gateway.png" alt="Gateway" /></figure>
+</th>
+        <th><figure><img class="docimage" src="images/blog/benchmark/device-live-messages-scenario/800/gc.png" alt="Garbage Collection Time" /></figure>
+</th>
+    </tr>
+</table>
+
+<p>Scaling the instances and increasing the value of connection <strong>clientCount</strong> solves the GC issue and doubles the messages/s. Performing more than 2400 live messages/s also results in high garbage collection time for things and gateway services and this is the maximum with single things and gateway services. Scaling things and gateway solves the issue and results in ~3000 live messages/s.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Setup</th>
+      <th>1 instance of each service</th>
+      <th>2 connectivity, 1 instance each else</th>
+      <th>3 connectivity, 1 instance each else</th>
+      <th>4 connectivity, 1 instance each else</th>
+      <th>5 connectivity, 2 things, 2 gateway, 1 instance each else</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Live messages/s</td>
+      <td>~600</td>
+      <td>~1200</td>
+      <td>~1800</td>
+      <td>~2400</td>
+      <td>~3000</td>
+    </tr>
+    <tr>
+      <td>Command Processing Time(ms)</td>
+      <td>~50</td>
+      <td>~50</td>
+      <td>~100</td>
+      <td>~240</td>
+      <td>~50</td>
+    </tr>
+    <tr>
+      <td>Signal Processing Times(ms)</td>
+      <td>~15</td>
+      <td>~15</td>
+      <td>~40</td>
+      <td>~90</td>
+      <td>~20</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="additional-tuning-properties-not-used-in-the-scenarios">Additional tuning properties, not used in the scenarios</h2>
+
+<p>Ditto ‘tuning’ environment variables, that were not mentioned, because those cases were never hit, while executing the scenarios.</p>
+
+<p><strong>THING_PERSISTENCE_ACTOR_MAILBOX_SIZE</strong> - Used for special actor mailbox, which handles ThingModifyCommands, see org.
+eclipse.ditto.things.service.persistence.actors.ThingPersistenceActorMailbox. If number of messages is more than 
+the mailbox capacity, modify command results in error, like the following:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Too many modifying requests are already outstanding to the Thing with ID 'org.eclipse.ditto:test-thing-1'.
+</code></pre></div></div>
+
+<p><strong>REMOTE_OUTBOUND_MESSAGE_QUEUE_SIZE</strong> - See <a href="https://doc.akka.io/docs/akka/current/general/configuration-reference.html">https://doc.akka.io/docs/akka/current/general/configuration-reference.html</a></p>
+
+<pre><code class="language-none">        # Size of the send queue for outgoing messages. Messages will be dropped if
+        # the queue becomes full. This may happen if you send a burst of many messages
+        # without end-to-end flow control. Note that there is one such queue per
+        # outbound association. The trade-off of using a larger queue size is that
+        # it consumes more memory, since the queue is based on preallocated array with
+        # fixed size.
+        outbound-message-queue-size = 3072
+</code></pre>
+
+<p>If this limit is hit, the following error log will appear:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Message [org.eclipse.ditto.things.model.signals.commands.modify.ModifyAttribute] from Actor
+[akka://ditto-cluster/temp/thingProxy$AsP9C] to Actor[akka://ditto-cluster@10.0.157.
+154:2552/system/sharding/thing#362290016] was dropped. Due to overflow of send queue, size [3072]. [10] dead letters 
+encountered, no more dead letters will be logged in next [5.000 min]. This logging can be turned off or adjusted 
+with configuration settings 'akka.log-dead-letters' and 'akka.log-dead-letters-during-shutdown'.
+</code></pre></div></div>
+
+    </div>
+
+
+
+</article>
+
+<hr class="shaded"/>
+
+<footer>
+            <div class="row">
+                <div class="col-lg-12 footer">
+                    <div class="logo">
+                        <a href="https://eclipse.org"><img src="images/eclipse_foundation_logo.svg" alt="Eclipse logo"/></a>
+                    </div>
+                    <p class="notice">
+                        &copy;2023 Eclipse Ditto™.
+                         Site last generated: Oct 9, 2023 <br />
+                    </p>
+                    <div class="quickLinks">
+                        <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">
+                            &gt; Privacy Policy
+                        </a>
+                        <a href="https://www.eclipse.org/legal/termsofuse.php" target="_blank">
+                            &gt; Terms of Use
+                        </a>
+                        <a href="https://www.eclipse.org/legal/copyright.php" target="_blank">
+                            &gt; Copyright Agent
+                        </a>
+                        <a href="https://www.eclipse.org/legal" target="_blank">
+                            &gt; Legal
+                        </a>
+                        <a href="https://www.eclipse.org/legal/epl-2.0/" target="_blank">
+                            &gt; License
+                        </a>
+                        <a href="https://eclipse.org/security" target="_blank">
+                            &gt; Report a Vulnerability
+                        </a>
+                    </div>
+                </div>
+            </div>
+</footer>
+
+
+        </div>
+    <!-- /.row -->
+</div>
+<!-- /.container -->
+</div>
+<!-- /#main -->
+    </div>
+
+</body>
+</html>
