@@ -5,9 +5,112 @@
         <description>Announcements, tutorials and examples around Eclipse Ditto and Digital Twins</description>
         <link>https://www.eclipse.dev/ditto/</link>
         <atom:link href="https://www.eclipse.dev/ditto/feed.xml" rel="self" type="application/rss+xml"/>
-        <pubDate>Mon, 09 Oct 2023 14:56:11 +0000</pubDate>
-        <lastBuildDate>Mon, 09 Oct 2023 14:56:11 +0000</lastBuildDate>
+        <pubDate>Tue, 17 Oct 2023 12:26:01 +0000</pubDate>
+        <lastBuildDate>Tue, 17 Oct 2023 12:26:01 +0000</lastBuildDate>
         <generator>Jekyll v3.6.2</generator>
+        
+        <item>
+            <title>Announcing Eclipse Ditto Release 3.4.0</title>
+            <description>&lt;p&gt;The Eclipse Ditto teams is proud to announce the availability of Eclipse Ditto 
+&lt;a href=&quot;https://projects.eclipse.org/projects/iot.ditto/releases/3.4.0&quot;&gt;3.4.0&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Version 3.4.0 mainly concentrates on exchanging the use of the &lt;a href=&quot;https://akka.io&quot;&gt;Akka toolkit&lt;/a&gt; 
+(due to a change in licensing) with its fork &lt;a href=&quot;https://pekko.apache.org/&quot;&gt;Apache Pekko&lt;/a&gt; which remains Apache 2.0 licensed.&lt;br /&gt;
+Apart from that, several improvements are also included which can be found in the changelog.&lt;/p&gt;
+
+&lt;h2 id=&quot;adoption&quot;&gt;Adoption&lt;/h2&gt;
+
+&lt;p&gt;Companies are willing to show their adoption of Eclipse Ditto publicly: 
+&lt;a href=&quot;https://iot.eclipse.org/adopters/?#iot.ditto&quot;&gt;https://iot.eclipse.org/adopters/?#iot.ditto&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;When you use Eclipse Ditto it would be great to support the project by putting your logo there.&lt;/p&gt;
+
+&lt;h2 id=&quot;changelog&quot;&gt;Changelog&lt;/h2&gt;
+
+&lt;p&gt;The main improvements and additions of Ditto 3.4.0 are:&lt;/p&gt;
+
+&lt;p&gt;Eclipse Ditto 3.4.0 focuses on the following areas:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Supporting &lt;strong&gt;HTTP &lt;code class=&quot;highlighter-rouge&quot;&gt;POST&lt;/code&gt;&lt;/strong&gt; for performing &lt;strong&gt;searches&lt;/strong&gt; with a very &lt;strong&gt;long query&lt;/strong&gt;&lt;/li&gt;
+  &lt;li&gt;Addition of a &lt;strong&gt;new placeholder&lt;/strong&gt; to use &lt;strong&gt;in connections&lt;/strong&gt; to use &lt;strong&gt;payload of the thing JSON&lt;/strong&gt; e.g. in headers or addresses&lt;/li&gt;
+  &lt;li&gt;New &lt;strong&gt;placeholder functions&lt;/strong&gt; for &lt;strong&gt;joining&lt;/strong&gt; multiple elements into a single string and doing &lt;strong&gt;URL-encoding and -decoding&lt;/strong&gt;&lt;/li&gt;
+  &lt;li&gt;Configure &lt;strong&gt;MQTT message expiry interval for published messages&lt;/strong&gt; via a header&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Reduce patch/merge thing commands&lt;/strong&gt; to &lt;strong&gt;modify&lt;/strong&gt; only the &lt;strong&gt;actually changed values&lt;/strong&gt; with a new option&lt;/li&gt;
+  &lt;li&gt;UI enhancements:
+    &lt;ul&gt;
+      &lt;li&gt;Adding sending messages to Things&lt;/li&gt;
+      &lt;li&gt;Made UI (at least navigation bar) responsive for small screen sizes&lt;/li&gt;
+      &lt;li&gt;Increase size of JSON editors in “edit” mode&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The following non-functional work is also included:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;Swapping the &lt;a href=&quot;https://akka.io&quot;&gt;Akka toolkit&lt;/a&gt;&lt;/strong&gt; (because of its switch of license to &lt;a href=&quot;https://www.lightbend.com/akka/license-faq&quot;&gt;BSL License&lt;/a&gt; after Akka v2.6.x)
+&lt;strong&gt;with its fork &lt;a href=&quot;https://pekko.apache.org/&quot;&gt;Apache Pekko&lt;/a&gt;&lt;/strong&gt; which remains Apache 2.0 licensed.&lt;/li&gt;
+  &lt;li&gt;Support for using &lt;strong&gt;AWS DocumentDB&lt;/strong&gt; as a replacement for MongoDB&lt;/li&gt;
+  &lt;li&gt;Improve logging by adding the &lt;strong&gt;W3C Trace Context&lt;/strong&gt; &lt;code class=&quot;highlighter-rouge&quot;&gt;traceparent&lt;/code&gt; header as MDC field to logs&lt;/li&gt;
+  &lt;li&gt;Adjust handling of special MQTT headers in MQTT 5&lt;/li&gt;
+  &lt;li&gt;Optimize docker files&lt;/li&gt;
+  &lt;li&gt;Migration of Ditto UI to TypeScript&lt;/li&gt;
+  &lt;li&gt;There now is an official &lt;strong&gt;&lt;a href=&quot;2023-10-09-ditto-benchmark.html&quot;&gt;Eclipse Ditto Benchmark&lt;/a&gt;&lt;/strong&gt; which shows how Ditto is able
+to scale horizontally and provides some tuning tips&lt;/li&gt;
+  &lt;li&gt;Addition of a &lt;strong&gt;benchmark tooling&lt;/strong&gt; to run own Ditto benchmarks&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The following notable fixes are included:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Fixed that failed retrieval of a policy (e.g. after policy change) leads to search index being “emptied out”&lt;/li&gt;
+  &lt;li&gt;Fixed that putting metadata when updating a single scalar value did not work&lt;/li&gt;
+  &lt;li&gt;UI fix, fixing that patching a thing will null values did not reflect that change in the UI&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Please have a look at the &lt;a href=&quot;release_notes_340.html&quot;&gt;3.4.0 release notes&lt;/a&gt; for a more detailed information on the release.&lt;/p&gt;
+
+&lt;h2 id=&quot;artifacts&quot;&gt;Artifacts&lt;/h2&gt;
+
+&lt;p&gt;The new Java artifacts have been published at the &lt;a href=&quot;https://repo.eclipse.org/content/repositories/ditto/&quot;&gt;Eclipse Maven repository&lt;/a&gt;
+as well as &lt;a href=&quot;https://repo1.maven.org/maven2/org/eclipse/ditto/&quot;&gt;Maven central&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;The Ditto JavaScript client release was published on &lt;a href=&quot;https://www.npmjs.com/~eclipse_ditto&quot;&gt;npmjs.com&lt;/a&gt;:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.npmjs.com/package/@eclipse-ditto/ditto-javascript-client-dom&quot;&gt;@eclipse-ditto/ditto-javascript-client-dom&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.npmjs.com/package/@eclipse-ditto/ditto-javascript-client-node&quot;&gt;@eclipse-ditto/ditto-javascript-client-node&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The Docker images have been pushed to Docker Hub:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://hub.docker.com/r/eclipse/ditto-policies/&quot;&gt;eclipse/ditto-policies&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://hub.docker.com/r/eclipse/ditto-things/&quot;&gt;eclipse/ditto-things&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://hub.docker.com/r/eclipse/ditto-things-search/&quot;&gt;eclipse/ditto-things-search&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://hub.docker.com/r/eclipse/ditto-gateway/&quot;&gt;eclipse/ditto-gateway&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://hub.docker.com/r/eclipse/ditto-connectivity/&quot;&gt;eclipse/ditto-connectivity&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The Ditto Helm chart has been published to Docker Hub:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://hub.docker.com/r/eclipse/ditto/&quot;&gt;eclipse/ditto&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;br /&gt;
+&lt;br /&gt;&lt;/p&gt;
+&lt;figure&gt;&lt;img class=&quot;docimage&quot; src=&quot;images/ditto.svg&quot; alt=&quot;Ditto&quot; style=&quot;max-width: 500px&quot; /&gt;&lt;/figure&gt;
+
+&lt;p&gt;–&lt;br /&gt;
+The Eclipse Ditto team&lt;/p&gt;
+</description>
+            <pubDate>Tue, 17 Oct 2023 00:00:00 +0000</pubDate>
+            <link>https://www.eclipse.dev/ditto/2023-10-17-release-announcement-340.html</link>
+            <guid isPermaLink="true">https://www.eclipse.dev/ditto/2023-10-17-release-announcement-340.html</guid>
+            
+            <category>blog</category>
+            
+            
+        </item>
         
         <item>
             <title>Eclipse Ditto Benchmark</title>
@@ -35,8 +138,7 @@
     &lt;p&gt;Deployed &lt;a href=&quot;https://github.com/grafana/k6-operator&quot;&gt;k6-operator&lt;/a&gt; - Kubernetes operator for running distributed k6 tests.&lt;/p&gt;
   &lt;/li&gt;
   &lt;li&gt;
-    &lt;p&gt;&lt;a href=&quot;https://cloud.mongodb.com/&quot;&gt;MongoDB&lt;/a&gt; instance of type &lt;a href=&quot;https://www.mongodb.
-com/docs/atlas/manage-clusters/#nvme-considerations&quot;&gt;M50&lt;/a&gt;, version 5.0.21&lt;/p&gt;
+    &lt;p&gt;&lt;a href=&quot;https://cloud.mongodb.com/&quot;&gt;MongoDB&lt;/a&gt; instance of type &lt;a href=&quot;https://www.mongodb.com/docs/atlas/manage-clusters/#nvme-considerations&quot;&gt;M50&lt;/a&gt;, version 5.0.21&lt;/p&gt;
   &lt;/li&gt;
 &lt;/ul&gt;
 
@@ -1548,111 +1650,6 @@ The Eclipse Ditto team&lt;/p&gt;
             <category>wot</category>
             
             <category>http</category>
-            
-            
-        </item>
-        
-        <item>
-            <title>Announcing Eclipse Ditto Release 2.3.0</title>
-            <description>&lt;p&gt;The Eclipse Ditto teams announces availability of Eclipse Ditto &lt;a href=&quot;https://projects.eclipse.org/projects/iot.ditto/releases/2.3.0&quot;&gt;2.3.0&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;It contains mainly new features around the Ditto &lt;a href=&quot;protocol-twinlive.html#live&quot;&gt;“live” channel&lt;/a&gt; which can be used to 
-directly interact with devices.&lt;/p&gt;
-
-&lt;p&gt;Such live commands may now be easily &lt;a href=&quot;2021-12-20-http-live-channel.html&quot;&gt;created via the HTTP API&lt;/a&gt; - and in addition
-a conventional API call targeting the persisted &lt;a href=&quot;protocol-twinlive.html#twin&quot;&gt;twin&lt;/a&gt; may now be automatically converted
-to a live command, based on a passed &lt;a href=&quot;2021-12-22-live-channel-condition.html&quot;&gt;live channel condition&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;With that, we are proud that we now can provide a really powerful addition to Ditto’s “Digital Twin pattern”:&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;requesting data from an actual device e.g. when it is currently connected/online (based on a &lt;a href=&quot;basic-conditional-requests.html#live-channel-condition&quot;&gt;live channel condition&lt;/a&gt; targeting the online status)&lt;/li&gt;
-  &lt;li&gt;fall back to its last known persisted state
-    &lt;ul&gt;
-      &lt;li&gt;if it is currently not online (the condition did not match)&lt;/li&gt;
-      &lt;li&gt;or also as a fallback, if the device does not answer within e.g. 10 seconds&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;all that within one single API call, including information from which source the data was reported back
-    &lt;ul&gt;
-      &lt;li&gt;the “live” device or the persisted “twin”&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;adoption&quot;&gt;Adoption&lt;/h2&gt;
-
-&lt;p&gt;Companies are willing to show their adoption of Eclipse Ditto publicly: &lt;a href=&quot;https://iot.eclipse.org/adopters/?#iot.ditto&quot;&gt;https://iot.eclipse.org/adopters/?#iot.ditto&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;From our various &lt;a href=&quot;feedback.html&quot;&gt;feedback channels&lt;/a&gt; we however know of more adoption.&lt;br /&gt;
-If you are making use of Eclipse Ditto, it would be great to show this by adding your company name to that list of 
-known adopters.&lt;br /&gt;
-In the end, that’s one main way of measuring the success of the project.&lt;/p&gt;
-
-&lt;h2 id=&quot;changelog&quot;&gt;Changelog&lt;/h2&gt;
-
-&lt;p&gt;The main improvements and additions of Ditto 2.3.0 are:&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;HTTP API for “live” commands&lt;/li&gt;
-  &lt;li&gt;Smart channel strategy for live/twin read access&lt;/li&gt;
-  &lt;li&gt;Configurable allowing creation of entities (policies/things) based on namespace and authenticated subjects&lt;/li&gt;
-  &lt;li&gt;Allow using &lt;code class=&quot;highlighter-rouge&quot;&gt;*&lt;/code&gt; as a placeholder for the feature id in selected fields&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;The following notable fixes are included:&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;Fix potential concurrent modification errors when using JavaScript payload mapping and global variables&lt;/li&gt;
-  &lt;li&gt;Fix reconnect backoff for Kafka connections with authentication failures&lt;/li&gt;
-  &lt;li&gt;Fix caching of JWTs in HTTP push connections&lt;/li&gt;
-  &lt;li&gt;Fix potentially unreachable client actors in connections with &lt;code class=&quot;highlighter-rouge&quot;&gt;clientCount &amp;gt; 1&lt;/code&gt;&lt;/li&gt;
-  &lt;li&gt;Fix search inconsistencies for very active things during shard relocation (e.g. on rolling updates)&lt;/li&gt;
-  &lt;li&gt;Fix that a Kafka connection with only targets remains “open” even if Kafka broker is not available&lt;/li&gt;
-  &lt;li&gt;Allow usage of absolute domain paths ending with a “.” as Kafka bootstrap servers&lt;/li&gt;
-  &lt;li&gt;Ensure that Ditto pub/sub state is eventually consistent with a guaranteed upper time limit&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;The following non-functional work is also included:&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;Update of several used dependencies&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Please have a look at the &lt;a href=&quot;release_notes_230.html&quot;&gt;2.3.0 release notes&lt;/a&gt; for a more detailed information on the release.&lt;/p&gt;
-
-&lt;h2 id=&quot;artifacts&quot;&gt;Artifacts&lt;/h2&gt;
-
-&lt;p&gt;The new Java artifacts have been published at the &lt;a href=&quot;https://repo.eclipse.org/content/repositories/ditto/&quot;&gt;Eclipse Maven repository&lt;/a&gt;
-as well as &lt;a href=&quot;https://repo1.maven.org/maven2/org/eclipse/ditto/&quot;&gt;Maven central&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;The Ditto JavaScript client release was published on &lt;a href=&quot;https://www.npmjs.com/~eclipse_ditto&quot;&gt;npmjs.com&lt;/a&gt;:&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://www.npmjs.com/package/@eclipse-ditto/ditto-javascript-client-dom&quot;&gt;@eclipse-ditto/ditto-javascript-client-dom&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://www.npmjs.com/package/@eclipse-ditto/ditto-javascript-client-node&quot;&gt;@eclipse-ditto/ditto-javascript-client-node&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;The Docker images have been pushed to Docker Hub:&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://hub.docker.com/r/eclipse/ditto-policies/&quot;&gt;eclipse/ditto-policies&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://hub.docker.com/r/eclipse/ditto-things/&quot;&gt;eclipse/ditto-things&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://hub.docker.com/r/eclipse/ditto-things-search/&quot;&gt;eclipse/ditto-things-search&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://hub.docker.com/r/eclipse/ditto-gateway/&quot;&gt;eclipse/ditto-gateway&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://hub.docker.com/r/eclipse/ditto-connectivity/&quot;&gt;eclipse/ditto-connectivity&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://hub.docker.com/r/eclipse/ditto-concierge/&quot;&gt;eclipse/ditto-concierge&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;br /&gt;
-&lt;br /&gt;&lt;/p&gt;
-&lt;figure&gt;&lt;img class=&quot;docimage&quot; src=&quot;images/ditto.svg&quot; alt=&quot;Ditto&quot; style=&quot;max-width: 500px&quot; /&gt;&lt;/figure&gt;
-
-&lt;p&gt;–&lt;br /&gt;
-The Eclipse Ditto team&lt;/p&gt;
-</description>
-            <pubDate>Fri, 21 Jan 2022 00:00:00 +0000</pubDate>
-            <link>https://www.eclipse.dev/ditto/2022-01-21-release-announcement-230.html</link>
-            <guid isPermaLink="true">https://www.eclipse.dev/ditto/2022-01-21-release-announcement-230.html</guid>
-            
-            <category>blog</category>
             
             
         </item>
