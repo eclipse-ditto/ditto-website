@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="">
-<meta name="keywords" content="installation,  operating, docker, docker-compose, devops, logging, logstash, elk, monitoring, prometheus, grafana">
+<meta name="keywords" content="installation,  operating, docker, docker-compose, devops, logging, logstash, elk, monitoring, prometheus, grafana, tracing, metrics">
 <title>  Operating Ditto • Eclipse Ditto™ • a digital twin framework</title>
 
 <link rel="stylesheet" href="css/syntax.css">
@@ -273,6 +273,13 @@
         <li class="subfolders">
           <a href="#"><span></span>Release Notes</a>
           <ul>
+              
+              
+              
+              <li><a href="release_notes_342.html">3.4.2</a></li>
+              
+              
+              
               
               
               
@@ -2494,6 +2501,58 @@ jvm_memory_bytes_sum{component="system-metrics",measure="used",segment="miscella
 <a href="https://github.com/eclipse-ditto/ditto/tree/master/deployment/operations/grafana-dashboards">example Grafana dashboards</a>
 and build and share new ones back to the Ditto community.</p>
 
+<h3 id="operator-defined-custom-metrics">Operator defined custom metrics</h3>
+
+<p>Starting with Ditto 3.5.0, it is possible to configure “custom metrics” which are gathered by counting things matching
+a defined namespace/filter combination.<br />
+This is configured via the <a href="architecture-services-things-search.html">search</a> service configuration and builds on the
+<a href="basic-search.html#search-count-queries">count things</a> functionality.</p>
+
+<p>The idea behind this is that you want to show some statistic (e.g. in Grafana) about the amount of “Things” managed in
+Ditto fulfilling a certain condition.</p>
+
+<p>This would be an example search service configuration snippet for e.g. providing a metric named 
+<code class="highlighter-rouge">all_produced_and_not_installed_devices</code> defining a query on existence of a <code class="highlighter-rouge">production-date</code> and absence of 
+an <code class="highlighter-rouge">installation-date</code> attribute:</p>
+<pre><code class="language-hocon">ditto {
+  search {
+    operator-metrics {
+      enabled = true
+      scrape-interval = 15m
+      custom-metrics {
+        all_produced_and_not_installed_devices {
+          scrape-interval = 5m # overwrite scrape interval, run each 5 minutes
+          namespaces = [
+            "org.eclipse.ditto.smokedetectors"
+            "org.eclipse.ditto.cameras"
+          ]
+          filter = "and(exists(attributes/production-date),not(exists(attributes/installation-date)))"
+          tags {
+            company = "acme-corp"
+          }
+        }
+      }
+    }
+  }
+}
+</code></pre>
+
+<p>In order to add custom metrics via System properties, the following example shows how the above metric can be configured:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>-Dditto.search.operator-metrics.custom-metrics.all_produced_and_not_installed_devices.enabled=true
+-Dditto.search.operator-metrics.custom-metrics.all_produced_and_not_installed_devices.scrape-interval=5m
+-Dditto.search.operator-metrics.custom-metrics.all_produced_and_not_installed_devices.namespaces.0=org.eclipse.ditto.smokedetectors
+-Dditto.search.operator-metrics.custom-metrics.all_produced_and_not_installed_devices.namespaces.1=org.eclipse.ditto.cameras
+-Dditto.search.operator-metrics.custom-metrics.all_produced_and_not_installed_devices.filter=and(exists(attributes/production-date),not(exists(attributes/installation-date)))
+-Dditto.search.operator-metrics.custom-metrics.all_produced_and_not_installed_devices.tags.company=acme-corp
+</code></pre></div></div>
+
+<p>Ditto will perform a <a href="basic-search.html#search-count-queries">count things operation</a> each <code class="highlighter-rouge">5m</code> (5 minutes), providing
+a gauge named <code class="highlighter-rouge">all_produced_and_not_installed_devices</code> with the count of the query, adding the tag <code class="highlighter-rouge">company="acme-corp"</code>.</p>
+
+<p>In Prometheus format this would look like:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>all_produced_and_not_installed_devices{company="acme-corp"} 42.0
+</code></pre></div></div>
+
 <h2 id="tracing">Tracing</h2>
 
 <p>Ditto supports reading and propagating <a href="https://www.w3.org/TR/trace-context/">W3C trace context</a> headers at the 
@@ -3403,7 +3462,7 @@ to stop blocking messages to a namespace.</p>
                     </div>
                     <p class="notice">
                         &copy;2023 Eclipse Ditto™.
-                         Site last generated: Nov 9, 2023 <br />
+                         Site last generated: Nov 30, 2023 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

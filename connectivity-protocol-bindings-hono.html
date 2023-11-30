@@ -276,6 +276,13 @@
               
               
               
+              <li><a href="release_notes_342.html">3.4.2</a></li>
+              
+              
+              
+              
+              
+              
               <li><a href="release_notes_341.html">3.4.1</a></li>
               
               
@@ -2066,12 +2073,11 @@ These specifics are applied automatically at runtime for the connections of type
 <a href="connectivity-protocol-bindings-kafka2.html">Kafka connection documentation</a> is valid for the Hono connection too, 
 but with some exceptions, as described below.</p>
 
-<h4 id="important-note">Important note</h4>
-<p>A Hono connection is associated with <em>one</em> Hono tenant. That means for each Hono tenant a separate Hono connection needs to be created.
-The tenant ID is used in the source and target connection addresses, representing the Kafka topics used by Hono for
-sending and receiving messages for this tenant.
-See below sections <a href="#source-addresses">Source addresses</a>, <a href="#source-reply-target">Source reply target</a> and <a href="#target-address">Target Address</a>.
-The Hono tenant ID for the connection is defined in the <a href="#specific-configuration-properties">specific config</a> <code class="highlighter-rouge">"honoTenantId"</code> property.</p>
+<div class="alert alert-info" role="alert"><i class="fa fa-info-circle"></i> <b>Note:</b> A Hono connection is associated with <em>one</em> Hono tenant. That means for each Hono tenant a separate Hono connection
+            needs to be created. The tenant ID is used in the source and target connection addresses, representing the Kafka
+            topics used by Hono for sending and receiving messages for this tenant. See below sections <a href="#source-addresses">Source addresses</a>,
+            <a href="#source-reply-target">Source reply target</a> and <a href="#target-address">Target Address</a>. The Hono tenant ID for the connection is defined in the
+            <a href="#specific-configuration-properties">specific config</a> <code class="highlighter-rouge">honoTenantId</code> property.</div>
 
 <h2 id="specific-hono-connection-configuration">Specific Hono connection configuration</h2>
 
@@ -2278,7 +2284,8 @@ For more details see <a href="connectivity-tls-certificates.html">Connection con
       password = "honoPassword"
       sasl-mechanism = "PLAIN"
       bootstrap-servers = "localhost:9092"
-      validate-certificates = false
+      validateCertificates = true,
+      ca = "-----BEGIN CERTIFICATE-----\n&lt;trusted certificate&gt;\n-----END CERTIFICATE-----"
     }
   }
 }
@@ -2313,7 +2320,7 @@ The returned value could be used for inspection, but not for example to create a
                     </div>
                     <p class="notice">
                         &copy;2023 Eclipse Ditto™.
-                         Site last generated: Nov 9, 2023 <br />
+                         Site last generated: Nov 30, 2023 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">
