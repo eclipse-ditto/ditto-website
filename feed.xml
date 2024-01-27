@@ -5,9 +5,113 @@
         <description>Announcements, tutorials and examples around Eclipse Ditto and Digital Twins</description>
         <link>https://www.eclipse.dev/ditto/</link>
         <atom:link href="https://www.eclipse.dev/ditto/feed.xml" rel="self" type="application/rss+xml"/>
-        <pubDate>Tue, 02 Jan 2024 14:30:01 +0000</pubDate>
-        <lastBuildDate>Tue, 02 Jan 2024 14:30:01 +0000</lastBuildDate>
+        <pubDate>Sat, 27 Jan 2024 09:00:39 +0000</pubDate>
+        <lastBuildDate>Sat, 27 Jan 2024 09:00:39 +0000</lastBuildDate>
         <generator>Jekyll v3.6.2</generator>
+        
+        <item>
+            <title>Announcing Eclipse Ditto Release 3.5.0</title>
+            <description>&lt;p&gt;The Eclipse Ditto team wished you a happy new year and is excited to announce availability of Ditto
+&lt;a href=&quot;https://projects.eclipse.org/projects/iot.ditto/releases/3.5.0&quot;&gt;3.5.0&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;In 3.5.0 a lot of UI improvements are contained and several smaller but very useful features were added.&lt;br /&gt;
+Thanks a lot to the contributors who contributed to this release, this is really appreciated.&lt;/p&gt;
+
+&lt;h2 id=&quot;adoption&quot;&gt;Adoption&lt;/h2&gt;
+
+&lt;p&gt;Companies are willing to show their adoption of Eclipse Ditto publicly: 
+&lt;a href=&quot;https://iot.eclipse.org/adopters/?#iot.ditto&quot;&gt;https://iot.eclipse.org/adopters/?#iot.ditto&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;When you use Eclipse Ditto it would be great to support the project by putting your logo there.&lt;/p&gt;
+
+&lt;h2 id=&quot;changelog&quot;&gt;Changelog&lt;/h2&gt;
+
+&lt;p&gt;The main improvements and additions of Ditto 3.5.0 are:&lt;/p&gt;
+
+&lt;p&gt;Eclipse Ditto 3.5.0 focuses on the following areas:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;Search in the history&lt;/strong&gt; of a &lt;strong&gt;single thing&lt;/strong&gt; using an RQL filter&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Configure per namespace&lt;/strong&gt; the &lt;strong&gt;fields to index&lt;/strong&gt; in Ditto’s &lt;strong&gt;search index&lt;/strong&gt;&lt;/li&gt;
+  &lt;li&gt;Configure &lt;strong&gt;defined search count queries&lt;/strong&gt; to be &lt;strong&gt;exposed as Prometheus metrics&lt;/strong&gt; by Ditto periodically&lt;/li&gt;
+  &lt;li&gt;Providing &lt;strong&gt;new placeholder functionality&lt;/strong&gt; to the &lt;strong&gt;time placeholder&lt;/strong&gt;, being able to &lt;strong&gt;add and subtract to/from
+the current time&lt;/strong&gt; and to truncate the time to a given unit&lt;/li&gt;
+  &lt;li&gt;Enhance &lt;strong&gt;WoT (Web of Things) JSON skeleton creation&lt;/strong&gt; to be able to &lt;strong&gt;fail with an exception&lt;/strong&gt; on &lt;strong&gt;invalid&lt;/strong&gt; WoT models&lt;/li&gt;
+  &lt;li&gt;Provide &lt;strong&gt;negative numbers&lt;/strong&gt; when &lt;strong&gt;querying for the historical events&lt;/strong&gt; of an entity (thing, policy, connection) in order to
+&lt;strong&gt;e.g. get “latest 10” events&lt;/strong&gt;&lt;/li&gt;
+  &lt;li&gt;UI enhancements:
+    &lt;ul&gt;
+      &lt;li&gt;Show &lt;strong&gt;policy imports&lt;/strong&gt; in Ditto explorer UI&lt;/li&gt;
+      &lt;li&gt;Enhance UI &lt;strong&gt;Operations&lt;/strong&gt; functionality to be able to &lt;strong&gt;perform devops/piggyback commands&lt;/strong&gt;&lt;/li&gt;
+      &lt;li&gt;Allow &lt;strong&gt;editors in UI&lt;/strong&gt; to toggle &lt;strong&gt;full screen mode&lt;/strong&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;strong&gt;Display attributes in UI&lt;/strong&gt; inside a &lt;strong&gt;JSON editor&lt;/strong&gt; in order to correctly display structured JSON payloads&lt;/li&gt;
+      &lt;li&gt;Enhance “&lt;strong&gt;Incoming Thing Updates&lt;/strong&gt;” section by &lt;strong&gt;displaying “Action” and “Path” in the table&lt;/strong&gt; and adding a &lt;strong&gt;dropdown to
+select the amount of details&lt;/strong&gt; to show per event&lt;/li&gt;
+      &lt;li&gt;Add &lt;strong&gt;client side filter option&lt;/strong&gt; for filtering &lt;strong&gt;Incoming Thing Updates&lt;/strong&gt; and &lt;strong&gt;Connection logs&lt;/strong&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The following non-functional work is also included:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Configured docker-compose to by default retain only the last 50m of log messages per Ditto service&lt;/li&gt;
+  &lt;li&gt;Migrated SLF4J to version 2.x and logback to version 1.4.x&lt;/li&gt;
+  &lt;li&gt;Benchmark tool improvements and fixes&lt;/li&gt;
+  &lt;li&gt;Improve cluster stability when running in Kubernetes, e.g. on updates or k8s node-shutdowns&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The following notable fixes are included:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Fix enriching Thing creation events with the inlined &lt;code class=&quot;highlighter-rouge&quot;&gt;_policy&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;Fixed that Ditto’s own calculated “health” was not exposed to the &lt;code class=&quot;highlighter-rouge&quot;&gt;/alive&lt;/code&gt; endpoint scraped by Kubernetes to check for
+aliveness of single services&lt;/li&gt;
+  &lt;li&gt;Fixed that no cache was used when updating the search index when an “imported” policy was modified&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Please have a look at the &lt;a href=&quot;release_notes_350.html&quot;&gt;3.5.0 release notes&lt;/a&gt; for a more detailed information on the release.&lt;/p&gt;
+
+&lt;h2 id=&quot;artifacts&quot;&gt;Artifacts&lt;/h2&gt;
+
+&lt;p&gt;The new Java artifacts have been published at the &lt;a href=&quot;https://repo.eclipse.org/content/repositories/ditto/&quot;&gt;Eclipse Maven repository&lt;/a&gt;
+as well as &lt;a href=&quot;https://repo1.maven.org/maven2/org/eclipse/ditto/&quot;&gt;Maven central&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;The Ditto JavaScript client release was published on &lt;a href=&quot;https://www.npmjs.com/~eclipse_ditto&quot;&gt;npmjs.com&lt;/a&gt;:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.npmjs.com/package/@eclipse-ditto/ditto-javascript-client-dom&quot;&gt;@eclipse-ditto/ditto-javascript-client-dom&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.npmjs.com/package/@eclipse-ditto/ditto-javascript-client-node&quot;&gt;@eclipse-ditto/ditto-javascript-client-node&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The Docker images have been pushed to Docker Hub:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://hub.docker.com/r/eclipse/ditto-policies/&quot;&gt;eclipse/ditto-policies&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://hub.docker.com/r/eclipse/ditto-things/&quot;&gt;eclipse/ditto-things&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://hub.docker.com/r/eclipse/ditto-things-search/&quot;&gt;eclipse/ditto-things-search&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://hub.docker.com/r/eclipse/ditto-gateway/&quot;&gt;eclipse/ditto-gateway&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://hub.docker.com/r/eclipse/ditto-connectivity/&quot;&gt;eclipse/ditto-connectivity&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The Ditto Helm chart has been published to Docker Hub:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://hub.docker.com/r/eclipse/ditto/&quot;&gt;eclipse/ditto&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;br /&gt;
+&lt;br /&gt;&lt;/p&gt;
+&lt;figure&gt;&lt;img class=&quot;docimage&quot; src=&quot;images/ditto.svg&quot; alt=&quot;Ditto&quot; style=&quot;max-width: 500px&quot; /&gt;&lt;/figure&gt;
+
+&lt;p&gt;–&lt;br /&gt;
+The Eclipse Ditto team&lt;/p&gt;
+</description>
+            <pubDate>Fri, 26 Jan 2024 00:00:00 +0000</pubDate>
+            <link>https://www.eclipse.dev/ditto/2024-01-26-release-announcement-350.html</link>
+            <guid isPermaLink="true">https://www.eclipse.dev/ditto/2024-01-26-release-announcement-350.html</guid>
+            
+            <category>blog</category>
+            
+            
+        </item>
         
         <item>
             <title>Announcing Eclipse Ditto Release 3.4.0</title>
@@ -1431,225 +1535,6 @@ The Eclipse Ditto team&lt;/p&gt;
             <guid isPermaLink="true">https://www.eclipse.dev/ditto/2022-04-14-release-announcement-240.html</guid>
             
             <category>blog</category>
-            
-            
-        </item>
-        
-        <item>
-            <title>W3C WoT (Web of Things) integration</title>
-            <description>&lt;p&gt;The upcoming Eclipse Ditto &lt;strong&gt;version 2.4.0&lt;/strong&gt; will add support for &lt;a href=&quot;https://www.w3.org/WoT/&quot;&gt;W3C WoT (Web of Things)&lt;/a&gt; 
-integration by referencing WoT Thing Model in Ditto managed twins describing the Things’ capabilities.&lt;/p&gt;
-
-&lt;p&gt;Using this integration, Ditto managed digital twins can be linked to WoT “Thing Models” from which Ditto can create 
-WoT “Thing Descriptions” containing the API descriptions of the twins.&lt;/p&gt;
-
-&lt;p&gt;By integrating WoT, Ditto takes a big step forward towards:&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;increased interoperability&lt;/li&gt;
-  &lt;li&gt;introspection of twins to find out their capabilities
-    &lt;ul&gt;
-      &lt;li&gt;which &lt;code class=&quot;highlighter-rouge&quot;&gt;properties&lt;/code&gt; are provided and their data type and format&lt;/li&gt;
-      &lt;li&gt;which &lt;code class=&quot;highlighter-rouge&quot;&gt;actions&lt;/code&gt; can be invoked on the devices, including their expected input/output data type and format&lt;/li&gt;
-      &lt;li&gt;which &lt;code class=&quot;highlighter-rouge&quot;&gt;events&lt;/code&gt; the devices are able to emit, including their data type and format&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;addition of semantic context to Ditto managed digital twins and their capabilities&lt;/li&gt;
-  &lt;li&gt;description of Ditto twin HTTP APIs in an open, established, well specified, “web optimized”, active IoT standard&lt;/li&gt;
-  &lt;li&gt;backing Ditto managed twins with WoT models, also supporting “brownfield” setups, without the need for actual devices to be aware of WoT&lt;/li&gt;
-  &lt;li&gt;opening the door to a new ecosystem of tools&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;To learn more about WoT (Web of Things), please visit: &lt;a href=&quot;https://www.w3.org/WoT/documentation/&quot;&gt;Web of Things in a Nutshell&lt;/a&gt;&lt;/p&gt;
-
-&lt;h2 id=&quot;wot-integration-in-ditto&quot;&gt;WoT integration in Ditto&lt;/h2&gt;
-
-&lt;p&gt;The WoT integration in Ditto covers several aspects:&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;referencing HTTP(s) URLs to WoT Thing Models in &lt;a href=&quot;basic-thing.html#definition&quot;&gt;Thing Definitions&lt;/a&gt; and in &lt;a href=&quot;basic-feature.html#feature-definition&quot;&gt;Feature Definitions&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;generation of WoT Thing Descriptions for Thing and Feature instances based on referenced Thing Models
-    &lt;ul&gt;
-      &lt;li&gt;resolving potential &lt;a href=&quot;https://www.w3.org/TR/2022/WD-wot-thing-description11-20220311/#thing-model-extension-import&quot;&gt;extensions via &lt;code class=&quot;highlighter-rouge&quot;&gt;tm:extends&lt;/code&gt; and imports via &lt;code class=&quot;highlighter-rouge&quot;&gt;tm:ref&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;resolving potential Thing level &lt;a href=&quot;https://www.w3.org/TR/2022/WD-wot-thing-description11-20220311/#thing-model-composition&quot;&gt;compositions via &lt;code class=&quot;highlighter-rouge&quot;&gt;tm:submodel&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;resolving potential &lt;a href=&quot;https://www.w3.org/TR/2022/WD-wot-thing-description11-20220311/#thing-model-td-placeholder&quot;&gt;TM placeholders&lt;/a&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;upon creation of new Things, generation of a “JSON skeleton” following the WoT Thing Model, including referenced 
-TM submodels as Features of the Thing&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;For additional details about the WoT integration, please check the full 
-&lt;a href=&quot;basic-wot-integration.html&quot;&gt;WoT integration documentation&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;The WoT integration is still marked as “experimental” as the WoT Thing Description version 1.1 is not yet published as
-“W3C Recommendation” and may still change - as well as the implementation of the standard in Ditto.&lt;/p&gt;
-
-&lt;div class=&quot;alert alert-info&quot; role=&quot;alert&quot;&gt;&lt;i class=&quot;fa fa-info-circle&quot;&gt;&lt;/i&gt; &lt;b&gt;Note:&lt;/b&gt; In order to enable the &lt;strong&gt;experimental&lt;/strong&gt; support for WoT in Ditto &lt;code class=&quot;highlighter-rouge&quot;&gt;2.4.0&lt;/code&gt;, please
-      configure the environment variable &lt;code class=&quot;highlighter-rouge&quot;&gt;DITTO_DEVOPS_FEATURE_WOT_INTEGRATION_ENABLED&lt;/code&gt; to &lt;code class=&quot;highlighter-rouge&quot;&gt;true&lt;/code&gt;.&lt;/div&gt;
-
-&lt;h2 id=&quot;example&quot;&gt;Example&lt;/h2&gt;
-
-&lt;p&gt;For a full example of the different aspects of the WoT integration, please check the full 
-&lt;a href=&quot;basic-wot-integration-example.html&quot;&gt;WoT integration example&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;To summarize:&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;“link” a Thing with a publicly available WoT Thing Model by specifying the URL in its &lt;a href=&quot;basic-thing.html#definition&quot;&gt;Thing Definition&lt;/a&gt;.&lt;/li&gt;
-  &lt;li&gt;creation of a new Thing can use a Thing Model (e.g. the example model &lt;a href=&quot;https://eclipse-ditto.github.io/ditto-examples/wot/models/floor-lamp-1.0.0.tm.jsonld&quot;&gt;https://eclipse-ditto.github.io/ditto-examples/wot/models/floor-lamp-1.0.0.tm.jsonld&lt;/a&gt;) in order to generate a JSON skeleton:
-    &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  curl &lt;span class=&quot;nt&quot;&gt;--location&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--request&lt;/span&gt; PUT &lt;span class=&quot;nt&quot;&gt;-u&lt;/span&gt; ditto:ditto &lt;span class=&quot;s1&quot;&gt;'https://ditto.eclipseprojects.io/api/2/things/io.eclipseprojects.ditto:floor-lamp-0815'&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-  &lt;span class=&quot;nt&quot;&gt;--header&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'Content-Type: application/json'&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-  &lt;span class=&quot;nt&quot;&gt;--data-raw&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'{
-      &quot;definition&quot;: &quot;https://eclipse-ditto.github.io/ditto-examples/wot/models/floor-lamp-1.0.0.tm.jsonld&quot;
-  }'&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
-  &lt;/li&gt;
-  &lt;li&gt;which results in a Thing like this:
-    &lt;div class=&quot;language-json highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-  &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;thingId&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;io.eclipseprojects.ditto:floor-lamp-0815&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-  &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;policyId&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;io.eclipseprojects.ditto:floor-lamp-0815&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-  &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;definition&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;https://eclipse-ditto.github.io/ditto-examples/wot/models/floor-lamp-1.0.0.tm.jsonld&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-  &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;attributes&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;manufacturer&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;serialNo&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-  &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;features&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;Spot1&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-      &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;definition&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-        &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;https://eclipse-ditto.github.io/ditto-examples/wot/models/dimmable-colored-lamp-1.0.0.tm.jsonld&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-        &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;https://eclipse-ditto.github.io/ditto-examples/wot/models/colored-lamp-1.0.0.tm.jsonld&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-        &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;https://eclipse-ditto.github.io/ditto-examples/wot/models/switchable-1.0.0.tm.jsonld&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-      &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-      &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;properties&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-        &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;dimmer-level&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;0.0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-        &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;color&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-          &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;r&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-          &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;g&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-          &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;b&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-        &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-        &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;on&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;kc&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-      &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;Spot2&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-      &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;definition&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-        &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;https://eclipse-ditto.github.io/ditto-examples/wot/models/dimmable-colored-lamp-1.0.0.tm.jsonld&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-        &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;https://eclipse-ditto.github.io/ditto-examples/wot/models/colored-lamp-1.0.0.tm.jsonld&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-        &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;https://eclipse-ditto.github.io/ditto-examples/wot/models/switchable-1.0.0.tm.jsonld&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-      &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-      &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;properties&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-        &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;dimmer-level&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;0.0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-        &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;color&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-          &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;r&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-          &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;g&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-          &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;b&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-        &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-        &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;on&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;kc&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-      &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;Spot3&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-      &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;definition&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-        &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;https://eclipse-ditto.github.io/ditto-examples/wot/models/dimmable-colored-lamp-1.0.0.tm.jsonld&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-        &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;https://eclipse-ditto.github.io/ditto-examples/wot/models/colored-lamp-1.0.0.tm.jsonld&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-        &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;https://eclipse-ditto.github.io/ditto-examples/wot/models/switchable-1.0.0.tm.jsonld&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-      &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-      &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;properties&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-        &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;dimmer-level&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;0.0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-        &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;color&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-          &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;r&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-          &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;g&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-          &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;b&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-        &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-        &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;on&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;kc&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-      &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;ConnectionStatus&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-      &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;definition&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-        &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;https://eclipse-ditto.github.io/ditto-examples/wot/models/connection-status-1.0.0.tm.jsonld&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-      &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-      &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;properties&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-        &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;readySince&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-        &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;readyUntil&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-      &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;PowerConsumptionAwareness&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-      &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;definition&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-        &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;https://eclipse-ditto.github.io/ditto-examples/wot/models/power-consumption-aware-1.0.0.tm.jsonld&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-      &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-      &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;properties&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-        &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;reportPowerConsumption&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-      &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;SmokeDetection&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-      &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;definition&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-        &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;https://eclipse-ditto.github.io/ditto-examples/wot/models/smoke-detector-1.0.0.tm.jsonld&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-      &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;Status-LED&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-      &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;definition&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-        &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;https://eclipse-ditto.github.io/ditto-examples/wot/models/colored-lamp-1.0.0.tm.jsonld&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-        &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;https://eclipse-ditto.github.io/ditto-examples/wot/models/switchable-1.0.0.tm.jsonld&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-      &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-      &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;properties&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-        &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;color&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-          &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;r&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-          &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;g&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-          &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;b&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-        &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-        &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;on&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;kc&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-      &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
-  &lt;/li&gt;
-  &lt;li&gt;the WoT Thing Description of Things containing a Thing Model in their &lt;code class=&quot;highlighter-rouge&quot;&gt;&quot;definition&quot;&lt;/code&gt; may then be retrieved by invoking 
-the existing endpoint&lt;br /&gt;
-&lt;code class=&quot;highlighter-rouge&quot;&gt;GET /api/2/things/&amp;lt;thingId&amp;gt;&lt;/code&gt; with the &lt;code class=&quot;highlighter-rouge&quot;&gt;Accept&lt;/code&gt; header &lt;code class=&quot;highlighter-rouge&quot;&gt;application/td+json&lt;/code&gt;:
-    &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;curl &lt;span class=&quot;nt&quot;&gt;--location&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--request&lt;/span&gt; GET &lt;span class=&quot;nt&quot;&gt;-u&lt;/span&gt; ditto:ditto &lt;span class=&quot;s1&quot;&gt;'https://ditto.eclipseprojects.io/api/2/things/io.eclipseprojects.ditto:floor-lamp-0815'&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-&lt;span class=&quot;nt&quot;&gt;--header&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'Accept: application/td+json'&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
-  &lt;/li&gt;
-  &lt;li&gt;Features of Things are handled as WoT “submodels” and also can describe themselves with the same approach, e.g.:
-    &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;curl &lt;span class=&quot;nt&quot;&gt;--location&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--request&lt;/span&gt; GET &lt;span class=&quot;nt&quot;&gt;-u&lt;/span&gt; ditto:ditto &lt;span class=&quot;s1&quot;&gt;'https://ditto.eclipseprojects.io/api/2/things/io.eclipseprojects.ditto:floor-lamp-0815/features/Spot1'&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-&lt;span class=&quot;nt&quot;&gt;--header&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'Accept: application/td+json'&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;ditto-wot-java-model&quot;&gt;Ditto WoT Java model&lt;/h2&gt;
-
-&lt;p&gt;As part of the integration of WoT in Ditto, a Java module has been added to provide a Java API for the WoT 
-“Thing Description”/”Thing Model” and their parts - this module can also be used separately from Ditto in order to
-e.g. have a builder based API for building new objects or to read a TD/TM from a string:&lt;/p&gt;
-
-&lt;div class=&quot;language-xml highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nt&quot;&gt;&amp;lt;dependency&amp;gt;&lt;/span&gt;
-    &lt;span class=&quot;nt&quot;&gt;&amp;lt;groupId&amp;gt;&lt;/span&gt;org.eclipse.ditto&lt;span class=&quot;nt&quot;&gt;&amp;lt;/groupId&amp;gt;&lt;/span&gt;
-    &lt;span class=&quot;nt&quot;&gt;&amp;lt;artifactId&amp;gt;&lt;/span&gt;ditto-wot-model&lt;span class=&quot;nt&quot;&gt;&amp;lt;/artifactId&amp;gt;&lt;/span&gt;
-    &lt;span class=&quot;nt&quot;&gt;&amp;lt;version&amp;gt;&lt;/span&gt;${ditto.version}&lt;span class=&quot;nt&quot;&gt;&amp;lt;/version&amp;gt;&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;&amp;lt;!-- the ditto-wot-model is available since &quot;ditto.version&quot; 2.4.0 --&amp;gt;&lt;/span&gt;
-&lt;span class=&quot;nt&quot;&gt;&amp;lt;/dependency&amp;gt;&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Please have a look at the added &lt;a href=&quot;https://github.com/eclipse-ditto/ditto/tree/master/wot/model&quot;&gt;ditto-wot-model module&lt;/a&gt; to find
-out more about example usage.&lt;/p&gt;
-
-&lt;h2 id=&quot;feedback&quot;&gt;Feedback?&lt;/h2&gt;
-
-&lt;p&gt;Please &lt;a href=&quot;feedback.html&quot;&gt;get in touch&lt;/a&gt; if you have feedback or questions towards this new functionality.&lt;/p&gt;
-
-&lt;p&gt;&lt;br /&gt;
-&lt;br /&gt;&lt;/p&gt;
-&lt;figure&gt;&lt;img class=&quot;docimage&quot; src=&quot;images/ditto.svg&quot; alt=&quot;Ditto&quot; style=&quot;max-width: 500px&quot; /&gt;&lt;/figure&gt;
-
-&lt;p&gt;–&lt;br /&gt; 
-The Eclipse Ditto team&lt;/p&gt;
-</description>
-            <pubDate>Thu, 03 Mar 2022 00:00:00 +0000</pubDate>
-            <link>https://www.eclipse.dev/ditto/2022-03-03-wot-integration.html</link>
-            <guid isPermaLink="true">https://www.eclipse.dev/ditto/2022-03-03-wot-integration.html</guid>
-            
-            <category>blog</category>
-            
-            <category>wot</category>
-            
-            <category>http</category>
             
             
         </item>
