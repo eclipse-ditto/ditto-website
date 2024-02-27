@@ -1,0 +1,1112 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="">
+<meta name="keywords" content="blog,  ">
+<title>  Access Ditto Things from an Asset Administration Shell • Eclipse Ditto™</title>
+
+<link rel="stylesheet" href="css/syntax.css">
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" crossorigin="anonymous">
+<link rel="stylesheet" href="css/modern-business.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" crossorigin="anonymous">
+<link rel="stylesheet" href="css/customstyles.css">
+<link rel="stylesheet" href="css/boxshadowproperties.css">
+<link rel="stylesheet" href="css/theme-ditto.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,700|Source+Code+Pro:300,600|Titillium+Web:400,600,700">
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/2.0.0/anchor.min.js" crossorigin="anonymous"></script>
+<script src="js/toc.js"></script>
+<script src="js/customscripts.js"></script>
+
+<script type="application/ld+json">
+{
+  "@context": "http://schema.org",
+  "@type": "Organization",
+  "url": "https://www.eclipse.dev/ditto/",
+  "logo": "https://www.eclipse.dev/ditto/images/ditto.svg"
+}
+</script>
+
+<link rel="icon" type="image/png" href="images/favicon-16x16.png" sizes="16x16">
+<link rel="icon" type="image/png" href="images/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="images/favicon-96x96.png" sizes="96x96">
+
+<link rel="alternate" type="application/rss+xml" title="Eclipse Ditto Blog" href="https://www.eclipse.dev/ditto/feed.xml">
+
+<!-- Eclipse Foundation cookie consent: -->
+<link rel="stylesheet" type="text/css" href="https://www.eclipse.org/eclipse.org-common/themes/solstice/public/stylesheets/vendor/cookieconsent/cookieconsent.min.css" />
+<script src="https://www.eclipse.org/eclipse.org-common/themes/solstice/public/javascript/vendor/cookieconsent/default.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            $("#tg-sb-link").click(function() {
+                $("#tg-sb-sidebar").toggle();
+                $("#tg-sb-content").toggleClass('col-md-9');
+                $("#tg-sb-content").toggleClass('col-md-12');
+                $("#tg-sb-icon").toggleClass('fa-toggle-on');
+                $("#tg-sb-icon").toggleClass('fa-toggle-off');
+            });
+        });
+    </script>
+</head>
+
+
+<script>
+    (function(w,d,s,l,i){
+        w[l]=w[l]||[];
+        w[l].push({'gtm.start':
+            new Date().getTime(),event:'gtm.js'});
+        var f=d.getElementsByTagName(s)[0],
+            j=d.createElement(s),
+            dl=l!='dataLayer'?'&l='+l:'';
+        j.async=true;
+        j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;
+        f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-5WLCZXC');
+</script>
+
+
+
+<body>
+<!-- Navigation -->
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container topnavlinks">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-ditto-home" href="index.html">&nbsp;<img src="images/ditto_allwhite_symbolonly.svg" class="ditto-navbar-symbol" alt="Home"> <img src="images/ditto_allwhite_textonly.svg" class="ditto-navbar-symbol-text" alt="Eclipse Ditto™"></a>
+        </div>
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <!-- toggle sidebar button -->
+                <!--<li><a id="tg-sb-link" href="#"><i id="tg-sb-icon" class="fa fa-toggle-on"></i> Nav</a></li>-->
+                <!-- entries without drop-downs appear here -->
+
+
+
+
+                
+                
+                
+                <li><a href="blog.html">Blog</a></li>
+                
+                
+                
+                <li><a href="intro-overview.html">Documentation</a></li>
+                
+                
+                
+                <li><a href="http-api-doc.html">HTTP API</a></li>
+                
+                
+                
+                <li><a href="sandbox.html">Sandbox</a></li>
+                
+                
+                
+                  
+                  <li><a href="https://github.com/eclipse-ditto/ditto" target="_blank">
+                    <img src="images/GitHub-Mark-Light-32px.png" alt="Sources at GitHub">
+                  </a></li>
+                  
+                
+                
+                
+                  
+                  <li><a href="https://github.com/eclipse-ditto/ditto-clients" target="_blank">
+                    <img src="images/GitHub-Mark-Light-32px.png" alt="SDK sources at GitHub">SDKs
+                  </a></li>
+                  
+                
+                
+                
+                  
+                  <li><a href="https://github.com/eclipse-ditto/ditto-examples" target="_blank">
+                    <img src="images/GitHub-Mark-Light-32px.png" alt="Example sources at GitHub">examples
+                  </a></li>
+                  
+                
+                
+                
+                <!-- entries with drop-downs appear here -->
+                <!-- conditional logic to control which topnav appears for the audience defined in the configuration file.-->
+                
+                
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Links<b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        
+                        
+                        <li><a href="https://projects.eclipse.org/projects/iot.ditto" target="_blank">Eclipse Ditto Project</a></li>
+                        
+                        
+                        
+                        <li><a href="https://www.eclipse.org/forums/index.php/f/364/" target="_blank">Forum</a></li>
+                        
+                        
+                        
+                        <li><a href="https://ci.eclipse.org/ditto/" target="_blank">Jenkins</a></li>
+                        
+                        
+                        
+                        <li><a href="https://dev.eclipse.org/mhonarc/lists/ditto-dev/" target="_blank">Mailing list archives</a></li>
+                        
+                        
+                        
+                        <li><a href="https://gitter.im/eclipse/ditto" target="_blank">Gitter.im chat</a></li>
+                        
+                        
+                    </ul>
+                </li>
+                
+                
+                
+                <!--comment out this block if you want to hide search-->
+                <li>
+                    <!--start search-->
+                    <div id="search-demo-container">
+                        <input type="text" id="search-input" placeholder="search...">
+                        <ul id="results-container"></ul>
+                    </div>
+                    <script src="https://cdnjs.cloudflare.com/ajax/libs/simple-jekyll-search/0.0.9/jekyll-search.js" type="text/javascript"></script>
+                    <script type="text/javascript">
+                            SimpleJekyllSearch.init({
+                                searchInput: document.getElementById('search-input'),
+                                resultsContainer: document.getElementById('results-container'),
+                                dataSource: 'search.json',
+                                searchResultTemplate: '<li><a href="{url}" title="Access Ditto Things from an Asset Administration Shell">{title}</a></li>',
+                                noResultsText: 'No results found.',
+                                limit: 10,
+                                fuzzy: true,
+                    })
+                    </script>
+                    <!--end search-->
+                </li>
+            </ul>
+        </div>
+    </div>
+    <!-- /.container -->
+</nav>
+
+<!-- Page Content -->
+<div class="container">
+  <div id="main">
+    <!-- Content Row -->
+    <div class="row">
+        
+        
+
+        <!-- Content Column -->
+        <div class="col-md-12" id="tg-sb-content">
+            <!-- Look the author details up from the site config. -->
+
+
+<!-- Output author details if some exist. -->
+<!-- Output author details if some exist. -->
+<!---->
+<!--<span>-->
+    <!--&lt;!&ndash; Mugshot. &ndash;&gt;-->
+    <!--<img src="https://www.gravatar.com/avatar/88ca57a47a15b97f3b20d209f28c01f0?s=135" alt="A photo of Johannes Kristan" />-->
+
+<!--&lt;!&ndash; Personal Info. &ndash;&gt;-->
+    <!--Written by <a href="https://github.com/bs-jokri" target="_blank">Johannes Kristan</a>-->
+<!--</span>-->
+<!---->
+
+<article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+    <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">Access Ditto Things from an Asset Administration Shell</h1>
+        <p class="post-meta">Published by <img src="https://www.gravatar.com/avatar/88ca57a47a15b97f3b20d209f28c01f0?s=135" alt="A photo of Johannes Kristan" style="width:50px;border-radius:50%;display:inline-block;margin-right:5px;" /><span itemprop="author" itemscope itemtype="http://schema.org/Person"><span itemprop="name"><a href="https://github.com/bs-jokri" target="_blank">Johannes Kristan</a> </span></span> on <time datetime="2024-02-27T00:00:00+00:00" itemprop="datePublished">Feb 27, 2024</time> - Tags:
+            
+            
+            
+            <a href="tag_blog.html">blog</a>
+            
+            
+            
+
+        </p>
+
+
+    </header>
+
+    <div class="post-content" itemprop="articleBody">
+
+        
+
+        
+
+        <p>Integrating digital representations of devices into an IT infrastructure is a recurring task in different domains and application areas.
+To address this challenge in Industry 4.0 scenarios along the supply chain, the community specified the <a href="https://industrialdigitaltwin.org/">Asset Administration Shell</a> within the Industrial Digital Twin Association (IDTA) to handle all kinds of information of a physical asset over its lifecycle.</p>
+
+<p>Eclipse Ditto provides a backend for handling such device data as Things and takes care of a number of general tasks that are otherwise easy to be done wrong,
+such as handling device connectivity over different protocols or state management. Therefore, it is promising to use the benefits of Eclipse Ditto for populating an AAS infrastructure when the devices already communicate with an existing instance of Eclipse Ditto.</p>
+
+<p>In this post we want to share our solution and learnings from setting up an AAS infrastructure based on <a href="https://eclipse.dev/basyx/">Eclipse Basyx</a> and Eclipse Ditto as a source for device state.</p>
+
+<figure><img class="docimage" src="images/blog/2024-02-15-integrating-ditto-ass-basyx/basic-interaction.svg" alt="User-device interaction via AAS and IoT backend" style="max-width: 1000px" /></figure>
+
+<p><em>Figure 1:  User-device interaction via BaSyx and Ditto</em></p>
+
+<h2 id="background">Background</h2>
+
+<p>We start with some background on the AAS and Eclipse Basyx. If you are allready familiar with both, it is safe to skip this section.</p>
+
+<h3 id="asset-administration-shell">Asset Administration Shell</h3>
+
+<p>The Asset Administration Shell (AAS) is a standardization effort of
+the Industrial Digital Twin Association (IDTA) that originated from the
+Platform Industry 4.0 (I4.0) (<a href="https://industrialdigitaltwin.org/en/wp-content/uploads/sites/2/2023/04/IDTA-01001-3-0_SpecificationAssetAdministrationShell_Part1_Metamodel.pdf">AAS Spec Part I</a>; <a href="https://industrialdigitaltwin.org/en/wp-content/uploads/sites/2/2023/04/IDTA-01002-3-0_SpecificationAssetAdministrationShell_Part2_API.pdf">AAS Spec Part II</a>).</p>
+
+<p>An AAS is a digital representation of a physical asset and consists of one or more submodels. Each submodel contains a structured set of submodel elements.
+Submodels, as well as their submodel elements, can either be a type or an instance.
+The AAS metamodel defines the possible elements for modeling an AAS like Asset, AssetAdminstrationShell (AAS), Submodel (SM), SubmodelElementCollection (SMEC),
+Property, and SubmodelElement (SME). You can find further details <a href="https://www.plattform-i40.de/IP/Redaktion/EN/Downloads/Publikation/2021_What-is-the-AAS.html">here</a> and <a href="https://industrialdigitaltwin.org/en/wp-content/uploads/sites/2/2023/04/IDTA-01001-3-0_SpecificationAssetAdministrationShell_Part1_Metamodel.pdf">here</a>.</p>
+
+<p>A user who wants to interact with an AAS over HTTP follows the sequence of service calls depicted in Figure 2.
+The flow starts by requesting an AAS ID from the AAS discovery interface based on a (local) specific asset ID or a global asset ID. An example of such an asset ID is a serial number written on the device. With the AAS ID, the user retrieves the endpoint for the AAS through the AAS registry interface.
+The user then requests the SM ID from that AAS endpoint and uses this SM ID to get the SM endpoint from the SM Registry.
+From that SM endpoint, the user can request the SME, which contains the required value.</p>
+
+<figure><img class="docimage" src="images/blog/2024-02-15-integrating-ditto-ass-basyx/aas-sequenz.svg" alt="Sequence of data flow through AAS infrastructure" style="max-width: 1000px" /></figure>
+
+<p><em>Figure 2: Sequence of data flow through AAS infrastructure</em></p>
+
+<p>If you want to dig deeper into the specifics of the AAS, consult the <a href="https://www.plattform-i40.de/IP/Redaktion/DE/Downloads/Publikation/AAS-ReadingGuide_202201.html">AAS Reading Guide</a>, which helps the interested reader to navigate through the available material.</p>
+
+<h3 id="eclipse-basyx">Eclipse BaSyx</h3>
+
+<p><a href="https://wiki.eclipse.org/BaSyx_/_Documentation_/_Components">Eclipse BaSyx</a> is an open-source project hosted by the Eclipse Foundation providing components to deploy an Industry 4.0 middleware.
+Apart from other features, Eclipse BaSyx provides several easy-to-use off-the-shelf components to realize an AAS infrastructure:</p>
+
+<ul>
+  <li><a href="https://wiki.eclipse.org/BaSyx_/_Documentation_/_Components_/_AAS_Server">AAS Server Component</a></li>
+  <li><a href="https://wiki.eclipse.org/BaSyx_/_Documentation_/_Components_/_Registry">Registry Component</a></li>
+  <li><a href="https://wiki.eclipse.org/BaSyx_/_Documentation_/_Components_/_DataBridge">DataBridge Component</a></li>
+  <li><a href="https://wiki.eclipse.org/BaSyx_/_Documentation_/_Components_/_AAS_Web_UI">AAS Web UI</a></li>
+</ul>
+
+<p>You can pull them from Docker Hub or <a href="https://wiki.eclipse.org/BaSyx_/_Documentation_/_Components_/_Docker">follow the instructions</a> to build them yourself.</p>
+
+<p>In this post, we mainly work with the AAS Server Component and the Registry Component.</p>
+
+<h2 id="architectural-considerations">Architectural Considerations</h2>
+
+<p>Making Eclipse Ditto Things available in an AAS infrastructure, in our case from the Eclipse Basyx project, boils down to making Thing data available as Submodels of an AAS accessible via the AAS Interface.</p>
+
+<p>We see three approaches to achieve this:</p>
+
+<ul>
+  <li>BaSyx AAS SM server <em>pulls</em> the current state from Eclipse Ditto via a <em>wrapper</em> around Eclipse Ditto.
+This approach requires the creation of a custom AAS infrastructure around Eclipse Ditto without the chance of reusing existing components of the Eclipse Basyx project.
+The Eclipse Ditto project followed a comparable approach to support <a href="2022-03-03-wot-integration.html">Web of Things</a> (WoT) definitions, which is another specification to integrate IoT devices from different contexts and align their utilized data model.
+Ditto now allows the generation of new Things based on a WoT Thing Description.</li>
+  <li>BaSyx AAS SM server <em>pulls</em> the current state from Eclipse Ditto via a <em>bridge</em> component, which Eclipse Basyx already provides.
+To integrate the bridge, the BaSyx SM-server component has a delegation feature, where the user can configure an SME with an endpoint to which the server delegates incoming requests.
+The configured endpoint can reference the bridge that then retrieves the actual data from Ditto and applies transformation logic.</li>
+  <li>Eclipse Ditto <em>pushes</em> the latest updates to a BaSyx SM server.
+For this approach, we configure Eclipse Ditto to notify the BaSyx SM server about any change to the relevant Things. During the creation of the notification message, Ditto applies a payload mapping to transform the data into the AAS format. The BaSyx SM server then stores the received submodel element and responds directly to the requests by the users.</li>
+</ul>
+
+<figure><img class="docimage" src="images/blog/2024-02-15-integrating-ditto-ass-basyx/push.svg" alt="Push approach sequence" style="max-width: 1000px" /></figure>
+
+<p><em>Figure 3: Push approach sequence</em></p>
+
+<p>We follow the push approach here because it treats the AAS infrastructure as a blackbox and almost all configuration happens within Eclipse Ditto.</p>
+
+<h2 id="mapping-of-data-models">Mapping of Data Models</h2>
+
+<p>Eclipse Ditto and Eclipse Basyx work with different data structures and conceptual elements to represent device and asset data. Since we want to convert between these data models, we need to come up with a mapping between them.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Eclipse Ditto</th>
+      <th>Asset Administration Shell</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Namespace</td>
+      <td>Asset Administration Shell</td>
+    </tr>
+    <tr>
+      <td>Thing</td>
+      <td>—</td>
+    </tr>
+    <tr>
+      <td>Features</td>
+      <td>Submodel</td>
+    </tr>
+    <tr>
+      <td>Property</td>
+      <td>Submodel Element</td>
+    </tr>
+    <tr>
+      <td>Attribute</td>
+      <td>Submodel Element</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><em>Table 1: Concept mapping from Eclipse Ditto to the AAS</em></p>
+
+<p>We map a Ditto <a href="basic-namespaces-and-names.html#namespace"><code class="highlighter-rouge">Namespace</code></a> to a single AAS. An AAS holds multiple SMs, and not all of these SMs necessarily have counterparts in Ditto. We thus treat a <code class="highlighter-rouge">Thing</code> as an opaque concept and do not define an explicit mapping for a <code class="highlighter-rouge">Thing</code> but map each <a href="basic-feature.html"><code class="highlighter-rouge">feature</code></a> to one SM.
+<a href="basic-feature.html#feature-properties"><code class="highlighter-rouge">property</code></a> and <a href="basic-thing.html#attributes"><code class="highlighter-rouge">Attribute</code></a> are mapped to SMEs.</p>
+
+<p>By that, it is possible to have more than one Thing organized in one AAS.
+This can especially be useful if an AAS organizes complex equipment with different sensors and actuators, which belong together but are organized in multiple Things.</p>
+
+<h2 id="integration-steps">Integration Steps</h2>
+
+<p>With the more theoretical details completed, we can now turn to the actual implementation and describe what is required
+to integrate Eclipse Ditto into an AAS infrastructure of Eclipse BaSyx.</p>
+
+<h3 id="prerequisites">Prerequisites</h3>
+
+<ol>
+  <li>Running instance of <a href="https://eclipse.dev/ditto/">Eclipse Ditto</a></li>
+  <li>Running instance of <a href="https://wiki.eclipse.org/BaSyx_/_Documentation_/_Components_/_AAS_Server">Eclipse BaSyx AAS Server</a></li>
+  <li>Running instance of <a href="https://wiki.eclipse.org/BaSyx_/_Documentation_/_Components_/_Registry">Eclipse BaSyx AAS Registry</a></li>
+</ol>
+
+<p>Those three instances must be available and a network connection must exist between them.
+In the code snippets below, we use placeholders for the URLs of Ditto as well as BaSyx.
+So, you need to replace <code class="highlighter-rouge">&lt;ditto-instance-url&gt;</code>,  <code class="highlighter-rouge">&lt;basyx-server-instance-url&gt;</code>, <code class="highlighter-rouge">&lt;basyx-registry-instance-url&gt;</code>
+with the proper URLs in your environment.</p>
+
+<p>For our setup, we used version 3.0.1 for Eclipse Ditto and version 1.4.0 for Eclipse BaSyx.
+Please note that the Ditto demo instance, does not work for the described setup and requests because it does not allow to directly invoke the <code class="highlighter-rouge">/devops</code> endpoints through which we later configure connections.</p>
+
+<h3 id="payload-mappers-from-ditto-to-basyx">Payload Mappers from Ditto to BaSyx</h3>
+
+<p>Let us assume a device with a sensor named <code class="highlighter-rouge">machine:sensor</code> that is capable of measuring temperature values.
+This device may send sensor data to an Eclipse Ditto instance as a Ditto Protocol message <a href="protocol-overview.html">Ditto Protocol message</a>:</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"topic"</span><span class="p">:</span><span class="w"> </span><span class="s2">"machine/sensor/things/twin/commands/modify"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
+  </span><span class="s2">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/features/temperature/properties/value"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"value"</span><span class="p">:</span><span class="w"> </span><span class="mi">46</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p><em>Listing 1: Ditto Protocol message for the Thing <code class="highlighter-rouge">machine:senor</code></em></p>
+
+<p>If the device uses another message format, you can find more details on <a href="connectivity-mapping.html">how to map it</a> to a Ditto Protocol message.</p>
+
+<p>After an update to a Thing, we want Ditto to map the information to an AAS-conforming representation and forward this via an outbound connection to an AAS server.
+The task in Eclipse Ditto is to define <a href="connectivity-mapping.html">payload mappers</a> for these transformations in accordance with the mapping from <a href="#mapping-of-data-models">Mapping of Data Models</a>. Ditto allows the usage of JavaScript to create the mappers. We thus configure connections in Ditto to the BaSyx components, where we filter for the relevant changes to a Thing and then trigger the respective mapper.</p>
+
+<p>We need to implement the following mappers:</p>
+
+<ul>
+  <li>Creation of an AAS triggered by creation of new <code class="highlighter-rouge">namespaces</code></li>
+  <li>Creation of a SM triggered by creation of <code class="highlighter-rouge">feature</code></li>
+  <li>Creation and update of an SME triggered by creation and modification of a <code class="highlighter-rouge">property</code></li>
+</ul>
+
+<h4 id="map-from-thing-creation-to-aas-creation">Map from Thing Creation to AAS Creation</h4>
+
+<p>The next snippet performs a mapping from a Thing to an AAS.
+It gets executed every time a Thing is created.</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">mapFromDittoProtocolMsg</span><span class="p">(</span>
+  <span class="nx">namespace</span><span class="p">,</span>
+  <span class="nx">name</span><span class="p">,</span>
+  <span class="nx">group</span><span class="p">,</span>
+  <span class="nx">channel</span><span class="p">,</span>
+  <span class="nx">criterion</span><span class="p">,</span>
+  <span class="nx">action</span><span class="p">,</span>
+  <span class="nx">path</span><span class="p">,</span>
+  <span class="nx">dittoHeaders</span><span class="p">,</span>
+  <span class="nx">value</span><span class="p">,</span>
+  <span class="nx">status</span><span class="p">,</span>
+  <span class="nx">extra</span>
+<span class="p">)</span> <span class="p">{</span>
+  <span class="kd">let</span> <span class="nx">headers</span> <span class="o">=</span> <span class="nx">dittoHeaders</span><span class="p">;</span>
+  <span class="kd">let</span> <span class="nx">textPayload</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">({</span>
+    <span class="na">conceptDictionary</span><span class="p">:</span> <span class="p">[],</span>
+    <span class="na">identification</span><span class="p">:</span> <span class="p">{</span>
+      <span class="na">idType</span><span class="p">:</span> <span class="s1">'Custom'</span><span class="p">,</span>
+      <span class="na">id</span><span class="p">:</span> <span class="nx">namespace</span>
+    <span class="p">},</span>
+    <span class="na">idShort</span><span class="p">:</span> <span class="nx">namespace</span><span class="p">,</span>
+    <span class="na">dataSpecification</span><span class="p">:</span> <span class="p">[],</span>
+    <span class="na">modelType</span><span class="p">:</span> <span class="p">{</span>
+      <span class="na">name</span><span class="p">:</span> <span class="s1">'AssetAdministrationShell'</span>
+    <span class="p">},</span>
+    <span class="na">asset</span><span class="p">:</span> <span class="p">{</span>
+      <span class="na">identification</span><span class="p">:</span> <span class="p">{</span>
+        <span class="na">idType</span><span class="p">:</span> <span class="s1">'Custom'</span><span class="p">,</span>
+        <span class="na">id</span><span class="p">:</span> <span class="nx">namespace</span> <span class="o">+</span> <span class="s1">'-asset'</span>
+      <span class="p">},</span>
+      <span class="na">idShort</span><span class="p">:</span> <span class="nx">namespace</span> <span class="o">+</span> <span class="s1">'-asset'</span><span class="p">,</span>
+      <span class="na">kind</span><span class="p">:</span> <span class="s1">'Instance'</span><span class="p">,</span>
+      <span class="na">dataSpecification</span><span class="p">:</span> <span class="p">[],</span>
+      <span class="na">modelType</span><span class="p">:</span> <span class="p">{</span>
+        <span class="na">name</span><span class="p">:</span> <span class="s1">'Asset'</span>
+      <span class="p">},</span>
+      <span class="na">embeddedDataSpecifications</span><span class="p">:</span> <span class="p">[]</span>
+    <span class="p">},</span>
+    <span class="na">embeddedDataSpecifications</span><span class="p">:</span> <span class="p">[],</span>
+    <span class="na">views</span><span class="p">:</span> <span class="p">[],</span>
+    <span class="na">submodels</span><span class="p">:</span> <span class="p">[]</span>
+  <span class="p">});</span>
+  <span class="kd">let</span> <span class="nx">bytePayload</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+  <span class="kd">let</span> <span class="nx">contentType</span> <span class="o">=</span> <span class="s1">'application/json'</span><span class="p">;</span>
+  <span class="k">return</span> <span class="nx">Ditto</span><span class="p">.</span><span class="nx">buildExternalMsg</span><span class="p">(</span>
+    <span class="nx">headers</span><span class="p">,</span> <span class="c1">// The external headers Object containing header values</span>
+    <span class="nx">textPayload</span><span class="p">,</span> <span class="c1">// The external mapped String</span>
+    <span class="nx">bytePayload</span><span class="p">,</span> <span class="c1">// The external mapped byte[]</span>
+    <span class="nx">contentType</span> <span class="c1">// The returned Content-Type</span>
+  <span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p><em>Listing 2: Payload mapping that creates a new AAS if a new Thing appears</em></p>
+
+<p>As we map the Thing namespace to an AAS we only use the <code class="highlighter-rouge">namespace</code>, which is the first part of the ID of a Thing.
+For example <code class="highlighter-rouge">machine</code> in our <code class="highlighter-rouge">machine:sensor</code> example Thing (Listing 1).
+More precisely, the mapping creates a representation of an AAS with the ID <code class="highlighter-rouge">namespace</code> and returns a new message with this text as payload. The Ditto connectivity service then runs the mapping and pushes the new message to the BaSyx AAS server to create the described AAS.
+For example, whenever a Thing with the ID <code class="highlighter-rouge">machine:sensor</code> is created, an AAS with the ID <code class="highlighter-rouge">machine</code> will be created.</p>
+
+<h3 id="map-from-feature-creation-to-submodel-creation">Map from Feature creation to Submodel creation</h3>
+
+<p>The next mapper creates an AAS submodel and will be executed every time a new feature is created for a Thing.</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">mapFromDittoProtocolMsg</span><span class="p">(</span>
+  <span class="nx">namespace</span><span class="p">,</span>
+  <span class="nx">name</span><span class="p">,</span>
+  <span class="nx">group</span><span class="p">,</span>
+  <span class="nx">channel</span><span class="p">,</span>
+  <span class="nx">criterion</span><span class="p">,</span>
+  <span class="nx">action</span><span class="p">,</span>
+  <span class="nx">path</span><span class="p">,</span>
+  <span class="nx">dittoHeaders</span><span class="p">,</span>
+  <span class="nx">value</span><span class="p">,</span>
+  <span class="nx">status</span><span class="p">,</span>
+  <span class="nx">extra</span>
+<span class="p">)</span> <span class="p">{</span>
+  
+  <span class="kd">let</span> <span class="nx">feature_id</span> <span class="o">=</span> <span class="nx">path</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s1">'/'</span><span class="p">).</span><span class="nx">slice</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+  <span class="kd">let</span> <span class="nx">headers</span> <span class="o">=</span> <span class="nx">dittoHeaders</span><span class="p">;</span>
+  <span class="kd">let</span> <span class="nx">textPayload</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span>
+    <span class="p">{</span>
+      <span class="na">parent</span><span class="p">:</span> <span class="p">{</span>
+        <span class="na">keys</span><span class="p">:</span> <span class="p">[</span>
+          <span class="p">{</span>
+            <span class="na">idType</span><span class="p">:</span> <span class="s1">'Custom'</span><span class="p">,</span>
+            <span class="na">type</span><span class="p">:</span> <span class="s1">'AssetAdministrationShell'</span><span class="p">,</span>
+            <span class="na">value</span><span class="p">:</span> <span class="nx">namespace</span><span class="p">,</span>
+            <span class="na">local</span><span class="p">:</span> <span class="kc">true</span>
+          <span class="p">}</span>
+        <span class="p">]</span>
+      <span class="p">},</span>
+      <span class="na">identification</span><span class="p">:</span> <span class="p">{</span>
+        <span class="na">idType</span><span class="p">:</span> <span class="s1">'Custom'</span><span class="p">,</span>
+        <span class="na">id</span><span class="p">:</span> <span class="nx">name</span><span class="o">+</span><span class="s1">'_'</span><span class="o">+</span><span class="nx">feature_id</span>
+      <span class="p">},</span>
+      <span class="na">idShort</span><span class="p">:</span> <span class="nx">name</span><span class="o">+</span><span class="s1">'_'</span><span class="o">+</span><span class="nx">feature_id</span><span class="p">,</span>
+      <span class="na">kind</span><span class="p">:</span> <span class="s1">'Instance'</span><span class="p">,</span>
+      <span class="na">dataSpecification</span><span class="p">:</span> <span class="p">[],</span>
+      <span class="na">modelType</span><span class="p">:</span> <span class="p">{</span>
+        <span class="na">name</span><span class="p">:</span> <span class="s1">'Submodel'</span>
+      <span class="p">},</span>
+      <span class="na">embeddedDataSpecifications</span><span class="p">:</span> <span class="p">[],</span>
+      <span class="na">submodelElements</span><span class="p">:</span> <span class="p">[]</span>
+    <span class="p">}</span>
+
+  <span class="p">);</span>
+  <span class="kd">let</span> <span class="nx">bytePayload</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+  <span class="kd">let</span> <span class="nx">contentType</span> <span class="o">=</span> <span class="s1">'application/json'</span><span class="p">;</span>
+  <span class="k">return</span> <span class="nx">Ditto</span><span class="p">.</span><span class="nx">buildExternalMsg</span><span class="p">(</span>
+    <span class="nx">headers</span><span class="p">,</span> <span class="c1">// The external headers Object containing header values</span>
+    <span class="nx">textPayload</span><span class="p">,</span> <span class="c1">// The external mapped String</span>
+    <span class="nx">bytePayload</span><span class="p">,</span> <span class="c1">// The external mapped byte[]</span>
+    <span class="nx">contentType</span> <span class="c1">// The returned Content-Type</span>
+  <span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p><em>Listing 3: Payload mapping that creates a new AAS submodel if a new Feature appears</em></p>
+
+<p>Besides <code class="highlighter-rouge">namespace</code>, this mapper uses the parameters <code class="highlighter-rouge">name</code> and <code class="highlighter-rouge">path</code> from the Ditto Protocol message.
+The <code class="highlighter-rouge">name</code> represents the second part of the Thing-ID, e.g., <code class="highlighter-rouge">sensor</code> from our <code class="highlighter-rouge">machine:sensor</code> example Thing (Listing 1).
+The <code class="highlighter-rouge">path</code> describes the part of the Thing whose change triggered the processed Ditto Protocol message.
+It may include the feature ID of the Thing or the whole path of the affected property of the Thing,
+but it could be only <code class="highlighter-rouge">/</code> after the creation of a Thing. In our <a href="#payload-mappers-from-ditto-to-basyx">example message</a> above,
+the <code class="highlighter-rouge">path</code> is <code class="highlighter-rouge">/features/temperature/properties/value</code>.</p>
+
+<p>The mapping function extracts the ID of the feature from the parameter <code class="highlighter-rouge">path</code> and uses this together with the <code class="highlighter-rouge">name</code>
+of the Thing to build the ID of the corresponding AAS submodel. For example, whenever the feature <code class="highlighter-rouge">temperature</code>
+of a Thing called <code class="highlighter-rouge">machine:sensor</code> is created, an AAS submodel with the ID <code class="highlighter-rouge">sensor_temperature</code> in the AAS <code class="highlighter-rouge">machine</code> will be created.</p>
+
+<p>Similarly to the <a href="#map-from-thing-creation-to-aas-creation">AAS creation mapping</a>, the listed function returns a new message with a custom text payload.
+Below, we will create a connection so that this payload gets pushed to the BaSyx AAS server to trigger the creation of an AAS submodel there.</p>
+
+<h4 id="map-from-property-update-to-submodel-update">Map from Property Update to Submodel Update</h4>
+
+<p>The next mapper creates an AAS submodel element.
+we use it in the connection for every modification of a property in a Thing.</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">mapFromDittoProtocolMsg</span><span class="p">(</span>
+  <span class="nx">namespace</span><span class="p">,</span>
+  <span class="nx">name</span><span class="p">,</span>
+  <span class="nx">group</span><span class="p">,</span>
+  <span class="nx">channel</span><span class="p">,</span>
+  <span class="nx">criterion</span><span class="p">,</span>
+  <span class="nx">action</span><span class="p">,</span>
+  <span class="nx">path</span><span class="p">,</span>
+  <span class="nx">dittoHeaders</span><span class="p">,</span>
+  <span class="nx">value</span><span class="p">,</span>
+  <span class="nx">status</span><span class="p">,</span>
+  <span class="nx">extra</span>
+<span class="p">)</span> <span class="p">{</span>
+  <span class="kd">let</span> <span class="nx">property_id</span> <span class="o">=</span> <span class="nx">path</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s1">'/'</span><span class="p">).</span><span class="nx">slice</span><span class="p">(</span><span class="mi">3</span><span class="p">).</span><span class="nx">join</span><span class="p">(</span><span class="s1">'_'</span><span class="p">);</span>
+  <span class="kd">let</span> <span class="nx">feature_id</span> <span class="o">=</span> <span class="nx">path</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s1">'/'</span><span class="p">).</span><span class="nx">slice</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">);</span>
+  <span class="kd">let</span> <span class="nx">headers</span> <span class="o">=</span> <span class="nx">dittoHeaders</span><span class="p">;</span>
+  <span class="kd">let</span> <span class="nx">dataType</span> <span class="o">=</span> <span class="k">typeof</span> <span class="nx">value</span><span class="p">;</span>
+  <span class="nx">dataType</span> <span class="o">=</span> <span class="nx">mapDataType</span><span class="p">(</span><span class="nx">dataType</span><span class="p">)</span>
+
+  <span class="kd">function</span> <span class="nx">mapDataType</span><span class="p">(</span><span class="nx">dataType</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">switch</span> <span class="p">(</span><span class="nx">dataType</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">case</span> <span class="s1">'undefined'</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s1">'Undefined'</span><span class="p">;</span>
+        <span class="k">case</span> <span class="s1">'boolean'</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s1">'boolean'</span><span class="p">;</span>
+        <span class="k">case</span> <span class="s1">'number'</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s1">'int'</span><span class="p">;</span>
+        <span class="k">case</span> <span class="s1">'string'</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s1">'string'</span><span class="p">;</span>
+        <span class="k">case</span> <span class="s1">'symbol'</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s1">'Symbol'</span><span class="p">;</span>
+        <span class="k">case</span> <span class="s1">'bigint'</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s1">'BigInt'</span><span class="p">;</span>
+        <span class="k">case</span> <span class="s1">'object'</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s1">'string'</span><span class="p">;</span>
+        <span class="k">case</span> <span class="s1">'function'</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s1">'Function'</span><span class="p">;</span>
+        <span class="nl">default</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s1">'Unknown'</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="kd">let</span> <span class="nx">textPayload</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span>
+  <span class="p">{</span>
+    <span class="na">parent</span><span class="p">:</span> <span class="p">{</span>
+      <span class="na">keys</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+          <span class="na">idType</span><span class="p">:</span> <span class="s1">'Custom'</span><span class="p">,</span>
+          <span class="na">type</span><span class="p">:</span> <span class="s1">'Submodel'</span><span class="p">,</span>
+          <span class="na">value</span><span class="p">:</span> <span class="nx">name</span><span class="o">+</span><span class="s1">'_'</span><span class="o">+</span><span class="nx">feature_id</span><span class="p">,</span>
+          <span class="na">local</span><span class="p">:</span> <span class="kc">true</span>
+        <span class="p">}</span>
+      <span class="p">]</span>
+    <span class="p">},</span>
+    <span class="na">idShort</span><span class="p">:</span> <span class="nx">property_id</span><span class="p">,</span>
+    <span class="na">kind</span><span class="p">:</span> <span class="s1">'Instance'</span><span class="p">,</span>
+    <span class="na">valueType</span><span class="p">:</span> <span class="nx">dataType</span><span class="p">,</span>
+    <span class="na">modelType</span><span class="p">:</span> <span class="p">{</span>
+      <span class="na">name</span><span class="p">:</span> <span class="s1">'Property'</span>
+    <span class="p">},</span>
+    <span class="na">value</span><span class="p">:</span> <span class="nx">value</span>
+  <span class="p">}</span>
+  <span class="p">);</span>
+  <span class="kd">let</span> <span class="nx">bytePayload</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+  <span class="kd">let</span> <span class="nx">contentType</span> <span class="o">=</span> <span class="s1">'application/json'</span><span class="p">;</span>
+  <span class="k">return</span> <span class="nx">Ditto</span><span class="p">.</span><span class="nx">buildExternalMsg</span><span class="p">(</span>
+    <span class="nx">headers</span><span class="p">,</span> <span class="c1">// The external headers Object containing header values</span>
+    <span class="nx">textPayload</span><span class="p">,</span> <span class="c1">// The external mapped String</span>
+    <span class="nx">bytePayload</span><span class="p">,</span> <span class="c1">// The external mapped byte[]</span>
+    <span class="nx">contentType</span> <span class="c1">// The returned Content-Type</span>
+  <span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p><em>Listing 4: Payload mapping that modifies an AAS submodel element if a property is changed</em></p>
+
+<p>The mapper extracts the <code class="highlighter-rouge">feature_id</code> and the <code class="highlighter-rouge">property_id</code> from the <code class="highlighter-rouge">path</code>, which is only possible if the parameter <code class="highlighter-rouge">path</code> includes the <code class="highlighter-rouge">property_id</code>. So, in the configuration of the connection, we have to ensure that this mapper only runs for the right messages.
+Moreover, we can access the <code class="highlighter-rouge">value</code> of the modified <code class="highlighter-rouge">property</code>, which will be set as <code class="highlighter-rouge">value</code> in the submodel element from the <code class="highlighter-rouge">textPayload</code> output.</p>
+
+<p>For example, if a message updates the <code class="highlighter-rouge">path</code>: <code class="highlighter-rouge">/features/temperature/properties/value</code> in the Thing <code class="highlighter-rouge">machine:sensor</code>, the submodel element with the ID <code class="highlighter-rouge">properties_value</code> in the submodel <code class="highlighter-rouge">sensor_temperature</code> will be updated with the new temperature as <code class="highlighter-rouge">value</code>.</p>
+
+<p>We update a submodel element instead of the whole submodel if an existing Thing changes because the mapper only has access to the changed property of the Thing and no information about the other properties.
+Therefore, submodel elements, which may already be part of the submodel due to previous updates, would implicitly be dropped.
+With our approach, we preserve the existing properties and only modify the updated properties.</p>
+
+<h4 id="create-a-connection-to-the-basyx-aas-server">Create a Connection to the BaSyx AAS Server</h4>
+
+<p>To apply the introduced mappers, we configure a new <a href="basic-connections.html">Ditto connection</a> to a BaSyx AAS server.
+The listings below show the respective HTTP calls using curl to configure this connection.</p>
+
+<p>The JavaScript mappers from above are part of <code class="highlighter-rouge">piggybackCommand.connection.mappingDefinitions</code> in <code class="highlighter-rouge">mappingforShell</code>, <code class="highlighter-rouge">mappingforSubmodel</code> and <code class="highlighter-rouge">mappingforSubmodelElement</code>.</p>
+
+<p>In the example, we use the placeholder <code class="highlighter-rouge">&lt;ditto-instance-url&gt;</code> for the used Ditto instance. You need to adjust to the valid URL of your environment.
+We assume you have access rights to the Ditto <a href="installation-operating.html#devops-commands">Devops Commands</a> credentials in the used instance (username: <code class="highlighter-rouge">devops</code>, password: `foobar is the default).</p>
+
+<p>You can change the password by setting the environment variable <em>DEVOPS_PASSWORD</em> in the <a href="architecture-services-gateway.html">gateway service</a>.</p>
+
+<p>Alternatively, an already existing password can be obtained and stored as an environment variable using the following command:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">export </span><span class="nv">DEVOPS_PWD</span><span class="o">=</span><span class="k">$(</span>kubectl <span class="nt">--namespace</span> ditto get secret my-ditto-gateway-secret <span class="nt">-o</span> <span class="nv">jsonpath</span><span class="o">=</span><span class="s2">"{.data.devops-password}"</span> | base64 <span class="nt">--decode</span><span class="k">)</span>
+</code></pre></div></div>
+
+<p>Please be aware that this command assumes Ditto has been deployed within a namespace <code class="highlighter-rouge">ditto</code>.</p>
+
+<p>Finally, you adjust the parameter <code class="highlighter-rouge">piggybackCommand.connection.uri</code> with the URL of the running BaSyx server to which Ditto should have network connectivity.</p>
+
+<p>As HTTP requires us to replace certain characters for proper processing, we encode the payload by escaping certain characters and removing the line breaks.
+We replaced newlines with <code class="highlighter-rouge">\n</code> and <code class="highlighter-rouge">'</code> with <code class="highlighter-rouge">'"'</code>.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">-X</span> POST <span class="nt">-u</span> devops:foobar <span class="nt">-H</span> <span class="s1">'Content-Type: application/json'</span> <span class="nt">--data-binary</span> <span class="s1">'{
+    "targetActorSelection": "/system/sharding/connection",
+    "headers": {
+      "aggregate": false
+    },
+    "piggybackCommand": {
+      "type": "connectivity.commands:createConnection",
+      "connection": {
+        "id": "basyxserver-http-connection",
+        "connectionType": "http-push",
+        "connectionStatus": "open",
+        "uri": "&lt;basyx-server-instance-url&gt;:4001",
+        "failoverEnabled": true,
+        "mappingDefinitions": {
+          "mappingforShell": {
+            "mappingEngine": "JavaScript",
+            "options": {
+              "outgoingScript": "function mapFromDittoProtocolMsg(namespace, name, group, channel, criterion, action, path, dittoHeaders, value, status, extra) {\n  let headers = dittoHeaders;\n  let textPayload = JSON.stringify({\n    conceptDictionary: [],\n    identification: {\n      idType: '</span><span class="s2">"'Custom'"</span><span class="s1">',\n      id: namespace\n    },\n    idShort: namespace,\n    dataSpecification: [],\n    modelType: {\n      name: '</span><span class="s2">"'AssetAdministrationShell'"</span><span class="s1">'\n    },\n    asset: {\n      identification: {\n        idType: '</span><span class="s2">"'Custom'"</span><span class="s1">',\n        id: namespace + '</span><span class="s2">"'-asset'"</span><span class="s1">'\n      },\n      idShort: namespace + '</span><span class="s2">"'-asset'"</span><span class="s1">',\n      kind: '</span><span class="s2">"'Instance'"</span><span class="s1">',\n      dataSpecification: [],\n      modelType: {\n        name: '</span><span class="s2">"'Asset'"</span><span class="s1">'\n      },\n      embeddedDataSpecifications: []\n    },\n    embeddedDataSpecifications: [],\n    views: [],\n    submodels: []\n  });\n  let bytePayload = null;\n  let contentType = '</span><span class="s2">"'application/json'"</span><span class="s1">';\n  return Ditto.buildExternalMsg(headers, textPayload, bytePayload, contentType);}"            
+            }
+          },
+          "mappingforSubmodel": {
+            "mappingEngine": "JavaScript",
+            "options": {
+                "outgoingScript": "function mapFromDittoProtocolMsg(namespace, name, group, channel, criterion, action, path, dittoHeaders, value, status, extra) {\n  \n  let feature_id = path.split('</span><span class="s2">"'/'"</span><span class="s1">').slice(2);\n  let headers = dittoHeaders;\n  let textPayload = JSON.stringify(\n    {\n      parent: {\n        keys: [\n          {\n            idType: '</span><span class="s2">"'Custom'"</span><span class="s1">',\n            type: '</span><span class="s2">"'AssetAdministrationShell'"</span><span class="s1">',\n            value: namespace,\n            local: true\n          }\n        ]\n      },\n      identification: {\n        idType: '</span><span class="s2">"'Custom'"</span><span class="s1">',\n        id: name+'</span><span class="s2">"'_'"</span><span class="s1">'+feature_id\n      },\n      idShort: name+'</span><span class="s2">"'_'"</span><span class="s1">'+feature_id,\n      kind: '</span><span class="s2">"'Instance'"</span><span class="s1">',\n      dataSpecification: [],\n      modelType: {\n        name: '</span><span class="s2">"'Submodel'"</span><span class="s1">'\n      },\n      embeddedDataSpecifications: [],\n      submodelElements: []\n    }\n\n  );\n  let bytePayload = null;\n  let contentType = '</span><span class="s2">"'application/json'"</span><span class="s1">';\n  return Ditto.buildExternalMsg(headers, textPayload, bytePayload, contentType);}"
+            }
+          },
+          "mappingforSubmodelElement": {
+            "mappingEngine": "JavaScript",
+            "options": {
+              "outgoingScript": "function mapFromDittoProtocolMsg(namespace, name, group, channel, criterion, action, path, dittoHeaders, value, status, extra) {\n  let property_id = path.split('</span><span class="s2">"'/'"</span><span class="s1">').slice(3).join('</span><span class="s2">"'_'"</span><span class="s1">');\n  let feature_id = path.split('</span><span class="s2">"'/'"</span><span class="s1">').slice(2,3);\n  let headers = dittoHeaders;\n  let dataType = typeof value;\n  dataType = mapDataType(dataType)\n\n  function mapDataType(dataType) {\n    switch (dataType) {\n        case '</span><span class="s2">"'undefined'"</span><span class="s1">':\n        return '</span><span class="s2">"'Undefined'"</span><span class="s1">';\n        case '</span><span class="s2">"'boolean'"</span><span class="s1">':\n        return '</span><span class="s2">"'boolean'"</span><span class="s1">';\n        case '</span><span class="s2">"'number'"</span><span class="s1">':\n        return '</span><span class="s2">"'int'"</span><span class="s1">';\n        case '</span><span class="s2">"'string'"</span><span class="s1">':\n        return '</span><span class="s2">"'string'"</span><span class="s1">';\n        case '</span><span class="s2">"'symbol'"</span><span class="s1">':\n        return '</span><span class="s2">"'Symbol'"</span><span class="s1">';\n        case '</span><span class="s2">"'bigint'"</span><span class="s1">':\n        return '</span><span class="s2">"'BigInt'"</span><span class="s1">';\n        case '</span><span class="s2">"'object'"</span><span class="s1">':\n        return '</span><span class="s2">"'string'"</span><span class="s1">';\n        case '</span><span class="s2">"'function'"</span><span class="s1">':\n        return '</span><span class="s2">"'Function'"</span><span class="s1">';\n        default:\n        return '</span><span class="s2">"'Unknown'"</span><span class="s1">';\n    }\n  }\n  let textPayload = JSON.stringify(\n  {\n    parent: {\n      keys: [\n        {\n          idType: '</span><span class="s2">"'Custom'"</span><span class="s1">',\n          type: '</span><span class="s2">"'Submodel'"</span><span class="s1">',\n          value: name+'</span><span class="s2">"'_'"</span><span class="s1">'+feature_id,\n          local: true\n        }\n      ]\n    },\n    idShort: property_id,\n    kind: '</span><span class="s2">"'Instance'"</span><span class="s1">',\n    valueType: dataType,\n    modelType: {\n      name: '</span><span class="s2">"'Property'"</span><span class="s1">'\n    },\n    value: value\n  }\n  );\n  let bytePayload = null;\n  let contentType = '</span><span class="s2">"'application/json'"</span><span class="s1">';\n  return Ditto.buildExternalMsg(headers, textPayload, bytePayload, contentType);}"
+            }
+          }
+        },
+        "sources": [],
+        "targets": [
+          {
+            "address": "PUT:/aasServer/shells/{{ thing:namespace }}",
+            "headerMapping": {
+              "content-type": "{{ header:content-type }}"
+            },
+            "authorizationContext": ["nginx:ditto"],
+            "topics": [
+              "_/_/things/twin/events?filter=and(in(topic:action,'</span><span class="s2">"'created'"</span><span class="s1">'),eq(resource:path,'</span><span class="s2">"'/'"</span><span class="s1">'))"
+            ],
+            "payloadMapping": [
+              "mappingforShell"
+            ]
+          },
+          {
+            "address": "PUT:/aasServer/shells/{{ thing:namespace }}/aas/submodels/{{ thing:name }}_{{ resource:path | fn:substring-after('</span><span class="s2">"'/features/'"</span><span class="s1">') }}",
+            "headerMapping": {
+              "content-type": "{{ header:content-type }}"
+            },
+            "authorizationContext": ["nginx:ditto"],
+            "topics": [
+              "_/_/things/twin/events?filter=and(in(topic:action,'</span><span class="s2">"'created'"</span><span class="s1">'),not(eq(resource:path,'</span><span class="s2">"'/features'"</span><span class="s1">')),like(resource:path,'</span><span class="s2">"'/features*'"</span><span class="s1">'),not(like(resource:path,'</span><span class="s2">"'*properties*'"</span><span class="s1">')))"
+            ],
+            "payloadMapping": [
+              "mappingforSubmodel"
+            ]
+          },
+          {
+            "address": "PUT:/aasServer/shells/{{ thing:namespace }}/aas/submodels/{{ thing:name }}_{{ resource:path | fn:substring-after('</span><span class="s2">"'/features/'"</span><span class="s1">') | fn:substring-before('</span><span class="s2">"'/properties'"</span><span class="s1">') }}/submodel/submodelElements/properties_{{ resource:path | fn:substring-after('</span><span class="s2">"'/properties/'"</span><span class="s1">') | fn:replace('</span><span class="s2">"'/'"</span><span class="s1">','</span><span class="s2">"'_'"</span><span class="s1">') }}",
+            "headerMapping": {
+              "content-type": "{{ header:content-type }}"
+            },
+            "authorizationContext": ["nginx:ditto"],
+            "topics": [
+              "_/_/things/twin/events?filter=and(in(topic:action,'</span><span class="s2">"'modified'"</span><span class="s1">'),not(eq(resource:path,'</span><span class="s2">"'/features'"</span><span class="s1">')),like(resource:path,'</span><span class="s2">"'/features*'"</span><span class="s1">'),like(resource:path,'</span><span class="s2">"'*properties*'"</span><span class="s1">'),not(like(resource:path,'</span><span class="s2">"'*properties'"</span><span class="s1">')))"
+            ],
+            "payloadMapping": [
+              "mappingforSubmodelElement"
+            ]
+          }
+        ]
+      }
+    }
+  }'</span> &lt;ditto-instance-url&gt;/devops/piggyback/connectivity
+</code></pre></div></div>
+
+<p><em>Listing 5: Request to add a new <code class="highlighter-rouge">Connection</code> to a Ditto instance</em></p>
+
+<p>When Ditto established the connection and our payload mappings work, it returns a successful HTTP response and otherwise an error message.</p>
+
+<p>Without any further means, the payload mappings defined in <code class="highlighter-rouge">piggybackCommand.mappingDefinition</code> and set in <code class="highlighter-rouge">piggybackCommand.targets</code> would get executed for all changes to a Thing.
+To prevent this, we use <a href="basic-changenotifications.html#filtering">filtering</a> with <a href="basic-rql.html">RQL expressions</a> to make sure that our payload mappings are only executed for the correct messages.
+For example, the filter:</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">_/_/things/twin/events?filter=and(in(topic</span><span class="p">:</span><span class="err">action</span><span class="p">,</span><span class="err">'</span><span class="s2">"'created'"</span><span class="err">')</span><span class="p">,</span><span class="err">eq(resource</span><span class="p">:</span><span class="err">path</span><span class="p">,</span><span class="err">'</span><span class="s2">"'/'"</span><span class="err">'))</span><span class="w">
+</span></code></pre></div></div>
+
+<p>before <code class="highlighter-rouge">mappingforShell</code> in <code class="highlighter-rouge">piggybackCommands.targets[0].topics[0]</code> makes sure that it only triggers for messages, which create a Thing.</p>
+
+<p>Another filter for <code class="highlighter-rouge">mappingForSubmodel</code> in <code class="highlighter-rouge">pigybackCommands.targets[1].topics[0]</code> makes sure, that the parameter <code class="highlighter-rouge">path</code> contains a <code class="highlighter-rouge">feature</code> and not a <code class="highlighter-rouge">property</code>:</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="s2">"_/_/things/twin/events?filter=and(in(topic:action,'"</span><span class="err">'created'</span><span class="s2">"'),not(eq(resource:path,'"</span><span class="err">'/features'</span><span class="s2">"')),like(resource:path,'"</span><span class="err">'/features*'</span><span class="s2">"'),not(like(resource:path,'"</span><span class="err">'*properties*'</span><span class="s2">"')))"</span><span class="w">
+</span></code></pre></div></div>
+
+<h4 id="setup-connection-to-an-basyx-aas-registry">Setup Connection to an BaSyx AAS Registry</h4>
+
+<p>Within an AAS environment it is required that AAS are discoverable via an AAS registry.
+We make an AAS discoverable by adding an entry for that AAS into the AAS registry for a new Thing. In our setup we achieve this through the definition of a new connection between Eclipse Ditto and the BaSyx AAS Registry
+with a respective payload mapping.</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">mapFromDittoProtocolMsg</span><span class="p">(</span>
+  <span class="nx">namespace</span><span class="p">,</span>
+  <span class="nx">name</span><span class="p">,</span>
+  <span class="nx">group</span><span class="p">,</span>
+  <span class="nx">channel</span><span class="p">,</span>
+  <span class="nx">criterion</span><span class="p">,</span>
+  <span class="nx">action</span><span class="p">,</span>
+  <span class="nx">path</span><span class="p">,</span>
+  <span class="nx">dittoHeaders</span><span class="p">,</span>
+  <span class="nx">value</span><span class="p">,</span>
+  <span class="nx">status</span><span class="p">,</span>
+  <span class="nx">extra</span>
+<span class="p">)</span> <span class="p">{</span>
+  <span class="kd">let</span> <span class="nx">headers</span> <span class="o">=</span> <span class="nx">dittoHeaders</span><span class="p">;</span>
+  <span class="kd">let</span> <span class="nx">textPayload</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">({</span>
+    <span class="na">endpoints</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="na">address</span><span class="p">:</span> <span class="s1">'&lt;basyx-server-instance-url&gt;:4001/aasServer/shells/'</span> <span class="o">+</span> <span class="nx">namespace</span> <span class="o">+</span> <span class="s1">'/aas'</span><span class="p">,</span>
+            <span class="na">type</span><span class="p">:</span> <span class="s1">'http'</span>
+        <span class="p">}</span>
+    <span class="p">],</span>
+    <span class="na">modelType</span><span class="p">:</span> <span class="p">{</span>
+        <span class="na">name</span><span class="p">:</span> <span class="s1">'AssetAdministrationShellDescriptor'</span>
+    <span class="p">},</span>
+    <span class="na">identification</span><span class="p">:</span> <span class="p">{</span>
+        <span class="na">idType</span><span class="p">:</span> <span class="s1">'Custom'</span><span class="p">,</span>
+        <span class="na">id</span><span class="p">:</span> <span class="nx">namespace</span>
+<span class="p">},</span>
+    <span class="na">idShort</span><span class="p">:</span> <span class="nx">namespace</span><span class="p">,</span>
+      <span class="na">asset</span><span class="p">:</span> <span class="p">{</span>
+          <span class="na">identification</span><span class="p">:</span> <span class="p">{</span>
+              <span class="na">idType</span><span class="p">:</span> <span class="s1">'Custom'</span><span class="p">,</span>
+              <span class="na">id</span><span class="p">:</span> <span class="nx">namespace</span> <span class="o">+</span> <span class="s1">'-asset'</span>
+          <span class="p">},</span>
+          <span class="na">idShort</span><span class="p">:</span> <span class="nx">namespace</span> <span class="o">+</span> <span class="s1">'-asset'</span><span class="p">,</span>
+          <span class="na">kind</span><span class="p">:</span> <span class="s1">'Instance'</span><span class="p">,</span>
+          <span class="na">dataSpecification</span><span class="p">:</span> <span class="p">[],</span>
+          <span class="na">modelType</span><span class="p">:</span> <span class="p">{</span>
+              <span class="na">name</span><span class="p">:</span> <span class="s1">'Asset'</span>
+          <span class="p">},</span>
+          <span class="na">embeddedDataSpecifications</span><span class="p">:</span> <span class="p">[]</span>
+      <span class="p">},</span>
+      <span class="na">submodels</span><span class="p">:</span> <span class="p">[]</span>
+  <span class="p">});</span>
+  <span class="kd">let</span> <span class="nx">bytePayload</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+  <span class="kd">let</span> <span class="nx">contentType</span> <span class="o">=</span> <span class="s1">'application/json'</span><span class="p">;</span>
+  <span class="k">return</span> <span class="nx">Ditto</span><span class="p">.</span><span class="nx">buildExternalMsg</span><span class="p">(</span>
+    <span class="nx">headers</span><span class="p">,</span> <span class="c1">// The external headers Object containing header values</span>
+   <span class="nx">textPayload</span><span class="p">,</span> <span class="c1">// The external mapped String</span>
+   <span class="nx">bytePayload</span><span class="p">,</span> <span class="c1">// The external mapped byte[]</span>
+    <span class="nx">contentType</span> <span class="c1">// The returned Content-Type</span>
+<span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p><em>Listing 6: Snippet to add a new AAS Registry entry for an AAS</em></p>
+
+<p>As introduced in <a href="#mapping-of-data-models">Mapping of Data Models</a>, we map a <code class="highlighter-rouge">namespace</code> in Ditto to an AAS.
+The new entry in the BaSyx Registry has to contain the endpoint of the BaSyx AAS server, which hosts the new AAS. You find this in the script-payload in the variable <code class="highlighter-rouge">endpoints.address</code>. So you need to adapt this value in the following HTTP request to the address of the BaSyx ASS server that you are using and that was configured in the <a href="#create-a-connection-to-the-basyx-aas-server">connection between Ditto and the BaSyx AAS Server</a>.</p>
+
+<p>With this mapping, it is now possible to configure a new connection from Ditto to a BaSyx AAS registry through the following HTTP request:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">-X</span> POST <span class="nt">-u</span> devops:foobar <span class="nt">-H</span> <span class="s1">'Content-Type: application/json'</span> <span class="nt">--data-binary</span> <span class="s1">'{
+    "targetActorSelection": "/system/sharding/connection",
+    "headers": {
+      "aggregate": false
+    },
+    "piggybackCommand": {
+      "type": "connectivity.commands:createConnection",
+      "connection": {
+        "id": "basyxregistry-http-connection",
+        "connectionType": "http-push",
+        "connectionStatus": "open",
+        "uri": "&lt;basyx-registry-instance-url&gt;:4000",
+        "failoverEnabled": true,
+        "mappingDefinitions": {
+          "mappingforShell": {
+            "mappingEngine": "JavaScript",
+            "options": {
+              "outgoingScript": "function mapFromDittoProtocolMsg(namespace, name, group, channel, criterion, action, path, dittoHeaders, value, status, extra) {\n  let headers = dittoHeaders;\n  let textPayload = JSON.stringify({\n    endpoints: [\n        {\n            address: '</span><span class="s2">"'&lt;basyx-server-instance-url&gt;:4001/aasServer/shells/'"</span><span class="s1">' + namespace + '</span><span class="s2">"'/aas'"</span><span class="s1">',\n            type: '</span><span class="s2">"'http'"</span><span class="s1">'\n        }\n    ],\n    modelType: {\n        name: '</span><span class="s2">"'AssetAdministrationShellDescriptor'"</span><span class="s1">'\n    },\n    identification: {\n        idType: '</span><span class="s2">"'Custom'"</span><span class="s1">',\n        id: namespace\n},\n    idShort: namespace,\n      asset: {\n          identification: {\n              idType: '</span><span class="s2">"'Custom'"</span><span class="s1">',\n              id: namespace + '</span><span class="s2">"'-asset'"</span><span class="s1">'\n          },\n          idShort: namespace + '</span><span class="s2">"'-asset'"</span><span class="s1">',\n          kind: '</span><span class="s2">"'Instance'"</span><span class="s1">',\n          dataSpecification: [],\n          modelType: {\n              name: '</span><span class="s2">"'Asset'"</span><span class="s1">'\n          },\n          embeddedDataSpecifications: []\n      },\n      submodels: []\n  });\n  let bytePayload = null;\n  let contentType = '</span><span class="s2">"'application/json'"</span><span class="s1">';\n  return Ditto.buildExternalMsg(headers, textPayload, bytePayload, contentType);}"
+            }
+          }
+        },
+        "sources": [],
+        "targets": [
+          {
+            "address": "PUT:/registry/api/v1/registry/{{ thing:namespace }}",
+            "headerMapping": {
+              "content-type": "{{ header:content-type }}"
+            },
+            "authorizationContext": ["nginx:ditto"],
+            "topics": [
+              "_/_/things/twin/events?filter=and(in(topic:action,'</span><span class="s2">"'created'"</span><span class="s1">'),eq(resource:path,'</span><span class="s2">"'/'"</span><span class="s1">'))"
+            ],
+            "payloadMapping": [
+              "mappingforShell"
+            ]
+          }
+        ]
+      }
+    }
+  }'</span> &lt;ditto-instance-url&gt;/devops/piggyback/connectivity
+</code></pre></div></div>
+
+<p><em>Listing 7: Request to add a new <code class="highlighter-rouge">Connection</code> to a Ditto instance</em></p>
+
+<p>We list the JavaScript mapper in <code class="highlighter-rouge">piggybackCommand.connection.mappingDefinitions.mappingForShell.options.outgoingScript</code> and reference it as <code class="highlighter-rouge">mappingForShell</code> in <code class="highlighter-rouge">piggybackCommand.connection.targets[0].payloadMapping</code>.
+The address of the BaSyx AAS registry is configured in the parameter <code class="highlighter-rouge">piggybackCommand.connection.uri</code>.</p>
+
+<p>As filter, to make sure that our mapper function only triggers after the creation of new Thing, we use:</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="s2">"_/_/things/twin/events?filter=and(in(topic:action,'"</span><span class="err">'created'</span><span class="s2">"'),eq(resource:path,'"</span><span class="err">'/'</span><span class="s2">"'))"</span><span class="w">
+</span></code></pre></div></div>
+
+<p>Since the registry uses the AAS server endpoint as a base to also get access to all submodels and submodel elements from the same AAS, it is enough to register the AAS endpoint.</p>
+
+<h3 id="test-the-connection">Test the Connection</h3>
+
+<p>We now configured all required connections in Ditto and can test our setup.
+All configured mappers trigger through changes to a Thing, so we begin by creating a Thing.</p>
+
+<p>We again refer to the used Ditto instance through the placeholder <code class="highlighter-rouge">&lt;ditto-instance-url&gt;</code>,
+which you need to adapt to the URL of your Ditto instance.</p>
+
+<h4 id="creating-a-thing-in-eclipse-ditto">Creating a Thing in Eclipse Ditto</h4>
+
+<h5 id="setup-a-common-policy">Setup a common policy</h5>
+
+<p>To define authorization information to be used by the Things,
+we first create a <a href="basic-policy.html">policy</a> with the policy-id <code class="highlighter-rouge">machine:my-policy</code>.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">POLICY_ID</span><span class="o">=</span>machine:my-policy
+
+curl <span class="nt">-i</span> <span class="nt">-X</span> PUT <span class="nt">-u</span> ditto:ditto <span class="nt">-H</span> <span class="s1">'Content-Type: application/json'</span> <span class="nt">--data</span> <span class="s1">'{
+  "entries": {
+    "DEFAULT": {
+      "subjects": {
+        "{{ request:subjectId }}": {
+           "type": "Ditto user authenticated via nginx"
+        }
+      },
+      "resources": {
+        "thing:/": {
+          "grant": ["READ", "WRITE"],
+          "revoke": []
+        },
+        "policy:/": {
+          "grant": ["READ", "WRITE"],
+          "revoke": []
+        },
+        "message:/": {
+          "grant": ["READ", "WRITE"],
+          "revoke": []
+        }
+      }
+    }
+  }
+}'</span> &lt;ditto-instance-url&gt;/api/2/policies/<span class="nv">$POLICY_ID</span>
+</code></pre></div></div>
+
+<p><em>Listing 8: Demo Policy Definition</em></p>
+
+<p>You will get a <code class="highlighter-rouge">201 Created</code> response, if the policy creation concluded successfuly. In the subsequent steps, we use the policy-id <code class="highlighter-rouge">machine:my-policy</code> to refer to the created policy.</p>
+
+<h4 id="create-a-thing">Create a Thing</h4>
+
+<p>The next step is to create an actual Thing.
+We use the namespace and name <code class="highlighter-rouge">machine:my-policy</code> and policy-id <code class="highlighter-rouge">machine:my-policy</code> here:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">NAMESPACE</span><span class="o">=</span>machine
+<span class="nv">NAME</span><span class="o">=</span>sensor
+<span class="nv">DEVICE_ID</span><span class="o">=</span><span class="nv">$NAMESPACE</span>:<span class="nv">$NAME</span>
+
+curl <span class="nt">-i</span> <span class="nt">-X</span> PUT <span class="nt">-u</span> ditto:ditto <span class="nt">-H</span> <span class="s1">'Content-Type: application/json'</span> <span class="nt">--data</span> <span class="s1">'{
+  "policyId": "'</span><span class="nv">$POLICY_ID</span><span class="s1">'"
+}'</span> &lt;ditto-instance-url&gt;/api/2/things/<span class="nv">$DEVICE_ID</span>
+</code></pre></div></div>
+
+<p><em>Listing 9: Request to add the Demo Policy to a Ditto instance (<code class="highlighter-rouge">$POLICY_ID</code> refers to Listing 8)</em></p>
+
+<p>Again, a successful creation returns a <code class="highlighter-rouge">201 Created</code> response.</p>
+
+<p>We earlier configured two connections to trigger a mapper on the create event of a Thing. This should push a new AAS to the AAS server and a reference to that AAS in the AAS registry.</p>
+
+<p>You can check whether the execution of the scripts was successful by requesting the shell at the AAS server:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">-X</span> GET &lt;basyx-server-instance-url&gt;:4001/aasServer/shells
+</code></pre></div></div>
+
+<p>which should return the following result</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">[{</span><span class="s2">"modelType"</span><span class="p">:{</span><span class="s2">"name"</span><span class="p">:</span><span class="s2">"AssetAdministrationShell"</span><span class="p">},</span><span class="s2">"idShort"</span><span class="p">:</span><span class="s2">"machine"</span><span class="p">,</span><span class="s2">"identification"</span><span class="p">:{</span><span class="s2">"idType"</span><span class="p">:</span><span class="s2">"Custom"</span><span class="p">,</span><span class="s2">"id"</span><span class="p">:</span><span class="s2">"machine"</span><span class="p">},</span><span class="s2">"dataSpecification"</span><span class="p">:[],</span><span class="s2">"embeddedDataSpecifications"</span><span class="p">:[],</span><span class="s2">"submodels"</span><span class="p">:[{</span><span class="s2">"keys"</span><span class="p">:[{</span><span class="s2">"type"</span><span class="p">:</span><span class="s2">"AssetAdministrationShell"</span><span class="p">,</span><span class="s2">"local"</span><span class="p">:</span><span class="kc">true</span><span class="p">,</span><span class="s2">"value"</span><span class="p">:</span><span class="s2">"machine"</span><span class="p">,</span><span class="s2">"idType"</span><span class="p">:</span><span class="s2">"Custom"</span><span class="p">},{</span><span class="s2">"type"</span><span class="p">:</span><span class="s2">"Submodel"</span><span class="p">,</span><span class="s2">"local"</span><span class="p">:</span><span class="kc">true</span><span class="p">,</span><span class="s2">"value"</span><span class="p">:</span><span class="s2">"sensor_temperature"</span><span class="p">,</span><span class="s2">"idType"</span><span class="p">:</span><span class="s2">"Custom"</span><span class="p">}]}],</span><span class="s2">"asset"</span><span class="p">:{</span><span class="s2">"keys"</span><span class="p">:[{</span><span class="s2">"type"</span><span class="p">:</span><span class="s2">"Asset"</span><span class="p">,</span><span class="s2">"local"</span><span class="p">:</span><span class="kc">true</span><span class="p">,</span><span class="s2">"value"</span><span class="p">:</span><span class="s2">"machine-asset"</span><span class="p">,</span><span class="s2">"idType"</span><span class="p">:</span><span class="s2">"Custom"</span><span class="p">}],</span><span class="s2">"identification"</span><span class="p">:{</span><span class="s2">"idType"</span><span class="p">:</span><span class="s2">"Custom"</span><span class="p">,</span><span class="s2">"id"</span><span class="p">:</span><span class="s2">"machine-asset"</span><span class="p">},</span><span class="s2">"idShort"</span><span class="p">:</span><span class="s2">"machine-asset"</span><span class="p">,</span><span class="s2">"kind"</span><span class="p">:</span><span class="s2">"Instance"</span><span class="p">,</span><span class="s2">"dataSpecification"</span><span class="p">:[],</span><span class="s2">"modelType"</span><span class="p">:{</span><span class="s2">"name"</span><span class="p">:</span><span class="s2">"Asset"</span><span class="p">},</span><span class="s2">"embeddedDataSpecifications"</span><span class="p">:[]},</span><span class="s2">"views"</span><span class="p">:[],</span><span class="s2">"conceptDictionary"</span><span class="p">:[]}]</span><span class="w">
+</span></code></pre></div></div>
+
+<p>In addition, the request to the AAS registry:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">-X</span> GET &lt;basyx-registry-instance-url&gt;:4000/registry/api/v1/registry
+</code></pre></div></div>
+
+<p>should return:</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">[{</span><span class="s2">"modelType"</span><span class="p">:{</span><span class="s2">"name"</span><span class="p">:</span><span class="s2">"AssetAdministrationShellDescriptor"</span><span class="p">},</span><span class="s2">"endpoints"</span><span class="p">:[{</span><span class="s2">"address"</span><span class="p">:</span><span class="s2">"&lt;basyx-server-instance-url&gt;:4001/aasServer/shells/machine/aas"</span><span class="p">,</span><span class="s2">"type"</span><span class="p">:</span><span class="s2">"http"</span><span class="p">}],</span><span class="s2">"identification"</span><span class="p">:{</span><span class="s2">"idType"</span><span class="p">:</span><span class="s2">"Custom"</span><span class="p">,</span><span class="s2">"id"</span><span class="p">:</span><span class="s2">"machine"</span><span class="p">},</span><span class="s2">"idShort"</span><span class="p">:</span><span class="s2">"machine"</span><span class="p">,</span><span class="s2">"asset"</span><span class="p">:{</span><span class="s2">"identification"</span><span class="p">:{</span><span class="s2">"idType"</span><span class="p">:</span><span class="s2">"Custom"</span><span class="p">,</span><span class="s2">"id"</span><span class="p">:</span><span class="s2">"machine-asset"</span><span class="p">},</span><span class="s2">"idShort"</span><span class="p">:</span><span class="s2">"machine-asset"</span><span class="p">,</span><span class="s2">"kind"</span><span class="p">:</span><span class="s2">"Instance"</span><span class="p">,</span><span class="s2">"dataSpecification"</span><span class="p">:[],</span><span class="s2">"modelType"</span><span class="p">:{</span><span class="s2">"name"</span><span class="p">:</span><span class="s2">"Asset"</span><span class="p">},</span><span class="s2">"embeddedDataSpecifications"</span><span class="p">:[]},</span><span class="s2">"submodels"</span><span class="p">:[]}]</span><span class="w">
+</span></code></pre></div></div>
+
+<p>At this point, the newly created Thing has no features, properties, or attributes yet.
+So let us populate that Thing.</p>
+
+<h4 id="create-a-feature-for-the-thing">Create a feature for the Thing</h4>
+
+<p>Next, we create a feature for the Thing to contain a property with the data of a temperature sensor.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">FEATURE_ID</span><span class="o">=</span>temperature
+
+curl <span class="nt">-X</span> PUT <span class="nt">-u</span> ditto:ditto <span class="nt">-H</span> <span class="s1">'Content-Type: application/json'</span> <span class="nt">--data-binary</span> <span class="s1">'{
+  "properties": {
+    "value": null
+  }
+}'</span> &lt;ditto-instance-url&gt;/api/2/things/<span class="nv">$DEVICE_ID</span>/features/<span class="nv">$FEATURE_ID</span>
+</code></pre></div></div>
+
+<p><em>Listing 10: Request to add a feature to the demo Thing (variables refer to previous Listings)</em></p>
+
+<p>The feature creation triggers the mapper (<code class="highlighter-rouge">mappingforSubmodel</code>) to create a corresponding Submodel in the previously created AAS.</p>
+
+<p>To check if this was successful, we request the expected submodel:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">-X</span> GET &lt;basyx-server-instance-url&gt;:4001/aasServer/shells/<span class="nv">$NAMESPACE</span>/aas/submodels/<span class="k">${</span><span class="nv">NAME</span><span class="k">}</span>_<span class="k">${</span><span class="nv">FEATURE_ID</span><span class="k">}</span>/submodel
+</code></pre></div></div>
+
+<p>which should result in the following response:</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="s2">"parent"</span><span class="p">:{</span><span class="s2">"keys"</span><span class="p">:[{</span><span class="s2">"idType"</span><span class="p">:</span><span class="s2">"Custom"</span><span class="p">,</span><span class="s2">"type"</span><span class="p">:</span><span class="s2">"AssetAdministrationShell"</span><span class="p">,</span><span class="s2">"value"</span><span class="p">:</span><span class="s2">"machine"</span><span class="p">,</span><span class="s2">"local"</span><span class="p">:</span><span class="kc">true</span><span class="p">}]},</span><span class="s2">"identification"</span><span class="p">:{</span><span class="s2">"idType"</span><span class="p">:</span><span class="s2">"Custom"</span><span class="p">,</span><span class="s2">"id"</span><span class="p">:</span><span class="s2">"sensor_temperature"</span><span class="p">},</span><span class="s2">"idShort"</span><span class="p">:</span><span class="s2">"sensor_temperature"</span><span class="p">,</span><span class="s2">"kind"</span><span class="p">:</span><span class="s2">"Instance"</span><span class="p">,</span><span class="s2">"dataSpecification"</span><span class="p">:[],</span><span class="s2">"modelType"</span><span class="p">:{</span><span class="s2">"name"</span><span class="p">:</span><span class="s2">"Submodel"</span><span class="p">},</span><span class="s2">"embeddedDataSpecifications"</span><span class="p">:[],</span><span class="s2">"submodelElements"</span><span class="p">:[]}</span><span class="w">
+</span></code></pre></div></div>
+
+<h4 id="updating-a-thing">Updating a Thing</h4>
+
+<p>After we have successfully created a Thing, we can check if the update of a property works as well by executing:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">-i</span> <span class="nt">-X</span> PUT <span class="nt">-u</span> ditto:ditto <span class="nt">-H</span> <span class="s2">"content-type: application/json"</span> <span class="nt">--data-binary</span> <span class="s1">'46'</span> &lt;ditto-instance-url&gt;/api/2/things/<span class="nv">$DEVICE_ID</span>/features/<span class="nv">$FEATURE_ID</span>/properties/value
+</code></pre></div></div>
+
+<p>Again, we check if our change was successful:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">-u</span> ditto:ditto <span class="nt">-w</span> <span class="s1">'\n'</span> &lt;ditto-instance-url&gt;/api/2/things/<span class="nv">$DEVICE_ID</span>
+</code></pre></div></div>
+
+<p>and expect:</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="s2">"thingId"</span><span class="p">:</span><span class="s2">"machine:sensor"</span><span class="p">,</span><span class="s2">"policyId"</span><span class="p">:</span><span class="s2">"machine:my-policy"</span><span class="p">,</span><span class="s2">"features"</span><span class="p">:{</span><span class="s2">"temperature"</span><span class="p">:{</span><span class="s2">"properties"</span><span class="p">:{</span><span class="s2">"value"</span><span class="p">:</span><span class="mi">46</span><span class="p">}}}}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>If the property creation was successful, then the mapping <code class="highlighter-rouge">mappingforSubmodelElement</code> should trigger.
+To verify that the Submodel was updated, call:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">-X</span> GET &lt;basyx-server-instance-url&gt;:4001/aasServer/shells/<span class="nv">$NAMESPACE</span>/aas/submodels/<span class="k">${</span><span class="nv">NAME</span><span class="k">}</span>_<span class="k">${</span><span class="nv">FEATURE_ID</span><span class="k">}</span>/submodel/submodelElements/properties_value
+</code></pre></div></div>
+
+<p>This should lead to the response:</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="s2">"parent"</span><span class="p">:{</span><span class="s2">"keys"</span><span class="p">:[{</span><span class="s2">"idType"</span><span class="p">:</span><span class="s2">"Custom"</span><span class="p">,</span><span class="s2">"type"</span><span class="p">:</span><span class="s2">"Submodel"</span><span class="p">,</span><span class="s2">"value"</span><span class="p">:</span><span class="s2">"sensor_temperature"</span><span class="p">,</span><span class="s2">"local"</span><span class="p">:</span><span class="kc">true</span><span class="p">}]},</span><span class="s2">"idShort"</span><span class="p">:</span><span class="s2">"properties_value"</span><span class="p">,</span><span class="s2">"kind"</span><span class="p">:</span><span class="s2">"Instance"</span><span class="p">,</span><span class="s2">"valueType"</span><span class="p">:</span><span class="s2">"int"</span><span class="p">,</span><span class="s2">"modelType"</span><span class="p">:{</span><span class="s2">"name"</span><span class="p">:</span><span class="s2">"Property"</span><span class="p">},</span><span class="s2">"value"</span><span class="p">:</span><span class="mi">46</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>Here, we see that we are able to access the sensor data of the device through the AAS Submodel API via Eclipse BaSyx.</p>
+
+<p>As an alternative to plain Json responses, you can use one of the UI-tools provided by the AAS community, like the <a href="https://wiki.eclipse.org/BaSyx_/_Documentation_/_Components_/_AAS_Web_UI">AAS Web UI</a>.</p>
+
+<figure><img class="docimage" src="images/blog/2024-02-15-integrating-ditto-ass-basyx/AASDashboard.png" alt="AAS Dashboard" style="max-width: 1000px" /></figure>
+
+<p><em>Figure 4: BaSyx AAS Web UI</em></p>
+
+<h2 id="summary">Summary</h2>
+
+<p>In this post, we present our approach for making Ditto Things available in an AAS.
+We defined a mapping concept between Things and AAS.
+To apply the mapping concept, we created connections with mappers from Ditto to a BaSyx AAS server and a BaSyx AAS registry.
+Afterwards, we tested the connections with an example Thing and data from a sensor.</p>
+
+<p>Our example of integrating Ditto Things into an AAS environment shows, how the capbilities of Ditto, such as
+custom mappers, filters etc, render it a useful tool to integrate device states into various environments.
+We discussed the integration into AAS but believe a similar approach could be applied in other domains as well.</p>
+
+<p><br />
+<br />
+Milena Jäntgen, <a href="https://github.com/eriksven">Sven Erik Jeroschewski</a> and <a href="https://github.com/max-grzanna">Max Grzanna</a> contributed to this post.</p>
+
+    </div>
+
+
+
+</article>
+
+<hr class="shaded"/>
+
+<footer>
+            <div class="row">
+                <div class="col-lg-12 footer">
+                    <div class="logo">
+                        <a href="https://eclipse.org"><img src="images/eclipse_foundation_logo.svg" alt="Eclipse logo"/></a>
+                    </div>
+                    <p class="notice">
+                        &copy;2024 Eclipse Ditto™.
+                         Site last generated: Feb 27, 2024 <br />
+                    </p>
+                    <div class="quickLinks">
+                        <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">
+                            &gt; Privacy Policy
+                        </a>
+                        <a href="https://www.eclipse.org/legal/termsofuse.php" target="_blank">
+                            &gt; Terms of Use
+                        </a>
+                        <a href="https://www.eclipse.org/legal/copyright.php" target="_blank">
+                            &gt; Copyright Agent
+                        </a>
+                        <a href="https://www.eclipse.org/legal" target="_blank">
+                            &gt; Legal
+                        </a>
+                        <a href="https://www.eclipse.org/legal/epl-2.0/" target="_blank">
+                            &gt; License
+                        </a>
+                        <a href="https://eclipse.org/security" target="_blank">
+                            &gt; Report a Vulnerability
+                        </a>
+                    </div>
+                </div>
+            </div>
+</footer>
+
+
+        </div>
+    <!-- /.row -->
+</div>
+<!-- /.container -->
+</div>
+<!-- /#main -->
+    </div>
+
+</body>
+</html>

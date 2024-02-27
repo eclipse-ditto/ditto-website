@@ -5,9 +5,831 @@
         <description>Announcements, tutorials and examples around Eclipse Ditto and Digital Twins</description>
         <link>https://www.eclipse.dev/ditto/</link>
         <atom:link href="https://www.eclipse.dev/ditto/feed.xml" rel="self" type="application/rss+xml"/>
-        <pubDate>Tue, 27 Feb 2024 14:18:56 +0000</pubDate>
-        <lastBuildDate>Tue, 27 Feb 2024 14:18:56 +0000</lastBuildDate>
+        <pubDate>Tue, 27 Feb 2024 15:43:57 +0000</pubDate>
+        <lastBuildDate>Tue, 27 Feb 2024 15:43:57 +0000</lastBuildDate>
         <generator>Jekyll v3.6.2</generator>
+        
+        <item>
+            <title>Access Ditto Things from an Asset Administration Shell</title>
+            <description>&lt;p&gt;Integrating digital representations of devices into an IT infrastructure is a recurring task in different domains and application areas.
+To address this challenge in Industry 4.0 scenarios along the supply chain, the community specified the &lt;a href=&quot;https://industrialdigitaltwin.org/&quot;&gt;Asset Administration Shell&lt;/a&gt; within the Industrial Digital Twin Association (IDTA) to handle all kinds of information of a physical asset over its lifecycle.&lt;/p&gt;
+
+&lt;p&gt;Eclipse Ditto provides a backend for handling such device data as Things and takes care of a number of general tasks that are otherwise easy to be done wrong,
+such as handling device connectivity over different protocols or state management. Therefore, it is promising to use the benefits of Eclipse Ditto for populating an AAS infrastructure when the devices already communicate with an existing instance of Eclipse Ditto.&lt;/p&gt;
+
+&lt;p&gt;In this post we want to share our solution and learnings from setting up an AAS infrastructure based on &lt;a href=&quot;https://eclipse.dev/basyx/&quot;&gt;Eclipse Basyx&lt;/a&gt; and Eclipse Ditto as a source for device state.&lt;/p&gt;
+
+&lt;figure&gt;&lt;img class=&quot;docimage&quot; src=&quot;images/blog/2024-02-15-integrating-ditto-ass-basyx/basic-interaction.svg&quot; alt=&quot;User-device interaction via AAS and IoT backend&quot; style=&quot;max-width: 1000px&quot; /&gt;&lt;/figure&gt;
+
+&lt;p&gt;&lt;em&gt;Figure 1:  User-device interaction via BaSyx and Ditto&lt;/em&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;background&quot;&gt;Background&lt;/h2&gt;
+
+&lt;p&gt;We start with some background on the AAS and Eclipse Basyx. If you are allready familiar with both, it is safe to skip this section.&lt;/p&gt;
+
+&lt;h3 id=&quot;asset-administration-shell&quot;&gt;Asset Administration Shell&lt;/h3&gt;
+
+&lt;p&gt;The Asset Administration Shell (AAS) is a standardization effort of
+the Industrial Digital Twin Association (IDTA) that originated from the
+Platform Industry 4.0 (I4.0) (&lt;a href=&quot;https://industrialdigitaltwin.org/en/wp-content/uploads/sites/2/2023/04/IDTA-01001-3-0_SpecificationAssetAdministrationShell_Part1_Metamodel.pdf&quot;&gt;AAS Spec Part I&lt;/a&gt;; &lt;a href=&quot;https://industrialdigitaltwin.org/en/wp-content/uploads/sites/2/2023/04/IDTA-01002-3-0_SpecificationAssetAdministrationShell_Part2_API.pdf&quot;&gt;AAS Spec Part II&lt;/a&gt;).&lt;/p&gt;
+
+&lt;p&gt;An AAS is a digital representation of a physical asset and consists of one or more submodels. Each submodel contains a structured set of submodel elements.
+Submodels, as well as their submodel elements, can either be a type or an instance.
+The AAS metamodel defines the possible elements for modeling an AAS like Asset, AssetAdminstrationShell (AAS), Submodel (SM), SubmodelElementCollection (SMEC),
+Property, and SubmodelElement (SME). You can find further details &lt;a href=&quot;https://www.plattform-i40.de/IP/Redaktion/EN/Downloads/Publikation/2021_What-is-the-AAS.html&quot;&gt;here&lt;/a&gt; and &lt;a href=&quot;https://industrialdigitaltwin.org/en/wp-content/uploads/sites/2/2023/04/IDTA-01001-3-0_SpecificationAssetAdministrationShell_Part1_Metamodel.pdf&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;A user who wants to interact with an AAS over HTTP follows the sequence of service calls depicted in Figure 2.
+The flow starts by requesting an AAS ID from the AAS discovery interface based on a (local) specific asset ID or a global asset ID. An example of such an asset ID is a serial number written on the device. With the AAS ID, the user retrieves the endpoint for the AAS through the AAS registry interface.
+The user then requests the SM ID from that AAS endpoint and uses this SM ID to get the SM endpoint from the SM Registry.
+From that SM endpoint, the user can request the SME, which contains the required value.&lt;/p&gt;
+
+&lt;figure&gt;&lt;img class=&quot;docimage&quot; src=&quot;images/blog/2024-02-15-integrating-ditto-ass-basyx/aas-sequenz.svg&quot; alt=&quot;Sequence of data flow through AAS infrastructure&quot; style=&quot;max-width: 1000px&quot; /&gt;&lt;/figure&gt;
+
+&lt;p&gt;&lt;em&gt;Figure 2: Sequence of data flow through AAS infrastructure&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;If you want to dig deeper into the specifics of the AAS, consult the &lt;a href=&quot;https://www.plattform-i40.de/IP/Redaktion/DE/Downloads/Publikation/AAS-ReadingGuide_202201.html&quot;&gt;AAS Reading Guide&lt;/a&gt;, which helps the interested reader to navigate through the available material.&lt;/p&gt;
+
+&lt;h3 id=&quot;eclipse-basyx&quot;&gt;Eclipse BaSyx&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://wiki.eclipse.org/BaSyx_/_Documentation_/_Components&quot;&gt;Eclipse BaSyx&lt;/a&gt; is an open-source project hosted by the Eclipse Foundation providing components to deploy an Industry 4.0 middleware.
+Apart from other features, Eclipse BaSyx provides several easy-to-use off-the-shelf components to realize an AAS infrastructure:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://wiki.eclipse.org/BaSyx_/_Documentation_/_Components_/_AAS_Server&quot;&gt;AAS Server Component&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://wiki.eclipse.org/BaSyx_/_Documentation_/_Components_/_Registry&quot;&gt;Registry Component&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://wiki.eclipse.org/BaSyx_/_Documentation_/_Components_/_DataBridge&quot;&gt;DataBridge Component&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://wiki.eclipse.org/BaSyx_/_Documentation_/_Components_/_AAS_Web_UI&quot;&gt;AAS Web UI&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;You can pull them from Docker Hub or &lt;a href=&quot;https://wiki.eclipse.org/BaSyx_/_Documentation_/_Components_/_Docker&quot;&gt;follow the instructions&lt;/a&gt; to build them yourself.&lt;/p&gt;
+
+&lt;p&gt;In this post, we mainly work with the AAS Server Component and the Registry Component.&lt;/p&gt;
+
+&lt;h2 id=&quot;architectural-considerations&quot;&gt;Architectural Considerations&lt;/h2&gt;
+
+&lt;p&gt;Making Eclipse Ditto Things available in an AAS infrastructure, in our case from the Eclipse Basyx project, boils down to making Thing data available as Submodels of an AAS accessible via the AAS Interface.&lt;/p&gt;
+
+&lt;p&gt;We see three approaches to achieve this:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;BaSyx AAS SM server &lt;em&gt;pulls&lt;/em&gt; the current state from Eclipse Ditto via a &lt;em&gt;wrapper&lt;/em&gt; around Eclipse Ditto.
+This approach requires the creation of a custom AAS infrastructure around Eclipse Ditto without the chance of reusing existing components of the Eclipse Basyx project.
+The Eclipse Ditto project followed a comparable approach to support &lt;a href=&quot;2022-03-03-wot-integration.html&quot;&gt;Web of Things&lt;/a&gt; (WoT) definitions, which is another specification to integrate IoT devices from different contexts and align their utilized data model.
+Ditto now allows the generation of new Things based on a WoT Thing Description.&lt;/li&gt;
+  &lt;li&gt;BaSyx AAS SM server &lt;em&gt;pulls&lt;/em&gt; the current state from Eclipse Ditto via a &lt;em&gt;bridge&lt;/em&gt; component, which Eclipse Basyx already provides.
+To integrate the bridge, the BaSyx SM-server component has a delegation feature, where the user can configure an SME with an endpoint to which the server delegates incoming requests.
+The configured endpoint can reference the bridge that then retrieves the actual data from Ditto and applies transformation logic.&lt;/li&gt;
+  &lt;li&gt;Eclipse Ditto &lt;em&gt;pushes&lt;/em&gt; the latest updates to a BaSyx SM server.
+For this approach, we configure Eclipse Ditto to notify the BaSyx SM server about any change to the relevant Things. During the creation of the notification message, Ditto applies a payload mapping to transform the data into the AAS format. The BaSyx SM server then stores the received submodel element and responds directly to the requests by the users.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;figure&gt;&lt;img class=&quot;docimage&quot; src=&quot;images/blog/2024-02-15-integrating-ditto-ass-basyx/push.svg&quot; alt=&quot;Push approach sequence&quot; style=&quot;max-width: 1000px&quot; /&gt;&lt;/figure&gt;
+
+&lt;p&gt;&lt;em&gt;Figure 3: Push approach sequence&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;We follow the push approach here because it treats the AAS infrastructure as a blackbox and almost all configuration happens within Eclipse Ditto.&lt;/p&gt;
+
+&lt;h2 id=&quot;mapping-of-data-models&quot;&gt;Mapping of Data Models&lt;/h2&gt;
+
+&lt;p&gt;Eclipse Ditto and Eclipse Basyx work with different data structures and conceptual elements to represent device and asset data. Since we want to convert between these data models, we need to come up with a mapping between them.&lt;/p&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;Eclipse Ditto&lt;/th&gt;
+      &lt;th&gt;Asset Administration Shell&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Namespace&lt;/td&gt;
+      &lt;td&gt;Asset Administration Shell&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Thing&lt;/td&gt;
+      &lt;td&gt;—&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Features&lt;/td&gt;
+      &lt;td&gt;Submodel&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Property&lt;/td&gt;
+      &lt;td&gt;Submodel Element&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Attribute&lt;/td&gt;
+      &lt;td&gt;Submodel Element&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;&lt;em&gt;Table 1: Concept mapping from Eclipse Ditto to the AAS&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;We map a Ditto &lt;a href=&quot;basic-namespaces-and-names.html#namespace&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Namespace&lt;/code&gt;&lt;/a&gt; to a single AAS. An AAS holds multiple SMs, and not all of these SMs necessarily have counterparts in Ditto. We thus treat a &lt;code class=&quot;highlighter-rouge&quot;&gt;Thing&lt;/code&gt; as an opaque concept and do not define an explicit mapping for a &lt;code class=&quot;highlighter-rouge&quot;&gt;Thing&lt;/code&gt; but map each &lt;a href=&quot;basic-feature.html&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;feature&lt;/code&gt;&lt;/a&gt; to one SM.
+&lt;a href=&quot;basic-feature.html#feature-properties&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;property&lt;/code&gt;&lt;/a&gt; and &lt;a href=&quot;basic-thing.html#attributes&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Attribute&lt;/code&gt;&lt;/a&gt; are mapped to SMEs.&lt;/p&gt;
+
+&lt;p&gt;By that, it is possible to have more than one Thing organized in one AAS.
+This can especially be useful if an AAS organizes complex equipment with different sensors and actuators, which belong together but are organized in multiple Things.&lt;/p&gt;
+
+&lt;h2 id=&quot;integration-steps&quot;&gt;Integration Steps&lt;/h2&gt;
+
+&lt;p&gt;With the more theoretical details completed, we can now turn to the actual implementation and describe what is required
+to integrate Eclipse Ditto into an AAS infrastructure of Eclipse BaSyx.&lt;/p&gt;
+
+&lt;h3 id=&quot;prerequisites&quot;&gt;Prerequisites&lt;/h3&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;Running instance of &lt;a href=&quot;https://eclipse.dev/ditto/&quot;&gt;Eclipse Ditto&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;Running instance of &lt;a href=&quot;https://wiki.eclipse.org/BaSyx_/_Documentation_/_Components_/_AAS_Server&quot;&gt;Eclipse BaSyx AAS Server&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;Running instance of &lt;a href=&quot;https://wiki.eclipse.org/BaSyx_/_Documentation_/_Components_/_Registry&quot;&gt;Eclipse BaSyx AAS Registry&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Those three instances must be available and a network connection must exist between them.
+In the code snippets below, we use placeholders for the URLs of Ditto as well as BaSyx.
+So, you need to replace &lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;lt;ditto-instance-url&amp;gt;&lt;/code&gt;,  &lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;lt;basyx-server-instance-url&amp;gt;&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;lt;basyx-registry-instance-url&amp;gt;&lt;/code&gt;
+with the proper URLs in your environment.&lt;/p&gt;
+
+&lt;p&gt;For our setup, we used version 3.0.1 for Eclipse Ditto and version 1.4.0 for Eclipse BaSyx.
+Please note that the Ditto demo instance, does not work for the described setup and requests because it does not allow to directly invoke the &lt;code class=&quot;highlighter-rouge&quot;&gt;/devops&lt;/code&gt; endpoints through which we later configure connections.&lt;/p&gt;
+
+&lt;h3 id=&quot;payload-mappers-from-ditto-to-basyx&quot;&gt;Payload Mappers from Ditto to BaSyx&lt;/h3&gt;
+
+&lt;p&gt;Let us assume a device with a sensor named &lt;code class=&quot;highlighter-rouge&quot;&gt;machine:sensor&lt;/code&gt; that is capable of measuring temperature values.
+This device may send sensor data to an Eclipse Ditto instance as a Ditto Protocol message &lt;a href=&quot;protocol-overview.html&quot;&gt;Ditto Protocol message&lt;/a&gt;:&lt;/p&gt;
+
+&lt;div class=&quot;language-json highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;topic&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;machine/sensor/things/twin/commands/modify&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;headers&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{},&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;path&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;/features/temperature/properties/value&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;value&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;46&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;em&gt;Listing 1: Ditto Protocol message for the Thing &lt;code class=&quot;highlighter-rouge&quot;&gt;machine:senor&lt;/code&gt;&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;If the device uses another message format, you can find more details on &lt;a href=&quot;connectivity-mapping.html&quot;&gt;how to map it&lt;/a&gt; to a Ditto Protocol message.&lt;/p&gt;
+
+&lt;p&gt;After an update to a Thing, we want Ditto to map the information to an AAS-conforming representation and forward this via an outbound connection to an AAS server.
+The task in Eclipse Ditto is to define &lt;a href=&quot;connectivity-mapping.html&quot;&gt;payload mappers&lt;/a&gt; for these transformations in accordance with the mapping from &lt;a href=&quot;#mapping-of-data-models&quot;&gt;Mapping of Data Models&lt;/a&gt;. Ditto allows the usage of JavaScript to create the mappers. We thus configure connections in Ditto to the BaSyx components, where we filter for the relevant changes to a Thing and then trigger the respective mapper.&lt;/p&gt;
+
+&lt;p&gt;We need to implement the following mappers:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Creation of an AAS triggered by creation of new &lt;code class=&quot;highlighter-rouge&quot;&gt;namespaces&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;Creation of a SM triggered by creation of &lt;code class=&quot;highlighter-rouge&quot;&gt;feature&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;Creation and update of an SME triggered by creation and modification of a &lt;code class=&quot;highlighter-rouge&quot;&gt;property&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;map-from-thing-creation-to-aas-creation&quot;&gt;Map from Thing Creation to AAS Creation&lt;/h4&gt;
+
+&lt;p&gt;The next snippet performs a mapping from a Thing to an AAS.
+It gets executed every time a Thing is created.&lt;/p&gt;
+
+&lt;div class=&quot;language-javascript highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;mapFromDittoProtocolMsg&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;namespace&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;group&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;channel&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;criterion&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;action&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;path&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;dittoHeaders&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;value&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;status&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;extra&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;kd&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;headers&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;dittoHeaders&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;kd&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;textPayload&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;JSON&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;stringify&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;({&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;conceptDictionary&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[],&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;identification&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+      &lt;span class=&quot;na&quot;&gt;idType&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'Custom'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+      &lt;span class=&quot;na&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;namespace&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;idShort&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;namespace&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;dataSpecification&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[],&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;modelType&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+      &lt;span class=&quot;na&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'AssetAdministrationShell'&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;asset&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+      &lt;span class=&quot;na&quot;&gt;identification&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;na&quot;&gt;idType&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'Custom'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+        &lt;span class=&quot;na&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;namespace&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'-asset'&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
+      &lt;span class=&quot;na&quot;&gt;idShort&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;namespace&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'-asset'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+      &lt;span class=&quot;na&quot;&gt;kind&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'Instance'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+      &lt;span class=&quot;na&quot;&gt;dataSpecification&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[],&lt;/span&gt;
+      &lt;span class=&quot;na&quot;&gt;modelType&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;na&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'Asset'&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
+      &lt;span class=&quot;na&quot;&gt;embeddedDataSpecifications&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;embeddedDataSpecifications&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[],&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;views&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[],&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;submodels&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;
+  &lt;span class=&quot;kd&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;bytePayload&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;kd&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;contentType&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'application/json'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;Ditto&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;buildExternalMsg&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;headers&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// The external headers Object containing header values&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;textPayload&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// The external mapped String&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;bytePayload&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// The external mapped byte[]&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;contentType&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// The returned Content-Type&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;em&gt;Listing 2: Payload mapping that creates a new AAS if a new Thing appears&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;As we map the Thing namespace to an AAS we only use the &lt;code class=&quot;highlighter-rouge&quot;&gt;namespace&lt;/code&gt;, which is the first part of the ID of a Thing.
+For example &lt;code class=&quot;highlighter-rouge&quot;&gt;machine&lt;/code&gt; in our &lt;code class=&quot;highlighter-rouge&quot;&gt;machine:sensor&lt;/code&gt; example Thing (Listing 1).
+More precisely, the mapping creates a representation of an AAS with the ID &lt;code class=&quot;highlighter-rouge&quot;&gt;namespace&lt;/code&gt; and returns a new message with this text as payload. The Ditto connectivity service then runs the mapping and pushes the new message to the BaSyx AAS server to create the described AAS.
+For example, whenever a Thing with the ID &lt;code class=&quot;highlighter-rouge&quot;&gt;machine:sensor&lt;/code&gt; is created, an AAS with the ID &lt;code class=&quot;highlighter-rouge&quot;&gt;machine&lt;/code&gt; will be created.&lt;/p&gt;
+
+&lt;h3 id=&quot;map-from-feature-creation-to-submodel-creation&quot;&gt;Map from Feature creation to Submodel creation&lt;/h3&gt;
+
+&lt;p&gt;The next mapper creates an AAS submodel and will be executed every time a new feature is created for a Thing.&lt;/p&gt;
+
+&lt;div class=&quot;language-javascript highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;mapFromDittoProtocolMsg&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;namespace&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;group&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;channel&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;criterion&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;action&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;path&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;dittoHeaders&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;value&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;status&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;extra&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  
+  &lt;span class=&quot;kd&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;feature_id&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;path&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;split&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'/'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;slice&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+  &lt;span class=&quot;kd&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;headers&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;dittoHeaders&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;kd&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;textPayload&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;JSON&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;stringify&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+      &lt;span class=&quot;na&quot;&gt;parent&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;na&quot;&gt;keys&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;
+          &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;na&quot;&gt;idType&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'Custom'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+            &lt;span class=&quot;na&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'AssetAdministrationShell'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+            &lt;span class=&quot;na&quot;&gt;value&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;namespace&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+            &lt;span class=&quot;na&quot;&gt;local&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;true&lt;/span&gt;
+          &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
+      &lt;span class=&quot;na&quot;&gt;identification&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;na&quot;&gt;idType&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'Custom'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+        &lt;span class=&quot;na&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'_'&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;feature_id&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
+      &lt;span class=&quot;na&quot;&gt;idShort&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'_'&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;feature_id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+      &lt;span class=&quot;na&quot;&gt;kind&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'Instance'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+      &lt;span class=&quot;na&quot;&gt;dataSpecification&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[],&lt;/span&gt;
+      &lt;span class=&quot;na&quot;&gt;modelType&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;na&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'Submodel'&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
+      &lt;span class=&quot;na&quot;&gt;embeddedDataSpecifications&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[],&lt;/span&gt;
+      &lt;span class=&quot;na&quot;&gt;submodelElements&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+  &lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+  &lt;span class=&quot;kd&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;bytePayload&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;kd&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;contentType&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'application/json'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;Ditto&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;buildExternalMsg&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;headers&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// The external headers Object containing header values&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;textPayload&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// The external mapped String&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;bytePayload&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// The external mapped byte[]&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;contentType&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// The returned Content-Type&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;em&gt;Listing 3: Payload mapping that creates a new AAS submodel if a new Feature appears&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;Besides &lt;code class=&quot;highlighter-rouge&quot;&gt;namespace&lt;/code&gt;, this mapper uses the parameters &lt;code class=&quot;highlighter-rouge&quot;&gt;name&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;path&lt;/code&gt; from the Ditto Protocol message.
+The &lt;code class=&quot;highlighter-rouge&quot;&gt;name&lt;/code&gt; represents the second part of the Thing-ID, e.g., &lt;code class=&quot;highlighter-rouge&quot;&gt;sensor&lt;/code&gt; from our &lt;code class=&quot;highlighter-rouge&quot;&gt;machine:sensor&lt;/code&gt; example Thing (Listing 1).
+The &lt;code class=&quot;highlighter-rouge&quot;&gt;path&lt;/code&gt; describes the part of the Thing whose change triggered the processed Ditto Protocol message.
+It may include the feature ID of the Thing or the whole path of the affected property of the Thing,
+but it could be only &lt;code class=&quot;highlighter-rouge&quot;&gt;/&lt;/code&gt; after the creation of a Thing. In our &lt;a href=&quot;#payload-mappers-from-ditto-to-basyx&quot;&gt;example message&lt;/a&gt; above,
+the &lt;code class=&quot;highlighter-rouge&quot;&gt;path&lt;/code&gt; is &lt;code class=&quot;highlighter-rouge&quot;&gt;/features/temperature/properties/value&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;The mapping function extracts the ID of the feature from the parameter &lt;code class=&quot;highlighter-rouge&quot;&gt;path&lt;/code&gt; and uses this together with the &lt;code class=&quot;highlighter-rouge&quot;&gt;name&lt;/code&gt;
+of the Thing to build the ID of the corresponding AAS submodel. For example, whenever the feature &lt;code class=&quot;highlighter-rouge&quot;&gt;temperature&lt;/code&gt;
+of a Thing called &lt;code class=&quot;highlighter-rouge&quot;&gt;machine:sensor&lt;/code&gt; is created, an AAS submodel with the ID &lt;code class=&quot;highlighter-rouge&quot;&gt;sensor_temperature&lt;/code&gt; in the AAS &lt;code class=&quot;highlighter-rouge&quot;&gt;machine&lt;/code&gt; will be created.&lt;/p&gt;
+
+&lt;p&gt;Similarly to the &lt;a href=&quot;#map-from-thing-creation-to-aas-creation&quot;&gt;AAS creation mapping&lt;/a&gt;, the listed function returns a new message with a custom text payload.
+Below, we will create a connection so that this payload gets pushed to the BaSyx AAS server to trigger the creation of an AAS submodel there.&lt;/p&gt;
+
+&lt;h4 id=&quot;map-from-property-update-to-submodel-update&quot;&gt;Map from Property Update to Submodel Update&lt;/h4&gt;
+
+&lt;p&gt;The next mapper creates an AAS submodel element.
+we use it in the connection for every modification of a property in a Thing.&lt;/p&gt;
+
+&lt;div class=&quot;language-javascript highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;mapFromDittoProtocolMsg&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;namespace&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;group&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;channel&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;criterion&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;action&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;path&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;dittoHeaders&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;value&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;status&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;extra&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;kd&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;property_id&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;path&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;split&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'/'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;slice&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;join&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'_'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+  &lt;span class=&quot;kd&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;feature_id&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;path&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;split&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'/'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;slice&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+  &lt;span class=&quot;kd&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;headers&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;dittoHeaders&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;kd&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;dataType&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;typeof&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;value&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;dataType&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;mapDataType&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;dataType&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+  &lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;mapDataType&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;dataType&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;switch&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;dataType&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;case&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'undefined'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'Undefined'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;case&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'boolean'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'boolean'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;case&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'number'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'int'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;case&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'string'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'string'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;case&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'symbol'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'Symbol'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;case&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'bigint'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'BigInt'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;case&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'object'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'string'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;case&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'function'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'Function'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;nl&quot;&gt;default&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'Unknown'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+  &lt;span class=&quot;kd&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;textPayload&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;JSON&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;stringify&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;parent&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+      &lt;span class=&quot;na&quot;&gt;keys&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+          &lt;span class=&quot;na&quot;&gt;idType&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'Custom'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+          &lt;span class=&quot;na&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'Submodel'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+          &lt;span class=&quot;na&quot;&gt;value&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'_'&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;feature_id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+          &lt;span class=&quot;na&quot;&gt;local&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;true&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;idShort&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;property_id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;kind&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'Instance'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;valueType&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;dataType&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;modelType&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+      &lt;span class=&quot;na&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'Property'&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;value&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;value&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+  &lt;span class=&quot;kd&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;bytePayload&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;kd&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;contentType&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'application/json'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;Ditto&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;buildExternalMsg&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;headers&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// The external headers Object containing header values&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;textPayload&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// The external mapped String&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;bytePayload&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// The external mapped byte[]&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;contentType&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// The returned Content-Type&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;em&gt;Listing 4: Payload mapping that modifies an AAS submodel element if a property is changed&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;The mapper extracts the &lt;code class=&quot;highlighter-rouge&quot;&gt;feature_id&lt;/code&gt; and the &lt;code class=&quot;highlighter-rouge&quot;&gt;property_id&lt;/code&gt; from the &lt;code class=&quot;highlighter-rouge&quot;&gt;path&lt;/code&gt;, which is only possible if the parameter &lt;code class=&quot;highlighter-rouge&quot;&gt;path&lt;/code&gt; includes the &lt;code class=&quot;highlighter-rouge&quot;&gt;property_id&lt;/code&gt;. So, in the configuration of the connection, we have to ensure that this mapper only runs for the right messages.
+Moreover, we can access the &lt;code class=&quot;highlighter-rouge&quot;&gt;value&lt;/code&gt; of the modified &lt;code class=&quot;highlighter-rouge&quot;&gt;property&lt;/code&gt;, which will be set as &lt;code class=&quot;highlighter-rouge&quot;&gt;value&lt;/code&gt; in the submodel element from the &lt;code class=&quot;highlighter-rouge&quot;&gt;textPayload&lt;/code&gt; output.&lt;/p&gt;
+
+&lt;p&gt;For example, if a message updates the &lt;code class=&quot;highlighter-rouge&quot;&gt;path&lt;/code&gt;: &lt;code class=&quot;highlighter-rouge&quot;&gt;/features/temperature/properties/value&lt;/code&gt; in the Thing &lt;code class=&quot;highlighter-rouge&quot;&gt;machine:sensor&lt;/code&gt;, the submodel element with the ID &lt;code class=&quot;highlighter-rouge&quot;&gt;properties_value&lt;/code&gt; in the submodel &lt;code class=&quot;highlighter-rouge&quot;&gt;sensor_temperature&lt;/code&gt; will be updated with the new temperature as &lt;code class=&quot;highlighter-rouge&quot;&gt;value&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;We update a submodel element instead of the whole submodel if an existing Thing changes because the mapper only has access to the changed property of the Thing and no information about the other properties.
+Therefore, submodel elements, which may already be part of the submodel due to previous updates, would implicitly be dropped.
+With our approach, we preserve the existing properties and only modify the updated properties.&lt;/p&gt;
+
+&lt;h4 id=&quot;create-a-connection-to-the-basyx-aas-server&quot;&gt;Create a Connection to the BaSyx AAS Server&lt;/h4&gt;
+
+&lt;p&gt;To apply the introduced mappers, we configure a new &lt;a href=&quot;basic-connections.html&quot;&gt;Ditto connection&lt;/a&gt; to a BaSyx AAS server.
+The listings below show the respective HTTP calls using curl to configure this connection.&lt;/p&gt;
+
+&lt;p&gt;The JavaScript mappers from above are part of &lt;code class=&quot;highlighter-rouge&quot;&gt;piggybackCommand.connection.mappingDefinitions&lt;/code&gt; in &lt;code class=&quot;highlighter-rouge&quot;&gt;mappingforShell&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;mappingforSubmodel&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;mappingforSubmodelElement&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;In the example, we use the placeholder &lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;lt;ditto-instance-url&amp;gt;&lt;/code&gt; for the used Ditto instance. You need to adjust to the valid URL of your environment.
+We assume you have access rights to the Ditto &lt;a href=&quot;installation-operating.html#devops-commands&quot;&gt;Devops Commands&lt;/a&gt; credentials in the used instance (username: &lt;code class=&quot;highlighter-rouge&quot;&gt;devops&lt;/code&gt;, password: `foobar is the default).&lt;/p&gt;
+
+&lt;p&gt;You can change the password by setting the environment variable &lt;em&gt;DEVOPS_PASSWORD&lt;/em&gt; in the &lt;a href=&quot;architecture-services-gateway.html&quot;&gt;gateway service&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Alternatively, an already existing password can be obtained and stored as an environment variable using the following command:&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;export &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;DEVOPS_PWD&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;$(&lt;/span&gt;kubectl &lt;span class=&quot;nt&quot;&gt;--namespace&lt;/span&gt; ditto get secret my-ditto-gateway-secret &lt;span class=&quot;nt&quot;&gt;-o&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;jsonpath&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;{.data.devops-password}&quot;&lt;/span&gt; | base64 &lt;span class=&quot;nt&quot;&gt;--decode&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Please be aware that this command assumes Ditto has been deployed within a namespace &lt;code class=&quot;highlighter-rouge&quot;&gt;ditto&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Finally, you adjust the parameter &lt;code class=&quot;highlighter-rouge&quot;&gt;piggybackCommand.connection.uri&lt;/code&gt; with the URL of the running BaSyx server to which Ditto should have network connectivity.&lt;/p&gt;
+
+&lt;p&gt;As HTTP requires us to replace certain characters for proper processing, we encode the payload by escaping certain characters and removing the line breaks.
+We replaced newlines with &lt;code class=&quot;highlighter-rouge&quot;&gt;\n&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;'&lt;/code&gt; with &lt;code class=&quot;highlighter-rouge&quot;&gt;'&quot;'&lt;/code&gt;.&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;curl &lt;span class=&quot;nt&quot;&gt;-X&lt;/span&gt; POST &lt;span class=&quot;nt&quot;&gt;-u&lt;/span&gt; devops:foobar &lt;span class=&quot;nt&quot;&gt;-H&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'Content-Type: application/json'&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--data-binary&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'{
+    &quot;targetActorSelection&quot;: &quot;/system/sharding/connection&quot;,
+    &quot;headers&quot;: {
+      &quot;aggregate&quot;: false
+    },
+    &quot;piggybackCommand&quot;: {
+      &quot;type&quot;: &quot;connectivity.commands:createConnection&quot;,
+      &quot;connection&quot;: {
+        &quot;id&quot;: &quot;basyxserver-http-connection&quot;,
+        &quot;connectionType&quot;: &quot;http-push&quot;,
+        &quot;connectionStatus&quot;: &quot;open&quot;,
+        &quot;uri&quot;: &quot;&amp;lt;basyx-server-instance-url&amp;gt;:4001&quot;,
+        &quot;failoverEnabled&quot;: true,
+        &quot;mappingDefinitions&quot;: {
+          &quot;mappingforShell&quot;: {
+            &quot;mappingEngine&quot;: &quot;JavaScript&quot;,
+            &quot;options&quot;: {
+              &quot;outgoingScript&quot;: &quot;function mapFromDittoProtocolMsg(namespace, name, group, channel, criterion, action, path, dittoHeaders, value, status, extra) {\n  let headers = dittoHeaders;\n  let textPayload = JSON.stringify({\n    conceptDictionary: [],\n    identification: {\n      idType: '&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;'Custom'&quot;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;',\n      id: namespace\n    },\n    idShort: namespace,\n    dataSpecification: [],\n    modelType: {\n      name: '&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;'AssetAdministrationShell'&quot;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'\n    },\n    asset: {\n      identification: {\n        idType: '&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;'Custom'&quot;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;',\n        id: namespace + '&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;'-asset'&quot;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'\n      },\n      idShort: namespace + '&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;'-asset'&quot;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;',\n      kind: '&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;'Instance'&quot;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;',\n      dataSpecification: [],\n      modelType: {\n        name: '&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;'Asset'&quot;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'\n      },\n      embeddedDataSpecifications: []\n    },\n    embeddedDataSpecifications: [],\n    views: [],\n    submodels: []\n  });\n  let bytePayload = null;\n  let contentType = '&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;'application/json'&quot;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;';\n  return Ditto.buildExternalMsg(headers, textPayload, bytePayload, contentType);}&quot;            
+            }
+          },
+          &quot;mappingforSubmodel&quot;: {
+            &quot;mappingEngine&quot;: &quot;JavaScript&quot;,
+            &quot;options&quot;: {
+                &quot;outgoingScript&quot;: &quot;function mapFromDittoProtocolMsg(namespace, name, group, channel, criterion, action, path, dittoHeaders, value, status, extra) {\n  \n  let feature_id = path.split('&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;'/'&quot;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;').slice(2);\n  let headers = dittoHeaders;\n  let textPayload = JSON.stringify(\n    {\n      parent: {\n        keys: [\n          {\n            idType: '&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;'Custom'&quot;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;',\n            type: '&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;'AssetAdministrationShell'&quot;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;',\n            value: namespace,\n            local: true\n          }\n        ]\n      },\n      identification: {\n        idType: '&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;'Custom'&quot;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;',\n        id: name+'&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;'_'&quot;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'+feature_id\n      },\n      idShort: name+'&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;'_'&quot;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'+feature_id,\n      kind: '&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;'Instance'&quot;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;',\n      dataSpecification: [],\n      modelType: {\n        name: '&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;'Submodel'&quot;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'\n      },\n      embeddedDataSpecifications: [],\n      submodelElements: []\n    }\n\n  );\n  let bytePayload = null;\n  let contentType = '&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;'application/json'&quot;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;';\n  return Ditto.buildExternalMsg(headers, textPayload, bytePayload, contentType);}&quot;
+            }
+          },
+          &quot;mappingforSubmodelElement&quot;: {
+            &quot;mappingEngine&quot;: &quot;JavaScript&quot;,
+            &quot;options&quot;: {
+              &quot;outgoingScript&quot;: &quot;function mapFromDittoProtocolMsg(namespace, name, group, channel, criterion, action, path, dittoHeaders, value, status, extra) {\n  let property_id = path.split('&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;'/'&quot;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;').slice(3).join('&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;'_'&quot;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;');\n  let feature_id = path.split('&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;'/'&quot;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;').slice(2,3);\n  let headers = dittoHeaders;\n  let dataType = typeof value;\n  dataType = mapDataType(dataType)\n\n  function mapDataType(dataType) {\n    switch (dataType) {\n        case '&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;'undefined'&quot;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;':\n        return '&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;'Undefined'&quot;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;';\n        case '&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;'boolean'&quot;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;':\n        return '&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;'boolean'&quot;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;';\n        case '&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;'number'&quot;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;':\n        return '&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;'int'&quot;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;';\n        case '&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;'string'&quot;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;':\n        return '&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;'string'&quot;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;';\n        case '&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;'symbol'&quot;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;':\n        return '&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;'Symbol'&quot;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;';\n        case '&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;'bigint'&quot;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;':\n        return '&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;'BigInt'&quot;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;';\n        case '&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;'object'&quot;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;':\n        return '&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;'string'&quot;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;';\n        case '&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;'function'&quot;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;':\n        return '&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;'Function'&quot;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;';\n        default:\n        return '&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;'Unknown'&quot;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;';\n    }\n  }\n  let textPayload = JSON.stringify(\n  {\n    parent: {\n      keys: [\n        {\n          idType: '&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;'Custom'&quot;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;',\n          type: '&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;'Submodel'&quot;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;',\n          value: name+'&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;'_'&quot;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'+feature_id,\n          local: true\n        }\n      ]\n    },\n    idShort: property_id,\n    kind: '&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;'Instance'&quot;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;',\n    valueType: dataType,\n    modelType: {\n      name: '&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;'Property'&quot;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'\n    },\n    value: value\n  }\n  );\n  let bytePayload = null;\n  let contentType = '&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;'application/json'&quot;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;';\n  return Ditto.buildExternalMsg(headers, textPayload, bytePayload, contentType);}&quot;
+            }
+          }
+        },
+        &quot;sources&quot;: [],
+        &quot;targets&quot;: [
+          {
+            &quot;address&quot;: &quot;PUT:/aasServer/shells/{{ thing:namespace }}&quot;,
+            &quot;headerMapping&quot;: {
+              &quot;content-type&quot;: &quot;{{ header:content-type }}&quot;
+            },
+            &quot;authorizationContext&quot;: [&quot;nginx:ditto&quot;],
+            &quot;topics&quot;: [
+              &quot;_/_/things/twin/events?filter=and(in(topic:action,'&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;'created'&quot;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'),eq(resource:path,'&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;'/'&quot;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'))&quot;
+            ],
+            &quot;payloadMapping&quot;: [
+              &quot;mappingforShell&quot;
+            ]
+          },
+          {
+            &quot;address&quot;: &quot;PUT:/aasServer/shells/{{ thing:namespace }}/aas/submodels/{{ thing:name }}_{{ resource:path | fn:substring-after('&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;'/features/'&quot;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;') }}&quot;,
+            &quot;headerMapping&quot;: {
+              &quot;content-type&quot;: &quot;{{ header:content-type }}&quot;
+            },
+            &quot;authorizationContext&quot;: [&quot;nginx:ditto&quot;],
+            &quot;topics&quot;: [
+              &quot;_/_/things/twin/events?filter=and(in(topic:action,'&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;'created'&quot;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'),not(eq(resource:path,'&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;'/features'&quot;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;')),like(resource:path,'&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;'/features*'&quot;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'),not(like(resource:path,'&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;'*properties*'&quot;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;')))&quot;
+            ],
+            &quot;payloadMapping&quot;: [
+              &quot;mappingforSubmodel&quot;
+            ]
+          },
+          {
+            &quot;address&quot;: &quot;PUT:/aasServer/shells/{{ thing:namespace }}/aas/submodels/{{ thing:name }}_{{ resource:path | fn:substring-after('&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;'/features/'&quot;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;') | fn:substring-before('&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;'/properties'&quot;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;') }}/submodel/submodelElements/properties_{{ resource:path | fn:substring-after('&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;'/properties/'&quot;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;') | fn:replace('&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;'/'&quot;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;','&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;'_'&quot;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;') }}&quot;,
+            &quot;headerMapping&quot;: {
+              &quot;content-type&quot;: &quot;{{ header:content-type }}&quot;
+            },
+            &quot;authorizationContext&quot;: [&quot;nginx:ditto&quot;],
+            &quot;topics&quot;: [
+              &quot;_/_/things/twin/events?filter=and(in(topic:action,'&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;'modified'&quot;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'),not(eq(resource:path,'&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;'/features'&quot;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;')),like(resource:path,'&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;'/features*'&quot;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'),like(resource:path,'&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;'*properties*'&quot;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'),not(like(resource:path,'&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;'*properties'&quot;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;')))&quot;
+            ],
+            &quot;payloadMapping&quot;: [
+              &quot;mappingforSubmodelElement&quot;
+            ]
+          }
+        ]
+      }
+    }
+  }'&lt;/span&gt; &amp;lt;ditto-instance-url&amp;gt;/devops/piggyback/connectivity
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;em&gt;Listing 5: Request to add a new &lt;code class=&quot;highlighter-rouge&quot;&gt;Connection&lt;/code&gt; to a Ditto instance&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;When Ditto established the connection and our payload mappings work, it returns a successful HTTP response and otherwise an error message.&lt;/p&gt;
+
+&lt;p&gt;Without any further means, the payload mappings defined in &lt;code class=&quot;highlighter-rouge&quot;&gt;piggybackCommand.mappingDefinition&lt;/code&gt; and set in &lt;code class=&quot;highlighter-rouge&quot;&gt;piggybackCommand.targets&lt;/code&gt; would get executed for all changes to a Thing.
+To prevent this, we use &lt;a href=&quot;basic-changenotifications.html#filtering&quot;&gt;filtering&lt;/a&gt; with &lt;a href=&quot;basic-rql.html&quot;&gt;RQL expressions&lt;/a&gt; to make sure that our payload mappings are only executed for the correct messages.
+For example, the filter:&lt;/p&gt;
+
+&lt;div class=&quot;language-json highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;err&quot;&gt;_/_/things/twin/events?filter=and(in(topic&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;action&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;'created'&quot;&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;')&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;eq(resource&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;path&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;'/'&quot;&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;'))&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;before &lt;code class=&quot;highlighter-rouge&quot;&gt;mappingforShell&lt;/code&gt; in &lt;code class=&quot;highlighter-rouge&quot;&gt;piggybackCommands.targets[0].topics[0]&lt;/code&gt; makes sure that it only triggers for messages, which create a Thing.&lt;/p&gt;
+
+&lt;p&gt;Another filter for &lt;code class=&quot;highlighter-rouge&quot;&gt;mappingForSubmodel&lt;/code&gt; in &lt;code class=&quot;highlighter-rouge&quot;&gt;pigybackCommands.targets[1].topics[0]&lt;/code&gt; makes sure, that the parameter &lt;code class=&quot;highlighter-rouge&quot;&gt;path&lt;/code&gt; contains a &lt;code class=&quot;highlighter-rouge&quot;&gt;feature&lt;/code&gt; and not a &lt;code class=&quot;highlighter-rouge&quot;&gt;property&lt;/code&gt;:&lt;/p&gt;
+
+&lt;div class=&quot;language-json highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;s2&quot;&gt;&quot;_/_/things/twin/events?filter=and(in(topic:action,'&quot;&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;'created'&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;'),not(eq(resource:path,'&quot;&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;'/features'&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;')),like(resource:path,'&quot;&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;'/features*'&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;'),not(like(resource:path,'&quot;&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;'*properties*'&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;')))&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h4 id=&quot;setup-connection-to-an-basyx-aas-registry&quot;&gt;Setup Connection to an BaSyx AAS Registry&lt;/h4&gt;
+
+&lt;p&gt;Within an AAS environment it is required that AAS are discoverable via an AAS registry.
+We make an AAS discoverable by adding an entry for that AAS into the AAS registry for a new Thing. In our setup we achieve this through the definition of a new connection between Eclipse Ditto and the BaSyx AAS Registry
+with a respective payload mapping.&lt;/p&gt;
+
+&lt;div class=&quot;language-javascript highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;mapFromDittoProtocolMsg&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;namespace&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;group&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;channel&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;criterion&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;action&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;path&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;dittoHeaders&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;value&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;status&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;extra&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;kd&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;headers&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;dittoHeaders&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;kd&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;textPayload&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;JSON&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;stringify&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;({&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;endpoints&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;na&quot;&gt;address&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'&amp;lt;basyx-server-instance-url&amp;gt;:4001/aasServer/shells/'&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;namespace&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'/aas'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+            &lt;span class=&quot;na&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'http'&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;modelType&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;na&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'AssetAdministrationShellDescriptor'&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;identification&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;na&quot;&gt;idType&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'Custom'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+        &lt;span class=&quot;na&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;namespace&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;idShort&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;namespace&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+      &lt;span class=&quot;na&quot;&gt;asset&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+          &lt;span class=&quot;na&quot;&gt;identification&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+              &lt;span class=&quot;na&quot;&gt;idType&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'Custom'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+              &lt;span class=&quot;na&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;namespace&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'-asset'&lt;/span&gt;
+          &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
+          &lt;span class=&quot;na&quot;&gt;idShort&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;namespace&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'-asset'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+          &lt;span class=&quot;na&quot;&gt;kind&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'Instance'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+          &lt;span class=&quot;na&quot;&gt;dataSpecification&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[],&lt;/span&gt;
+          &lt;span class=&quot;na&quot;&gt;modelType&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+              &lt;span class=&quot;na&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'Asset'&lt;/span&gt;
+          &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
+          &lt;span class=&quot;na&quot;&gt;embeddedDataSpecifications&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
+      &lt;span class=&quot;na&quot;&gt;submodels&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;
+  &lt;span class=&quot;kd&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;bytePayload&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;kd&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;contentType&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'application/json'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;Ditto&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;buildExternalMsg&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;headers&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// The external headers Object containing header values&lt;/span&gt;
+   &lt;span class=&quot;nx&quot;&gt;textPayload&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// The external mapped String&lt;/span&gt;
+   &lt;span class=&quot;nx&quot;&gt;bytePayload&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// The external mapped byte[]&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;contentType&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// The returned Content-Type&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;em&gt;Listing 6: Snippet to add a new AAS Registry entry for an AAS&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;As introduced in &lt;a href=&quot;#mapping-of-data-models&quot;&gt;Mapping of Data Models&lt;/a&gt;, we map a &lt;code class=&quot;highlighter-rouge&quot;&gt;namespace&lt;/code&gt; in Ditto to an AAS.
+The new entry in the BaSyx Registry has to contain the endpoint of the BaSyx AAS server, which hosts the new AAS. You find this in the script-payload in the variable &lt;code class=&quot;highlighter-rouge&quot;&gt;endpoints.address&lt;/code&gt;. So you need to adapt this value in the following HTTP request to the address of the BaSyx ASS server that you are using and that was configured in the &lt;a href=&quot;#create-a-connection-to-the-basyx-aas-server&quot;&gt;connection between Ditto and the BaSyx AAS Server&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;With this mapping, it is now possible to configure a new connection from Ditto to a BaSyx AAS registry through the following HTTP request:&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;curl &lt;span class=&quot;nt&quot;&gt;-X&lt;/span&gt; POST &lt;span class=&quot;nt&quot;&gt;-u&lt;/span&gt; devops:foobar &lt;span class=&quot;nt&quot;&gt;-H&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'Content-Type: application/json'&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--data-binary&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'{
+    &quot;targetActorSelection&quot;: &quot;/system/sharding/connection&quot;,
+    &quot;headers&quot;: {
+      &quot;aggregate&quot;: false
+    },
+    &quot;piggybackCommand&quot;: {
+      &quot;type&quot;: &quot;connectivity.commands:createConnection&quot;,
+      &quot;connection&quot;: {
+        &quot;id&quot;: &quot;basyxregistry-http-connection&quot;,
+        &quot;connectionType&quot;: &quot;http-push&quot;,
+        &quot;connectionStatus&quot;: &quot;open&quot;,
+        &quot;uri&quot;: &quot;&amp;lt;basyx-registry-instance-url&amp;gt;:4000&quot;,
+        &quot;failoverEnabled&quot;: true,
+        &quot;mappingDefinitions&quot;: {
+          &quot;mappingforShell&quot;: {
+            &quot;mappingEngine&quot;: &quot;JavaScript&quot;,
+            &quot;options&quot;: {
+              &quot;outgoingScript&quot;: &quot;function mapFromDittoProtocolMsg(namespace, name, group, channel, criterion, action, path, dittoHeaders, value, status, extra) {\n  let headers = dittoHeaders;\n  let textPayload = JSON.stringify({\n    endpoints: [\n        {\n            address: '&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;'&amp;lt;basyx-server-instance-url&amp;gt;:4001/aasServer/shells/'&quot;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;' + namespace + '&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;'/aas'&quot;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;',\n            type: '&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;'http'&quot;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'\n        }\n    ],\n    modelType: {\n        name: '&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;'AssetAdministrationShellDescriptor'&quot;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'\n    },\n    identification: {\n        idType: '&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;'Custom'&quot;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;',\n        id: namespace\n},\n    idShort: namespace,\n      asset: {\n          identification: {\n              idType: '&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;'Custom'&quot;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;',\n              id: namespace + '&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;'-asset'&quot;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'\n          },\n          idShort: namespace + '&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;'-asset'&quot;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;',\n          kind: '&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;'Instance'&quot;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;',\n          dataSpecification: [],\n          modelType: {\n              name: '&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;'Asset'&quot;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'\n          },\n          embeddedDataSpecifications: []\n      },\n      submodels: []\n  });\n  let bytePayload = null;\n  let contentType = '&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;'application/json'&quot;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;';\n  return Ditto.buildExternalMsg(headers, textPayload, bytePayload, contentType);}&quot;
+            }
+          }
+        },
+        &quot;sources&quot;: [],
+        &quot;targets&quot;: [
+          {
+            &quot;address&quot;: &quot;PUT:/registry/api/v1/registry/{{ thing:namespace }}&quot;,
+            &quot;headerMapping&quot;: {
+              &quot;content-type&quot;: &quot;{{ header:content-type }}&quot;
+            },
+            &quot;authorizationContext&quot;: [&quot;nginx:ditto&quot;],
+            &quot;topics&quot;: [
+              &quot;_/_/things/twin/events?filter=and(in(topic:action,'&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;'created'&quot;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'),eq(resource:path,'&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;'/'&quot;&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'))&quot;
+            ],
+            &quot;payloadMapping&quot;: [
+              &quot;mappingforShell&quot;
+            ]
+          }
+        ]
+      }
+    }
+  }'&lt;/span&gt; &amp;lt;ditto-instance-url&amp;gt;/devops/piggyback/connectivity
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;em&gt;Listing 7: Request to add a new &lt;code class=&quot;highlighter-rouge&quot;&gt;Connection&lt;/code&gt; to a Ditto instance&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;We list the JavaScript mapper in &lt;code class=&quot;highlighter-rouge&quot;&gt;piggybackCommand.connection.mappingDefinitions.mappingForShell.options.outgoingScript&lt;/code&gt; and reference it as &lt;code class=&quot;highlighter-rouge&quot;&gt;mappingForShell&lt;/code&gt; in &lt;code class=&quot;highlighter-rouge&quot;&gt;piggybackCommand.connection.targets[0].payloadMapping&lt;/code&gt;.
+The address of the BaSyx AAS registry is configured in the parameter &lt;code class=&quot;highlighter-rouge&quot;&gt;piggybackCommand.connection.uri&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;As filter, to make sure that our mapper function only triggers after the creation of new Thing, we use:&lt;/p&gt;
+
+&lt;div class=&quot;language-json highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;s2&quot;&gt;&quot;_/_/things/twin/events?filter=and(in(topic:action,'&quot;&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;'created'&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;'),eq(resource:path,'&quot;&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;'/'&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;'))&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Since the registry uses the AAS server endpoint as a base to also get access to all submodels and submodel elements from the same AAS, it is enough to register the AAS endpoint.&lt;/p&gt;
+
+&lt;h3 id=&quot;test-the-connection&quot;&gt;Test the Connection&lt;/h3&gt;
+
+&lt;p&gt;We now configured all required connections in Ditto and can test our setup.
+All configured mappers trigger through changes to a Thing, so we begin by creating a Thing.&lt;/p&gt;
+
+&lt;p&gt;We again refer to the used Ditto instance through the placeholder &lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;lt;ditto-instance-url&amp;gt;&lt;/code&gt;,
+which you need to adapt to the URL of your Ditto instance.&lt;/p&gt;
+
+&lt;h4 id=&quot;creating-a-thing-in-eclipse-ditto&quot;&gt;Creating a Thing in Eclipse Ditto&lt;/h4&gt;
+
+&lt;h5 id=&quot;setup-a-common-policy&quot;&gt;Setup a common policy&lt;/h5&gt;
+
+&lt;p&gt;To define authorization information to be used by the Things,
+we first create a &lt;a href=&quot;basic-policy.html&quot;&gt;policy&lt;/a&gt; with the policy-id &lt;code class=&quot;highlighter-rouge&quot;&gt;machine:my-policy&lt;/code&gt;.&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;POLICY_ID&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;machine:my-policy
+
+curl &lt;span class=&quot;nt&quot;&gt;-i&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-X&lt;/span&gt; PUT &lt;span class=&quot;nt&quot;&gt;-u&lt;/span&gt; ditto:ditto &lt;span class=&quot;nt&quot;&gt;-H&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'Content-Type: application/json'&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--data&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'{
+  &quot;entries&quot;: {
+    &quot;DEFAULT&quot;: {
+      &quot;subjects&quot;: {
+        &quot;{{ request:subjectId }}&quot;: {
+           &quot;type&quot;: &quot;Ditto user authenticated via nginx&quot;
+        }
+      },
+      &quot;resources&quot;: {
+        &quot;thing:/&quot;: {
+          &quot;grant&quot;: [&quot;READ&quot;, &quot;WRITE&quot;],
+          &quot;revoke&quot;: []
+        },
+        &quot;policy:/&quot;: {
+          &quot;grant&quot;: [&quot;READ&quot;, &quot;WRITE&quot;],
+          &quot;revoke&quot;: []
+        },
+        &quot;message:/&quot;: {
+          &quot;grant&quot;: [&quot;READ&quot;, &quot;WRITE&quot;],
+          &quot;revoke&quot;: []
+        }
+      }
+    }
+  }
+}'&lt;/span&gt; &amp;lt;ditto-instance-url&amp;gt;/api/2/policies/&lt;span class=&quot;nv&quot;&gt;$POLICY_ID&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;em&gt;Listing 8: Demo Policy Definition&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;You will get a &lt;code class=&quot;highlighter-rouge&quot;&gt;201 Created&lt;/code&gt; response, if the policy creation concluded successfuly. In the subsequent steps, we use the policy-id &lt;code class=&quot;highlighter-rouge&quot;&gt;machine:my-policy&lt;/code&gt; to refer to the created policy.&lt;/p&gt;
+
+&lt;h4 id=&quot;create-a-thing&quot;&gt;Create a Thing&lt;/h4&gt;
+
+&lt;p&gt;The next step is to create an actual Thing.
+We use the namespace and name &lt;code class=&quot;highlighter-rouge&quot;&gt;machine:my-policy&lt;/code&gt; and policy-id &lt;code class=&quot;highlighter-rouge&quot;&gt;machine:my-policy&lt;/code&gt; here:&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;NAMESPACE&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;machine
+&lt;span class=&quot;nv&quot;&gt;NAME&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;sensor
+&lt;span class=&quot;nv&quot;&gt;DEVICE_ID&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$NAMESPACE&lt;/span&gt;:&lt;span class=&quot;nv&quot;&gt;$NAME&lt;/span&gt;
+
+curl &lt;span class=&quot;nt&quot;&gt;-i&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-X&lt;/span&gt; PUT &lt;span class=&quot;nt&quot;&gt;-u&lt;/span&gt; ditto:ditto &lt;span class=&quot;nt&quot;&gt;-H&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'Content-Type: application/json'&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--data&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'{
+  &quot;policyId&quot;: &quot;'&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$POLICY_ID&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'&quot;
+}'&lt;/span&gt; &amp;lt;ditto-instance-url&amp;gt;/api/2/things/&lt;span class=&quot;nv&quot;&gt;$DEVICE_ID&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;em&gt;Listing 9: Request to add the Demo Policy to a Ditto instance (&lt;code class=&quot;highlighter-rouge&quot;&gt;$POLICY_ID&lt;/code&gt; refers to Listing 8)&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;Again, a successful creation returns a &lt;code class=&quot;highlighter-rouge&quot;&gt;201 Created&lt;/code&gt; response.&lt;/p&gt;
+
+&lt;p&gt;We earlier configured two connections to trigger a mapper on the create event of a Thing. This should push a new AAS to the AAS server and a reference to that AAS in the AAS registry.&lt;/p&gt;
+
+&lt;p&gt;You can check whether the execution of the scripts was successful by requesting the shell at the AAS server:&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;curl &lt;span class=&quot;nt&quot;&gt;-X&lt;/span&gt; GET &amp;lt;basyx-server-instance-url&amp;gt;:4001/aasServer/shells
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;which should return the following result&lt;/p&gt;
+
+&lt;div class=&quot;language-json highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;[{&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;modelType&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:{&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;name&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;AssetAdministrationShell&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;idShort&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;machine&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;identification&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:{&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;idType&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;Custom&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;id&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;machine&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;dataSpecification&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:[],&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;embeddedDataSpecifications&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:[],&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;submodels&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:[{&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;keys&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:[{&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;type&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;AssetAdministrationShell&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;local&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;kc&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;value&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;machine&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;idType&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;Custom&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;},{&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;type&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;Submodel&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;local&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;kc&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;value&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;sensor_temperature&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;idType&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;Custom&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}]}],&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;asset&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:{&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;keys&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:[{&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;type&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;Asset&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;local&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;kc&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;value&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;machine-asset&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;idType&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;Custom&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}],&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;identification&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:{&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;idType&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;Custom&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;id&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;machine-asset&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;idShort&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;machine-asset&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;kind&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;Instance&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;dataSpecification&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:[],&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;modelType&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:{&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;name&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;Asset&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;embeddedDataSpecifications&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:[]},&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;views&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:[],&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;conceptDictionary&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:[]}]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;In addition, the request to the AAS registry:&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;curl &lt;span class=&quot;nt&quot;&gt;-X&lt;/span&gt; GET &amp;lt;basyx-registry-instance-url&amp;gt;:4000/registry/api/v1/registry
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;should return:&lt;/p&gt;
+
+&lt;div class=&quot;language-json highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;[{&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;modelType&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:{&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;name&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;AssetAdministrationShellDescriptor&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;endpoints&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:[{&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;address&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&amp;lt;basyx-server-instance-url&amp;gt;:4001/aasServer/shells/machine/aas&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;type&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;http&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}],&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;identification&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:{&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;idType&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;Custom&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;id&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;machine&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;idShort&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;machine&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;asset&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:{&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;identification&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:{&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;idType&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;Custom&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;id&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;machine-asset&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;idShort&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;machine-asset&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;kind&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;Instance&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;dataSpecification&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:[],&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;modelType&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:{&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;name&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;Asset&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;embeddedDataSpecifications&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:[]},&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;submodels&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:[]}]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;At this point, the newly created Thing has no features, properties, or attributes yet.
+So let us populate that Thing.&lt;/p&gt;
+
+&lt;h4 id=&quot;create-a-feature-for-the-thing&quot;&gt;Create a feature for the Thing&lt;/h4&gt;
+
+&lt;p&gt;Next, we create a feature for the Thing to contain a property with the data of a temperature sensor.&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;FEATURE_ID&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;temperature
+
+curl &lt;span class=&quot;nt&quot;&gt;-X&lt;/span&gt; PUT &lt;span class=&quot;nt&quot;&gt;-u&lt;/span&gt; ditto:ditto &lt;span class=&quot;nt&quot;&gt;-H&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'Content-Type: application/json'&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--data-binary&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'{
+  &quot;properties&quot;: {
+    &quot;value&quot;: null
+  }
+}'&lt;/span&gt; &amp;lt;ditto-instance-url&amp;gt;/api/2/things/&lt;span class=&quot;nv&quot;&gt;$DEVICE_ID&lt;/span&gt;/features/&lt;span class=&quot;nv&quot;&gt;$FEATURE_ID&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;em&gt;Listing 10: Request to add a feature to the demo Thing (variables refer to previous Listings)&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;The feature creation triggers the mapper (&lt;code class=&quot;highlighter-rouge&quot;&gt;mappingforSubmodel&lt;/code&gt;) to create a corresponding Submodel in the previously created AAS.&lt;/p&gt;
+
+&lt;p&gt;To check if this was successful, we request the expected submodel:&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;curl &lt;span class=&quot;nt&quot;&gt;-X&lt;/span&gt; GET &amp;lt;basyx-server-instance-url&amp;gt;:4001/aasServer/shells/&lt;span class=&quot;nv&quot;&gt;$NAMESPACE&lt;/span&gt;/aas/submodels/&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;NAME&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;_&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;FEATURE_ID&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;/submodel
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;which should result in the following response:&lt;/p&gt;
+
+&lt;div class=&quot;language-json highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;parent&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:{&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;keys&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:[{&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;idType&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;Custom&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;type&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;AssetAdministrationShell&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;value&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;machine&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;local&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;kc&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}]},&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;identification&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:{&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;idType&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;Custom&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;id&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;sensor_temperature&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;idShort&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;sensor_temperature&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;kind&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;Instance&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;dataSpecification&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:[],&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;modelType&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:{&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;name&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;Submodel&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;embeddedDataSpecifications&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:[],&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;submodelElements&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:[]}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h4 id=&quot;updating-a-thing&quot;&gt;Updating a Thing&lt;/h4&gt;
+
+&lt;p&gt;After we have successfully created a Thing, we can check if the update of a property works as well by executing:&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;curl &lt;span class=&quot;nt&quot;&gt;-i&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-X&lt;/span&gt; PUT &lt;span class=&quot;nt&quot;&gt;-u&lt;/span&gt; ditto:ditto &lt;span class=&quot;nt&quot;&gt;-H&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;content-type: application/json&quot;&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--data-binary&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'46'&lt;/span&gt; &amp;lt;ditto-instance-url&amp;gt;/api/2/things/&lt;span class=&quot;nv&quot;&gt;$DEVICE_ID&lt;/span&gt;/features/&lt;span class=&quot;nv&quot;&gt;$FEATURE_ID&lt;/span&gt;/properties/value
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Again, we check if our change was successful:&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;curl &lt;span class=&quot;nt&quot;&gt;-u&lt;/span&gt; ditto:ditto &lt;span class=&quot;nt&quot;&gt;-w&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'\n'&lt;/span&gt; &amp;lt;ditto-instance-url&amp;gt;/api/2/things/&lt;span class=&quot;nv&quot;&gt;$DEVICE_ID&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;and expect:&lt;/p&gt;
+
+&lt;div class=&quot;language-json highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;thingId&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;machine:sensor&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;policyId&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;machine:my-policy&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;features&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:{&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;temperature&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:{&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;properties&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:{&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;value&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;46&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}}}}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;If the property creation was successful, then the mapping &lt;code class=&quot;highlighter-rouge&quot;&gt;mappingforSubmodelElement&lt;/code&gt; should trigger.
+To verify that the Submodel was updated, call:&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;curl &lt;span class=&quot;nt&quot;&gt;-X&lt;/span&gt; GET &amp;lt;basyx-server-instance-url&amp;gt;:4001/aasServer/shells/&lt;span class=&quot;nv&quot;&gt;$NAMESPACE&lt;/span&gt;/aas/submodels/&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;NAME&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;_&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;FEATURE_ID&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;/submodel/submodelElements/properties_value
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;This should lead to the response:&lt;/p&gt;
+
+&lt;div class=&quot;language-json highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;parent&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:{&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;keys&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:[{&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;idType&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;Custom&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;type&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;Submodel&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;value&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;sensor_temperature&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;local&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;kc&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}]},&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;idShort&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;properties_value&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;kind&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;Instance&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;valueType&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;int&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;modelType&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:{&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;name&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;Property&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;value&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;46&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Here, we see that we are able to access the sensor data of the device through the AAS Submodel API via Eclipse BaSyx.&lt;/p&gt;
+
+&lt;p&gt;As an alternative to plain Json responses, you can use one of the UI-tools provided by the AAS community, like the &lt;a href=&quot;https://wiki.eclipse.org/BaSyx_/_Documentation_/_Components_/_AAS_Web_UI&quot;&gt;AAS Web UI&lt;/a&gt;.&lt;/p&gt;
+
+&lt;figure&gt;&lt;img class=&quot;docimage&quot; src=&quot;images/blog/2024-02-15-integrating-ditto-ass-basyx/AASDashboard.png&quot; alt=&quot;AAS Dashboard&quot; style=&quot;max-width: 1000px&quot; /&gt;&lt;/figure&gt;
+
+&lt;p&gt;&lt;em&gt;Figure 4: BaSyx AAS Web UI&lt;/em&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;summary&quot;&gt;Summary&lt;/h2&gt;
+
+&lt;p&gt;In this post, we present our approach for making Ditto Things available in an AAS.
+We defined a mapping concept between Things and AAS.
+To apply the mapping concept, we created connections with mappers from Ditto to a BaSyx AAS server and a BaSyx AAS registry.
+Afterwards, we tested the connections with an example Thing and data from a sensor.&lt;/p&gt;
+
+&lt;p&gt;Our example of integrating Ditto Things into an AAS environment shows, how the capbilities of Ditto, such as
+custom mappers, filters etc, render it a useful tool to integrate device states into various environments.
+We discussed the integration into AAS but believe a similar approach could be applied in other domains as well.&lt;/p&gt;
+
+&lt;p&gt;&lt;br /&gt;
+&lt;br /&gt;
+Milena Jäntgen, &lt;a href=&quot;https://github.com/eriksven&quot;&gt;Sven Erik Jeroschewski&lt;/a&gt; and &lt;a href=&quot;https://github.com/max-grzanna&quot;&gt;Max Grzanna&lt;/a&gt; contributed to this post.&lt;/p&gt;
+</description>
+            <pubDate>Tue, 27 Feb 2024 00:00:00 +0000</pubDate>
+            <link>https://www.eclipse.dev/ditto/2024-02-27-integrating-ditto-aas-basyx.html</link>
+            <guid isPermaLink="true">https://www.eclipse.dev/ditto/2024-02-27-integrating-ditto-aas-basyx.html</guid>
+            
+            <category>blog</category>
+            
+            
+        </item>
         
         <item>
             <title>Announcing Eclipse Ditto Release 3.5.0</title>
@@ -1443,96 +2265,6 @@ The Eclipse Ditto team&lt;/p&gt;
             <pubDate>Tue, 12 Jul 2022 00:00:00 +0000</pubDate>
             <link>https://www.eclipse.dev/ditto/2022-07-12-reactive-mqtt.html</link>
             <guid isPermaLink="true">https://www.eclipse.dev/ditto/2022-07-12-reactive-mqtt.html</guid>
-            
-            <category>blog</category>
-            
-            
-        </item>
-        
-        <item>
-            <title>Announcing Eclipse Ditto Release 2.4.0</title>
-            <description>&lt;p&gt;The Eclipse Ditto teams announces availability of Eclipse Ditto &lt;a href=&quot;https://projects.eclipse.org/projects/iot.ditto/releases/2.4.0&quot;&gt;2.4.0&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;The main topics in this release were the move from Java 11 to Java 17 (and the switch in Ditto’s pre-built Docker containers from OpenJ9 to Hotspot runtime), 
-W3C WoT (Web of Things) integration and enhanced placeholder capabilities, e.g. used in JWT claim extraction and signal 
-enrichment.&lt;/p&gt;
-
-&lt;h2 id=&quot;adoption&quot;&gt;Adoption&lt;/h2&gt;
-
-&lt;p&gt;Companies are willing to show their adoption of Eclipse Ditto publicly: 
-&lt;a href=&quot;https://iot.eclipse.org/adopters/?#iot.ditto&quot;&gt;https://iot.eclipse.org/adopters/?#iot.ditto&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;From our various &lt;a href=&quot;feedback.html&quot;&gt;feedback channels&lt;/a&gt; we however know of more adoption.&lt;br /&gt;
-If you are making use of Eclipse Ditto, it would be great to show this by adding your company name to that list of 
-known adopters.&lt;br /&gt;
-In the end, that’s one main way of measuring the success of the project.&lt;/p&gt;
-
-&lt;h2 id=&quot;changelog&quot;&gt;Changelog&lt;/h2&gt;
-
-&lt;p&gt;The main improvements and additions of Ditto 2.4.0 are:&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;W3C WoT (Web of Things) integration&lt;/li&gt;
-  &lt;li&gt;SSE (ServerSentEvent) API for subscribing to messages&lt;/li&gt;
-  &lt;li&gt;Recovery status for connections indicating when e.g. recovery is no longer tried after max backoff&lt;/li&gt;
-  &lt;li&gt;Enhance placeholders to resolve to multiple values&lt;/li&gt;
-  &lt;li&gt;Advanced JWT placeholder operations&lt;/li&gt;
-  &lt;li&gt;Support for a wildcard/placeholder identifying the changed feature in order to enrich e.g. its definition&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;The following notable fixes are included:&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;Several fixes and improvements regarding consistency and performance of search updates&lt;/li&gt;
-  &lt;li&gt;Don’t publish messages with failed enrichments and issue failed ack&lt;/li&gt;
-  &lt;li&gt;Filter for incorrect element types in jsonArray of feature definitions&lt;/li&gt;
-  &lt;li&gt;Fix of placeholder resolvment in “commandHeaders” of “ImplicitThingCreation” mapper&lt;/li&gt;
-  &lt;li&gt;Fix &lt;code class=&quot;highlighter-rouge&quot;&gt;fn:substring-after()&lt;/code&gt; function returning incorrect data&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;The following non-functional work is also included:&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;Upgrade of compiler target level for service modules from Java 11 to Java 17&lt;/li&gt;
-  &lt;li&gt;Switch of used Java runtime in pre-built Docker containers from OpenJ9 to Hotspot&lt;/li&gt;
-  &lt;li&gt;Publication of pre-built multi-architecture Docker images for &lt;code class=&quot;highlighter-rouge&quot;&gt;linux/amd64&lt;/code&gt; (as always) and now in addition &lt;code class=&quot;highlighter-rouge&quot;&gt;linux/arm64&lt;/code&gt;&lt;/li&gt;
-  &lt;li&gt;Removal of rate limiting / throttling limits as default&lt;/li&gt;
-  &lt;li&gt;Update of several used dependencies&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Please have a look at the &lt;a href=&quot;release_notes_240.html&quot;&gt;2.4.0 release notes&lt;/a&gt; for a more detailed information on the release.&lt;/p&gt;
-
-&lt;h2 id=&quot;artifacts&quot;&gt;Artifacts&lt;/h2&gt;
-
-&lt;p&gt;The new Java artifacts have been published at the &lt;a href=&quot;https://repo.eclipse.org/content/repositories/ditto/&quot;&gt;Eclipse Maven repository&lt;/a&gt;
-as well as &lt;a href=&quot;https://repo1.maven.org/maven2/org/eclipse/ditto/&quot;&gt;Maven central&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;The Ditto JavaScript client release was published on &lt;a href=&quot;https://www.npmjs.com/~eclipse_ditto&quot;&gt;npmjs.com&lt;/a&gt;:&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://www.npmjs.com/package/@eclipse-ditto/ditto-javascript-client-dom&quot;&gt;@eclipse-ditto/ditto-javascript-client-dom&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://www.npmjs.com/package/@eclipse-ditto/ditto-javascript-client-node&quot;&gt;@eclipse-ditto/ditto-javascript-client-node&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;The Docker images have been pushed to Docker Hub:&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://hub.docker.com/r/eclipse/ditto-policies/&quot;&gt;eclipse/ditto-policies&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://hub.docker.com/r/eclipse/ditto-things/&quot;&gt;eclipse/ditto-things&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://hub.docker.com/r/eclipse/ditto-things-search/&quot;&gt;eclipse/ditto-things-search&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://hub.docker.com/r/eclipse/ditto-gateway/&quot;&gt;eclipse/ditto-gateway&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://hub.docker.com/r/eclipse/ditto-connectivity/&quot;&gt;eclipse/ditto-connectivity&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://hub.docker.com/r/eclipse/ditto-concierge/&quot;&gt;eclipse/ditto-concierge&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;br /&gt;
-&lt;br /&gt;&lt;/p&gt;
-&lt;figure&gt;&lt;img class=&quot;docimage&quot; src=&quot;images/ditto.svg&quot; alt=&quot;Ditto&quot; style=&quot;max-width: 500px&quot; /&gt;&lt;/figure&gt;
-
-&lt;p&gt;–&lt;br /&gt;
-The Eclipse Ditto team&lt;/p&gt;
-</description>
-            <pubDate>Thu, 14 Apr 2022 00:00:00 +0000</pubDate>
-            <link>https://www.eclipse.dev/ditto/2022-04-14-release-announcement-240.html</link>
-            <guid isPermaLink="true">https://www.eclipse.dev/ditto/2022-04-14-release-announcement-240.html</guid>
             
             <category>blog</category>
             
