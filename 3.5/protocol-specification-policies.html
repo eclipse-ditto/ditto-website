@@ -278,6 +278,13 @@
               
               
               
+              <li><a href="release_notes_354.html">3.5.4</a></li>
+              
+              
+              
+              
+              
+              
               <li><a href="release_notes_353.html">3.5.3</a></li>
               
               
@@ -2103,28 +2110,28 @@ $('#toc').on('click', 'a', function() {
 
 <p>A valid topic consists of five elements, describing the policy affected by this message and the type of the message:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;namespace&gt;/&lt;policyName&gt;/policies/commands/&lt;action&gt;
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;namespace&gt;/&lt;policyName&gt;/policies/commands/&lt;action&gt;
 </code></pre></div></div>
 
 <ol>
-  <li><code class="highlighter-rouge">namespace</code>: the namespace of the Policy.</li>
-  <li><code class="highlighter-rouge">policyName</code>: the name of the Policy.</li>
-  <li><code class="highlighter-rouge">group</code>: the group for addressing Policies is <code class="highlighter-rouge">policies</code>.</li>
-  <li><code class="highlighter-rouge">criterion</code>: the type of Protocol messages addressing Policies is <code class="highlighter-rouge">commands</code>, 
+  <li><code class="language-plaintext highlighter-rouge">namespace</code>: the namespace of the Policy.</li>
+  <li><code class="language-plaintext highlighter-rouge">policyName</code>: the name of the Policy.</li>
+  <li><code class="language-plaintext highlighter-rouge">group</code>: the group for addressing Policies is <code class="language-plaintext highlighter-rouge">policies</code>.</li>
+  <li><code class="language-plaintext highlighter-rouge">criterion</code>: the type of Protocol messages addressing Policies is <code class="language-plaintext highlighter-rouge">commands</code>, 
  for <a href="basic-signals-announcement.html">announcements</a> it is 
-<a href="protocol-specification-policies-announcement.html"><code class="highlighter-rouge">announcements</code></a>.</li>
-  <li><code class="highlighter-rouge">action</code>: the action executed on the Policy via <code class="highlighter-rouge">commands</code> criterion:
-    <a href="protocol-specification-policies-create-or-modify.html"><code class="highlighter-rouge">create/modify</code></a>,
-    <a href="protocol-specification-policies-retrieve.html"><code class="highlighter-rouge">retrieve</code></a> or
-    <a href="protocol-specification-policies-delete.html"><code class="highlighter-rouge">delete</code></a>.</li>
-  <li><code class="highlighter-rouge">subject</code>: for <a href="basic-signals-announcement.html">announcements</a> the <code class="highlighter-rouge">subject</code> contains the announcement name</li>
+<a href="protocol-specification-policies-announcement.html"><code class="language-plaintext highlighter-rouge">announcements</code></a>.</li>
+  <li><code class="language-plaintext highlighter-rouge">action</code>: the action executed on the Policy via <code class="language-plaintext highlighter-rouge">commands</code> criterion:
+    <a href="protocol-specification-policies-create-or-modify.html"><code class="language-plaintext highlighter-rouge">create/modify</code></a>,
+    <a href="protocol-specification-policies-retrieve.html"><code class="language-plaintext highlighter-rouge">retrieve</code></a> or
+    <a href="protocol-specification-policies-delete.html"><code class="language-plaintext highlighter-rouge">delete</code></a>.</li>
+  <li><code class="language-plaintext highlighter-rouge">subject</code>: for <a href="basic-signals-announcement.html">announcements</a> the <code class="language-plaintext highlighter-rouge">subject</code> contains the announcement name</li>
 </ol>
 
 <div class="alert alert-info" role="alert"><i class="fa fa-info-circle"></i> <b>Note:</b> The topic path of the <em>policies</em> group does not contain a channel unlike the <em>things</em> group.</div>
 
 <h2 id="policy-representation">Policy representation</h2>
 
-<p>The representation of a <code class="highlighter-rouge">Policy</code> is specified as follows:</p>
+<p>The representation of a <code class="language-plaintext highlighter-rouge">Policy</code> is specified as follows:</p>
 
 <script src="docson/widget.js" data-schema="../jsonschema/policy.json"></script>
 
@@ -2140,8 +2147,8 @@ $('#toc').on('click', 'a', function() {
 <h3 id="common-errors-to-commands">Common errors to commands</h3>
 
 <p>Each Policy command could also result in an <a href="protocol-specification-errors.html">error</a> response.<br />
-The <code class="highlighter-rouge">"topic"</code> of such errors differ from the command <code class="highlighter-rouge">"topic"</code> - correlation is however possible via the
-<code class="highlighter-rouge">"correlation-id"</code> header which is preserved in the error message.</p>
+The <code class="language-plaintext highlighter-rouge">"topic"</code> of such errors differ from the command <code class="language-plaintext highlighter-rouge">"topic"</code> - correlation is however possible via the
+<code class="language-plaintext highlighter-rouge">"correlation-id"</code> header which is preserved in the error message.</p>
 
 <p>The following table contains common error codes for Policy commands:</p>
 
@@ -2154,31 +2161,31 @@ The <code class="highlighter-rouge">"topic"</code> of such errors differ from th
   </thead>
   <tbody>
     <tr>
-      <td><code class="highlighter-rouge">400</code></td>
+      <td><code class="language-plaintext highlighter-rouge">400</code></td>
       <td>Bad Format - The request could not be completed due to malformed request syntax.</td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge">401</code></td>
+      <td><code class="language-plaintext highlighter-rouge">401</code></td>
       <td>Unauthorized - The request could not be completed due to missing authentication.</td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge">403</code></td>
+      <td><code class="language-plaintext highlighter-rouge">403</code></td>
       <td>Forbidden - The Policy could not be modified/deleted/retrieved as the requester had insufficient permissions.</td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge">404</code></td>
+      <td><code class="language-plaintext highlighter-rouge">404</code></td>
       <td>Not Found - The request could not be completed. The Policy with the given ID was not found in the context of the authenticated user.</td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge">412</code></td>
-      <td>Precondition Failed - A precondition for reading or writing the (sub-)resource failed. This will happen for write requests, if you specified an <code class="highlighter-rouge">If-Match</code> or <code class="highlighter-rouge">If-None-Match</code> header, which fails the precondition check against the current ETag of the (sub-)resource.</td>
+      <td><code class="language-plaintext highlighter-rouge">412</code></td>
+      <td>Precondition Failed - A precondition for reading or writing the (sub-)resource failed. This will happen for write requests, if you specified an <code class="language-plaintext highlighter-rouge">If-Match</code> or <code class="language-plaintext highlighter-rouge">If-None-Match</code> header, which fails the precondition check against the current ETag of the (sub-)resource.</td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge">413</code></td>
+      <td><code class="language-plaintext highlighter-rouge">413</code></td>
       <td>Request Entity Too Large - The created or modified Policy is larger than the configured limit (defaults to 100 kB).</td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge">429</code></td>
+      <td><code class="language-plaintext highlighter-rouge">429</code></td>
       <td>Too many modifying requests are already outstanding to a specific Policy.</td>
     </tr>
   </tbody>
@@ -2210,7 +2217,7 @@ The <code class="highlighter-rouge">"topic"</code> of such errors differ from th
                     </div>
                     <p class="notice">
                         &copy;2024 Eclipse Ditto™.
-                         Site last generated: Feb 27, 2024 <br />
+                         Site last generated: Apr 10, 2024 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

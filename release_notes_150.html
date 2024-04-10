@@ -278,6 +278,13 @@
               
               
               
+              <li><a href="release_notes_354.html">3.5.4</a></li>
+              
+              
+              
+              
+              
+              
               <li><a href="release_notes_353.html">3.5.3</a></li>
               
               
@@ -2114,12 +2121,12 @@ bugfixes were added.</p>
 
 <h3 id="changes">Changes</h3>
 
-<h4 id="negatively-settling-processed-amqp-10-messages-changed-to-rejected"><a href="https://github.com/eclipse-ditto/ditto/pull/907">Negatively settling processed AMQP 1.0 messages changed to <code class="highlighter-rouge">rejected</code></a></h4>
+<h4 id="negatively-settling-processed-amqp-10-messages-changed-to-rejected"><a href="https://github.com/eclipse-ditto/ditto/pull/907">Negatively settling processed AMQP 1.0 messages changed to <code class="language-plaintext highlighter-rouge">rejected</code></a></h4>
 
 <p>In previous versions, Ditto negatively settled messages consumed via AMQP 1.0 which could not be applied to Ditto 
-(e.g. because the received message could not be understood or permissions were missing) with <code class="highlighter-rouge">modified[undeliverable-here]</code>.</p>
+(e.g. because the received message could not be understood or permissions were missing) with <code class="language-plaintext highlighter-rouge">modified[undeliverable-here]</code>.</p>
 
-<p>This was changed to settle with <code class="highlighter-rouge">rejected</code> 
+<p>This was changed to settle with <code class="language-plaintext highlighter-rouge">rejected</code> 
 (see <a href="https://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-messaging-v1.0-os.html#type-rejected">AMQP 1.0 spec</a>) 
 instead, as this is the more correct settlement outcome.</p>
 
@@ -2129,8 +2136,8 @@ instead, as this is the more correct settlement outcome.</p>
 
 <h4 id="config-files-consolidation"><a href="https://github.com/eclipse-ditto/ditto/pull/888">Config files consolidation</a></h4>
 
-<p>No special <code class="highlighter-rouge">-cloud.conf</code> and <code class="highlighter-rouge">-docker.conf</code> config files are needed any longer, there are only special config files 
-ending with <code class="highlighter-rouge">-dev.conf</code> which contain configuration in order to start Eclipse Ditto e.g. locally in an IDE.</p>
+<p>No special <code class="language-plaintext highlighter-rouge">-cloud.conf</code> and <code class="language-plaintext highlighter-rouge">-docker.conf</code> config files are needed any longer, there are only special config files 
+ending with <code class="language-plaintext highlighter-rouge">-dev.conf</code> which contain configuration in order to start Eclipse Ditto e.g. locally in an IDE.</p>
 
 <h3 id="new-features">New features</h3>
 
@@ -2147,7 +2154,7 @@ twin state</a>.</p>
 “desired” state is something an application in the backend or a mobile app would set as the new requested target state 
 for a property.</p>
 
-<p>This issue layed the foundation by creating the model and the APIs in order to manage those <code class="highlighter-rouge">desiredProperties</code>.</p>
+<p>This issue layed the foundation by creating the model and the APIs in order to manage those <code class="language-plaintext highlighter-rouge">desiredProperties</code>.</p>
 
 <h4 id="issuing-weak-acknowledgements-when-a-command-requesting-acks-was-filtered-out"><a href="https://github.com/eclipse-ditto/ditto/issues/852">Issuing “weak acknowledgements” when a command requesting acks was filtered out</a></h4>
 
@@ -2177,7 +2184,7 @@ actors subscribe for events directly using the connection ID as group.</p>
 <p>While <a href="https://cloudevents.io">cloud events</a> provide bindings for Kafka, MQTT, … they also have an HTTP endpoint 
 binding, which can easily be used in the combination with Knative.</p>
 
-<p>With addition of a new HTTP endpoint <code class="highlighter-rouge">/cloudevents</code>, it is now possible to easily map incoming messages from any 
+<p>With addition of a new HTTP endpoint <code class="language-plaintext highlighter-rouge">/cloudevents</code>, it is now possible to easily map incoming messages from any 
 Knative eventing source to Eclipse Ditto, acting as a Knative eventing sink.</p>
 
 <p>A special thanks to <a href="https://github.com/ctron">Jens Reimann (ctron)</a> from <a href="https://github.com/RedHatOfficial">RedHat</a>
@@ -2192,15 +2199,15 @@ Here as well for the Ditto Java Client: <a href="https://github.com/eclipse-ditt
 
 <h4 id="fix-that-sending-messages-with-non-existing-value-was-not-possible-via-http-endpoints"><a href="https://github.com/eclipse-ditto/ditto/pull/875">Fix that sending messages with non-existing “value” was not possible via HTTP endpoints</a></h4>
 
-<p>The HTTP <code class="highlighter-rouge">/messages</code> endpoints did not allow that a Ditto Protocol messages with non-existing <code class="highlighter-rouge">"value"</code>  were created for
+<p>The HTTP <code class="language-plaintext highlighter-rouge">/messages</code> endpoints did not allow that a Ditto Protocol messages with non-existing <code class="language-plaintext highlighter-rouge">"value"</code>  were created for
 HTTP invocations which did not include payload at all.</p>
 
-<p>That was fixed in the way that for requests with <code class="highlighter-rouge">Content-Length: 0</code> the <code class="highlighter-rouge">"value"</code> is now removed from the resulting 
-Ditto Protocol message instead of being <code class="highlighter-rouge">"value": ""</code> (empty JSON string).</p>
+<p>That was fixed in the way that for requests with <code class="language-plaintext highlighter-rouge">Content-Length: 0</code> the <code class="language-plaintext highlighter-rouge">"value"</code> is now removed from the resulting 
+Ditto Protocol message instead of being <code class="language-plaintext highlighter-rouge">"value": ""</code> (empty JSON string).</p>
 
 <h4 id="ditto-java-client-when-starting-consumption-with-invalid-filter-wrongly-timeout-exception-is-propagate-to-the-user"><a href="https://github.com/eclipse-ditto/ditto-clients/pull/105">Ditto Java client: When starting consumption with invalid filter, wrongly timeout exception is propagate to the user</a></h4>
 
-<p><code class="highlighter-rouge">dittoClient.twin().startConsumption(org.eclipse.ditto.client.options.Options.Consumption.filter("invalidFilter"))</code>
+<p><code class="language-plaintext highlighter-rouge">dittoClient.twin().startConsumption(org.eclipse.ditto.client.options.Options.Consumption.filter("invalidFilter"))</code>
 throwed a wrong exception and did not propagate the real error to the user.</p>
 
 <p>Affected <a href="https://github.com/eclipse-ditto/ditto/pull/902">Ditto PR</a>.</p>
@@ -2215,13 +2222,13 @@ when only a single subpath exists in the feature (i.e. feature with only propert
 <h3 id="mongodb-hostname-configuration">MongoDB hostname configuration</h3>
 
 <p>Due to the <a href="https://github.com/eclipse-ditto/ditto/pull/888">consolidation of config files</a>, it is now <strong>required to configure
-the MongoDB <code class="highlighter-rouge">hostname</code> explicitly</strong> as the default hostname was changed to <code class="highlighter-rouge">localhost</code>.<br />
-Previously, this hostname was automatically set to <code class="highlighter-rouge">mongodb</code> (which is the hostname of the MongoDB when e.g. the 
-<code class="highlighter-rouge">docker-compose.yaml</code> deployment is used) in Docker based environments.</p>
+the MongoDB <code class="language-plaintext highlighter-rouge">hostname</code> explicitly</strong> as the default hostname was changed to <code class="language-plaintext highlighter-rouge">localhost</code>.<br />
+Previously, this hostname was automatically set to <code class="language-plaintext highlighter-rouge">mongodb</code> (which is the hostname of the MongoDB when e.g. the 
+<code class="language-plaintext highlighter-rouge">docker-compose.yaml</code> deployment is used) in Docker based environments.</p>
 
-<p>This now has to be manually done via the environment variable <code class="highlighter-rouge">MONGO_DB_HOSTNAME</code>.</p>
+<p>This now has to be manually done via the environment variable <code class="language-plaintext highlighter-rouge">MONGO_DB_HOSTNAME</code>.</p>
 
-<p>The default <code class="highlighter-rouge">docker-compose.yaml</code> was also adjusted accordingly: 
+<p>The default <code class="language-plaintext highlighter-rouge">docker-compose.yaml</code> was also adjusted accordingly: 
 <a href="https://github.com/eclipse-ditto/ditto/blob/master/deployment/docker/docker-compose.yml">docker-compose.yml</a></p>
 
 
@@ -2249,7 +2256,7 @@ Previously, this hostname was automatically set to <code class="highlighter-roug
                     </div>
                     <p class="notice">
                         &copy;2024 Eclipse Ditto™.
-                         Site last generated: Feb 27, 2024 <br />
+                         Site last generated: Apr 10, 2024 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

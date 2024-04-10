@@ -278,6 +278,13 @@
               
               
               
+              <li><a href="release_notes_354.html">3.5.4</a></li>
+              
+              
+              
+              
+              
+              
               <li><a href="release_notes_353.html">3.5.3</a></li>
               
               
@@ -2124,7 +2131,7 @@ to prior Eclipse Ditto 2.x versions.</p>
   <li>Don’t publish messages with failed enrichments and issue failed ack</li>
   <li>Filter for incorrect element types in jsonArray of feature definitions</li>
   <li>Fix of placeholder resolvment in “commandHeaders” of “ImplicitThingCreation” mapper</li>
-  <li>Fix <code class="highlighter-rouge">fn:substring-after()</code> function returning incorrect data</li>
+  <li>Fix <code class="language-plaintext highlighter-rouge">fn:substring-after()</code> function returning incorrect data</li>
 </ul>
 
 <p>The following non-functional work is also included:</p>
@@ -2132,7 +2139,7 @@ to prior Eclipse Ditto 2.x versions.</p>
 <ul>
   <li>Upgrade of compiler target level for service modules from Java 11 to Java 17</li>
   <li>Switch of used Java runtime in pre-built Docker containers from OpenJ9 to Hotspot</li>
-  <li>Publication of pre-built multi-architecture Docker images for <code class="highlighter-rouge">linux/amd64</code> (as always) and now in addition <code class="highlighter-rouge">linux/arm64</code></li>
+  <li>Publication of pre-built multi-architecture Docker images for <code class="language-plaintext highlighter-rouge">linux/amd64</code> (as always) and now in addition <code class="language-plaintext highlighter-rouge">linux/arm64</code></li>
   <li>Removal of rate limiting / throttling limits as default</li>
   <li>Update of several used dependencies</li>
 </ul>
@@ -2164,8 +2171,8 @@ This change only affects you when you’re building and deploying Ditto on your 
 <p>Acknowledging the raise of the ARM processor architecture, starting with Ditto 2.4.0, 
 Docker images for the following architectures will be published to docker.io:</p>
 <ul>
-  <li><code class="highlighter-rouge">linux/amd64</code></li>
-  <li><code class="highlighter-rouge">linux/arm64</code> (new)</li>
+  <li><code class="language-plaintext highlighter-rouge">linux/amd64</code></li>
+  <li><code class="language-plaintext highlighter-rouge">linux/arm64</code> (new)</li>
 </ul>
 
 <h4 id="removal-of-rate-limiting--throttling-limits-as-default"><a href="https://github.com/eclipse-ditto/ditto/pull/1324">Removal of rate limiting / throttling limits as default</a></h4>
@@ -2225,21 +2232,21 @@ in <a href="basic-placeholders.html#scope-openid-connect-configuration">scope of
 be used with <a href="basic-placeholders.html#function-expressions">functions</a>.<br />
 This can e.g. be used in order to filter out unwanted subjects in the 
 <a href="installation-operating.html#openid-connect">OpenId connect configuration</a>, or to additionally split a JWT claim into 
-several values using the new <code class="highlighter-rouge">fn:split(' ')</code> function.</p>
+several values using the new <code class="language-plaintext highlighter-rouge">fn:split(' ')</code> function.</p>
 
 <p>Example extracting only subjects from a JSON array “roles” contained in a JWT ending with “moderator”:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{{ jwt:extra/roles | fn:filter('like','*moderator') }}
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{{ jwt:extra/roles | fn:filter('like','*moderator') }}
 </code></pre></div></div>
 
 <h4 id="support-for-a-wildcardplaceholder-identifying-the-changed-feature-in-order-to-enrich-eg-its-definition"><a href="https://github.com/eclipse-ditto/ditto/issues/710">Support for a wildcard/placeholder identifying the changed feature in order to enrich e.g. its definition</a></h4>
 
 <p>Using the above feature of placeholders being resolved to multiple values, it is now possible to use a placeholder 
-<code class="highlighter-rouge">{{ feature:id }}</code> as part of an <a href="basic-enrichment.html">enrichment <code class="highlighter-rouge">extraFields</code> pointer</a> resolving
+<code class="language-plaintext highlighter-rouge">{{ feature:id }}</code> as part of an <a href="basic-enrichment.html">enrichment <code class="language-plaintext highlighter-rouge">extraFields</code> pointer</a> resolving
 to all affected feature ids of a change.</p>
 
-<p>This can e.g. be used to enrich all the feature <code class="highlighter-rouge">definition</code>s of all modified features in an event which should be 
+<p>This can e.g. be used to enrich all the feature <code class="language-plaintext highlighter-rouge">definition</code>s of all modified features in an event which should be 
 published via websocket or a connection:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>extraFields=features/{{feature:id}}/definition
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>extraFields=features/{{feature:id}}/definition
 </code></pre></div></div>
 
 <h3 id="bugfixes">Bugfixes</h3>
@@ -2255,7 +2262,7 @@ including the fixed bugs.</p>
 <p>Migrations required updating from Ditto 2.3.x or earlier versions:</p>
 <ul>
   <li>With this release we not only switched from Java 11 to Java 17 but also from OpenJ9 to Hotspot runtime.
-This means that the environment variable <code class="highlighter-rouge">OPENJ9_JAVA_OPTIONS</code> needs to be renamed to <code class="highlighter-rouge">JAVA_TOOL_OPTIONS</code> and that 
+This means that the environment variable <code class="language-plaintext highlighter-rouge">OPENJ9_JAVA_OPTIONS</code> needs to be renamed to <code class="language-plaintext highlighter-rouge">JAVA_TOOL_OPTIONS</code> and that 
 options specific to the OpenJ9 runtime are no longer effective.<br />
 Make sure that all options that are defined are valid for the Hotspot JVM.</li>
 </ul>
@@ -2271,7 +2278,7 @@ Make sure that all options that are defined are valid for the Hotspot JVM.</li>
 
 <h4 id="fix-returning-the-revision-of-a-policy-when-retrieved-via-the-client"><a href="https://github.com/eclipse-ditto/ditto-clients/pull/182">Fix returning the revision of a Policy when retrieved via the client</a></h4>
 
-<p>When using the <code class="highlighter-rouge">client.policies().retrievePolicy(PolicyId)</code> functionality in the Ditto Java client, the <code class="highlighter-rouge">getRevision()</code>
+<p>When using the <code class="language-plaintext highlighter-rouge">client.policies().retrievePolicy(PolicyId)</code> functionality in the Ditto Java client, the <code class="language-plaintext highlighter-rouge">getRevision()</code>
 method of the returned policy was always empty.<br />
 The revision will now be included.</p>
 
@@ -2333,7 +2340,7 @@ functionality (providing HTTP + WS endpoints) into the
                     </div>
                     <p class="notice">
                         &copy;2024 Eclipse Ditto™.
-                         Site last generated: Feb 27, 2024 <br />
+                         Site last generated: Apr 10, 2024 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

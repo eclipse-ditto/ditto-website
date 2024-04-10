@@ -278,6 +278,13 @@
               
               
               
+              <li><a href="release_notes_354.html">3.5.4</a></li>
+              
+              
+              
+              
+              
+              
               <li><a href="release_notes_353.html">3.5.3</a></li>
               
               
@@ -2106,7 +2113,7 @@ Events are emitted after an entity (either a <strong>digital twin</strong> or an
 <ul>
   <li>Via the <a href="httpapi-protocol-bindings-websocket.html">WebSocket API</a> a WebSocket client gets all Events the authenticated subject
 (e.g. a user) is <a href="basic-auth.html">authorized</a> to receive as <a href="protocol-overview.html">Ditto Protocol</a> messages.</li>
-  <li>Via <a href="httpapi-sse.html">HTTP SSEs</a> a consumer of the SSE <code class="highlighter-rouge">EventSource</code> gets all Events the authenticated subject
+  <li>Via <a href="httpapi-sse.html">HTTP SSEs</a> a consumer of the SSE <code class="language-plaintext highlighter-rouge">EventSource</code> gets all Events the authenticated subject
 (e.g. a user) is <a href="basic-auth.html">authorized</a> to receive directly in the format of the changed entity 
 (e.g. as <a href="basic-thing.html#model-specification">Thing JSON</a> format).</li>
   <li>Via an established <a href="basic-connections.html">connection</a> in the <a href="connectivity-overview.html">connectivity</a> service</li>
@@ -2130,11 +2137,11 @@ common functionality of based on which information events may be filtered.</p>
 <p>Filtering may be done based on a namespace name. Each Ditto <a href="basic-thing.html">Thing</a> has an ID containing a namespace 
 (see also the conventions for a <a href="basic-thing.html#thing-id">Thing ID</a>).</p>
 
-<p>By providing the <code class="highlighter-rouge">namespaces</code> filter, a comma separated list of which namespaces to include in the result, only Things 
+<p>By providing the <code class="language-plaintext highlighter-rouge">namespaces</code> filter, a comma separated list of which namespaces to include in the result, only Things 
 in namespaces of interest are considered and thus only events of these Things are emitted at the API.</p>
 
 <p>For example, one would only subscribe for events occurring in 2 specific namespaces by defining:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>namespaces=org.eclipse.ditto.one,org.eclipse.ditto.two
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>namespaces=org.eclipse.ditto.one,org.eclipse.ditto.two
 </code></pre></div></div>
 
 <h3 id="by-rql-expression">By RQL expression</h3>
@@ -2147,9 +2154,9 @@ specifying:</p>
   <li>a filter based on the fields of the <a href="protocol-specification.html">Ditto Protocol</a> message which should be filtered, 
 e.g.:
     <ul>
-      <li>using the <code class="highlighter-rouge">topic:action</code> placeholder as query property, filtering for lifecycle events (<code class="highlighter-rouge">created</code>, <code class="highlighter-rouge">deleted</code>) 
+      <li>using the <code class="language-plaintext highlighter-rouge">topic:action</code> placeholder as query property, filtering for lifecycle events (<code class="language-plaintext highlighter-rouge">created</code>, <code class="language-plaintext highlighter-rouge">deleted</code>) 
 and other filter options on the <a href="protocol-specification-topic.html">Ditto Protocol topic</a> can be done</li>
-      <li>using the <code class="highlighter-rouge">resource:path</code> placeholder as query property, filtering based on the affected 
+      <li>using the <code class="language-plaintext highlighter-rouge">resource:path</code> placeholder as query property, filtering based on the affected 
 <a href="protocol-specification.html#path">Ditto Protocol path</a> of a Ditto Protocol message can be done</li>
       <li>for all supported placeholders, please refer to the 
 <a href="basic-placeholders.html#scope-rql-expressions-when-filtering-for-ditto-protocol-messages">placeholders documentation</a></li>
@@ -2166,20 +2173,20 @@ and other filter options on the <a href="protocol-specification-topic.html">Ditt
 <h4 id="examples">Examples</h4>
 
 <p>Only emit events when attribute “count” was changed to a value greater than 42:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>filter=gt(attributes/count,42)
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>filter=gt(attributes/count,42)
 </code></pre></div></div>
 
 <p>Only emit events for Things starting with myThing when a feature “lamp” was modified:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>filter=and(like(thingId,"org.eclipse.ditto:myThing*"),exists(features/lamp))
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>filter=and(like(thingId,"org.eclipse.ditto:myThing*"),exists(features/lamp))
 </code></pre></div></div>
 
 <p>Only emit events when the attribute “manufacturer” was changed to starting with “ACME &amp; Sons”.
-The <code class="highlighter-rouge">&amp;</code> must be escaped in that case:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>filter=like(attributes/manufacturer,"ACME %26 Sons*")
+The <code class="language-plaintext highlighter-rouge">&amp;</code> must be escaped in that case:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>filter=like(attributes/manufacturer,"ACME %26 Sons*")
 </code></pre></div></div>
 
 <p>Only emit events for Thing creation and deletion:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>filter=and(in(topic:action,'created','deleted'),eq(resource:path,'/'))
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>filter=and(in(topic:action,'created','deleted'),eq(resource:path,'/'))
 </code></pre></div></div>
 
 <p>You get the idea of how mighty this becomes by utilizing Ditto’s <a href="basic-rql.html">RQL expressions</a>.</p>
@@ -2213,7 +2220,7 @@ The <code class="highlighter-rouge">&amp;</code> must be escaped in that case:</
                     </div>
                     <p class="notice">
                         &copy;2024 Eclipse Ditto™.
-                         Site last generated: Feb 27, 2024 <br />
+                         Site last generated: Apr 10, 2024 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

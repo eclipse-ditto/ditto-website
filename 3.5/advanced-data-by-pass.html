@@ -278,6 +278,13 @@
               
               
               
+              <li><a href="release_notes_354.html">3.5.4</a></li>
+              
+              
+              
+              
+              
+              
               <li><a href="release_notes_353.html">3.5.3</a></li>
               
               
@@ -2180,33 +2187,33 @@ keep APIs consistent</li>
 <h2 id="policies">Policies</h2>
 
 <p>Policies can be used to restrict access to the provider micro-service and through that eventually to the database using 
-restrictions on the <code class="highlighter-rouge">message:/</code> resource.</p>
+restrictions on the <code class="language-plaintext highlighter-rouge">message:/</code> resource.</p>
 
 <p>Let’s assume that the provider micro-service registers via websockets and expects requests to the message-topic 
-<code class="highlighter-rouge">/services/history</code>. With the following policy entry we can allow access to this resource:</p>
+<code class="language-plaintext highlighter-rouge">/services/history</code>. With the following policy entry we can allow access to this resource:</p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"subjects"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
-  </span><span class="s2">"resources"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"message:/"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"grant"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
-      </span><span class="s2">"revoke"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"READ"</span><span class="p">,</span><span class="w"> </span><span class="s2">"WRITE"</span><span class="p">]</span><span class="w">
+  </span><span class="nl">"subjects"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
+  </span><span class="nl">"resources"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"message:/"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"grant"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+      </span><span class="nl">"revoke"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"READ"</span><span class="p">,</span><span class="w"> </span><span class="s2">"WRITE"</span><span class="p">]</span><span class="w">
     </span><span class="p">},</span><span class="w">
-    </span><span class="s2">"message:/inbox/messages/services/history"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"grant"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"READ"</span><span class="p">],</span><span class="w">
-      </span><span class="s2">"revoke"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+    </span><span class="nl">"message:/inbox/messages/services/history"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"grant"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"READ"</span><span class="p">],</span><span class="w">
+      </span><span class="nl">"revoke"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
     </span><span class="p">},</span><span class="w">
-    </span><span class="s2">"message:/outbox/messages/services/history"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"grant"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"WRITE"</span><span class="p">],</span><span class="w">
-      </span><span class="s2">"revoke"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+    </span><span class="nl">"message:/outbox/messages/services/history"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"grant"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"WRITE"</span><span class="p">],</span><span class="w">
+      </span><span class="nl">"revoke"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
     </span><span class="p">}</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
 <p>The first resource entry revokes any access to messages for subjects of this type. This is optional. The next entry 
-allows the provider micro-service to read messages from the topic <code class="highlighter-rouge">/services/history</code>. Note that we’ve decided to insert 
-another “namespace” <code class="highlighter-rouge">/services</code> here to distinguish these messages from other device faced messages. The last section 
+allows the provider micro-service to read messages from the topic <code class="language-plaintext highlighter-rouge">/services/history</code>. Note that we’ve decided to insert 
+another “namespace” <code class="language-plaintext highlighter-rouge">/services</code> here to distinguish these messages from other device faced messages. The last section 
 than allows the provider micro-service to reply to the received requests with it’s 303 response.</p>
 
 <p>This can also be built against single features. Since features have to be stated explicitly in the policy, this is not 
@@ -2228,7 +2235,7 @@ expiring random URLs was added, but not send upstream yet.</p>
 <h2 id="known-uses">Known uses</h2>
 
 <p><strong><a href="https://www.othermo.de">othermo GmbH</a> uses this for a history-service</strong>: The history service connects to Ditto via 
-websockets and hooks into things by answering specific <code class="highlighter-rouge">/history</code> messages. The messages API is translated to InfluxDB queries 
+websockets and hooks into things by answering specific <code class="language-plaintext highlighter-rouge">/history</code> messages. The messages API is translated to InfluxDB queries 
 which then are stored with a randomly generated URL and expiration of 5 minutes at the high-performance proxy. 
 The service then returns the random URL to the client which then follows the 303 to retrieve the actual data.</p>
 
@@ -2261,7 +2268,7 @@ path information in order to get the stored data into the right scopes and to be
                     </div>
                     <p class="notice">
                         &copy;2024 Eclipse Ditto™.
-                         Site last generated: Feb 27, 2024 <br />
+                         Site last generated: Apr 10, 2024 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

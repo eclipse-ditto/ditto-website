@@ -293,7 +293,7 @@ and let all other parts of the thing untouched.</p>
 with the existing thing. In short, a JSON merge patch resembles the original JSON structure of a thing, and 
 the fields provided in the patch are added, updated, or deleted in the existing thing.</p>
 
-<p>Please be aware that <code class="highlighter-rouge">null</code> values have a special meaning when applying a merge patch. A <code class="highlighter-rouge">null</code> value indicates 
+<p>Please be aware that <code class="language-plaintext highlighter-rouge">null</code> values have a special meaning when applying a merge patch. A <code class="language-plaintext highlighter-rouge">null</code> value indicates 
 the removal of existing fields in the updated thing. 
 For more details and examples, please refer to <a href="https://tools.ietf.org/html/rfc7396">RFC-7396</a>.</p>
 
@@ -307,33 +307,33 @@ the merge is rejected and <strong>not</strong> applied at all.</p>
 <p>To demonstrate the new merge feature, we assume that the following thing already exists:</p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"thingId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"com.acme:coffeebrewer"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"policyId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"com.acme:coffeebrewer-policy"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"definition"</span><span class="p">:</span><span class="w"> </span><span class="s2">"com.acme:coffeebrewer:0.1.0"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"manufacturer"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ACME demo corp."</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"location"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Berlin, main floor"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"serialno"</span><span class="p">:</span><span class="w"> </span><span class="s2">"42"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"model"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Speaking coffee machine"</span><span class="w">
+  </span><span class="nl">"thingId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"com.acme:coffeebrewer"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"policyId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"com.acme:coffeebrewer-policy"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"definition"</span><span class="p">:</span><span class="w"> </span><span class="s2">"com.acme:coffeebrewer:0.1.0"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"manufacturer"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ACME demo corp."</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"location"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Berlin, main floor"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"serialno"</span><span class="p">:</span><span class="w"> </span><span class="s2">"42"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"model"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Speaking coffee machine"</span><span class="w">
   </span><span class="p">},</span><span class="w">
-  </span><span class="s2">"features"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"coffee-brewer"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"definition"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"com.acme:coffeebrewer:0.1.0"</span><span class="p">],</span><span class="w">
-      </span><span class="s2">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"brewed-coffees"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w">
+  </span><span class="nl">"features"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"coffee-brewer"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"definition"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"com.acme:coffeebrewer:0.1.0"</span><span class="p">],</span><span class="w">
+      </span><span class="nl">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"brewed-coffees"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w">
       </span><span class="p">}</span><span class="w">
     </span><span class="p">},</span><span class="w">
-    </span><span class="s2">"water-tank"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"configuration"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-          </span><span class="s2">"smartMode"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-          </span><span class="s2">"brewingTemp"</span><span class="p">:</span><span class="w"> </span><span class="mi">87</span><span class="p">,</span><span class="w">
-          </span><span class="s2">"tempToHold"</span><span class="p">:</span><span class="w"> </span><span class="mi">44</span><span class="p">,</span><span class="w">
-          </span><span class="s2">"timeoutSeconds"</span><span class="p">:</span><span class="w"> </span><span class="mi">6000</span><span class="w">
+    </span><span class="nl">"water-tank"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"configuration"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"smartMode"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"brewingTemp"</span><span class="p">:</span><span class="w"> </span><span class="mi">87</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"tempToHold"</span><span class="p">:</span><span class="w"> </span><span class="mi">44</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"timeoutSeconds"</span><span class="p">:</span><span class="w"> </span><span class="mi">6000</span><span class="w">
         </span><span class="p">},</span><span class="w">
-        </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-          </span><span class="s2">"waterAmount"</span><span class="p">:</span><span class="w"> </span><span class="mi">731</span><span class="p">,</span><span class="w">
-          </span><span class="s2">"temperature"</span><span class="p">:</span><span class="w"> </span><span class="mi">44</span><span class="w">
+        </span><span class="nl">"status"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"waterAmount"</span><span class="p">:</span><span class="w"> </span><span class="mi">731</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"temperature"</span><span class="p">:</span><span class="w"> </span><span class="mi">44</span><span class="w">
         </span><span class="p">}</span><span class="w">
       </span><span class="p">}</span><span class="w">
     </span><span class="p">}</span><span class="w">
@@ -357,20 +357,20 @@ and the Ditto Java Client.</p>
 Notice that this request will add the “manufacturingYear” to the attributes, update the “tempToHold” to 50 and 
 delete the “smartMode” key from  the feature property “water-tank”.</p>
 
-<p>The <code class="highlighter-rouge">Content-Type</code> header for this request must be <em>application/merge-patch+json</em>.</p>
+<p>The <code class="language-plaintext highlighter-rouge">Content-Type</code> header for this request must be <em>application/merge-patch+json</em>.</p>
 
 <p>PATCH /things/com.acme:coffeebrewer</p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"manufacturingYear"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2020"</span><span class="w">
+  </span><span class="nl">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"manufacturingYear"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2020"</span><span class="w">
   </span><span class="p">},</span><span class="w">
-  </span><span class="s2">"features"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"water-tank"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"configuration"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-          </span><span class="s2">"smartMode"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
-          </span><span class="s2">"tempToHold"</span><span class="p">:</span><span class="w"> </span><span class="mi">50</span><span class="w">
+  </span><span class="nl">"features"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"water-tank"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"configuration"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"smartMode"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"tempToHold"</span><span class="p">:</span><span class="w"> </span><span class="mi">50</span><span class="w">
         </span><span class="p">}</span><span class="w">
       </span><span class="p">}</span><span class="w">
     </span><span class="p">}</span><span class="w">
@@ -381,33 +381,33 @@ delete the “smartMode” key from  the feature property “water-tank”.</p>
 <p>After the request was successfully performed the thing will look like this:</p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"thingId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"com.acme:coffeebrewer"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"policyId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"com.acme:coffeebrewer-policy"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"definition"</span><span class="p">:</span><span class="w"> </span><span class="s2">"com.acme:coffeebrewer:0.1.0"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"manufacturer"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ACME demo corp."</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"manufacturingYear"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2020"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"location"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Berlin, main floor"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"serialno"</span><span class="p">:</span><span class="w"> </span><span class="s2">"42"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"model"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Speaking coffee machine"</span><span class="w">
+  </span><span class="nl">"thingId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"com.acme:coffeebrewer"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"policyId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"com.acme:coffeebrewer-policy"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"definition"</span><span class="p">:</span><span class="w"> </span><span class="s2">"com.acme:coffeebrewer:0.1.0"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"manufacturer"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ACME demo corp."</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"manufacturingYear"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2020"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"location"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Berlin, main floor"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"serialno"</span><span class="p">:</span><span class="w"> </span><span class="s2">"42"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"model"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Speaking coffee machine"</span><span class="w">
   </span><span class="p">},</span><span class="w">
-  </span><span class="s2">"features"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"coffee-brewer"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"definition"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"com.acme:coffeebrewer:0.1.0"</span><span class="p">],</span><span class="w">
-      </span><span class="s2">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"brewed-coffees"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w">
+  </span><span class="nl">"features"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"coffee-brewer"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"definition"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"com.acme:coffeebrewer:0.1.0"</span><span class="p">],</span><span class="w">
+      </span><span class="nl">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"brewed-coffees"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w">
       </span><span class="p">}</span><span class="w">
     </span><span class="p">},</span><span class="w">
-    </span><span class="s2">"water-tank"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"configuration"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-          </span><span class="s2">"brewingTemp"</span><span class="p">:</span><span class="w"> </span><span class="mi">87</span><span class="p">,</span><span class="w">
-          </span><span class="s2">"tempToHold"</span><span class="p">:</span><span class="w"> </span><span class="mi">50</span><span class="p">,</span><span class="w">
-          </span><span class="s2">"timeoutSeconds"</span><span class="p">:</span><span class="w"> </span><span class="mi">6000</span><span class="w">
+    </span><span class="nl">"water-tank"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"configuration"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"brewingTemp"</span><span class="p">:</span><span class="w"> </span><span class="mi">87</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"tempToHold"</span><span class="p">:</span><span class="w"> </span><span class="mi">50</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"timeoutSeconds"</span><span class="p">:</span><span class="w"> </span><span class="mi">6000</span><span class="w">
         </span><span class="p">},</span><span class="w">
-        </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-          </span><span class="s2">"waterAmount"</span><span class="p">:</span><span class="w"> </span><span class="mi">731</span><span class="p">,</span><span class="w">
-          </span><span class="s2">"temperature"</span><span class="p">:</span><span class="w"> </span><span class="mi">44</span><span class="w">
+        </span><span class="nl">"status"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"waterAmount"</span><span class="p">:</span><span class="w"> </span><span class="mi">731</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"temperature"</span><span class="p">:</span><span class="w"> </span><span class="mi">44</span><span class="w">
         </span><span class="p">}</span><span class="w">
       </span><span class="p">}</span><span class="w">
     </span><span class="p">}</span><span class="w">
@@ -423,22 +423,22 @@ Check out the newly added <em>PATCH</em> resources in our <a href="http-api-doc.
 Applying the following Ditto merge command to the existing thing will lead to the same result as in the above HTTP example.</p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"topic"</span><span class="p">:</span><span class="w"> </span><span class="s2">"com.acme/coffeebrewer/things/twin/commands/merge"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"content-type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"application/merge-patch+json"</span><span class="w">
+  </span><span class="nl">"topic"</span><span class="p">:</span><span class="w"> </span><span class="s2">"com.acme/coffeebrewer/things/twin/commands/merge"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"content-type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"application/merge-patch+json"</span><span class="w">
   </span><span class="p">},</span><span class="w">
-  </span><span class="s2">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"value"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"thingId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"com.acme:coffeebrewer"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"manufacturingYear"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2020"</span><span class="w">
+  </span><span class="nl">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"value"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"thingId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"com.acme:coffeebrewer"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"manufacturingYear"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2020"</span><span class="w">
     </span><span class="p">},</span><span class="w">
-    </span><span class="s2">"features"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"water-tank"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-          </span><span class="s2">"configuration"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-            </span><span class="s2">"smartMode"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"tempToHold"</span><span class="p">:</span><span class="w"> </span><span class="mi">50</span><span class="w">
+    </span><span class="nl">"features"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"water-tank"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"configuration"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"smartMode"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"tempToHold"</span><span class="p">:</span><span class="w"> </span><span class="mi">50</span><span class="w">
           </span><span class="p">}</span><span class="w">
         </span><span class="p">}</span><span class="w">
       </span><span class="p">}</span><span class="w">
@@ -450,12 +450,12 @@ Applying the following Ditto merge command to the existing thing will lead to th
 <p>Another Ditto protocol example to merge a feature property:</p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"topic"</span><span class="p">:</span><span class="w"> </span><span class="s2">"com.acme/coffeebrewer/things/twin/commands/merge"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"content-type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"application/merge-patch+json"</span><span class="w">
+  </span><span class="nl">"topic"</span><span class="p">:</span><span class="w"> </span><span class="s2">"com.acme/coffeebrewer/things/twin/commands/merge"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"content-type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"application/merge-patch+json"</span><span class="w">
   </span><span class="p">},</span><span class="w">
-  </span><span class="s2">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/features/coffee-brewer/properties/brewed-coffees"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"value"</span><span class="p">:</span><span class="w"> </span><span class="mi">42</span><span class="w">
+  </span><span class="nl">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/features/coffee-brewer/properties/brewed-coffees"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"value"</span><span class="p">:</span><span class="w"> </span><span class="mi">42</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
@@ -465,33 +465,33 @@ with the upcoming (<strong>Ditto Java Client version 2.0.0</strong>).</p>
 
 <p>Example for merging a thing with the Ditto Java Client:</p>
 
-<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">final</span> <span class="n">String</span> <span class="n">THING_ID</span> <span class="o">=</span> <span class="s">"com.acme:coffeebrewer"</span><span class="o">;</span>
-<span class="kd">final</span> <span class="n">String</span> <span class="n">FEATURE_ID</span> <span class="o">=</span> <span class="s">"water-tank"</span><span class="o">;</span>
-<span class="kd">final</span> <span class="n">JsonPointer</span> <span class="n">ATTRIBUTE_KEY</span> <span class="o">=</span> <span class="n">JsonFactory</span><span class="o">.</span><span class="na">newPointer</span><span class="o">(</span><span class="s">"manufacturingYear"</span><span class="o">);</span>
-<span class="kd">final</span> <span class="n">String</span> <span class="n">ATTRIBUTE_VALUE</span> <span class="o">=</span> <span class="s">"2020"</span><span class="o">;</span>
-<span class="kd">final</span> <span class="n">Feature</span> <span class="n">FEATURE</span> <span class="o">=</span> <span class="n">ThingsModelFactory</span><span class="o">.</span><span class="na">newFeatureBuilder</span><span class="o">()</span>
-        <span class="o">.</span><span class="na">withId</span><span class="o">(</span><span class="n">FEATURE_ID</span><span class="o">)</span>
-        <span class="o">.</span><span class="na">properties</span><span class="o">(</span><span class="n">ThingsModelFactory</span><span class="o">.</span><span class="na">newFeaturePropertiesBuilder</span><span class="o">()</span>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">final</span> <span class="nc">String</span> <span class="no">THING_ID</span> <span class="o">=</span> <span class="s">"com.acme:coffeebrewer"</span><span class="o">;</span>
+<span class="kd">final</span> <span class="nc">String</span> <span class="no">FEATURE_ID</span> <span class="o">=</span> <span class="s">"water-tank"</span><span class="o">;</span>
+<span class="kd">final</span> <span class="nc">JsonPointer</span> <span class="no">ATTRIBUTE_KEY</span> <span class="o">=</span> <span class="nc">JsonFactory</span><span class="o">.</span><span class="na">newPointer</span><span class="o">(</span><span class="s">"manufacturingYear"</span><span class="o">);</span>
+<span class="kd">final</span> <span class="nc">String</span> <span class="no">ATTRIBUTE_VALUE</span> <span class="o">=</span> <span class="s">"2020"</span><span class="o">;</span>
+<span class="kd">final</span> <span class="nc">Feature</span> <span class="no">FEATURE</span> <span class="o">=</span> <span class="nc">ThingsModelFactory</span><span class="o">.</span><span class="na">newFeatureBuilder</span><span class="o">()</span>
+        <span class="o">.</span><span class="na">withId</span><span class="o">(</span><span class="no">FEATURE_ID</span><span class="o">)</span>
+        <span class="o">.</span><span class="na">properties</span><span class="o">(</span><span class="nc">ThingsModelFactory</span><span class="o">.</span><span class="na">newFeaturePropertiesBuilder</span><span class="o">()</span>
                         <span class="o">.</span><span class="na">set</span><span class="o">(</span><span class="s">"smartMode"</span><span class="o">,</span> <span class="kc">false</span><span class="o">)</span>
                         <span class="o">.</span><span class="na">set</span><span class="o">(</span><span class="s">"tempToHold"</span><span class="o">,</span> <span class="mi">50</span><span class="o">)</span>
                         <span class="o">.</span><span class="na">build</span><span class="o">())</span>
         <span class="o">.</span><span class="na">build</span><span class="o">();</span>
 
-<span class="kd">final</span> <span class="n">Thing</span> <span class="n">THING</span> <span class="o">=</span> <span class="n">ThingsModelFactory</span><span class="o">.</span><span class="na">newThingBuilder</span><span class="o">()</span>
-        <span class="o">.</span><span class="na">setId</span><span class="o">(</span><span class="n">THING_ID</span><span class="o">)</span>
-        <span class="o">.</span><span class="na">setAttribute</span><span class="o">(</span><span class="n">ATTRIBUTE_KEY_NEW</span><span class="o">,</span> <span class="n">JsonFactory</span><span class="o">.</span><span class="na">newValue</span><span class="o">(</span><span class="n">ATTRIBUTE_VALUE</span><span class="o">))</span>
-        <span class="o">.</span><span class="na">setFeature</span><span class="o">(</span><span class="n">FEATURE</span><span class="o">)</span>
+<span class="kd">final</span> <span class="nc">Thing</span> <span class="no">THING</span> <span class="o">=</span> <span class="nc">ThingsModelFactory</span><span class="o">.</span><span class="na">newThingBuilder</span><span class="o">()</span>
+        <span class="o">.</span><span class="na">setId</span><span class="o">(</span><span class="no">THING_ID</span><span class="o">)</span>
+        <span class="o">.</span><span class="na">setAttribute</span><span class="o">(</span><span class="no">ATTRIBUTE_KEY_NEW</span><span class="o">,</span> <span class="nc">JsonFactory</span><span class="o">.</span><span class="na">newValue</span><span class="o">(</span><span class="no">ATTRIBUTE_VALUE</span><span class="o">))</span>
+        <span class="o">.</span><span class="na">setFeature</span><span class="o">(</span><span class="no">FEATURE</span><span class="o">)</span>
         <span class="o">.</span><span class="na">build</span><span class="o">();</span>
 
 <span class="c1">// initialize the ditto-client</span>
-<span class="kd">final</span> <span class="n">DittoClient</span> <span class="n">dittoClient</span> <span class="o">=</span> <span class="o">...</span> <span class="o">;</span>
+<span class="kd">final</span> <span class="nc">DittoClient</span> <span class="n">dittoClient</span> <span class="o">=</span> <span class="o">...</span> <span class="o">;</span>
 
-<span class="n">dittoClient</span><span class="o">.</span><span class="na">twin</span><span class="o">().</span><span class="na">merge</span><span class="o">(</span><span class="n">THING_ID</span><span class="o">,</span> <span class="n">THING</span><span class="o">)</span>
+<span class="n">dittoClient</span><span class="o">.</span><span class="na">twin</span><span class="o">().</span><span class="na">merge</span><span class="o">(</span><span class="no">THING_ID</span><span class="o">,</span> <span class="no">THING</span><span class="o">)</span>
         <span class="o">.</span><span class="na">whenComplete</span><span class="o">(((</span><span class="n">adaptable</span><span class="o">,</span> <span class="n">throwable</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="o">{</span>
             <span class="k">if</span> <span class="o">(</span><span class="n">throwable</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
-                <span class="n">LOGGER</span><span class="o">.</span><span class="na">error</span><span class="o">(</span><span class="s">"Received error while sending MergeThing: '{}' "</span><span class="o">,</span> <span class="n">throwable</span><span class="o">.</span><span class="na">toString</span><span class="o">());</span>
+                <span class="no">LOGGER</span><span class="o">.</span><span class="na">error</span><span class="o">(</span><span class="s">"Received error while sending MergeThing: '{}' "</span><span class="o">,</span> <span class="n">throwable</span><span class="o">.</span><span class="na">toString</span><span class="o">());</span>
             <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
-                <span class="n">LOGGER</span><span class="o">.</span><span class="na">info</span><span class="o">(</span><span class="s">"Received response for MergeThing: '{}'"</span><span class="o">,</span> <span class="n">adaptable</span><span class="o">);</span>
+                <span class="no">LOGGER</span><span class="o">.</span><span class="na">info</span><span class="o">(</span><span class="s">"Received response for MergeThing: '{}'"</span><span class="o">,</span> <span class="n">adaptable</span><span class="o">);</span>
             <span class="o">}</span>
         <span class="o">}));</span>
 </code></pre></div></div>
@@ -500,7 +500,7 @@ with the upcoming (<strong>Ditto Java Client version 2.0.0</strong>).</p>
 
 <p>More examples for merging an attribute, all attributes and a feature property via Ditto Java Client.</p>
 <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// initialize the ditto-client</span>
-<span class="kd">final</span> <span class="n">DittoClient</span> <span class="n">dittoClient</span> <span class="o">=</span> <span class="o">...</span> <span class="o">;</span>
+<span class="kd">final</span> <span class="nc">DittoClient</span> <span class="n">dittoClient</span> <span class="o">=</span> <span class="o">...</span> <span class="o">;</span>
 
     <span class="c1">// merge attribute</span>
     <span class="n">dittoClient</span><span class="o">.</span><span class="na">twin</span><span class="o">()</span>
@@ -511,7 +511,7 @@ with the upcoming (<strong>Ditto Java Client version 2.0.0</strong>).</p>
     <span class="c1">// merge attributes</span>
     <span class="n">dittoClient</span><span class="o">.</span><span class="na">twin</span><span class="o">()</span>
         <span class="o">.</span><span class="na">forId</span><span class="o">(</span><span class="s">"com.acme:coffeebrewer"</span><span class="o">)</span>
-        <span class="o">.</span><span class="na">mergeAttributes</span><span class="o">(</span><span class="n">JsonObject</span><span class="o">.</span><span class="na">newBuilder</span><span class="o">().</span><span class="na">set</span><span class="o">(</span><span class="s">"manufacturingYear"</span><span class="o">,</span> <span class="s">"2021"</span><span class="o">).</span><span class="na">build</span><span class="o">())</span>
+        <span class="o">.</span><span class="na">mergeAttributes</span><span class="o">(</span><span class="nc">JsonObject</span><span class="o">.</span><span class="na">newBuilder</span><span class="o">().</span><span class="na">set</span><span class="o">(</span><span class="s">"manufacturingYear"</span><span class="o">,</span> <span class="s">"2021"</span><span class="o">).</span><span class="na">build</span><span class="o">())</span>
         <span class="o">.</span><span class="na">whenComplete</span><span class="o">(...);</span>
     
     <span class="c1">// merge feature property</span>
@@ -522,9 +522,9 @@ with the upcoming (<strong>Ditto Java Client version 2.0.0</strong>).</p>
 </code></pre></div></div>
 
 <h2 id="merge-events">Merge events</h2>
-<p>In this section we want to cover the new <code class="highlighter-rouge">ThingMerged</code> event which will be emitted after successfully applying an <code class="highlighter-rouge">MergeThing</code> command.
+<p>In this section we want to cover the new <code class="language-plaintext highlighter-rouge">ThingMerged</code> event which will be emitted after successfully applying an <code class="language-plaintext highlighter-rouge">MergeThing</code> command.
 For every HTTP request or Ditto protocol message which performs a merge operation on a thing there will be sent out 
-exactly one <code class="highlighter-rouge">ThingMerged</code> event. This event contains the <strong>path</strong> and the <strong>value</strong> of the merge operation.
+exactly one <code class="language-plaintext highlighter-rouge">ThingMerged</code> event. This event contains the <strong>path</strong> and the <strong>value</strong> of the merge operation.
 The <strong>path</strong> describes on which level of the thing the <strong>value</strong> was merged.</p>
 
 <h3 id="merge-event-example">Merge event example</h3>
@@ -532,47 +532,47 @@ The <strong>path</strong> describes on which level of the thing the <strong>valu
 PATCH /things/com.acme:coffeebrewer/features</p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"coffee-brewer"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"brewed-coffees"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="w">
+  </span><span class="nl">"coffee-brewer"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"brewed-coffees"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="w">
     </span><span class="p">}</span><span class="w">
   </span><span class="p">},</span><span class="w">
-  </span><span class="s2">"water-tank"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"configuration"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"smartMode"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"tempToHold"</span><span class="p">:</span><span class="w"> </span><span class="mi">30</span><span class="w">
+  </span><span class="nl">"water-tank"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"configuration"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"smartMode"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"tempToHold"</span><span class="p">:</span><span class="w"> </span><span class="mi">30</span><span class="w">
       </span><span class="p">}</span><span class="w">
     </span><span class="p">}</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
-<p>The following <code class="highlighter-rouge">ThingMerged</code> event is emitted:</p>
+<p>The following <code class="language-plaintext highlighter-rouge">ThingMerged</code> event is emitted:</p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"topic"</span><span class="p">:</span><span class="w"> </span><span class="s2">"com.acme/coffeebrewer/things/twin/events/merged"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"content-type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"application/merge-patch+json"</span><span class="w">
+  </span><span class="nl">"topic"</span><span class="p">:</span><span class="w"> </span><span class="s2">"com.acme/coffeebrewer/things/twin/events/merged"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"content-type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"application/merge-patch+json"</span><span class="w">
   </span><span class="p">},</span><span class="w">
-  </span><span class="s2">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/features"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"value"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"coffee-brewer"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"brewed-coffees"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="w">
+  </span><span class="nl">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/features"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"value"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"coffee-brewer"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"brewed-coffees"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="w">
       </span><span class="p">}</span><span class="w">
     </span><span class="p">},</span><span class="w">
-    </span><span class="s2">"water-tank"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"configuration"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-          </span><span class="s2">"smartMode"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
-          </span><span class="s2">"tempToHold"</span><span class="p">:</span><span class="w"> </span><span class="mi">30</span><span class="w">
+    </span><span class="nl">"water-tank"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"configuration"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"smartMode"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"tempToHold"</span><span class="p">:</span><span class="w"> </span><span class="mi">30</span><span class="w">
         </span><span class="p">}</span><span class="w">
       </span><span class="p">}</span><span class="w">
     </span><span class="p">}</span><span class="w">
   </span><span class="p">},</span><span class="w">
-  </span><span class="s2">"revision"</span><span class="p">:</span><span class="w"> </span><span class="mi">42</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"timestamp"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2021-02-04T09:42:39Z"</span><span class="w">
+  </span><span class="nl">"revision"</span><span class="p">:</span><span class="w"> </span><span class="mi">42</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"timestamp"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2021-02-04T09:42:39Z"</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
@@ -604,7 +604,7 @@ The Eclipse Ditto team</p>
                     </div>
                     <p class="notice">
                         &copy;2024 Eclipse Ditto™.
-                         Site last generated: Feb 27, 2024 <br />
+                         Site last generated: Apr 10, 2024 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

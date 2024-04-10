@@ -278,6 +278,13 @@
               
               
               
+              <li><a href="release_notes_354.html">3.5.4</a></li>
+              
+              
+              
+              
+              
+              
               <li><a href="release_notes_353.html">3.5.3</a></li>
               
               
@@ -2130,43 +2137,43 @@ by the same rules in the <a href="https://github.com/reactive-streams/reactive-s
   <tbody>
     <tr>
       <td><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/concurrent/Flow.Publisher.html#subscribe(java.util.concurrent.Flow.Subscriber)">Publisher#subscribe</a></td>
-      <td><a href="#subscribe"><code class="highlighter-rouge">_/_/things/twin/search/subscribe</code></a></td>
+      <td><a href="#subscribe"><code class="language-plaintext highlighter-rouge">_/_/things/twin/search/subscribe</code></a></td>
       <td>Command</td>
       <td>Client to Ditto</td>
     </tr>
     <tr>
       <td><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/concurrent/Flow.Subscription.html#request(long)">Subscription#request</a></td>
-      <td><a href="#request"><code class="highlighter-rouge">_/_/things/twin/search/request</code></a></td>
+      <td><a href="#request"><code class="language-plaintext highlighter-rouge">_/_/things/twin/search/request</code></a></td>
       <td>Command</td>
       <td>Client to Ditto</td>
     </tr>
     <tr>
       <td><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/concurrent/Flow.Subscription.html#cancel()">Subscription#cancel</a></td>
-      <td><a href="#cancel"><code class="highlighter-rouge">_/_/things/twin/search/cancel</code></a></td>
+      <td><a href="#cancel"><code class="language-plaintext highlighter-rouge">_/_/things/twin/search/cancel</code></a></td>
       <td>Command</td>
       <td>Client to Ditto</td>
     </tr>
     <tr>
       <td><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/concurrent/Flow.Subscriber.html#onSubscribe(java.util.concurrent.Flow.Subscription)">Subscriber#onSubscribe</a></td>
-      <td><a href="#created"><code class="highlighter-rouge">_/_/things/twin/search/created</code></a></td>
+      <td><a href="#created"><code class="language-plaintext highlighter-rouge">_/_/things/twin/search/created</code></a></td>
       <td>Event</td>
       <td>Ditto to Client</td>
     </tr>
     <tr>
       <td><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/concurrent/Flow.Subscriber.html#onNext(T)">Subscriber#onNext</a></td>
-      <td><a href="#next"><code class="highlighter-rouge">_/_/things/twin/search/next</code></a></td>
+      <td><a href="#next"><code class="language-plaintext highlighter-rouge">_/_/things/twin/search/next</code></a></td>
       <td>Event</td>
       <td>Ditto to Client</td>
     </tr>
     <tr>
       <td><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/concurrent/Flow.Subscriber.html#onComplete()">Subscriber#onComplete</a></td>
-      <td><a href="#complete"><code class="highlighter-rouge">_/_/things/twin/search/complete</code></a></td>
+      <td><a href="#complete"><code class="language-plaintext highlighter-rouge">_/_/things/twin/search/complete</code></a></td>
       <td>Event</td>
       <td>Ditto to Client</td>
     </tr>
     <tr>
       <td><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/concurrent/Flow.Subscriber.html#onError(java.lang.Throwable)">Subscriber#onError</a></td>
-      <td><a href="#failed"><code class="highlighter-rouge">_/_/things/twin/search/failed</code></a></td>
+      <td><a href="#failed"><code class="language-plaintext highlighter-rouge">_/_/things/twin/search/failed</code></a></td>
       <td>Event</td>
       <td>Ditto to Client</td>
     </tr>
@@ -2176,14 +2183,14 @@ by the same rules in the <a href="https://github.com/reactive-streams/reactive-s
 <h2 id="interaction-pattern">Interaction pattern</h2>
 
 <p>For one search query, the commands from client to Ditto should follow this protocol:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>subscribe request* cancel?
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>subscribe request* cancel?
 </code></pre></div></div>
 <p>The client should send one <a href="#subscribe">“subscribe”</a> command,
 followed by multiple <a href="#request">“request”</a> commands and an optional <a href="#cancel">“cancel”</a> command.</p>
 
 <p>In response to a <a href="#subscribe">“subscribe”</a> command and after each <a href="#request">“request”</a> command,
 Ditto will send 0 or more events to the client according to the following protocol:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>created next* (complete | failed)?
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>created next* (complete | failed)?
 </code></pre></div></div>
 <p>A <a href="#created">“created”</a> event bearing the subscription ID is always sent.
 0 or more <a href="#next">“next”</a> events are sent according to the amount of search results and the number of pages requested 
@@ -2218,11 +2225,11 @@ Ditto will always respond with a <a href="#created">“created”</a> event.</p>
   <tbody>
     <tr>
       <td><strong>topic</strong></td>
-      <td><code class="highlighter-rouge">_/_/things/twin/search/subscribe</code></td>
+      <td><code class="language-plaintext highlighter-rouge">_/_/things/twin/search/subscribe</code></td>
     </tr>
     <tr>
       <td><strong>path</strong></td>
-      <td><code class="highlighter-rouge">/</code></td>
+      <td><code class="language-plaintext highlighter-rouge">/</code></td>
     </tr>
     <tr>
       <td><strong>fields</strong></td>
@@ -2240,18 +2247,18 @@ Ditto will always respond with a <a href="#created">“created”</a> event.</p>
 </table>
 
 <p>The standard <a href="basic-rql.html#rql-filter">filter</a>,  <a href="basic-search.html#sorting-and-paging-options">options</a>
-and the <a href="basic-search.html#namespaces">namespaces</a> can be specified in the <code class="highlighter-rouge">value</code> field
+and the <a href="basic-search.html#namespaces">namespaces</a> can be specified in the <code class="language-plaintext highlighter-rouge">value</code> field
 of a <a href="#subscribe">“subscribe”</a> command.
 They have identical semantics and default values as other search APIs.
 In particular:</p>
 <ul>
-  <li>When given in the <code class="highlighter-rouge">options</code> field, <code class="highlighter-rouge">size(&lt;count&gt;)</code> limits the number of search results delivered
-in one <a href="#next">“next”</a> event to <code class="highlighter-rouge">&lt;count&gt;</code> items. The default value of <code class="highlighter-rouge">&lt;count&gt;</code> is 25 and the maximum value is 200.</li>
-  <li>When given in the <code class="highlighter-rouge">options</code> field, <code class="highlighter-rouge">sort(&lt;+"-&gt;&lt;property1&gt;, ...)</code> sets the order of search results.
-If not given, the default <code class="highlighter-rouge">sort(+thingId)</code> is used.</li>
+  <li>When given in the <code class="language-plaintext highlighter-rouge">options</code> field, <code class="language-plaintext highlighter-rouge">size(&lt;count&gt;)</code> limits the number of search results delivered
+in one <a href="#next">“next”</a> event to <code class="language-plaintext highlighter-rouge">&lt;count&gt;</code> items. The default value of <code class="language-plaintext highlighter-rouge">&lt;count&gt;</code> is 25 and the maximum value is 200.</li>
+  <li>When given in the <code class="language-plaintext highlighter-rouge">options</code> field, <code class="language-plaintext highlighter-rouge">sort(&lt;+"-&gt;&lt;property1&gt;, ...)</code> sets the order of search results.
+If not given, the default <code class="language-plaintext highlighter-rouge">sort(+thingId)</code> is used.</li>
 </ul>
 
-<p>The paging options <code class="highlighter-rouge">cursor</code> and <code class="highlighter-rouge">limit</code> of the <a href="httpapi-search.html">HTTP-API</a> are not supported here, because
+<p>The paging options <code class="language-plaintext highlighter-rouge">cursor</code> and <code class="language-plaintext highlighter-rouge">limit</code> of the <a href="httpapi-search.html">HTTP-API</a> are not supported here, because
 they are not meaningful for the search protocol. For the HTTP-API, those options are for iterating through large
 numbers of search results over many HTTP requests in a stateless manner.
 The search protocol is not stateless and does not require the client to keep track of any cursor or offset;
@@ -2274,11 +2281,11 @@ the search results are exhausted, or an error occurred.</p>
   <tbody>
     <tr>
       <td><strong>topic</strong></td>
-      <td><code class="highlighter-rouge">_/_/things/twin/search/request</code></td>
+      <td><code class="language-plaintext highlighter-rouge">_/_/things/twin/search/request</code></td>
     </tr>
     <tr>
       <td><strong>path</strong></td>
-      <td><code class="highlighter-rouge">/</code></td>
+      <td><code class="language-plaintext highlighter-rouge">/</code></td>
     </tr>
     <tr>
       <td><strong>value</strong></td>
@@ -2308,11 +2315,11 @@ events of the same subscription ID.</p>
   <tbody>
     <tr>
       <td><strong>topic</strong></td>
-      <td><code class="highlighter-rouge">_/_/things/twin/search/cancel</code></td>
+      <td><code class="language-plaintext highlighter-rouge">_/_/things/twin/search/cancel</code></td>
     </tr>
     <tr>
       <td><strong>path</strong></td>
-      <td><code class="highlighter-rouge">/</code></td>
+      <td><code class="language-plaintext highlighter-rouge">/</code></td>
     </tr>
     <tr>
       <td><strong>value</strong></td>
@@ -2341,11 +2348,11 @@ events of the same subscription ID.</p>
   <tbody>
     <tr>
       <td><strong>topic</strong></td>
-      <td><code class="highlighter-rouge">_/_/things/twin/search/created</code></td>
+      <td><code class="language-plaintext highlighter-rouge">_/_/things/twin/search/created</code></td>
     </tr>
     <tr>
       <td><strong>path</strong></td>
-      <td><code class="highlighter-rouge">/</code></td>
+      <td><code class="language-plaintext highlighter-rouge">/</code></td>
     </tr>
     <tr>
       <td><strong>value</strong></td>
@@ -2374,11 +2381,11 @@ requested by previous <a href="#request">“request”</a> commands.</p>
   <tbody>
     <tr>
       <td><strong>topic</strong></td>
-      <td><code class="highlighter-rouge">_/_/things/twin/search/next</code></td>
+      <td><code class="language-plaintext highlighter-rouge">_/_/things/twin/search/next</code></td>
     </tr>
     <tr>
       <td><strong>path</strong></td>
-      <td><code class="highlighter-rouge">/</code></td>
+      <td><code class="language-plaintext highlighter-rouge">/</code></td>
     </tr>
     <tr>
       <td><strong>value</strong></td>
@@ -2407,11 +2414,11 @@ Ditto sends a <a href="#complete">“complete”</a> event when all pages of the
   <tbody>
     <tr>
       <td><strong>topic</strong></td>
-      <td><code class="highlighter-rouge">_/_/things/twin/search/complete</code></td>
+      <td><code class="language-plaintext highlighter-rouge">_/_/things/twin/search/complete</code></td>
     </tr>
     <tr>
       <td><strong>path</strong></td>
-      <td><code class="highlighter-rouge">/</code></td>
+      <td><code class="language-plaintext highlighter-rouge">/</code></td>
     </tr>
     <tr>
       <td><strong>value</strong></td>
@@ -2442,11 +2449,11 @@ It is not possible to <a href="#request">“request”</a> more pages of the sea
   <tbody>
     <tr>
       <td><strong>topic</strong></td>
-      <td><code class="highlighter-rouge">_/_/things/twin/search/failed</code></td>
+      <td><code class="language-plaintext highlighter-rouge">_/_/things/twin/search/failed</code></td>
     </tr>
     <tr>
       <td><strong>path</strong></td>
-      <td><code class="highlighter-rouge">/</code></td>
+      <td><code class="language-plaintext highlighter-rouge">/</code></td>
     </tr>
     <tr>
       <td><strong>value</strong></td>
@@ -2488,7 +2495,7 @@ It is not possible to <a href="#request">“request”</a> more pages of the sea
                     </div>
                     <p class="notice">
                         &copy;2024 Eclipse Ditto™.
-                         Site last generated: Feb 27, 2024 <br />
+                         Site last generated: Apr 10, 2024 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

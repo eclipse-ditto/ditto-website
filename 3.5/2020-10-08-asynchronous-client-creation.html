@@ -250,7 +250,7 @@
 a client object connects to a configured Ditto back-end during its creation.</p>
 
 <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// create a client object and block until it connects to the Ditto back-end.</span>
-<span class="kd">final</span> <span class="n">DittoClient</span> <span class="n">client</span> <span class="o">=</span> <span class="n">DittoClients</span><span class="o">.</span><span class="na">newInstance</span><span class="o">(</span><span class="n">messagingProvider</span><span class="o">);</span>
+<span class="kd">final</span> <span class="nc">DittoClient</span> <span class="n">client</span> <span class="o">=</span> <span class="nc">DittoClients</span><span class="o">.</span><span class="na">newInstance</span><span class="o">(</span><span class="n">messagingProvider</span><span class="o">);</span>
 </code></pre></div></div>
 
 <p>There are several problems with the approach.</p>
@@ -269,25 +269,25 @@ has no simple way to free all resources allocated for the client.</li>
 
 <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">final</span> <span class="kd">class</span> <span class="nc">DittoClients</span> <span class="o">{</span>
 
-    <span class="kd">public</span> <span class="kd">static</span> <span class="n">DisconnectedDittoClient</span> <span class="nf">newDisconnectedInstance</span><span class="o">(</span><span class="n">MessagingProvider</span> <span class="n">mp</span><span class="o">);</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="nc">DisconnectedDittoClient</span> <span class="nf">newDisconnectedInstance</span><span class="o">(</span><span class="nc">MessagingProvider</span> <span class="n">mp</span><span class="o">);</span>
 <span class="o">}</span>
 
 <span class="kd">public</span> <span class="kd">interface</span> <span class="nc">DisconnectedDittoClient</span> <span class="o">{</span>
 
-    <span class="n">CompletionStage</span><span class="o">&lt;</span><span class="n">DittoClient</span><span class="o">&gt;</span> <span class="nf">connect</span><span class="o">();</span>
+    <span class="nc">CompletionStage</span><span class="o">&lt;</span><span class="nc">DittoClient</span><span class="o">&gt;</span> <span class="nf">connect</span><span class="o">();</span>
 
     <span class="kt">void</span> <span class="nf">destroy</span><span class="o">();</span>
 <span class="o">}</span>
 </code></pre></div></div>
 
-<p>The method <code class="highlighter-rouge">DittoClients.newDisconnectedInstance(MessagingProvider)</code> creates a <code class="highlighter-rouge">DisconnectedDittoClient</code>
-object. The <code class="highlighter-rouge">DisconnectedDittoClient</code> has references to all resources allocated for the client and
-can free them via the <code class="highlighter-rouge">destroy()</code> method. The <code class="highlighter-rouge">DisconnectedDittoClient</code> object offers no method to
-interact with the Ditto API. By calling <code class="highlighter-rouge">connect()</code>, one obtains a future that yields a familiar
-<code class="highlighter-rouge">DittoClient</code> object upon completion. One might use the asynchronous client creation interface thus:</p>
+<p>The method <code class="language-plaintext highlighter-rouge">DittoClients.newDisconnectedInstance(MessagingProvider)</code> creates a <code class="language-plaintext highlighter-rouge">DisconnectedDittoClient</code>
+object. The <code class="language-plaintext highlighter-rouge">DisconnectedDittoClient</code> has references to all resources allocated for the client and
+can free them via the <code class="language-plaintext highlighter-rouge">destroy()</code> method. The <code class="language-plaintext highlighter-rouge">DisconnectedDittoClient</code> object offers no method to
+interact with the Ditto API. By calling <code class="language-plaintext highlighter-rouge">connect()</code>, one obtains a future that yields a familiar
+<code class="language-plaintext highlighter-rouge">DittoClient</code> object upon completion. One might use the asynchronous client creation interface thus:</p>
 
-<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">final</span> <span class="n">DisconnectedDittoClient</span> <span class="n">disconnectedClient</span> <span class="o">=</span>
-    <span class="n">DittoClients</span><span class="o">.</span><span class="na">newDisconnectedInstance</span><span class="o">(</span><span class="n">messagingProvider</span><span class="o">);</span>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">final</span> <span class="nc">DisconnectedDittoClient</span> <span class="n">disconnectedClient</span> <span class="o">=</span>
+    <span class="nc">DittoClients</span><span class="o">.</span><span class="na">newDisconnectedInstance</span><span class="o">(</span><span class="n">messagingProvider</span><span class="o">);</span>
 
 <span class="n">disconnectedClient</span><span class="o">.</span><span class="na">connect</span><span class="o">()</span>
     <span class="o">.</span><span class="na">thenAccept</span><span class="o">(</span><span class="k">this</span><span class="o">::</span><span class="n">startUsingDittoClient</span><span class="o">)</span>
@@ -306,13 +306,13 @@ interact with the Ditto API. By calling <code class="highlighter-rouge">connect(
   </li>
   <li>
     <p>Even if configured to reconnect, the user can receive connection errors via
-the connection error handler in <code class="highlighter-rouge">MessagingConfiguration</code> and shut down the client
+the connection error handler in <code class="language-plaintext highlighter-rouge">MessagingConfiguration</code> and shut down the client
 at will.</p>
   </li>
   <li>
-    <p>When initial reconnection is disabled, the method <code class="highlighter-rouge">DisconnectedDittoClient.connect()</code>
+    <p>When initial reconnection is disabled, the method <code class="language-plaintext highlighter-rouge">DisconnectedDittoClient.connect()</code>
 returns a failed future on connection error. It is possible to reference the
-<code class="highlighter-rouge">DittoDisconnectedClient</code> object in the future’s error handler, where the client can
+<code class="language-plaintext highlighter-rouge">DittoDisconnectedClient</code> object in the future’s error handler, where the client can
 be destroyed.</p>
   </li>
 </ol>
@@ -340,7 +340,7 @@ The Eclipse Ditto team</p>
                     </div>
                     <p class="notice">
                         &copy;2024 Eclipse Ditto™.
-                         Site last generated: Feb 27, 2024 <br />
+                         Site last generated: Apr 10, 2024 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

@@ -278,6 +278,13 @@
               
               
               
+              <li><a href="release_notes_354.html">3.5.4</a></li>
+              
+              
+              
+              
+              
+              
               <li><a href="release_notes_353.html">3.5.3</a></li>
               
               
@@ -2104,10 +2111,10 @@ $('#toc').on('click', 'a', function() {
 
 <h2 id="content-type">Content-type</h2>
 
-<p>When messages are sent in <a href="protocol-overview.html">Ditto Protocol</a> (as <code class="highlighter-rouge">UTF-8</code> encoded String payload), 
-the <code class="highlighter-rouge">content-type</code> of AMQP 0.9.1 messages must be set to:</p>
+<p>When messages are sent in <a href="protocol-overview.html">Ditto Protocol</a> (as <code class="language-plaintext highlighter-rouge">UTF-8</code> encoded String payload), 
+the <code class="language-plaintext highlighter-rouge">content-type</code> of AMQP 0.9.1 messages must be set to:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>application/vnd.eclipse.ditto+json
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>application/vnd.eclipse.ditto+json
 </code></pre></div></div>
 
 <p>If messages, which are not in Ditto Protocol, should be processed, a <a href="connectivity-mapping.html">payload mapping</a> must
@@ -2118,8 +2125,8 @@ be configured for the AMQP 0.9.1 connection in order to transform the messages.<
 <p>Supported AMQP 0.9.1 properties which are interpreted in a specific way are:</p>
 
 <ul>
-  <li><code class="highlighter-rouge">content-type</code>: for defining the Ditto Protocol content-type</li>
-  <li><code class="highlighter-rouge">correlation-id</code>: for correlating request messages to responses</li>
+  <li><code class="language-plaintext highlighter-rouge">content-type</code>: for defining the Ditto Protocol content-type</li>
+  <li><code class="language-plaintext highlighter-rouge">correlation-id</code>: for correlating request messages to responses</li>
 </ul>
 
 <h2 id="specific-connection-configuration">Specific connection configuration</h2>
@@ -2130,17 +2137,17 @@ Following are some specifics for AMQP 0.9.1 connections:</p>
 
 <h3 id="source-format">Source format</h3>
 
-<p>An AMQP 0.9.1 connection requires the protocol configuration source object to have an <code class="highlighter-rouge">addresses</code> property with a list
-of queue names, and <code class="highlighter-rouge">authorizationContext</code> array that contains the authorization subjects, in whose context 
+<p>An AMQP 0.9.1 connection requires the protocol configuration source object to have an <code class="language-plaintext highlighter-rouge">addresses</code> property with a list
+of queue names, and <code class="language-plaintext highlighter-rouge">authorizationContext</code> array that contains the authorization subjects, in whose context 
 incoming messages are processed. These subjects may contain placeholders, see 
 <a href="basic-connections.html#placeholder-for-source-authorization-subjects">placeholders</a> section for more information.</p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"addresses"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+  </span><span class="nl">"addresses"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
     </span><span class="s2">"&lt;queue_name&gt;"</span><span class="p">,</span><span class="w">
     </span><span class="s2">"..."</span><span class="w">
   </span><span class="p">],</span><span class="w">
-  </span><span class="s2">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"ditto:inbound-auth-subject"</span><span class="p">,</span><span class="w"> </span><span class="s2">"..."</span><span class="p">]</span><span class="w">
+  </span><span class="nl">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"ditto:inbound-auth-subject"</span><span class="p">,</span><span class="w"> </span><span class="s2">"..."</span><span class="p">]</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
@@ -2152,42 +2159,42 @@ broker are treated in the following way:</p>
 
 <p>For Ditto acknowledgements with successful <a href="protocol-specification-acks.html#combined-status-code">status</a>:</p>
 <ul>
-  <li>Acknowledges a single AMQP 0.9.1 message with an <code class="highlighter-rouge">Ack</code> message for the received <code class="highlighter-rouge">deliveryTag</code></li>
+  <li>Acknowledges a single AMQP 0.9.1 message with an <code class="language-plaintext highlighter-rouge">Ack</code> message for the received <code class="language-plaintext highlighter-rouge">deliveryTag</code></li>
 </ul>
 
 <p>For Ditto acknowledgements with mixed successful/failed <a href="protocol-specification-acks.html#combined-status-code">status</a>:</p>
 <ul>
   <li>If some of the aggregated <a href="basic-acknowledgements.html#acknowledgements-acks">acknowledgements</a> require redelivery (e.g. based on a timeout):
     <ul>
-      <li>Negatively acknowledges the AMQP 0.9.1 message with a <code class="highlighter-rouge">Nack</code> message for the received <code class="highlighter-rouge">deliveryTag</code> and setting <code class="highlighter-rouge">requeue</code> to <code class="highlighter-rouge">true</code></li>
+      <li>Negatively acknowledges the AMQP 0.9.1 message with a <code class="language-plaintext highlighter-rouge">Nack</code> message for the received <code class="language-plaintext highlighter-rouge">deliveryTag</code> and setting <code class="language-plaintext highlighter-rouge">requeue</code> to <code class="language-plaintext highlighter-rouge">true</code></li>
     </ul>
   </li>
   <li>If none of the aggregated <a href="basic-acknowledgements.html#acknowledgements-acks">acknowledgements</a> require redelivery:
     <ul>
-      <li>Negatively acknowledges the AMQP 0.9.1 message with a <code class="highlighter-rouge">Nack</code> message for the received <code class="highlighter-rouge">deliveryTag</code> and setting <code class="highlighter-rouge">requeue</code> to <code class="highlighter-rouge">false</code> preventing redelivery by the AMQP 0.9.1 broker</li>
+      <li>Negatively acknowledges the AMQP 0.9.1 message with a <code class="language-plaintext highlighter-rouge">Nack</code> message for the received <code class="language-plaintext highlighter-rouge">deliveryTag</code> and setting <code class="language-plaintext highlighter-rouge">requeue</code> to <code class="language-plaintext highlighter-rouge">false</code> preventing redelivery by the AMQP 0.9.1 broker</li>
     </ul>
   </li>
 </ul>
 
 <h3 id="target-format">Target format</h3>
 
-<p>An AMQP 0.9.1 connection requires the protocol configuration target object to have an <code class="highlighter-rouge">address</code> property with a combined
-value of the <code class="highlighter-rouge">exchange_name</code> and <code class="highlighter-rouge">routing_key</code>. The target address may contain placeholders; see
+<p>An AMQP 0.9.1 connection requires the protocol configuration target object to have an <code class="language-plaintext highlighter-rouge">address</code> property with a combined
+value of the <code class="language-plaintext highlighter-rouge">exchange_name</code> and <code class="language-plaintext highlighter-rouge">routing_key</code>. The target address may contain placeholders; see
 <a href="basic-connections.html#placeholder-for-target-addresses">placeholders</a> section for more information.</p>
 
-<p>Further, <code class="highlighter-rouge">"topics"</code> is a list of strings, each list entry representing a subscription of
+<p>Further, <code class="language-plaintext highlighter-rouge">"topics"</code> is a list of strings, each list entry representing a subscription of
 <a href="protocol-specification-topic.html">Ditto protocol topics</a>.</p>
 
-<p>Outbound messages are published to the configured target address if one of the subjects in <code class="highlighter-rouge">"authorizationContext"</code>
+<p>Outbound messages are published to the configured target address if one of the subjects in <code class="language-plaintext highlighter-rouge">"authorizationContext"</code>
 has READ permission on the thing, which is associated with a message.</p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;exchange_name&gt;/&lt;routing_key&gt;"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"topics"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+  </span><span class="nl">"address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;exchange_name&gt;/&lt;routing_key&gt;"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"topics"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
     </span><span class="s2">"_/_/things/twin/events"</span><span class="p">,</span><span class="w">
     </span><span class="s2">"_/_/things/live/messages"</span><span class="w">
   </span><span class="p">],</span><span class="w">
-  </span><span class="s2">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"ditto:outbound-auth-subject"</span><span class="p">]</span><span class="w">
+  </span><span class="nl">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"ditto:outbound-auth-subject"</span><span class="p">]</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
@@ -2202,15 +2209,15 @@ is mapped to the automatically created <a href="protocol-specification-acks.html
 <ul>
   <li>Acknowledgement.status:
     <ul>
-      <li>will be <code class="highlighter-rouge">200</code>, if the message was successfully ACKed by the AMQP 0.9.1 broker</li>
-      <li>will be <code class="highlighter-rouge">400</code>, if the AMQP 0.9.1 broker does not support publisher confirms</li>
-      <li>will be <code class="highlighter-rouge">503</code>, if the AMQP 0.9.1 broker negatively confirmed receiving a message</li>
+      <li>will be <code class="language-plaintext highlighter-rouge">200</code>, if the message was successfully ACKed by the AMQP 0.9.1 broker</li>
+      <li>will be <code class="language-plaintext highlighter-rouge">400</code>, if the AMQP 0.9.1 broker does not support publisher confirms</li>
+      <li>will be <code class="language-plaintext highlighter-rouge">503</code>, if the AMQP 0.9.1 broker negatively confirmed receiving a message</li>
     </ul>
   </li>
   <li>Acknowledgement.value:
     <ul>
-      <li>will be missing, for status <code class="highlighter-rouge">200</code></li>
-      <li>will contain more information, in case that an error <code class="highlighter-rouge">status</code> was set</li>
+      <li>will be missing, for status <code class="language-plaintext highlighter-rouge">200</code></li>
+      <li>will contain more information, in case that an error <code class="language-plaintext highlighter-rouge">status</code> was set</li>
     </ul>
   </li>
 </ul>
@@ -2230,28 +2237,28 @@ existing connections.</p>
 <p>Example connection configuration to create a new AMQP 0.9.1 connection (e.g. in order to connect to a RabbitMQ):</p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"connection"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"rabbit-example-connection-123"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"connectionType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"amqp-091"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"connectionStatus"</span><span class="p">:</span><span class="w"> </span><span class="s2">"open"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"failoverEnabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"uri"</span><span class="p">:</span><span class="w"> </span><span class="s2">"amqp://user:password@localhost:5672/vhost"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"sources"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+  </span><span class="nl">"connection"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"rabbit-example-connection-123"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"connectionType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"amqp-091"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"connectionStatus"</span><span class="p">:</span><span class="w"> </span><span class="s2">"open"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"failoverEnabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"uri"</span><span class="p">:</span><span class="w"> </span><span class="s2">"amqp://user:password@localhost:5672/vhost"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"sources"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
       </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"addresses"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="nl">"addresses"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
           </span><span class="s2">"queueName"</span><span class="w">
         </span><span class="p">],</span><span class="w">
-        </span><span class="s2">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"ditto:inbound-auth-subject"</span><span class="p">,</span><span class="w"> </span><span class="s2">"..."</span><span class="p">]</span><span class="w">
+        </span><span class="nl">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"ditto:inbound-auth-subject"</span><span class="p">,</span><span class="w"> </span><span class="s2">"..."</span><span class="p">]</span><span class="w">
       </span><span class="p">}</span><span class="w">
     </span><span class="p">],</span><span class="w">
-    </span><span class="s2">"targets"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="nl">"targets"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
       </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"exchangeName/routingKey"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"topics"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="nl">"address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"exchangeName/routingKey"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"topics"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
           </span><span class="s2">"_/_/things/twin/events"</span><span class="p">,</span><span class="w">
           </span><span class="s2">"_/_/things/live/messages"</span><span class="w">
         </span><span class="p">],</span><span class="w">
-        </span><span class="s2">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"ditto:outbound-auth-subject"</span><span class="p">,</span><span class="w"> </span><span class="s2">"..."</span><span class="p">]</span><span class="w">
+        </span><span class="nl">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"ditto:outbound-auth-subject"</span><span class="p">,</span><span class="w"> </span><span class="s2">"..."</span><span class="p">]</span><span class="w">
       </span><span class="p">}</span><span class="w">
     </span><span class="p">]</span><span class="w">
   </span><span class="p">}</span><span class="w">
@@ -2291,7 +2298,7 @@ existing connections.</p>
                     </div>
                     <p class="notice">
                         &copy;2024 Eclipse Ditto™.
-                         Site last generated: Feb 27, 2024 <br />
+                         Site last generated: Apr 10, 2024 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

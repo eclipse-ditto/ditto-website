@@ -278,6 +278,13 @@
               
               
               
+              <li><a href="release_notes_354.html">3.5.4</a></li>
+              
+              
+              
+              
+              
+              
               <li><a href="release_notes_353.html">3.5.3</a></li>
               
               
@@ -2122,23 +2129,23 @@ bugfixes were added.</p>
 <h4 id="added-config-key-for-setting-the-max-pool-size-for-connections">Added config key for setting the max pool size for connections</h4>
 
 <p>The pool is used for mapping inbound and outbound messages in the connectivity service. It is configured
-per connection in the attribute <code class="highlighter-rouge">processorPoolSize</code>.</p>
+per connection in the attribute <code class="language-plaintext highlighter-rouge">processorPoolSize</code>.</p>
 
 <p>To provide a meaningful max per-connection pool size, you can now configure a service-wide maximum
-in the connectivity service using the key <code class="highlighter-rouge">ditto.connectivity.mapping.max-pool-size</code> (or its corresponding
-environment variable <code class="highlighter-rouge">CONNECTIVITY_MESSAGE_MAPPING_MAX_POOL_SIZE</code>).</p>
+in the connectivity service using the key <code class="language-plaintext highlighter-rouge">ditto.connectivity.mapping.max-pool-size</code> (or its corresponding
+environment variable <code class="language-plaintext highlighter-rouge">CONNECTIVITY_MESSAGE_MAPPING_MAX_POOL_SIZE</code>).</p>
 
 <h3 id="new-features">New features</h3>
 
-<h4 id="fnfilter-function-for-connectivity-header-mapping"><a href="https://github.com/eclipse-ditto/ditto/pull/674"><code class="highlighter-rouge">fn:filter</code> function for connectivity header mapping</a></h4>
+<h4 id="fnfilter-function-for-connectivity-header-mapping"><a href="https://github.com/eclipse-ditto/ditto/pull/674"><code class="language-plaintext highlighter-rouge">fn:filter</code> function for connectivity header mapping</a></h4>
 
 <p>In connection <a href="connectivity-header-mapping.html">header mappings</a> as part of the placeholders, the new 
-<a href="basic-placeholders.html#function-library"><code class="highlighter-rouge">fn:filter</code></a> function may be used in order to remove the result of the 
+<a href="basic-placeholders.html#function-library"><code class="language-plaintext highlighter-rouge">fn:filter</code></a> function may be used in order to remove the result of the 
 previous expression in the function pipeline unless the condition specified by the parameters is satisfied.</p>
 
 <h4 id="whoami-http-resource"><a href="https://github.com/eclipse-ditto/ditto/pull/687">Whoami HTTP resource</a></h4>
 
-<p>The new HTTP <code class="highlighter-rouge">GET</code> resource <code class="highlighter-rouge">/whoami</code> may be called in order to find out which authorization subjects were resolved in 
+<p>The new HTTP <code class="language-plaintext highlighter-rouge">GET</code> resource <code class="language-plaintext highlighter-rouge">/whoami</code> may be called in order to find out which authorization subjects were resolved in 
 the HTTP call’s authentication. This can be e.g. useful to find out the used JWT subject which should be added to 
 <a href="basic-policy.html#subjects">policies</a>.</p>
 
@@ -2161,17 +2168,17 @@ for all published twin events, live commands and live messages that request them
 are now supported as well. Both requesting and issuing them, e.g. in order to acknowledge that a message was 
 successfully received without directly responding to it.</p>
 
-<h4 id="addition-of-_created-date-to-things"><a href="https://github.com/eclipse-ditto/ditto/issues/749">Addition of <code class="highlighter-rouge">_created</code> date to things</a></h4>
+<h4 id="addition-of-_created-date-to-things"><a href="https://github.com/eclipse-ditto/ditto/issues/749">Addition of <code class="language-plaintext highlighter-rouge">_created</code> date to things</a></h4>
 
-<p>Whenever a <a href="basic-thing.html">thing</a> is now created, a JSON field <code class="highlighter-rouge">"_created"</code> is now added containing the creation 
+<p>Whenever a <a href="basic-thing.html">thing</a> is now created, a JSON field <code class="language-plaintext highlighter-rouge">"_created"</code> is now added containing the creation 
 date. This field can be selected via <a href="httpapi-concepts.html#with-field-selector">fields selection</a>, as the already 
-existing <code class="highlighter-rouge">"_modified"</code> field can also be. The created date can also be used as part of 
+existing <code class="language-plaintext highlighter-rouge">"_modified"</code> field can also be. The created date can also be used as part of 
 <a href="basic-rql.html">search RQL queries</a>.</p>
 
-<h4 id="support-for-adding-_metadata-to-things"><a href="https://github.com/eclipse-ditto/ditto/issues/680">Support for adding <code class="highlighter-rouge">_metadata</code> to things</a></h4>
+<h4 id="support-for-adding-_metadata-to-things"><a href="https://github.com/eclipse-ditto/ditto/issues/680">Support for adding <code class="language-plaintext highlighter-rouge">_metadata</code> to things</a></h4>
 
 <p>On modifying API calls to a <a href="basic-thing.html">thing</a>, additional metadata can now be passed with the header field 
-<code class="highlighter-rouge">"put-header"</code>. Documentation for this feature is still missing, but will be added soon after the 1.2.0 release.</p>
+<code class="language-plaintext highlighter-rouge">"put-header"</code>. Documentation for this feature is still missing, but will be added soon after the 1.2.0 release.</p>
 
 <h3 id="bugfixes">Bugfixes</h3>
 
@@ -2185,15 +2192,15 @@ This is a complete list of the
 
 <h2 id="migration-notes">Migration notes</h2>
 
-<h3 id="renamed-config-keys-containing-blacklist-to-blocklist">Renamed config keys containing <code class="highlighter-rouge">blacklist</code> to <code class="highlighter-rouge">blocklist</code></h3>
+<h3 id="renamed-config-keys-containing-blacklist-to-blocklist">Renamed config keys containing <code class="language-plaintext highlighter-rouge">blacklist</code> to <code class="language-plaintext highlighter-rouge">blocklist</code></h3>
 
 <ul>
-  <li>in <code class="highlighter-rouge">gateway.conf</code>: <code class="highlighter-rouge">ditto.gateway.http.redirect-to-https-blocklist-pattern</code></li>
-  <li>in <code class="highlighter-rouge">ditto-cluster.conf</code>: <code class="highlighter-rouge">ditto.cluster.cluster-status-roles-blocklist</code></li>
-  <li>in <code class="highlighter-rouge">ditto-protocol.conf</code>: <code class="highlighter-rouge">ditto.protocol.blocklist</code></li>
+  <li>in <code class="language-plaintext highlighter-rouge">gateway.conf</code>: <code class="language-plaintext highlighter-rouge">ditto.gateway.http.redirect-to-https-blocklist-pattern</code></li>
+  <li>in <code class="language-plaintext highlighter-rouge">ditto-cluster.conf</code>: <code class="language-plaintext highlighter-rouge">ditto.cluster.cluster-status-roles-blocklist</code></li>
+  <li>in <code class="language-plaintext highlighter-rouge">ditto-protocol.conf</code>: <code class="language-plaintext highlighter-rouge">ditto.protocol.blocklist</code></li>
 </ul>
 
-<p>If you configured any of the <code class="highlighter-rouge">blocklist</code> entries with Ditto &lt; 1.2.0, you’ll have to adjust your configuration 
+<p>If you configured any of the <code class="language-plaintext highlighter-rouge">blocklist</code> entries with Ditto &lt; 1.2.0, you’ll have to adjust your configuration 
 accordingly.</p>
 
 
@@ -2221,7 +2228,7 @@ accordingly.</p>
                     </div>
                     <p class="notice">
                         &copy;2024 Eclipse Ditto™.
-                         Site last generated: Feb 27, 2024 <br />
+                         Site last generated: Apr 10, 2024 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

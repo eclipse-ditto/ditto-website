@@ -274,7 +274,7 @@ $('#toc').on('click', 'a', function() {
 <p>By adding the new <a href="basic-acknowledgements.html">acknowledgements feature</a> to Ditto, it is now possible to provide an end to end QoS (quality of service) with level 1.
 Previously the <a href="architecture-services-connectivity.html">connectivity service</a> of Ditto did accept all incoming messages immediately as soon as it received the message.</p>
 
-<p>This behaviour can now be controlled by a Ditto header called <a href="basic-acknowledgements.html#requesting-acks"><code class="highlighter-rouge">requested-acks</code></a>.</p>
+<p>This behaviour can now be controlled by a Ditto header called <a href="basic-acknowledgements.html#requesting-acks"><code class="language-plaintext highlighter-rouge">requested-acks</code></a>.</p>
 
 <p>In this blog post I will provide a few examples for how to use this new feature in the following scenarios:</p>
 
@@ -320,19 +320,19 @@ E2E acknowledgement can also be used the other way around when e.g. a backend ap
 
 <p>In this scenario the device will send the modification command containing the headers:</p>
 <ul>
-  <li><code class="highlighter-rouge">response-required=false</code></li>
-  <li><code class="highlighter-rouge">requested-acks=[]</code></li>
+  <li><code class="language-plaintext highlighter-rouge">response-required=false</code></li>
+  <li><code class="language-plaintext highlighter-rouge">requested-acks=[]</code></li>
 </ul>
 
 <p>Example <a href="protocol-specification.html">Ditto Protocol</a> message:</p>
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"topic"</span><span class="p">:</span><span class="w"> </span><span class="s2">"org.eclipse.ditto/my-thing/things/twin/commands/modify"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"response-required"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"requested-acks"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+  </span><span class="nl">"topic"</span><span class="p">:</span><span class="w"> </span><span class="s2">"org.eclipse.ditto/my-thing/things/twin/commands/modify"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"response-required"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"requested-acks"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
   </span><span class="p">},</span><span class="w">
-  </span><span class="s2">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/features/lightSwitch/properties/status"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"on"</span><span class="w">
+  </span><span class="nl">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/features/lightSwitch/properties/status"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"on"</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
@@ -346,19 +346,19 @@ E2E acknowledgement can also be used the other way around when e.g. a backend ap
 
 <p>The command needs to define the following headers:</p>
 <ul>
-  <li><code class="highlighter-rouge">response-required=false</code></li>
-  <li><code class="highlighter-rouge">requested-acks=["twin-persisted"]</code></li>
+  <li><code class="language-plaintext highlighter-rouge">response-required=false</code></li>
+  <li><code class="language-plaintext highlighter-rouge">requested-acks=["twin-persisted"]</code></li>
 </ul>
 
 <p>Example <a href="protocol-specification.html">Ditto Protocol</a> message:</p>
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"topic"</span><span class="p">:</span><span class="w"> </span><span class="s2">"org.eclipse.ditto/my-thing/things/twin/commands/modify"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"response-required"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"requested-acks"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"twin-persisted"</span><span class="p">]</span><span class="w">
+  </span><span class="nl">"topic"</span><span class="p">:</span><span class="w"> </span><span class="s2">"org.eclipse.ditto/my-thing/things/twin/commands/modify"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"response-required"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"requested-acks"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"twin-persisted"</span><span class="p">]</span><span class="w">
   </span><span class="p">},</span><span class="w">
-  </span><span class="s2">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/features/lightSwitch/properties/status"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"on"</span><span class="w">
+  </span><span class="nl">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/features/lightSwitch/properties/status"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"on"</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
@@ -368,9 +368,9 @@ E2E acknowledgement can also be used the other way around when e.g. a backend ap
 this will cause the broker to redeliver the command to Ditto if the acknowledgment fails.<br />
 Please be aware that a redelivery will only be requested for the following error status codes:</p>
 <ul>
-  <li><code class="highlighter-rouge">408</code> (Request timed out)</li>
-  <li><code class="highlighter-rouge">424</code> (Dependency Failure)</li>
-  <li>All kinds of <code class="highlighter-rouge">5xx</code> status codes</li>
+  <li><code class="language-plaintext highlighter-rouge">408</code> (Request timed out)</li>
+  <li><code class="language-plaintext highlighter-rouge">424</code> (Dependency Failure)</li>
+  <li>All kinds of <code class="language-plaintext highlighter-rouge">5xx</code> status codes</li>
 </ul>
 
 <p>In this scenario it does matter if the command could be processed successfully, but it’s still not relevant if any subscriber received an event for this change.</p>
@@ -386,27 +386,27 @@ This can be a <a href="httpapi-protocol-bindings-websocket.html">WebSocket sessi
 
 <p>For this example we expect the event to be forwarded by an <a href="connectivity-protocol-bindings-http.html">HTTP connection</a> 
 which declared the following acknowledgement label as 
-<a href="basic-connections.html#target-issued-acknowledgement-label">issued acknowledgement of the target</a>: <code class="highlighter-rouge">d45d4522-142e-4057-ae87-8969343a3ddc:backend-processed</code>.</p>
+<a href="basic-connections.html#target-issued-acknowledgement-label">issued acknowledgement of the target</a>: <code class="language-plaintext highlighter-rouge">d45d4522-142e-4057-ae87-8969343a3ddc:backend-processed</code>.</p>
 
-<p>The UUID prefix in this case is the ID of the HTTP connection and the<code class="highlighter-rouge">backend-process</code> part is a custom label, defined by the user.</p>
+<p>The UUID prefix in this case is the ID of the HTTP connection and the<code class="language-plaintext highlighter-rouge">backend-process</code> part is a custom label, defined by the user.</p>
 
 <p>The command needs to define the following headers:</p>
 <ul>
-  <li><code class="highlighter-rouge">response-required=false</code></li>
-  <li><code class="highlighter-rouge">requested-acks=["d45d4522-142e-4057-ae87-8969343a3ddc:backend-processed"]</code></li>
-  <li><code class="highlighter-rouge">timeout=30s</code> (optional. Default is 10s.)</li>
+  <li><code class="language-plaintext highlighter-rouge">response-required=false</code></li>
+  <li><code class="language-plaintext highlighter-rouge">requested-acks=["d45d4522-142e-4057-ae87-8969343a3ddc:backend-processed"]</code></li>
+  <li><code class="language-plaintext highlighter-rouge">timeout=30s</code> (optional. Default is 10s.)</li>
 </ul>
 
 <p>Example <a href="protocol-specification.html">Ditto Protocol</a> message:</p>
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"topic"</span><span class="p">:</span><span class="w"> </span><span class="s2">"org.eclipse.ditto/my-thing/things/twin/commands/modify"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"response-required"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"requested-acks"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"d45d4522-142e-4057-ae87-8969343a3ddc:backend-processed"</span><span class="p">],</span><span class="w">
-    </span><span class="s2">"timeout"</span><span class="p">:</span><span class="w"> </span><span class="s2">"30s"</span><span class="w">
+  </span><span class="nl">"topic"</span><span class="p">:</span><span class="w"> </span><span class="s2">"org.eclipse.ditto/my-thing/things/twin/commands/modify"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"response-required"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"requested-acks"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"d45d4522-142e-4057-ae87-8969343a3ddc:backend-processed"</span><span class="p">],</span><span class="w">
+    </span><span class="nl">"timeout"</span><span class="p">:</span><span class="w"> </span><span class="s2">"30s"</span><span class="w">
   </span><span class="p">},</span><span class="w">
-  </span><span class="s2">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/features/alarm/properties/status"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"on"</span><span class="w">
+  </span><span class="nl">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/features/alarm/properties/status"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"on"</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
@@ -414,12 +414,12 @@ which declared the following acknowledgement label as
 will be finished before acknowledging the incoming message at the messaging system.</p>
 
 <p>The status code of the HTTP response will in this case determine if the message will be acknowledged successfully or not and if a redelivery will be requested or not.<br />
-All kinds of <code class="highlighter-rouge">2xx</code> status codes will lead to a successful acknowledgement at the messaging system.<br />
+All kinds of <code class="language-plaintext highlighter-rouge">2xx</code> status codes will lead to a successful acknowledgement at the messaging system.<br />
 All other status codes will lead to a failed acknowledgement at the messaging system and for the following status codes a redelivery will be requested:</p>
 <ul>
-  <li><code class="highlighter-rouge">408</code> (Request timed out)</li>
-  <li><code class="highlighter-rouge">424</code> (Dependency Failure)</li>
-  <li>All kinds of <code class="highlighter-rouge">5xx</code> status codes</li>
+  <li><code class="language-plaintext highlighter-rouge">408</code> (Request timed out)</li>
+  <li><code class="language-plaintext highlighter-rouge">424</code> (Dependency Failure)</li>
+  <li>All kinds of <code class="language-plaintext highlighter-rouge">5xx</code> status codes</li>
 </ul>
 
 <p>In this scenario it is ensured a specified subscriber will receive an event for this change.</p>
@@ -431,18 +431,18 @@ All other status codes will lead to a failed acknowledgement at the messaging sy
 <p>This could be for example an alarming system which wants to be sure a backend application receives the information, 
 or if not: tries to send an SMS as notification.</p>
 
-<p>This scenario is mostly like scenario 3, but needs to set the <code class="highlighter-rouge">response-required</code> header to <code class="highlighter-rouge">true</code> and it’s required 
+<p>This scenario is mostly like scenario 3, but needs to set the <code class="language-plaintext highlighter-rouge">response-required</code> header to <code class="language-plaintext highlighter-rouge">true</code> and it’s required 
 to <a href="basic-connections.html#source-reply-target">configure the reply-target of the source</a> to also expect “nack” responses.</p>
 
 <p>Example <a href="protocol-specification.html">Ditto Protocol</a> message:</p>
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"topic"</span><span class="p">:</span><span class="w"> </span><span class="s2">"org.eclipse.ditto/my-thing/things/twin/commands/modify"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"response-required"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"requested-acks"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"d45d4522-142e-4057-ae87-8969343a3ddc:backend-processed"</span><span class="p">]</span><span class="w">
+  </span><span class="nl">"topic"</span><span class="p">:</span><span class="w"> </span><span class="s2">"org.eclipse.ditto/my-thing/things/twin/commands/modify"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"response-required"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"requested-acks"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"d45d4522-142e-4057-ae87-8969343a3ddc:backend-processed"</span><span class="p">]</span><span class="w">
   </span><span class="p">},</span><span class="w">
-  </span><span class="s2">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/features/alarm/properties/status"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"on"</span><span class="w">
+  </span><span class="nl">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/features/alarm/properties/status"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"on"</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
@@ -454,34 +454,34 @@ device handles the result of the E2E acknowledgement. With QoS 1 (“at least on
 <p>If the HTTP endpoint of the backend application responds with the following response:</p>
 
 <p>headers:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>"content-type": "application/json"
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>"content-type": "application/json"
 </code></pre></div></div>
 
 <p>body:</p>
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"errorCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"notification.smartphone.failed"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Could not notify smartphone."</span><span class="w">
+  </span><span class="nl">"errorCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"notification.smartphone.failed"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Could not notify smartphone."</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
-<p>status code: <code class="highlighter-rouge">424</code></p>
+<p>status code: <code class="language-plaintext highlighter-rouge">424</code></p>
 
 <p>The response received at the device would look like this:</p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"topic"</span><span class="p">:</span><span class="w"> </span><span class="s2">"org.eclipse.ditto/my-thing/things/twin/acks/d45d4522-142e-4057-ae87-8969343a3ddc:backend-processed"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"response-required"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"requested-acks"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"d45d4522-142e-4057-ae87-8969343a3ddc:backend-processed"</span><span class="p">],</span><span class="w">
-    </span><span class="s2">"timeout"</span><span class="p">:</span><span class="w"> </span><span class="s2">"30s"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"content-type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"application/json"</span><span class="w">
+  </span><span class="nl">"topic"</span><span class="p">:</span><span class="w"> </span><span class="s2">"org.eclipse.ditto/my-thing/things/twin/acks/d45d4522-142e-4057-ae87-8969343a3ddc:backend-processed"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"response-required"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"requested-acks"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"d45d4522-142e-4057-ae87-8969343a3ddc:backend-processed"</span><span class="p">],</span><span class="w">
+    </span><span class="nl">"timeout"</span><span class="p">:</span><span class="w"> </span><span class="s2">"30s"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"content-type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"application/json"</span><span class="w">
   </span><span class="p">},</span><span class="w">
-  </span><span class="s2">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"value"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"errorCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"notification.smartphone.failed"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Could not notify smartphone."</span><span class="w">
+  </span><span class="nl">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"value"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"errorCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"notification.smartphone.failed"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Could not notify smartphone."</span><span class="w">
   </span><span class="p">},</span><span class="w">
-  </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="mi">424</span><span class="w">
+  </span><span class="nl">"status"</span><span class="p">:</span><span class="w"> </span><span class="mi">424</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
@@ -495,25 +495,25 @@ and after it was received the device can signal the user, that it is ready to do
 
 <p>The headers of the live message should have the following values:</p>
 <ul>
-  <li><code class="highlighter-rouge">response-required=true</code></li>
-  <li><code class="highlighter-rouge">requested-acks=["live-response"]</code></li>
+  <li><code class="language-plaintext highlighter-rouge">response-required=true</code></li>
+  <li><code class="language-plaintext highlighter-rouge">requested-acks=["live-response"]</code></li>
 </ul>
 
 <p>Example <a href="protocol-specification.html">Ditto Protocol</a> message:</p>
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-    </span><span class="s2">"topic"</span><span class="p">:</span><span class="w"> </span><span class="s2">"org.eclipse.ditto/my-thing/things/live/messages/firmware"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"response-required"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"requested-acks"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"live-response"</span><span class="p">],</span><span class="w">
-      </span><span class="s2">"content-type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"text/plain"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"timeout"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5s"</span><span class="w">
+    </span><span class="nl">"topic"</span><span class="p">:</span><span class="w"> </span><span class="s2">"org.eclipse.ditto/my-thing/things/live/messages/firmware"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"response-required"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"requested-acks"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"live-response"</span><span class="p">],</span><span class="w">
+      </span><span class="nl">"content-type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"text/plain"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"timeout"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5s"</span><span class="w">
     </span><span class="p">},</span><span class="w">
-    </span><span class="s2">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/outbox/messages/firmware"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"firmware.url.query"</span><span class="w">
+    </span><span class="nl">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/outbox/messages/firmware"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"firmware.url.query"</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
-<p>By requesting the acknowledgement <code class="highlighter-rouge">live-response</code> the connectivity service will wait until the response for the live message arrived 
+<p>By requesting the acknowledgement <code class="language-plaintext highlighter-rouge">live-response</code> the connectivity service will wait until the response for the live message arrived 
 for 5s before acknowledging the incoming message at the broker and will request a redelivery if the response did not arrive within this timeout.</p>
 
 <p>This will repeat until either the broker discards the message or the response arrives in the specified timeout.
@@ -529,21 +529,21 @@ like entering a code directly at the device if this response does not arrive wit
 
 <p>The headers of the live message should have the following values:</p>
 <ul>
-  <li><code class="highlighter-rouge">response-required=true</code></li>
-  <li><code class="highlighter-rouge">requested-acks=[]</code></li>
+  <li><code class="language-plaintext highlighter-rouge">response-required=true</code></li>
+  <li><code class="language-plaintext highlighter-rouge">requested-acks=[]</code></li>
 </ul>
 
 <p>Example <a href="protocol-specification.html">Ditto Protocol</a> message:</p>
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-    </span><span class="s2">"topic"</span><span class="p">:</span><span class="w"> </span><span class="s2">"org.eclipse.ditto/my-thing/things/live/messages/car-enter"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"response-required"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"requested-acks"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
-      </span><span class="s2">"content-type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"text/plain"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"timeout"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5s"</span><span class="w">
+    </span><span class="nl">"topic"</span><span class="p">:</span><span class="w"> </span><span class="s2">"org.eclipse.ditto/my-thing/things/live/messages/car-enter"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"response-required"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"requested-acks"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+      </span><span class="nl">"content-type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"text/plain"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"timeout"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5s"</span><span class="w">
     </span><span class="p">},</span><span class="w">
-    </span><span class="s2">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/outbox/messages/car-enter"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"FN IB 1337"</span><span class="w">
+    </span><span class="nl">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/outbox/messages/car-enter"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"FN IB 1337"</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
@@ -581,7 +581,7 @@ The Eclipse Ditto team</p>
                     </div>
                     <p class="notice">
                         &copy;2024 Eclipse Ditto™.
-                         Site last generated: Feb 27, 2024 <br />
+                         Site last generated: Apr 10, 2024 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

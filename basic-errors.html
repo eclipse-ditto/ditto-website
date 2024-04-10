@@ -278,6 +278,13 @@
               
               
               
+              <li><a href="release_notes_354.html">3.5.4</a></li>
+              
+              
+              
+              
+              
+              
               <li><a href="release_notes_353.html">3.5.3</a></li>
               
               
@@ -2126,15 +2133,15 @@ They might change without prior notice.</p>
 <p>Ditto itself uses the following prefixes for its error codes:</p>
 
 <ul>
-  <li><code class="highlighter-rouge">things:</code> - for errors related to <a href="basic-thing.html">things</a></li>
-  <li><code class="highlighter-rouge">policies:</code> - for errors related to <a href="basic-policy.html">policies</a></li>
-  <li><code class="highlighter-rouge">things-search:</code> - for errors related to the <a href="basic-search.html">things search</a></li>
-  <li><code class="highlighter-rouge">acknowledgement:</code> - for errors related to <a href="basic-acknowledgements.html">acknowledgements</a></li>
-  <li><code class="highlighter-rouge">messages:</code> - for errors related to <a href="basic-messages.html">messages</a></li>
-  <li><code class="highlighter-rouge">placeholder:</code> - for errors related to <a href="basic-placeholders.html">placeholders</a></li>
-  <li><code class="highlighter-rouge">jwt:</code> - for errors related to <a href="#" data-toggle="tooltip" data-original-title="JSON Web Token (JWT)">JWT</a> based <a href="basic-auth.html">authentication</a></li>
-  <li><code class="highlighter-rouge">gateway:</code> - for errors produced by the (HTTP/WS) <a href="architecture-services-gateway.html">gateway</a> service</li>
-  <li><code class="highlighter-rouge">connectivity:</code> - for errors produced by the <a href="architecture-services-connectivity.html">connectivity</a> service</li>
+  <li><code class="language-plaintext highlighter-rouge">things:</code> - for errors related to <a href="basic-thing.html">things</a></li>
+  <li><code class="language-plaintext highlighter-rouge">policies:</code> - for errors related to <a href="basic-policy.html">policies</a></li>
+  <li><code class="language-plaintext highlighter-rouge">things-search:</code> - for errors related to the <a href="basic-search.html">things search</a></li>
+  <li><code class="language-plaintext highlighter-rouge">acknowledgement:</code> - for errors related to <a href="basic-acknowledgements.html">acknowledgements</a></li>
+  <li><code class="language-plaintext highlighter-rouge">messages:</code> - for errors related to <a href="basic-messages.html">messages</a></li>
+  <li><code class="language-plaintext highlighter-rouge">placeholder:</code> - for errors related to <a href="basic-placeholders.html">placeholders</a></li>
+  <li><code class="language-plaintext highlighter-rouge">jwt:</code> - for errors related to <a href="#" data-toggle="tooltip" data-original-title="JSON Web Token (JWT)">JWT</a> based <a href="basic-auth.html">authentication</a></li>
+  <li><code class="language-plaintext highlighter-rouge">gateway:</code> - for errors produced by the (HTTP/WS) <a href="architecture-services-gateway.html">gateway</a> service</li>
+  <li><code class="language-plaintext highlighter-rouge">connectivity:</code> - for errors produced by the <a href="architecture-services-connectivity.html">connectivity</a> service</li>
 </ul>
 
 <h3 id="message">Message</h3>
@@ -2152,19 +2159,19 @@ They might change without prior notice.</p>
 <h2 id="examples">Examples</h2>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="mi">404</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"error"</span><span class="p">:</span><span class="w"> </span><span class="s2">"things:attribute.notfound"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"The attribute with key 'unknown-key' on the thing with ID 'org.eclipse.ditto:my-thing' could not be found or the requester had insufficient permissions to access it."</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Check if the ID of the thing and the key of your requested attribute was correct and you have sufficient permissions."</span><span class="w">
+  </span><span class="nl">"status"</span><span class="p">:</span><span class="w"> </span><span class="mi">404</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"error"</span><span class="p">:</span><span class="w"> </span><span class="s2">"things:attribute.notfound"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"The attribute with key 'unknown-key' on the thing with ID 'org.eclipse.ditto:my-thing' could not be found or the requester had insufficient permissions to access it."</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Check if the ID of the thing and the key of your requested attribute was correct and you have sufficient permissions."</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="mi">400</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"error"</span><span class="p">:</span><span class="w"> </span><span class="s2">"messages:id.invalid"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Thing ID 'foobar2000' is not valid!"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"It must conform to the namespaced entity ID notation (see Ditto documentation)"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"href"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://www.eclipse.dev/ditto/basic-namespaces-and-names.html#namespaced-id"</span><span class="w">
+  </span><span class="nl">"status"</span><span class="p">:</span><span class="w"> </span><span class="mi">400</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"error"</span><span class="p">:</span><span class="w"> </span><span class="s2">"messages:id.invalid"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Thing ID 'foobar2000' is not valid!"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"It must conform to the namespaced entity ID notation (see Ditto documentation)"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"href"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://www.eclipse.dev/ditto/basic-namespaces-and-names.html#namespaced-id"</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
@@ -2194,7 +2201,7 @@ They might change without prior notice.</p>
                     </div>
                     <p class="notice">
                         &copy;2024 Eclipse Ditto™.
-                         Site last generated: Feb 27, 2024 <br />
+                         Site last generated: Apr 10, 2024 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

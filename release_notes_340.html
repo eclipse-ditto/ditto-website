@@ -278,6 +278,13 @@
               
               
               
+              <li><a href="release_notes_354.html">3.5.4</a></li>
+              
+              
+              
+              
+              
+              
               <li><a href="release_notes_353.html">3.5.3</a></li>
               
               
@@ -2113,7 +2120,7 @@ investigated.”</p>
 <p>Eclipse Ditto 3.4.0 focuses on the following areas:</p>
 
 <ul>
-  <li>Supporting <strong>HTTP <code class="highlighter-rouge">POST</code></strong> for performing <strong>searches</strong> with a very <strong>long query</strong></li>
+  <li>Supporting <strong>HTTP <code class="language-plaintext highlighter-rouge">POST</code></strong> for performing <strong>searches</strong> with a very <strong>long query</strong></li>
   <li>Addition of a <strong>new placeholder</strong> to use <strong>in connections</strong> to use <strong>payload of the thing JSON</strong> e.g. in headers or addresses</li>
   <li>New <strong>placeholder functions</strong> for <strong>joining</strong> multiple elements into a single string and doing <strong>URL-encoding and -decoding</strong></li>
   <li>Configure <strong>MQTT message expiry interval for published messages</strong> via a header</li>
@@ -2133,7 +2140,7 @@ investigated.”</p>
   <li><strong>Swapping the <a href="https://akka.io">Akka toolkit</a></strong> (because of its switch of license to <a href="https://www.lightbend.com/akka/license-faq">BSL License</a> after Akka v2.6.x)
 <strong>with its fork <a href="https://pekko.apache.org/">Apache Pekko</a></strong> which remains Apache 2.0 licensed.</li>
   <li>Support for using <strong>AWS DocumentDB</strong> as a replacement for MongoDB</li>
-  <li>Improve logging by adding the <strong>W3C Trace Context</strong> <code class="highlighter-rouge">traceparent</code> header as MDC field to logs</li>
+  <li>Improve logging by adding the <strong>W3C Trace Context</strong> <code class="language-plaintext highlighter-rouge">traceparent</code> header as MDC field to logs</li>
   <li>Adjust handling of special MQTT headers in MQTT 5</li>
   <li>Optimize docker files</li>
   <li>Migration of Ditto UI to TypeScript</li>
@@ -2152,51 +2159,51 @@ to scale horizontally and provides some tuning tips</li>
 
 <h3 id="new-features">New features</h3>
 
-<h4 id="supporting-http-post-for-performing-searches-with-a-very-long-query">Supporting HTTP <code class="highlighter-rouge">POST</code> for performing searches with a very long query</h4>
+<h4 id="supporting-http-post-for-performing-searches-with-a-very-long-query">Supporting HTTP <code class="language-plaintext highlighter-rouge">POST</code> for performing searches with a very long query</h4>
 
-<p>In <a href="https://github.com/eclipse-ditto/ditto/pull/1706">#1706</a> support for the additional HTTP verb <code class="highlighter-rouge">POST</code> on the 
-search HTTP API <code class="highlighter-rouge">/api/2/search/things</code> and <code class="highlighter-rouge">/api/2/search/things/count</code> was added.<br />
+<p>In <a href="https://github.com/eclipse-ditto/ditto/pull/1706">#1706</a> support for the additional HTTP verb <code class="language-plaintext highlighter-rouge">POST</code> on the 
+search HTTP API <code class="language-plaintext highlighter-rouge">/api/2/search/things</code> and <code class="language-plaintext highlighter-rouge">/api/2/search/things/count</code> was added.<br />
 This is beneficial if the passed in <a href="basic-search.html#rql">RQL search query</a> would get too long to send via query 
-parameter of the <code class="highlighter-rouge">GET</code> verb.<br />
+parameter of the <code class="language-plaintext highlighter-rouge">GET</code> verb.<br />
 Documentation was added <a href="httpapi-search.html#post">here</a> and in the <a href="http-api-doc.html#/Things-Search/post_api_2_search_things">OpenAPI documentation</a>.</p>
 
 <h4 id="addition-of-a-new-placeholder-to-use-in-connections-to-use-payload-of-the-thing-json-eg-in-headers-or-addresses">Addition of a new placeholder to use in connections to use payload of the thing JSON e.g. in headers or addresses</h4>
 
 <p>For Ditto managed <a href="basic-connections.html">connections</a> a new <a href="basic-placeholders.html#thing-json-placeholder">“thing-json” placeholder</a>
 was added, resolving issue <a href="https://github.com/eclipse-ditto/ditto/issues/1727">#1727</a>.<br />
-With the <code class="highlighter-rouge">thing:json</code> placeholder it is possible to access arbitrary thing payload as a placeholder, for example in order
+With the <code class="language-plaintext highlighter-rouge">thing:json</code> placeholder it is possible to access arbitrary thing payload as a placeholder, for example in order
 to use it as part of an outbound HTTP call for a managed <a href="connectivity-protocol-bindings-http.html">HTTP-push connection</a> (WebHook).</p>
 
 <p>Example: call a foreign weather service with the location being a part of the thing’s attributes:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>"address": "GET:/weather?longitude={{thing-json:attributes/location/lon}}&amp;latitude={{thing-json:attributes/location/lat}}"
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>"address": "GET:/weather?longitude={{thing-json:attributes/location/lon}}&amp;latitude={{thing-json:attributes/location/lat}}"
 </code></pre></div></div>
 
 <h4 id="new-placeholder-functions-for-joining-multiple-elements-into-a-single-string-and-doing-url-encoding-and--decoding">New placeholder functions for joining multiple elements into a single string and doing URL-encoding and -decoding</h4>
 
 <p>With <a href="https://github.com/eclipse-ditto/ditto/pull/1754">#1754</a> there is a new <a href="basic-placeholders.html#function-library">placeholder function</a>, 
-<code class="highlighter-rouge">fn:join('delimiter')</code>, which can be used in order to join a pipeline element, containing multiple values, into a single
+<code class="language-plaintext highlighter-rouge">fn:join('delimiter')</code>, which can be used in order to join a pipeline element, containing multiple values, into a single
 string.</p>
 
 <p>As part of <a href="https://github.com/eclipse-ditto/ditto/issues/1727">#1727</a> several placeholders were also added in order to
 be able to apply URL-encoding and -decoding plus also Base64-encoding and -decoding:</p>
 <ul>
-  <li><code class="highlighter-rouge">fn:url-encode()</code></li>
-  <li><code class="highlighter-rouge">fn:url-decode()</code></li>
-  <li><code class="highlighter-rouge">fn:base64-encode()</code></li>
-  <li><code class="highlighter-rouge">fn:base64-decode()</code></li>
+  <li><code class="language-plaintext highlighter-rouge">fn:url-encode()</code></li>
+  <li><code class="language-plaintext highlighter-rouge">fn:url-decode()</code></li>
+  <li><code class="language-plaintext highlighter-rouge">fn:base64-encode()</code></li>
+  <li><code class="language-plaintext highlighter-rouge">fn:base64-decode()</code></li>
 </ul>
 
 <h4 id="configure-mqtt-message-expiry-interval-for-published-messages-via-a-header">Configure MQTT message expiry interval for published messages via a header</h4>
 
 <p>Resolving issue <a href="https://github.com/eclipse-ditto/ditto/issues/1729">#1729</a>, a functionality was added to add a special
-header <code class="highlighter-rouge">mqtt.message-expiry-interval</code> as part of a <a href="connectivity-protocol-bindings-mqtt5.html#target-header-mapping">MQTT5 target header mapping</a>,
+header <code class="language-plaintext highlighter-rouge">mqtt.message-expiry-interval</code> as part of a <a href="connectivity-protocol-bindings-mqtt5.html#target-header-mapping">MQTT5 target header mapping</a>,
 dynamically influencing the MQTT message expiry interval, e.g. as part of a payload mapper for certain to-be-published 
 messages, or as a header mapping for all published messages.</p>
 
 <h4 id="reduce-patchmerge-thing-commands-to-modify-only-the-actually-changed-values-with-a-new-option">Reduce patch/merge thing commands to modify only the actually changed values with a new option</h4>
 
 <p>In <a href="https://github.com/eclipse-ditto/ditto/pull/1772">#1772</a> the existing <a href="httpapi-concepts.html#conditional-headers">if-equal header</a>
-has been enhanced with a new option: <code class="highlighter-rouge">skip-minimizing-merge</code>.<br />
+has been enhanced with a new option: <code class="language-plaintext highlighter-rouge">skip-minimizing-merge</code>.<br />
 Performing a <a href="protocol-specification-things-merge.html">merge/patch command</a> and specifying this option as header will
 cause that the merge command’s payload will be minimized to only the values which will actually be changed in the thing.</p>
 
@@ -2213,7 +2220,7 @@ In detail, the following improvements and fixes were added:</p>
   <li>add a loading spinner to the “Send” (message) button and deactivate it while sending</li>
   <li>update a complete Thing using “PATCH” and with the new 3.4.0 header “if-equal: skip-minimizing-merge”</li>
   <li>only send eTag if it could be retrieved when updating complete thing</li>
-  <li>added missing <code class="highlighter-rouge">ilike</code> predicate to the search slot</li>
+  <li>added missing <code class="language-plaintext highlighter-rouge">ilike</code> predicate to the search slot</li>
   <li>made UI more responsive for small screens</li>
   <li>prevent browser for doing autocomplete in the “search” input field</li>
   <li>increase size of the “Things” JSON editor - keep sizes and position of other JSON editors as they were</li>
@@ -2241,7 +2248,7 @@ some <a href="installation-running.html#managed-amazon-documentdb-with-mongodb-c
 <h4 id="improve-logging-by-adding-the-w3c-traceparent-header-as-mdc-field-to-logs">Improve logging by adding the W3C traceparent header as MDC field to logs</h4>
 
 <p>In <a href="https://github.com/eclipse-ditto/ditto/issues/1739">#1739</a> Ditto adds support to log a <a href="https://www.w3.org/TR/trace-context/">W3C Trace Context</a> 
-<code class="highlighter-rouge">traceparent</code> header passed into Ditto (e.g. as HTTP header or as part of a <a href="connectivity-header-mapping.html">Connection’s header mapping</a>) 
+<code class="language-plaintext highlighter-rouge">traceparent</code> header passed into Ditto (e.g. as HTTP header or as part of a <a href="connectivity-header-mapping.html">Connection’s header mapping</a>) 
 to the MDC.<br />
 If <a href="installation-operating.html#tracing">tracing is enabled</a>, Ditto will even produce traceparents for (up to) each API
 invocation.</p>
@@ -2250,7 +2257,7 @@ invocation.</p>
 
 <p>Resolving <a href="https://github.com/eclipse-ditto/ditto/issues/1758">#1758</a>, a feature toggle
 (<a href="https://github.com/eclipse-ditto/ditto/blob/7ee1a778ffc6f254f59a9097d9c44372f069e897/internal/utils/config/src/main/resources/ditto-devops.conf#L24-L26">configuration</a>)
-was added to configure whether to preserve “special” MQTT properties (like <code class="highlighter-rouge">mqtt.topic</code>, <code class="highlighter-rouge">mqtt.qos</code>, …) as headers or not.<br />
+was added to configure whether to preserve “special” MQTT properties (like <code class="language-plaintext highlighter-rouge">mqtt.topic</code>, <code class="language-plaintext highlighter-rouge">mqtt.qos</code>, …) as headers or not.<br />
 The default is to preserve them (as this was the default until now).</p>
 
 <h4 id="optimize-docker-files">Optimize docker files</h4>
@@ -2267,7 +2274,7 @@ If one needs/wants to run own benchmarks, this tool can be a good starting point
 <h4 id="migration-of-ditto-ui-to-typescript">Migration of Ditto UI to TypeScript</h4>
 
 <p>With <a href="https://github.com/eclipse-ditto/ditto/pull/1688">#1688</a>, the Ditto UI has been migrated from JavaScript codebase
-to TypeScript, introducing <code class="highlighter-rouge">npm</code> to build the UI.</p>
+to TypeScript, introducing <code class="language-plaintext highlighter-rouge">npm</code> to build the UI.</p>
 
 <h3 id="bugfixes">Bugfixes</h3>
 
@@ -2279,13 +2286,13 @@ This could e.g. happen if a single policy is used by a lot of things and this wa
 
 <h4 id="fixed-that-putting-metadata-when-updating-a-single-scalar-value-did-not-work">Fixed that putting metadata when updating a single scalar value did not work</h4>
 
-<p>The reported bug <a href="https://github.com/eclipse-ditto/ditto/issues/1631">#1631</a>, where the header <code class="highlighter-rouge">put-metadata</code> did not 
+<p>The reported bug <a href="https://github.com/eclipse-ditto/ditto/issues/1631">#1631</a>, where the header <code class="language-plaintext highlighter-rouge">put-metadata</code> did not 
 have an effect when updating a single scalar value, was fixed.</p>
 
 <h4 id="ui-fix-fixing-that-patching-a-thing-will-null-values-did-not-reflect-that-change-in-the-ui">UI fix, fixing that patching a thing will null values did not reflect that change in the UI</h4>
 
 <p>The reported bug <a href="https://github.com/eclipse-ditto/ditto/issues/1712">#1712</a> was fixed, the UI now correctly updates
-when e.g. something was removed from a thing by a merge/patch update, using a <code class="highlighter-rouge">null</code> value.</p>
+when e.g. something was removed from a thing by a merge/patch update, using a <code class="language-plaintext highlighter-rouge">null</code> value.</p>
 
 <h3 id="helm-chart">Helm Chart</h3>
 
@@ -2310,9 +2317,9 @@ The following section describes, how.</p>
 
 <p>As part of the migration from Akka to Pekko and from <a href="https://github.com/scullxbones/akka-persistence-mongo">akka-persistence-mongo</a>
 persistence plugin to <a href="https://github.com/scullxbones/pekko-persistence-mongo">pekko-persistence-mongo</a> a previously
-named index <code class="highlighter-rouge">akka_persistence_metadata_pid</code> was renamed to <code class="highlighter-rouge">pekko_persistence_metadata_pid</code>.</p>
+named index <code class="language-plaintext highlighter-rouge">akka_persistence_metadata_pid</code> was renamed to <code class="language-plaintext highlighter-rouge">pekko_persistence_metadata_pid</code>.</p>
 
-<p>When starting Ditto 3.4.0 and not having adjusted the index name, the MongoDB will respond with errors as <code class="highlighter-rouge">pekko-persistence-mongo</code>
+<p>When starting Ditto 3.4.0 and not having adjusted the index name, the MongoDB will respond with errors as <code class="language-plaintext highlighter-rouge">pekko-persistence-mongo</code>
 will try to create the same index with a different name.</p>
 
 <p>To migrate, there are two options:</p>
@@ -2326,7 +2333,7 @@ will try to create the same index with a different name.</p>
 <ul>
   <li>Connect to your MongoDB with the permissions to alter/drop indexes</li>
   <li>Drop the indexes using the following commands (via MongoDB shell):
-    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>db.policies_metadata.dropIndex("akka_persistence_metadata_pid")
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>db.policies_metadata.dropIndex("akka_persistence_metadata_pid")
 db.things_metadata.dropIndex("akka_persistence_metadata_pid")
 db.connection_metadata.dropIndex("akka_persistence_metadata_pid")
 db.connection_remember_metadata.dropIndex("akka_persistence_metadata_pid")
@@ -2400,7 +2407,7 @@ their use of Ditto.</p>
                     </div>
                     <p class="notice">
                         &copy;2024 Eclipse Ditto™.
-                         Site last generated: Feb 27, 2024 <br />
+                         Site last generated: Apr 10, 2024 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

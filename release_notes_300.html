@@ -278,6 +278,13 @@
               
               
               
+              <li><a href="release_notes_354.html">3.5.4</a></li>
+              
+              
+              
+              
+              
+              
               <li><a href="release_notes_353.html">3.5.3</a></li>
               
               
@@ -2143,8 +2150,8 @@ backpressure</li>
 
 <ul>
   <li><strong>Passwords</strong> stored in the URI of <strong>connections</strong> to <strong>no longer need to be double encoded</strong></li>
-  <li>Using the <code class="highlighter-rouge">Normalized</code> connection payload mapper together with enriched <code class="highlighter-rouge">extra</code> fields lead to wrongly merged things</li>
-  <li>Adding custom Java based <code class="highlighter-rouge">MessageMappers</code> to Ditto via classpath was no longer possible</li>
+  <li>Using the <code class="language-plaintext highlighter-rouge">Normalized</code> connection payload mapper together with enriched <code class="language-plaintext highlighter-rouge">extra</code> fields lead to wrongly merged things</li>
+  <li>Adding custom Java based <code class="language-plaintext highlighter-rouge">MessageMappers</code> to Ditto via classpath was no longer possible</li>
 </ul>
 
 <h3 id="changes">Changes</h3>
@@ -2212,12 +2219,12 @@ mechanism for <a href="installation-extending.html">extending Ditto</a> was intr
 Examples of such extensions are:</p>
 <ul>
   <li>adding additional, custom HTTP APIs to Ditto</li>
-  <li>creating a custom <code class="highlighter-rouge">PreEnforcer</code> which e.g. additionally authorizes processed commands in Ditto before they are 
+  <li>creating a custom <code class="language-plaintext highlighter-rouge">PreEnforcer</code> which e.g. additionally authorizes processed commands in Ditto before they are 
 authorized via their policy</li>
 </ul>
 
 <p>Check out the <a href="installation-extending.html">documentation on extending Ditto</a> and the existing extension points 
-(interfaces extending <code class="highlighter-rouge">DittoExtensionPoint</code>) to find out what can be extended and how to do it.</p>
+(interfaces extending <code class="language-plaintext highlighter-rouge">DittoExtensionPoint</code>) to find out what can be extended and how to do it.</p>
 
 <h4 id="rewrite-of-ditto-managed-mqtt-connection-to-use-reactive-client"><a href="https://github.com/eclipse-ditto/ditto/pull/1411">Rewrite of Ditto managed MQTT connection to use reactive client</a></h4>
 
@@ -2235,7 +2242,7 @@ authorized via their policy</li>
 <h4 id="devops-commands-response-consistency"><a href="https://github.com/eclipse-ditto/ditto/pull/1380">DevOps commands response consistency</a></h4>
 
 <p>Devops commands error responses are fixed to have similar structure to non-error ones.<br />
-Responses to requests with <code class="highlighter-rouge">"aggregate": false</code> are stripped to remove service name and instance (or layers of <code class="highlighter-rouge">"?"</code>)
+Responses to requests with <code class="language-plaintext highlighter-rouge">"aggregate": false</code> are stripped to remove service name and instance (or layers of <code class="language-plaintext highlighter-rouge">"?"</code>)
 in the JSON response.</p>
 
 <p>If devops commands were utilized, this will require a migration of the response handling.</p>
@@ -2256,7 +2263,7 @@ in the JSON response.</p>
 <p>This also enables <a href="https://github.com/eclipse-ditto/ditto/pull/1417">support to search by feature definition</a>.</p>
 
 <p>You can use this e.g. in order to search for all things having a feature with a certain definition:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>filter=like(features/*/definition,"your-model-namespace:lamp:1.*")
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>filter=like(features/*/definition,"your-model-namespace:lamp:1.*")
 </code></pre></div></div>
 
 <h4 id="several-improvements-around-metadata">Several improvements around “metadata”</h4>
@@ -2326,22 +2333,22 @@ the final changes to the 1.1 version of WoT TD, the following improvements also 
 
 <p>By using the Ditto WoT Extension Ontology located at 
 <a href="https://ditto.eclipseprojects.io/wot/ditto-extension">https://ditto.eclipseprojects.io/wot/ditto-extension</a>, it is possible
-to define an additional <code class="highlighter-rouge">"category"</code> for WoT properties. That can for example be used to ease the migration from Vorto 
-models, e.g. by defining a <code class="highlighter-rouge">"ditto:category": "configuration"</code> inside a WoT ThingModel.</p>
+to define an additional <code class="language-plaintext highlighter-rouge">"category"</code> for WoT properties. That can for example be used to ease the migration from Vorto 
+models, e.g. by defining a <code class="language-plaintext highlighter-rouge">"ditto:category": "configuration"</code> inside a WoT ThingModel.</p>
 
 <h4 id="make-default-namespace-for-creating-new-entities-configurable"><a href="https://github.com/eclipse-ditto/ditto/pull/1372">Make “default namespace” for creating new entities configurable</a></h4>
 
-<p>When e.g. creating new entities (things/policies) via <code class="highlighter-rouge">HTTP POST</code>, previously an empty namespace was used to create them in.<br />
+<p>When e.g. creating new entities (things/policies) via <code class="language-plaintext highlighter-rouge">HTTP POST</code>, previously an empty namespace was used to create them in.<br />
 This namespace can now be <a href="https://github.com/eclipse-ditto/ditto/blob/master/edge/service/src/main/resources/ditto-edge-service.conf#L12-L13">configured</a>
-via the environment variable <code class="highlighter-rouge">DITTO_DEFAULT_NAMESPACE</code> set to the “edge” services (ditto-gateway and ditto-connectivity).</p>
+via the environment variable <code class="language-plaintext highlighter-rouge">DITTO_DEFAULT_NAMESPACE</code> set to the “edge” services (ditto-gateway and ditto-connectivity).</p>
 
 <h4 id="provide-custom-namespace-when-creating-things-via-http-post"><a href="https://github.com/eclipse-ditto/ditto/issues/550">Provide custom namespace when creating things via HTTP POST</a></h4>
 
-<p>Provides the option to provide a custom namespace to create a new thing in when using <code class="highlighter-rouge">HTTP POST</code>.</p>
+<p>Provides the option to provide a custom namespace to create a new thing in when using <code class="language-plaintext highlighter-rouge">HTTP POST</code>.</p>
 
 <h4 id="make-it-possible-to-provide-multiple-oidc-issuer-urls-for-a-single-configured-openid-connect-prefix"><a href="https://github.com/eclipse-ditto/ditto/pull/1465">Make it possible to provide multiple OIDC issuer urls for a single configured openid-connect “prefix”</a></h4>
 
-<p>Configure multiple <code class="highlighter-rouge">issuer</code> endpoints for the same configured <a href="installation-operating.html#openid-connect">openid-connect-provider</a>.</p>
+<p>Configure multiple <code class="language-plaintext highlighter-rouge">issuer</code> endpoints for the same configured <a href="installation-operating.html#openid-connect">openid-connect-provider</a>.</p>
 
 <h4 id="addition-of-a-cloudevents-mapper-for-mapping-ce-payloads-in-ditto-connections"><a href="https://github.com/eclipse-ditto/ditto/pull/1437">Addition of a “CloudEvents” mapper for mapping CE payloads in Ditto connections</a></h4>
 
@@ -2360,8 +2367,8 @@ This is a complete list of the</p>
 
 <h4 id="passwords-stored-in-the-uri-of-connections-to-no-longer-need-to-be-double-encoded">Passwords stored in the URI of connections to no longer need to be double encoded</h4>
 
-<p>Previously for some passwords containing special characters like e.g. a <code class="highlighter-rouge">+</code> the password needed to be URL encoded twice
-before storing it to the <a href="basic-connections.html">Connection</a> <code class="highlighter-rouge">URI</code>.</p>
+<p>Previously for some passwords containing special characters like e.g. a <code class="language-plaintext highlighter-rouge">+</code> the password needed to be URL encoded twice
+before storing it to the <a href="basic-connections.html">Connection</a> <code class="language-plaintext highlighter-rouge">URI</code>.</p>
 
 <p>This has been fixed by the PR:</p>
 <ul>
@@ -2385,7 +2392,7 @@ This has been fixed.</p>
 
 <h4 id="fix-that-adding-custom-java-messagemappers-to-ditto-via-classpath-is-no-longer-possible"><a href="https://github.com/eclipse-ditto/ditto/issues/1463">Fix that adding custom Java MessageMappers to Ditto via classpath is no longer possible</a></h4>
 
-<p>Writing own, Java based, <code class="highlighter-rouge">MessageMappers</code> and adding them to the classpath 
+<p>Writing own, Java based, <code class="language-plaintext highlighter-rouge">MessageMappers</code> and adding them to the classpath 
 <a href="connectivity-mapping.html#custom-java-based-implementation">as documented</a> did no longer work.<br />
 This has been fixed and the documentation for doing exactly that has been updated.</p>
 
@@ -2408,35 +2415,35 @@ This has been fixed and the documentation for doing exactly that has been update
 <a href="https://www.mongodb.com/docs/manual/core/index-wildcard/">wildcard indices</a> of MongoDB.<br />
 The service name, cluster role, database name and collections of the search service were changed as follows:</p>
 <ul>
-  <li>The service name is changed from <code class="highlighter-rouge">things-search</code> to <code class="highlighter-rouge">search</code>.</li>
-  <li>The cluster role is changed from <code class="highlighter-rouge">things-search</code> to <code class="highlighter-rouge">search</code>.</li>
-  <li>The default database is changed from <code class="highlighter-rouge">searchDB</code> to <code class="highlighter-rouge">search</code>.</li>
-  <li>The collections used for the search index are changed from <code class="highlighter-rouge">searchThings</code> and <code class="highlighter-rouge">searchThingsSync</code> to <code class="highlighter-rouge">search</code> and
-<code class="highlighter-rouge">searchSync</code>.</li>
+  <li>The service name is changed from <code class="language-plaintext highlighter-rouge">things-search</code> to <code class="language-plaintext highlighter-rouge">search</code>.</li>
+  <li>The cluster role is changed from <code class="language-plaintext highlighter-rouge">things-search</code> to <code class="language-plaintext highlighter-rouge">search</code>.</li>
+  <li>The default database is changed from <code class="language-plaintext highlighter-rouge">searchDB</code> to <code class="language-plaintext highlighter-rouge">search</code>.</li>
+  <li>The collections used for the search index are changed from <code class="language-plaintext highlighter-rouge">searchThings</code> and <code class="language-plaintext highlighter-rouge">searchThingsSync</code> to <code class="language-plaintext highlighter-rouge">search</code> and
+<code class="language-plaintext highlighter-rouge">searchSync</code>.</li>
 </ul>
 
 <h4 id="automatic-reindexing">Automatic reindexing</h4>
 
 <p>After initial deployment of Ditto <strong>3.0.0</strong>, the search service will start reindexing things in the background.<br />
 The result of performed search queries will be incomplete until the reindexing finishes.<br />
-The progress of the background sync can be monitored via the <code class="highlighter-rouge">/status/health</code> HTTP endpoint under the label 
-<code class="highlighter-rouge">backgroundSync</code>:</p>
+The progress of the background sync can be monitored via the <code class="language-plaintext highlighter-rouge">/status/health</code> HTTP endpoint under the label 
+<code class="language-plaintext highlighter-rouge">backgroundSync</code>:</p>
 
 <p>Here is an example status for reindexing in progress.</p>
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"label"</span><span class="p">:</span><span class="w"> </span><span class="s2">"backgroundSync"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"UP"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"details"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+  </span><span class="nl">"label"</span><span class="p">:</span><span class="w"> </span><span class="s2">"backgroundSync"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"UP"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"details"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
     </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"INFO"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"events"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+      </span><span class="nl">"INFO"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"events"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
           </span><span class="p">{</span><span class="w">
-            </span><span class="s2">"2022-08-25T02:13:07.695990296Z"</span><span class="p">:</span><span class="w"> </span><span class="s2">"WOKE_UP"</span><span class="w">
+            </span><span class="nl">"2022-08-25T02:13:07.695990296Z"</span><span class="p">:</span><span class="w"> </span><span class="s2">"WOKE_UP"</span><span class="w">
           </span><span class="p">}</span><span class="w">
         </span><span class="p">],</span><span class="w">
-        </span><span class="s2">"progressPersisted"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ditto:device1234"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"progressIndexed"</span><span class="p">:</span><span class="w"> </span><span class="s2">":_"</span><span class="w">
+        </span><span class="nl">"progressPersisted"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ditto:device1234"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"progressIndexed"</span><span class="p">:</span><span class="w"> </span><span class="s2">":_"</span><span class="w">
       </span><span class="p">}</span><span class="w">
     </span><span class="p">}</span><span class="w">
   </span><span class="p">]</span><span class="w">
@@ -2446,32 +2453,32 @@ The progress of the background sync can be monitored via the <code class="highli
 <p>Here is an example status after completion of background sync.</p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"label"</span><span class="p">:</span><span class="w"> </span><span class="s2">"backgroundSync"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"UP"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"details"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+  </span><span class="nl">"label"</span><span class="p">:</span><span class="w"> </span><span class="s2">"backgroundSync"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"UP"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"details"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
     </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"INFO"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"events"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+      </span><span class="nl">"INFO"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"events"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
           </span><span class="p">{</span><span class="w">
-            </span><span class="s2">"2022-08-25T02:13:07.695990296Z"</span><span class="p">:</span><span class="w"> </span><span class="s2">"WOKE_UP"</span><span class="w">
+            </span><span class="nl">"2022-08-25T02:13:07.695990296Z"</span><span class="p">:</span><span class="w"> </span><span class="s2">"WOKE_UP"</span><span class="w">
           </span><span class="p">},</span><span class="w">
           </span><span class="p">{</span><span class="w">
-            </span><span class="s2">"2022-08-25T02:05:07.679251051Z"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Stream terminated. Result=&lt;Done&gt; Error=&lt;null&gt;"</span><span class="w">
+            </span><span class="nl">"2022-08-25T02:05:07.679251051Z"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Stream terminated. Result=&lt;Done&gt; Error=&lt;null&gt;"</span><span class="w">
           </span><span class="p">}</span><span class="w">
         </span><span class="p">],</span><span class="w">
-        </span><span class="s2">"progressPersisted"</span><span class="p">:</span><span class="w"> </span><span class="s2">":_"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"progressIndexed"</span><span class="p">:</span><span class="w"> </span><span class="s2">":_"</span><span class="w">
+        </span><span class="nl">"progressPersisted"</span><span class="p">:</span><span class="w"> </span><span class="s2">":_"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"progressIndexed"</span><span class="p">:</span><span class="w"> </span><span class="s2">":_"</span><span class="w">
       </span><span class="p">}</span><span class="w">
     </span><span class="p">}</span><span class="w">
   </span><span class="p">]</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
-<p>Background sync will restart shortly after the first round of reindexing. As long as the <code class="highlighter-rouge">events</code> field contains the
+<p>Background sync will restart shortly after the first round of reindexing. As long as the <code class="language-plaintext highlighter-rouge">events</code> field contains the
 line</p>
 
-<p><code class="highlighter-rouge">"Stream terminated. Result=&lt;Done&gt; Error=&lt;null&gt;"</code></p>
+<p><code class="language-plaintext highlighter-rouge">"Stream terminated. Result=&lt;Done&gt; Error=&lt;null&gt;"</code></p>
 
 <p>, the reindexing has completed successfully.</p>
 
@@ -2482,16 +2489,16 @@ line</p>
 
 <p>After reindexing, the old search index can be dropped.</p>
 <ul>
-  <li>If you did not override the default database <code class="highlighter-rouge">searchDB</code>, the database <code class="highlighter-rouge">searchDB</code> can be dropped.</li>
-  <li>If you configured a different database, the collections <code class="highlighter-rouge">searchThings</code> and <code class="highlighter-rouge">searchThingsSync</code> can be dropped.</li>
+  <li>If you did not override the default database <code class="language-plaintext highlighter-rouge">searchDB</code>, the database <code class="language-plaintext highlighter-rouge">searchDB</code> can be dropped.</li>
+  <li>If you configured a different database, the collections <code class="language-plaintext highlighter-rouge">searchThings</code> and <code class="language-plaintext highlighter-rouge">searchThingsSync</code> can be dropped.</li>
 </ul>
 
 <h3 id="migration-removal-of-concierge-service-from-deployment-descriptors">Migration: Removal of concierge service from deployment descriptors</h3>
 
-<p>When using your own e.g. Kubernetes descriptors or <code class="highlighter-rouge">docker-compose.yml</code>, think about removing the <code class="highlighter-rouge">ditto-concierge</code> 
+<p>When using your own e.g. Kubernetes descriptors or <code class="language-plaintext highlighter-rouge">docker-compose.yml</code>, think about removing the <code class="language-plaintext highlighter-rouge">ditto-concierge</code> 
 service from those before upgrading to Ditto 3.0.</p>
 
-<p>Also make sure that no old <code class="highlighter-rouge">ditto-concierge</code> service running with version 2.x remains in your cluster after the upgrade
+<p>Also make sure that no old <code class="language-plaintext highlighter-rouge">ditto-concierge</code> service running with version 2.x remains in your cluster after the upgrade
 as this could lead to unforeseeable side effects.</p>
 
 <h3 id="migration-entity-creation-configuration-migration">Migration: Entity creation configuration migration</h3>
@@ -2504,8 +2511,8 @@ is now located in <a href="https://github.com/eclipse-ditto/ditto/blob/master/in
 
 <p>So the configuration keys changed</p>
 <ul>
-  <li>from: <code class="highlighter-rouge">ditto.concierge.enforcement.entity-creation</code></li>
-  <li>to: <code class="highlighter-rouge">ditto.entity-creation</code></li>
+  <li>from: <code class="language-plaintext highlighter-rouge">ditto.concierge.enforcement.entity-creation</code></li>
+  <li>to: <code class="language-plaintext highlighter-rouge">ditto.entity-creation</code></li>
 </ul>
 
 <p>Additionally, the configuration has to be done for “ditto-things” + “ditto-policies” services where it before had to be
@@ -2522,11 +2529,11 @@ If DevOps command responses were used in prior Ditto versions, please adjust acc
 
 <p>In previous versions of Ditto it <strong>might</strong> (depending on the characters used in the username/password) have been 
 necessary to URL encode a username or password twice when storing it inside a Ditto managed 
-<a href="basic-connections.html">connection</a> in the <code class="highlighter-rouge">uri</code>, e.g.:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ssl://user:double+url-encoded-password@hostname:8884
+<a href="basic-connections.html">connection</a> in the <code class="language-plaintext highlighter-rouge">uri</code>, e.g.:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ssl://user:double+url-encoded-password@hostname:8884
 </code></pre></div></div>
 
-<p>For example that was the case if the password contained a <code class="highlighter-rouge">+</code> sign or a space.</p>
+<p>For example that was the case if the password contained a <code class="language-plaintext highlighter-rouge">+</code> sign or a space.</p>
 
 <p>As this bug is fixed in Ditto 3.0 and single encoding is now sufficient, previously created connections which applied
 double encoding <strong>must be migrated</strong> to use single encoding instead.</p>
@@ -2574,7 +2581,7 @@ asked questions
                     </div>
                     <p class="notice">
                         &copy;2024 Eclipse Ditto™.
-                         Site last generated: Feb 27, 2024 <br />
+                         Site last generated: Apr 10, 2024 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

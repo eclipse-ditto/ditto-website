@@ -278,6 +278,13 @@
               
               
               
+              <li><a href="release_notes_354.html">3.5.4</a></li>
+              
+              
+              
+              
+              
+              
               <li><a href="release_notes_353.html">3.5.3</a></li>
               
               
@@ -2130,43 +2137,43 @@ by the same rules in the <a href="https://github.com/reactive-streams/reactive-s
   <tbody>
     <tr>
       <td><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/concurrent/Flow.Publisher.html#subscribe(java.util.concurrent.Flow.Subscriber)">Publisher#subscribe</a></td>
-      <td><a href="#subscribe-for-persisted-events"><code class="highlighter-rouge">&lt;namespace&gt;/&lt;entityName&gt;/&lt;group&gt;/&lt;channel&gt;/streaming/subscribeForPersistedEvents</code></a></td>
+      <td><a href="#subscribe-for-persisted-events"><code class="language-plaintext highlighter-rouge">&lt;namespace&gt;/&lt;entityName&gt;/&lt;group&gt;/&lt;channel&gt;/streaming/subscribeForPersistedEvents</code></a></td>
       <td>Command</td>
       <td>Client to Ditto</td>
     </tr>
     <tr>
       <td><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/concurrent/Flow.Subscription.html#request(long)">Subscription#request</a></td>
-      <td><a href="#request"><code class="highlighter-rouge">&lt;namespace&gt;/&lt;entityName&gt;/&lt;group&gt;/&lt;channel&gt;/streaming/request</code></a></td>
+      <td><a href="#request"><code class="language-plaintext highlighter-rouge">&lt;namespace&gt;/&lt;entityName&gt;/&lt;group&gt;/&lt;channel&gt;/streaming/request</code></a></td>
       <td>Command</td>
       <td>Client to Ditto</td>
     </tr>
     <tr>
       <td><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/concurrent/Flow.Subscription.html#cancel()">Subscription#cancel</a></td>
-      <td><a href="#cancel"><code class="highlighter-rouge">&lt;namespace&gt;/&lt;entityName&gt;/&lt;group&gt;/&lt;channel&gt;/streaming/cancel</code></a></td>
+      <td><a href="#cancel"><code class="language-plaintext highlighter-rouge">&lt;namespace&gt;/&lt;entityName&gt;/&lt;group&gt;/&lt;channel&gt;/streaming/cancel</code></a></td>
       <td>Command</td>
       <td>Client to Ditto</td>
     </tr>
     <tr>
       <td><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/concurrent/Flow.Subscriber.html#onSubscribe(java.util.concurrent.Flow.Subscription)">Subscriber#onSubscribe</a></td>
-      <td><a href="#created"><code class="highlighter-rouge">&lt;namespace&gt;/&lt;entityName&gt;/&lt;group&gt;/&lt;channel&gt;/streaming/created</code></a></td>
+      <td><a href="#created"><code class="language-plaintext highlighter-rouge">&lt;namespace&gt;/&lt;entityName&gt;/&lt;group&gt;/&lt;channel&gt;/streaming/created</code></a></td>
       <td>Event</td>
       <td>Ditto to Client</td>
     </tr>
     <tr>
       <td><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/concurrent/Flow.Subscriber.html#onNext(T)">Subscriber#onNext</a></td>
-      <td><a href="#next"><code class="highlighter-rouge">&lt;namespace&gt;/&lt;entityName&gt;/&lt;group&gt;/&lt;channel&gt;/streaming/next</code></a></td>
+      <td><a href="#next"><code class="language-plaintext highlighter-rouge">&lt;namespace&gt;/&lt;entityName&gt;/&lt;group&gt;/&lt;channel&gt;/streaming/next</code></a></td>
       <td>Event</td>
       <td>Ditto to Client</td>
     </tr>
     <tr>
       <td><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/concurrent/Flow.Subscriber.html#onComplete()">Subscriber#onComplete</a></td>
-      <td><a href="#complete"><code class="highlighter-rouge">&lt;namespace&gt;/&lt;entityName&gt;/&lt;group&gt;/&lt;channel&gt;/streaming/complete</code></a></td>
+      <td><a href="#complete"><code class="language-plaintext highlighter-rouge">&lt;namespace&gt;/&lt;entityName&gt;/&lt;group&gt;/&lt;channel&gt;/streaming/complete</code></a></td>
       <td>Event</td>
       <td>Ditto to Client</td>
     </tr>
     <tr>
       <td><a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/concurrent/Flow.Subscriber.html#onError(java.lang.Throwable)">Subscriber#onError</a></td>
-      <td><a href="#failed"><code class="highlighter-rouge">&lt;namespace&gt;/&lt;entityName&gt;/&lt;group&gt;/&lt;channel&gt;/streaming/failed</code></a></td>
+      <td><a href="#failed"><code class="language-plaintext highlighter-rouge">&lt;namespace&gt;/&lt;entityName&gt;/&lt;group&gt;/&lt;channel&gt;/streaming/failed</code></a></td>
       <td>Event</td>
       <td>Ditto to Client</td>
     </tr>
@@ -2176,14 +2183,14 @@ by the same rules in the <a href="https://github.com/reactive-streams/reactive-s
 <h2 id="interaction-pattern">Interaction pattern</h2>
 
 <p>For one request, the commands from client to Ditto should follow this protocol:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>subscribe request* cancel?
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>subscribe request* cancel?
 </code></pre></div></div>
 <p>The client should send one <a href="#subscribe-for-persisted-events">“subscribeForPersistedEvents”</a> command,
 followed by multiple <a href="#request">“request”</a> commands and an optional <a href="#cancel">“cancel”</a> command.</p>
 
 <p>In response to a <a href="#subscribe-for-persisted-events">“subscribeForPersistedEvents”</a> command and after each <a href="#request">“request”</a> command,
 Ditto will send 0 or more events to the client according to the following protocol:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>created next* (complete | failed)?
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>created next* (complete | failed)?
 </code></pre></div></div>
 <p>A <a href="#created">“created”</a> event bearing the subscription ID is always sent.
 0 or more <a href="#next">“next”</a> events are sent according to the amount of results requested 
@@ -2218,11 +2225,11 @@ Ditto will always respond with a <a href="#created">“created”</a> event.</p>
   <tbody>
     <tr>
       <td><strong>topic</strong></td>
-      <td><code class="highlighter-rouge">&lt;namespace&gt;/&lt;entityName&gt;/&lt;group&gt;/&lt;channel&gt;/streaming/subscribeForPersistedEvents</code></td>
+      <td><code class="language-plaintext highlighter-rouge">&lt;namespace&gt;/&lt;entityName&gt;/&lt;group&gt;/&lt;channel&gt;/streaming/subscribeForPersistedEvents</code></td>
     </tr>
     <tr>
       <td><strong>path</strong></td>
-      <td><code class="highlighter-rouge">/</code></td>
+      <td><code class="language-plaintext highlighter-rouge">/</code></td>
     </tr>
     <tr>
       <td><strong>value</strong></td>
@@ -2235,7 +2242,7 @@ Ditto will always respond with a <a href="#created">“created”</a> event.</p>
   </tbody>
 </table>
 
-<p>The options where to start/stop historical persisted events from can be specified in the <code class="highlighter-rouge">value</code> field
+<p>The options where to start/stop historical persisted events from can be specified in the <code class="language-plaintext highlighter-rouge">value</code> field
 of a <a href="#subscribe-for-persisted-events">“subscribeForPersistedEvents”</a> command.
 If no options are provided at all, the complete available history for the specified entity is streamed as a result.</p>
 
@@ -2256,11 +2263,11 @@ the results are exhausted, or an error occurred.</p>
   <tbody>
     <tr>
       <td><strong>topic</strong></td>
-      <td><code class="highlighter-rouge">&lt;namespace&gt;/&lt;entityName&gt;/&lt;group&gt;/&lt;channel&gt;/streaming/request</code></td>
+      <td><code class="language-plaintext highlighter-rouge">&lt;namespace&gt;/&lt;entityName&gt;/&lt;group&gt;/&lt;channel&gt;/streaming/request</code></td>
     </tr>
     <tr>
       <td><strong>path</strong></td>
-      <td><code class="highlighter-rouge">/</code></td>
+      <td><code class="language-plaintext highlighter-rouge">/</code></td>
     </tr>
     <tr>
       <td><strong>value</strong></td>
@@ -2290,11 +2297,11 @@ events of the same subscription ID.</p>
   <tbody>
     <tr>
       <td><strong>topic</strong></td>
-      <td><code class="highlighter-rouge">&lt;namespace&gt;/&lt;entityName&gt;/&lt;group&gt;/&lt;channel&gt;/streaming/cancel</code></td>
+      <td><code class="language-plaintext highlighter-rouge">&lt;namespace&gt;/&lt;entityName&gt;/&lt;group&gt;/&lt;channel&gt;/streaming/cancel</code></td>
     </tr>
     <tr>
       <td><strong>path</strong></td>
-      <td><code class="highlighter-rouge">/</code></td>
+      <td><code class="language-plaintext highlighter-rouge">/</code></td>
     </tr>
     <tr>
       <td><strong>value</strong></td>
@@ -2324,11 +2331,11 @@ a <a href="#created">“created”</a> event.</p>
   <tbody>
     <tr>
       <td><strong>topic</strong></td>
-      <td><code class="highlighter-rouge">&lt;namespace&gt;/&lt;entityName&gt;/&lt;group&gt;/&lt;channel&gt;/streaming/created</code></td>
+      <td><code class="language-plaintext highlighter-rouge">&lt;namespace&gt;/&lt;entityName&gt;/&lt;group&gt;/&lt;channel&gt;/streaming/created</code></td>
     </tr>
     <tr>
       <td><strong>path</strong></td>
-      <td><code class="highlighter-rouge">/</code></td>
+      <td><code class="language-plaintext highlighter-rouge">/</code></td>
     </tr>
     <tr>
       <td><strong>value</strong></td>
@@ -2357,11 +2364,11 @@ requested by previous <a href="#request">“request”</a> commands.</p>
   <tbody>
     <tr>
       <td><strong>topic</strong></td>
-      <td><code class="highlighter-rouge">&lt;namespace&gt;/&lt;entityName&gt;/&lt;group&gt;/&lt;channel&gt;/streaming/next</code></td>
+      <td><code class="language-plaintext highlighter-rouge">&lt;namespace&gt;/&lt;entityName&gt;/&lt;group&gt;/&lt;channel&gt;/streaming/next</code></td>
     </tr>
     <tr>
       <td><strong>path</strong></td>
-      <td><code class="highlighter-rouge">/</code></td>
+      <td><code class="language-plaintext highlighter-rouge">/</code></td>
     </tr>
     <tr>
       <td><strong>value</strong></td>
@@ -2390,11 +2397,11 @@ Ditto sends a <a href="#complete">“complete”</a> event when all items of the
   <tbody>
     <tr>
       <td><strong>topic</strong></td>
-      <td><code class="highlighter-rouge">&lt;namespace&gt;/&lt;entityName&gt;/&lt;group&gt;/&lt;channel&gt;/streaming/complete</code></td>
+      <td><code class="language-plaintext highlighter-rouge">&lt;namespace&gt;/&lt;entityName&gt;/&lt;group&gt;/&lt;channel&gt;/streaming/complete</code></td>
     </tr>
     <tr>
       <td><strong>path</strong></td>
-      <td><code class="highlighter-rouge">/</code></td>
+      <td><code class="language-plaintext highlighter-rouge">/</code></td>
     </tr>
     <tr>
       <td><strong>value</strong></td>
@@ -2425,11 +2432,11 @@ It is not possible to <a href="#request">“request”</a> more items of the str
   <tbody>
     <tr>
       <td><strong>topic</strong></td>
-      <td><code class="highlighter-rouge">&lt;namespace&gt;/&lt;entityName&gt;/&lt;group&gt;/&lt;channel&gt;/streaming/failed</code></td>
+      <td><code class="language-plaintext highlighter-rouge">&lt;namespace&gt;/&lt;entityName&gt;/&lt;group&gt;/&lt;channel&gt;/streaming/failed</code></td>
     </tr>
     <tr>
       <td><strong>path</strong></td>
-      <td><code class="highlighter-rouge">/</code></td>
+      <td><code class="language-plaintext highlighter-rouge">/</code></td>
     </tr>
     <tr>
       <td><strong>value</strong></td>
@@ -2471,7 +2478,7 @@ It is not possible to <a href="#request">“request”</a> more items of the str
                     </div>
                     <p class="notice">
                         &copy;2024 Eclipse Ditto™.
-                         Site last generated: Feb 27, 2024 <br />
+                         Site last generated: Apr 10, 2024 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

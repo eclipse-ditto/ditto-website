@@ -278,6 +278,13 @@
               
               
               
+              <li><a href="release_notes_354.html">3.5.4</a></li>
+              
+              
+              
+              
+              
+              
               <li><a href="release_notes_353.html">3.5.3</a></li>
               
               
@@ -2117,7 +2124,7 @@ and do not exist without this Thing.</p>
 A Feature ID often needs to be set in the path of an HTTP request. Due to this fact we strongly recommend using a
 restricted set of characters (e.g. those for <a href="https://www.ietf.org/rfc/rfc3986.txt">Uniform Resource Identifiers (URI)</a>).</p>
 
-<p>The Feature ID may not be the wildcard operator <code class="highlighter-rouge">*</code> because it has a special meaning and can lead to unexpected
+<p>The Feature ID may not be the wildcard operator <code class="language-plaintext highlighter-rouge">*</code> because it has a special meaning and can lead to unexpected
 results when retrieving or searching for things/features.</p>
 
 <h2 id="feature-properties">Feature properties</h2>
@@ -2150,7 +2157,7 @@ etc. for the time being, Ditto does not implement their further processing. Such
 <p>A feature’s definition is a list of definition identifiers containing</p>
 <ul>
   <li>either valid HTTP(s) URLs (e.g. in order to define that the Feature is described by <a href="basic-wot-integration.html#thing-model-describing-a-ditto-feature">WoT (Web of Things) Thing Models</a>)</li>
-  <li>or a <em>namespace</em>, <em>name</em> and <em>version</em> separated by colons: <code class="highlighter-rouge">&lt;namespace&gt;:&lt;name&gt;:&lt;version&gt;</code>
+  <li>or a <em>namespace</em>, <em>name</em> and <em>version</em> separated by colons: <code class="language-plaintext highlighter-rouge">&lt;namespace&gt;:&lt;name&gt;:&lt;version&gt;</code>
     <ul>
       <li>in that case the “knowledge” where to look up the definition must be managed somewhere else</li>
     </ul>
@@ -2158,15 +2165,15 @@ etc. for the time being, Ditto does not implement their further processing. Such
 </ul>
 
 <p>A definition can be seen as a type for features. The <a href="#feature-properties">properties</a> of a 
-feature containing a definition identifier <code class="highlighter-rouge">"org.eclipse.ditto:lamp:1.0.0"</code> can be expected to follow the structure
-described in the <code class="highlighter-rouge">lamp</code> type of namespace <code class="highlighter-rouge">org.eclipse.ditto</code> semantically versioned with version <code class="highlighter-rouge">1.0.0</code>.</p>
+feature containing a definition identifier <code class="language-plaintext highlighter-rouge">"org.eclipse.ditto:lamp:1.0.0"</code> can be expected to follow the structure
+described in the <code class="language-plaintext highlighter-rouge">lamp</code> type of namespace <code class="language-plaintext highlighter-rouge">org.eclipse.ditto</code> semantically versioned with version <code class="language-plaintext highlighter-rouge">1.0.0</code>.</p>
 
 <div class="alert alert-info" role="alert"><i class="fa fa-info-circle"></i> <b>Note:</b> Ditto does not contain a type system on its own and does not specify how to describe types. 
    You may either use the official <a href="#the-link-to-w3c-wot-web-of-things">W3C Web of Things (WoT)</a> standard or 
    <a href="#the-link-to-eclipse-vorto">Eclipse Vorto</a> (which defines a non-standardized DSL for defining digital twin models)
    to describe data structures and supported messages of Ditto features.</div>
 
-<p>Currently, Ditto <strong>does not</strong> ensure that the <code class="highlighter-rouge">properties</code> or <code class="highlighter-rouge">desiredProperties</code> of a feature or its supported messages 
+<p>Currently, Ditto <strong>does not</strong> ensure that the <code class="language-plaintext highlighter-rouge">properties</code> or <code class="language-plaintext highlighter-rouge">desiredProperties</code> of a feature or its supported messages 
 must follow the type defined in the definition.<br />
 This can be ensured e.g. before sending a property to Ditto or before sending a message.</p>
 
@@ -2182,7 +2189,7 @@ format.</p>
 
 <h3 id="the-link-to-eclipse-vorto">The link to Eclipse Vorto</h3>
 
-<p>A <a href="#feature-definition">feature definition</a> may also take the form <code class="highlighter-rouge">&lt;namespace&gt;:&lt;name&gt;:&lt;version&gt;</code>, those 3 values can 
+<p>A <a href="#feature-definition">feature definition</a> may also take the form <code class="language-plaintext highlighter-rouge">&lt;namespace&gt;:&lt;name&gt;:&lt;version&gt;</code>, those 3 values can 
 then be interpreted as the link to an Eclipse Vorto “function block” model.</p>
 
 <blockquote>
@@ -2214,52 +2221,52 @@ Thus, it is a consistent, self-contained set of (potentially re-usable) properti
 (see also <a href="https://www.eclipse.org/vorto/">Eclipse Vorto’s documentation</a>) of a device
 (in our case of a feature):</p>
 <ul>
-  <li><code class="highlighter-rouge">configuration</code>: Contains one or many configuration properties for the function block.</li>
-  <li><code class="highlighter-rouge">status</code>: Contains one or many status properties for the function block.</li>
-  <li><code class="highlighter-rouge">operations</code>: Contains one or many operations for the function block.</li>
-  <li><code class="highlighter-rouge">events</code>: Contains one or many events for the function block.</li>
+  <li><code class="language-plaintext highlighter-rouge">configuration</code>: Contains one or many configuration properties for the function block.</li>
+  <li><code class="language-plaintext highlighter-rouge">status</code>: Contains one or many status properties for the function block.</li>
+  <li><code class="language-plaintext highlighter-rouge">operations</code>: Contains one or many operations for the function block.</li>
+  <li><code class="language-plaintext highlighter-rouge">events</code>: Contains one or many events for the function block.</li>
 </ul>
 
 <h5 id="function-block-state">Function block state</h5>
 
-<p>The <code class="highlighter-rouge">configuration</code> and <code class="highlighter-rouge">status</code> sections of a function block define the state of a feature in Ditto.</p>
+<p>The <code class="language-plaintext highlighter-rouge">configuration</code> and <code class="language-plaintext highlighter-rouge">status</code> sections of a function block define the state of a feature in Ditto.</p>
 
 <p>They are mapped to a corresponding JSON object inside the feature <a href="#feature-properties">properties</a> which gets us
 following JSON structure of a Ditto feature:</p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-    </span><span class="s2">"feature-id"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"definition"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="s2">"&lt;namespace&gt;:&lt;name&gt;:&lt;version&gt;"</span><span class="w"> </span><span class="p">],</span><span class="w">
-        </span><span class="s2">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-            </span><span class="s2">"configuration"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"feature-id"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"definition"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="s2">"&lt;namespace&gt;:&lt;name&gt;:&lt;version&gt;"</span><span class="w"> </span><span class="p">],</span><span class="w">
+        </span><span class="nl">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"configuration"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
             </span><span class="p">},</span><span class="w">
-            </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"status"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
             </span><span class="p">}</span><span class="w">
         </span><span class="p">}</span><span class="w">
     </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
-<p>The structure below <code class="highlighter-rouge">configuration, status</code> is defined by the custom types of the Vorto function block. As these
+<p>The structure below <code class="language-plaintext highlighter-rouge">configuration, status</code> is defined by the custom types of the Vorto function block. As these
 can be simple types as well as complex types, the JSON structure follows the structure of the types.</p>
 
 <h5 id="function-block-capabilities">Function block capabilities</h5>
 
-<p>The <code class="highlighter-rouge">operations</code> and <code class="highlighter-rouge">events</code> sections of a function block define the capabilities or behavior of a Ditto feature.</p>
+<p>The <code class="language-plaintext highlighter-rouge">operations</code> and <code class="language-plaintext highlighter-rouge">events</code> sections of a function block define the capabilities or behavior of a Ditto feature.</p>
 
 <p>Both are mapped to feature <a href="basic-messages.html">messages</a> sent “to” or “from” a feature.</p>
 <ul>
-  <li>A message sent <strong>to</strong> a feature is mapped to an <code class="highlighter-rouge">operation</code>.</li>
-  <li>A messages sent <strong>from</strong> a feature is mapped to an <code class="highlighter-rouge">event</code>.</li>
+  <li>A message sent <strong>to</strong> a feature is mapped to an <code class="language-plaintext highlighter-rouge">operation</code>.</li>
+  <li>A messages sent <strong>from</strong> a feature is mapped to an <code class="language-plaintext highlighter-rouge">event</code>.</li>
 </ul>
 
 <h4 id="vorto-example">Vorto example</h4>
 
-<p>Here an example for a Vorto Function Block (in Vorto’s custom DSL) with the name <code class="highlighter-rouge">Lamp</code>.
+<p>Here an example for a Vorto Function Block (in Vorto’s custom DSL) with the name <code class="language-plaintext highlighter-rouge">Lamp</code>.
 For the sake of giving an example for events this lamp has some additional capabilities like detecting movement and
 smoke .</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> namespace com.mycompany.fb
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> namespace com.mycompany.fb
  version 1.0.0
  displayname "Lamp"
  category demo	
@@ -2295,30 +2302,30 @@ smoke .</p>
 
 <p>The Vorto function block contains all information required for a feature’s definition identifier in Ditto:</p>
 <ul>
-  <li>namespace: <code class="highlighter-rouge">com.mycompany.fb</code></li>
-  <li>name: <code class="highlighter-rouge">Lamp</code></li>
-  <li>version: <code class="highlighter-rouge">1.0.0</code></li>
+  <li>namespace: <code class="language-plaintext highlighter-rouge">com.mycompany.fb</code></li>
+  <li>name: <code class="language-plaintext highlighter-rouge">Lamp</code></li>
+  <li>version: <code class="language-plaintext highlighter-rouge">1.0.0</code></li>
 </ul>
 
 <p>A feature containing a definition pointing to such a Vorto function block would look like this:</p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-    </span><span class="s2">"lamp"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"definition"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="s2">"com.mycompany.fb:Lamp:1.0.0"</span><span class="w"> </span><span class="p">],</span><span class="w">
-        </span><span class="s2">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-            </span><span class="s2">"configuration"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                </span><span class="s2">"on"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-                </span><span class="s2">"location"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                    </span><span class="s2">"longitude"</span><span class="p">:</span><span class="w"> </span><span class="mf">34.052235</span><span class="p">,</span><span class="w">
-                    </span><span class="s2">"latitude"</span><span class="p">:</span><span class="w"> </span><span class="mf">-118.243683</span><span class="w">
+    </span><span class="nl">"lamp"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"definition"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="s2">"com.mycompany.fb:Lamp:1.0.0"</span><span class="w"> </span><span class="p">],</span><span class="w">
+        </span><span class="nl">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"configuration"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="nl">"on"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"location"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                    </span><span class="nl">"longitude"</span><span class="p">:</span><span class="w"> </span><span class="mf">34.052235</span><span class="p">,</span><span class="w">
+                    </span><span class="nl">"latitude"</span><span class="p">:</span><span class="w"> </span><span class="mf">-118.243683</span><span class="w">
                 </span><span class="p">}</span><span class="w">
             </span><span class="p">},</span><span class="w">
-            </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                </span><span class="s2">"on"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
-                </span><span class="s2">"color"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                    </span><span class="s2">"red"</span><span class="p">:</span><span class="w"> </span><span class="mi">128</span><span class="p">,</span><span class="w">
-                    </span><span class="s2">"green"</span><span class="p">:</span><span class="w"> </span><span class="mi">255</span><span class="p">,</span><span class="w">
-                    </span><span class="s2">"blue"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w">
+            </span><span class="nl">"status"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="nl">"on"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"color"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                    </span><span class="nl">"red"</span><span class="p">:</span><span class="w"> </span><span class="mi">128</span><span class="p">,</span><span class="w">
+                    </span><span class="nl">"green"</span><span class="p">:</span><span class="w"> </span><span class="mi">255</span><span class="p">,</span><span class="w">
+                    </span><span class="nl">"blue"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w">
                 </span><span class="p">}</span><span class="w">
             </span><span class="p">}</span><span class="w">
         </span><span class="p">}</span><span class="w">
@@ -2328,14 +2335,14 @@ smoke .</p>
 
 <p>The capabilities or behavior of this “lamp” feature would be defined as <a href="basic-messages.html">messages</a>:</p>
 <ul>
-  <li>Message with subject <code class="highlighter-rouge">smokeDetected</code> which is sent <code class="highlighter-rouge">FROM</code> a feature containing a JSON payload with an
-<code class="highlighter-rouge">intensity</code> and whether the detected smoke has reached a <code class="highlighter-rouge">critical</code> mass or not.</li>
-  <li>Message with subject <code class="highlighter-rouge">movementAlarm</code> which is sent <code class="highlighter-rouge">FROM</code> a feature with no payload.</li>
-  <li>Message with subject <code class="highlighter-rouge">blink</code> which is sent <code class="highlighter-rouge">TO</code> a feature containing a JSON payload of an <code class="highlighter-rouge">interval</code>
+  <li>Message with subject <code class="language-plaintext highlighter-rouge">smokeDetected</code> which is sent <code class="language-plaintext highlighter-rouge">FROM</code> a feature containing a JSON payload with an
+<code class="language-plaintext highlighter-rouge">intensity</code> and whether the detected smoke has reached a <code class="language-plaintext highlighter-rouge">critical</code> mass or not.</li>
+  <li>Message with subject <code class="language-plaintext highlighter-rouge">movementAlarm</code> which is sent <code class="language-plaintext highlighter-rouge">FROM</code> a feature with no payload.</li>
+  <li>Message with subject <code class="language-plaintext highlighter-rouge">blink</code> which is sent <code class="language-plaintext highlighter-rouge">TO</code> a feature containing a JSON payload of an <code class="language-plaintext highlighter-rouge">interval</code>
 (as JSON number) and a duration (also as JSON number) returning a JSON boolean.</li>
-  <li>Message with subject <code class="highlighter-rouge">stopBlinking</code> which is sent <code class="highlighter-rouge">TO</code> a feature with no payload returning a JSON boolean.</li>
-  <li>Message with subject <code class="highlighter-rouge">changeColor</code> which is sent <code class="highlighter-rouge">TO</code> a feature containing a JSON payload which follows the type
-<code class="highlighter-rouge">Color</code> defined in another Vorto function block.</li>
+  <li>Message with subject <code class="language-plaintext highlighter-rouge">stopBlinking</code> which is sent <code class="language-plaintext highlighter-rouge">TO</code> a feature with no payload returning a JSON boolean.</li>
+  <li>Message with subject <code class="language-plaintext highlighter-rouge">changeColor</code> which is sent <code class="language-plaintext highlighter-rouge">TO</code> a feature containing a JSON payload which follows the type
+<code class="language-plaintext highlighter-rouge">Color</code> defined in another Vorto function block.</li>
 </ul>
 
 <h1 id="example">Example</h1>
@@ -2371,7 +2378,7 @@ smoke .</p>
                     </div>
                     <p class="notice">
                         &copy;2024 Eclipse Ditto™.
-                         Site last generated: Feb 27, 2024 <br />
+                         Site last generated: Apr 10, 2024 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

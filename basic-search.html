@@ -278,6 +278,13 @@
               
               
               
+              <li><a href="release_notes_354.html">3.5.4</a></li>
+              
+              
+              
+              
+              
+              
               <li><a href="release_notes_353.html">3.5.3</a></li>
               
               
@@ -2132,8 +2139,8 @@ The functionality is available for the following APIs.</p>
 <h2 id="search-index">Search index</h2>
 
 <p>Ditto’s microservice <a href="architecture-services-things-search.html">things-search</a> automatically consumes all 
-<a href="basic-signals-event.html">events</a> which are emitted for changes to <code class="highlighter-rouge">Things</code> and <code class="highlighter-rouge">Policies</code> and updates an for search 
-optimized representation of the <code class="highlighter-rouge">Thing</code> data into its own database.</p>
+<a href="basic-signals-event.html">events</a> which are emitted for changes to <code class="language-plaintext highlighter-rouge">Things</code> and <code class="language-plaintext highlighter-rouge">Policies</code> and updates an for search 
+optimized representation of the <code class="language-plaintext highlighter-rouge">Thing</code> data into its own database.</p>
 
 <p>No custom indexes have to be defined as the structure in the database is “flattened” so that all data contained in 
 <a href="basic-thing.html">Things</a> can be searched for efficiently.</p>
@@ -2143,16 +2150,16 @@ optimized representation of the <code class="highlighter-rouge">Thing</code> dat
 <p>Ditto’s search index provides <strong>eventual consistency</strong>.</p>
 
 <p>In order to reduce load to the database when processing updates in a high frequency, the search index is updated 
-with a default interval of 1 second (configurable via environment variable <code class="highlighter-rouge">THINGS_SEARCH_UPDATER_STREAM_WRITE_INTERVAL</code>).</p>
+with a default interval of 1 second (configurable via environment variable <code class="language-plaintext highlighter-rouge">THINGS_SEARCH_UPDATER_STREAM_WRITE_INTERVAL</code>).</p>
 
 <p>That means that when a thing is updated and the API (e.g. the HTTP endpoint) returns a success response, the search index
 will not reflect that change in that instant. The change will most likely be reflected in the search index within
 1-2 seconds. In rare cases the duration until consistency is reached again might be higher.</p>
 
 <p>If it is important to know when a twin modification is reflected in the search index, request the
-<a href="basic-acknowledgements.html#built-in-acknowledgement-labels">built-in acknowledgement</a> <code class="highlighter-rouge">search-persisted</code> 
+<a href="basic-acknowledgements.html#built-in-acknowledgement-labels">built-in acknowledgement</a> <code class="language-plaintext highlighter-rouge">search-persisted</code> 
 in the corresponding command.<br />
-Search index update is successful if the status code of <code class="highlighter-rouge">search-persisted</code> in the command response is 204 “no content”.
+Search index update is successful if the status code of <code class="language-plaintext highlighter-rouge">search-persisted</code> in the command response is 204 “no content”.
 Status codes at or above 400 indicate failed search index update due to client or server errors.</p>
 
 <h2 id="search-queries">Search queries</h2>
@@ -2173,7 +2180,7 @@ Status codes at or above 400 indicate failed search index update due to client o
 
 <p><strong>Example:</strong> Search for all things located in “living-room”, reorder the list to start with the lowest thing ID as
 the first element, and return the first 5 results:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Filter:     eq(attributes/location,"living-room")
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Filter:     eq(attributes/location,"living-room")
 Sorting:    sort(+thingId)
 Paging:     size(5),cursor(CURSOR_ID)
 </code></pre></div></div>
@@ -2185,10 +2192,10 @@ The search index will index any values in that array, even arrays if mixed types
 
 <p>For example, assuming that we have the following thing containing special “tags” of different types:</p>
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"thingId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"org.eclipse.ditto:tagged-thing-1"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"policyId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"org.eclipse.ditto:tagged-thing-1"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+  </span><span class="nl">"thingId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"org.eclipse.ditto:tagged-thing-1"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"policyId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"org.eclipse.ditto:tagged-thing-1"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
       </span><span class="s2">"misc"</span><span class="p">,</span><span class="w">
       </span><span class="s2">"no-due-date"</span><span class="p">,</span><span class="w">
       </span><span class="s2">"high-priority"</span><span class="p">,</span><span class="w">
@@ -2197,8 +2204,8 @@ The search index will index any values in that array, even arrays if mixed types
       </span><span class="mi">5</span><span class="p">,</span><span class="w">
       </span><span class="kc">false</span><span class="p">,</span><span class="w">
       </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"room"</span><span class="p">:</span><span class="w"> </span><span class="s2">"kitchen"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"floor"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="w">
+        </span><span class="nl">"room"</span><span class="p">:</span><span class="w"> </span><span class="s2">"kitchen"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"floor"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="w">
       </span><span class="p">}</span><span class="w">
     </span><span class="p">]</span><span class="w">
   </span><span class="p">}</span><span class="w">
@@ -2206,7 +2213,7 @@ The search index will index any values in that array, even arrays if mixed types
 </span></code></pre></div></div>
 
 <p>We can formulate various different queries on different scalar values:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>eq(attributes/tags,"high-priority")
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>eq(attributes/tags,"high-priority")
 -&gt; match:       "high-priority" is contained
 
 ne(attributes/tags,"high-priority")
@@ -2226,7 +2233,7 @@ gt(attributes/tags,6)
 </code></pre></div></div>
 
 <p>And we can even formulate queries on JSON objects contained in the JSON array:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>exists(attributes/tags/room)
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>exists(attributes/tags/room)
 -&gt; match:       array contains one object having a key "room"
 
 eq(attributes/tags/room,"kitchen")
@@ -2243,7 +2250,7 @@ ge(attributes/tags/floor,2)
 
 <h2 id="namespaces">Namespaces</h2>
 
-<p>The Search supports specifying in which <code class="highlighter-rouge">namespaces</code> it should be searched. This may significantly improve the search 
+<p>The Search supports specifying in which <code class="language-plaintext highlighter-rouge">namespaces</code> it should be searched. This may significantly improve the search 
 performance when many Things of different namespaces are managed in Ditto’s search index.</p>
 
 <h2 id="rql">RQL</h2>
@@ -2253,32 +2260,32 @@ scenarios (e.g. filtering <a href="basic-changenotifications.html">notifications
 
 <h2 id="sorting-and-paging-options">Sorting and paging options</h2>
 
-<p>The <a href="basic-rql.html#rql-sorting"><code class="highlighter-rouge">sort</code> option</a> governs the order of search results.</p>
+<p>The <a href="basic-rql.html#rql-sorting"><code class="language-plaintext highlighter-rouge">sort</code> option</a> governs the order of search results.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sort(&lt;+|-&gt;&lt;property1&gt;,&lt;+|-&gt;&lt;property2&gt;,...)
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sort(&lt;+|-&gt;&lt;property1&gt;,&lt;+|-&gt;&lt;property2&gt;,...)
 </code></pre></div></div>
 
-<p>If not given, search results are listed in the ascending order of thing IDs, namely <code class="highlighter-rouge">sort(+thingId)</code>.</p>
+<p>If not given, search results are listed in the ascending order of thing IDs, namely <code class="language-plaintext highlighter-rouge">sort(+thingId)</code>.</p>
 
-<p>The <code class="highlighter-rouge">size</code> option</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>size(&lt;count&gt;)
+<p>The <code class="language-plaintext highlighter-rouge">size</code> option</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>size(&lt;count&gt;)
 </code></pre></div></div>
-<p>limits the search results delivered in one HTTP response or one Ditto protocol message to <code class="highlighter-rouge">&lt;count&gt;</code> items.</p>
+<p>limits the search results delivered in one HTTP response or one Ditto protocol message to <code class="language-plaintext highlighter-rouge">&lt;count&gt;</code> items.</p>
 
 <p>If the paging option is not explicitly specified a <strong>default value</strong> of <em>25</em> is used. 
 The <strong>maximum</strong> allowed count is <em>200</em>.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cursor(&lt;cursor-id&gt;)
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cursor(&lt;cursor-id&gt;)
 </code></pre></div></div>
-<p>Starts the search at the position of the cursor with ID <code class="highlighter-rouge">&lt;cursor-id&gt;</code>. The cursor ID is obtained from the field 
-<code class="highlighter-rouge">cursor</code> of a previous response and marks the <strong>position after the last entry</strong> of the previous search. A response 
+<p>Starts the search at the position of the cursor with ID <code class="language-plaintext highlighter-rouge">&lt;cursor-id&gt;</code>. The cursor ID is obtained from the field 
+<code class="language-plaintext highlighter-rouge">cursor</code> of a previous response and marks the <strong>position after the last entry</strong> of the previous search. A response 
 includes no cursor if there are no more results.</p>
 
-<p>If a request has a <code class="highlighter-rouge">cursor</code> option, then any included <code class="highlighter-rouge">filter</code> or <code class="highlighter-rouge">sort</code> option may not differ from the original request 
+<p>If a request has a <code class="language-plaintext highlighter-rouge">cursor</code> option, then any included <code class="language-plaintext highlighter-rouge">filter</code> or <code class="language-plaintext highlighter-rouge">sort</code> option may not differ from the original request 
 of the cursor. Otherwise, the request is rejected.</p>
 
 <p><strong>Example - return ten items with a cursor</strong></p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>option=size(10),cursor(&lt;cursor-from-previous-result&gt;)
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>option=size(10),cursor(&lt;cursor-from-previous-result&gt;)
 </code></pre></div></div>
 
 <h2 id="rql-paging-deprecated">RQL paging (deprecated)</h2>
@@ -2288,22 +2295,22 @@ paging</a> instead.</div>
 
 <p>The RQL limiting part specifies which part (or “page”) should be returned of a large search result set.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>limit(&lt;offset&gt;,&lt;count&gt;)
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>limit(&lt;offset&gt;,&lt;count&gt;)
 </code></pre></div></div>
 
-<p>Limits the search results to <code class="highlighter-rouge">&lt;count&gt;</code> items, starting with the item at index <code class="highlighter-rouge">&lt;offset&gt;</code>.</p>
+<p>Limits the search results to <code class="language-plaintext highlighter-rouge">&lt;count&gt;</code> items, starting with the item at index <code class="language-plaintext highlighter-rouge">&lt;offset&gt;</code>.</p>
 <ul>
-  <li>if the paging option is not explicitly specified, the <strong>default</strong> value <code class="highlighter-rouge">limit(0,25)</code> is used, 
-i.e. the first <code class="highlighter-rouge">25</code> results are returned.</li>
-  <li>the <strong>maximum</strong> allowed count is <code class="highlighter-rouge">200</code>.</li>
+  <li>if the paging option is not explicitly specified, the <strong>default</strong> value <code class="language-plaintext highlighter-rouge">limit(0,25)</code> is used, 
+i.e. the first <code class="language-plaintext highlighter-rouge">25</code> results are returned.</li>
+  <li>the <strong>maximum</strong> allowed count is <code class="language-plaintext highlighter-rouge">200</code>.</li>
 </ul>
 
 <p><strong>Example - return the first ten items</strong></p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>limit(0,10)
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>limit(0,10)
 </code></pre></div></div>
 
 <p><strong>Example - return the items 11 to 20</strong></p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>limit(10,10)
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>limit(10,10)
 </code></pre></div></div>
 <p>i.e. Return the next ten items (from index 11 to 20)</p>
 
@@ -2340,7 +2347,7 @@ i.e. the first <code class="highlighter-rouge">25</code> results are returned.</
                     </div>
                     <p class="notice">
                         &copy;2024 Eclipse Ditto™.
-                         Site last generated: Feb 27, 2024 <br />
+                         Site last generated: Apr 10, 2024 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

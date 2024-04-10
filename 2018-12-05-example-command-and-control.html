@@ -284,7 +284,7 @@ post.</p>
 <span class="c"># create a device</span>
 <span class="nv">$ </span>curl <span class="nt">-X</span> POST <span class="nt">-i</span> <span class="nt">-H</span> <span class="s1">'Content-Type: application/json'</span> <span class="nt">-d</span> <span class="s1">'{"device-id": "org.eclipse.ditto:teapot"}'</span> https://hono.eclipseprojects.io:28080/registration/org.eclipse.ditto
 <span class="c"># add device credentials</span>
-<span class="nv">$ PWD_HASH</span><span class="o">=</span><span class="k">$(</span><span class="nb">echo</span> <span class="nt">-n</span> <span class="s1">'teapot'</span> | openssl dgst <span class="nt">-binary</span> <span class="nt">-sha512</span> | base64 <span class="nt">-w</span> 0<span class="k">)</span>
+<span class="nv">$ PWD_HASH</span><span class="o">=</span><span class="si">$(</span><span class="nb">echo</span> <span class="nt">-n</span> <span class="s1">'teapot'</span> | openssl dgst <span class="nt">-binary</span> <span class="nt">-sha512</span> | <span class="nb">base64</span> <span class="nt">-w</span> 0<span class="si">)</span>
 <span class="nv">$ </span>curl <span class="nt">-X</span> POST <span class="nt">-i</span> <span class="nt">-H</span> <span class="s1">'Content-Type: application/json'</span> <span class="nt">-d</span> <span class="s1">'{
   "device-id": "org.eclipse.ditto:teapot",
   "type": "hashed-password",
@@ -345,9 +345,9 @@ post.</p>
 <a href="connectivity-manage-connections.html">connection</a> between Eclipse Ditto and Eclipse Hono that is prepared for 
 <em>Command &amp; Control</em> messages. According to the 
 <a href="https://www.eclipse.org/hono/">Hono documentation</a> 
-the connection must contain a target with the address <code class="highlighter-rouge">control/&lt;tenant-id&gt;/&lt;device-id&gt;</code> 
-and a source with the address <code class="highlighter-rouge">control/&lt;tenant-id&gt;/&lt;reply-identifier&gt;</code>. The <code class="highlighter-rouge">reply-identifier</code> can be 
-chosen arbitrarily, but must be set as the <code class="highlighter-rouge">reply-to</code> header of a command exactly as defined in the connection:</p>
+the connection must contain a target with the address <code class="language-plaintext highlighter-rouge">control/&lt;tenant-id&gt;/&lt;device-id&gt;</code> 
+and a source with the address <code class="language-plaintext highlighter-rouge">control/&lt;tenant-id&gt;/&lt;reply-identifier&gt;</code>. The <code class="language-plaintext highlighter-rouge">reply-identifier</code> can be 
+chosen arbitrarily, but must be set as the <code class="language-plaintext highlighter-rouge">reply-to</code> header of a command exactly as defined in the connection:</p>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">-X</span> POST <span class="nt">-i</span> <span class="nt">-u</span> devops:devopsPw1! <span class="se">\</span>
      <span class="nt">-H</span> <span class="s1">'Content-Type: application/json'</span> <span class="se">\</span>
@@ -400,15 +400,15 @@ chosen arbitrarily, but must be set as the <code class="highlighter-rouge">reply
 
 <p>As described in the 
 <a href="https://www.eclipse.org/hono/">Hono API description</a> 
-a command message has three mandatory properties: <code class="highlighter-rouge">correlation-id</code>, <code class="highlighter-rouge">subject</code> and <code class="highlighter-rouge">reply-to</code>, these are defined in the 
+a command message has three mandatory properties: <code class="language-plaintext highlighter-rouge">correlation-id</code>, <code class="language-plaintext highlighter-rouge">subject</code> and <code class="language-plaintext highlighter-rouge">reply-to</code>, these are defined in the 
 target header mapping of the connection. 
-The source header mapping defines a mapping for <code class="highlighter-rouge">correlation-id</code> and <code class="highlighter-rouge">status</code> to internal headers, they are required 
+The source header mapping defines a mapping for <code class="language-plaintext highlighter-rouge">correlation-id</code> and <code class="language-plaintext highlighter-rouge">status</code> to internal headers, they are required 
 to properly map the Hono command response to a Ditto message response.</p>
 
 <h3 id="signal-availability-of-device">Signal availability of device</h3>
 
 <p>As we are using the Hono HTTP Adapter to connect our device, send telemetry and receive commands, the designated way 
-is therefor to signal readiness to receive a command by specifying the <code class="highlighter-rouge">hono-ttd</code> parameter on an arbitrary event (for 
+is therefor to signal readiness to receive a command by specifying the <code class="language-plaintext highlighter-rouge">hono-ttd</code> parameter on an arbitrary event (for 
 detailed description please consult the 
 [Hono HTTP Adapter] (https://www.eclipse.org/hono/) 
 guide).</p>
@@ -437,8 +437,8 @@ message to the device waiting for a command:</p>
 <h3 id="device-receives-the-command">Device receives the command</h3>
 
 <p>The message is forwarded to Hono as configured in the connection and finally terminates the pending request we opened 
-before with a status code of <code class="highlighter-rouge">200 OK</code>:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>HTTP/1.1 200 OK
+before with a status code of <code class="language-plaintext highlighter-rouge">200 OK</code>:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>HTTP/1.1 200 OK
 hono-command: brew
 hono-cmd-req-id: 013command-and-controlreplies
 Content-Type: application/octet-stream
@@ -446,14 +446,14 @@ Content-Length: 17
 Connection: Keep-Alive
 </code></pre></div></div>
 
-<p>Hono adds two headers besides the standard HTTP headers: <code class="highlighter-rouge">hono-command</code> and <code class="highlighter-rouge">hono-cmd-req-id</code>. 
-<code class="highlighter-rouge">hono-command</code> contains the subject of the message and <code class="highlighter-rouge">hono-cmd-req-id</code> identifies the messages and is used to 
+<p>Hono adds two headers besides the standard HTTP headers: <code class="language-plaintext highlighter-rouge">hono-command</code> and <code class="language-plaintext highlighter-rouge">hono-cmd-req-id</code>. 
+<code class="language-plaintext highlighter-rouge">hono-command</code> contains the subject of the message and <code class="language-plaintext highlighter-rouge">hono-cmd-req-id</code> identifies the messages and is used to 
 correlate the request and the response we are now going to send.</p>
 
 <h3 id="device-sends-a-command-response">Device sends a command response</h3>
 
-<p>We use the header value of <code class="highlighter-rouge">hono-cmd-req-id</code> to construct the response address: 
-<code class="highlighter-rouge">https://hono.eclipseprojects.io:8080/control/res/013command-and-controlreplies</code></p>
+<p>We use the header value of <code class="language-plaintext highlighter-rouge">hono-cmd-req-id</code> to construct the response address: 
+<code class="language-plaintext highlighter-rouge">https://hono.eclipseprojects.io:8080/control/res/013command-and-controlreplies</code></p>
 
 <p>Another curl command completes the roundtrip with a response from the simulated device:</p>
 
@@ -476,7 +476,7 @@ correlate the request and the response we are now going to send.</p>
 <h3 id="message-response-is-received-at-ditto-message-api">Message response is received at Ditto Message API</h3>
 <p>And finally we receive the command response at the Ditto Message API where we sent the original message:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>HTTP/1.1 200 OK
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>HTTP/1.1 200 OK
 correlation-id: command-and-control
 message-id: command-and-control
 status: 200
@@ -488,12 +488,12 @@ Content-Length: 10
 
 <h3 id="alternative-receive-command-and-send-response-via-mqtt">Alternative: Receive command and send response via MQTT</h3>
 
-<p>Alternatively we can also receive the command by subscribing to the MQTT topic <code class="highlighter-rouge">control/+/+/req/#</code> at the 
+<p>Alternatively we can also receive the command by subscribing to the MQTT topic <code class="language-plaintext highlighter-rouge">control/+/+/req/#</code> at the 
 <a href="https://www.eclipse.org/hono/">Hono MQTT Adapter</a>:</p>
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>mosquitto_sub <span class="nt">-d</span> <span class="nt">-h</span> hono.eclipse.org <span class="nt">-p</span> 8883 <span class="nt">-v</span> <span class="nt">-u</span> <span class="s1">'teapot@org.eclipse.ditto'</span> <span class="nt">-P</span> teapot <span class="nt">-t</span> <span class="s1">'control/+/+/req/#'</span>
 </code></pre></div></div>
 
-<p>And also publish the command response on the MQTT topic <code class="highlighter-rouge">control///res/013command-and-controlreplies/200</code>:</p>
+<p>And also publish the command response on the MQTT topic <code class="language-plaintext highlighter-rouge">control///res/013command-and-controlreplies/200</code>:</p>
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mosquitto_pub <span class="nt">-d</span> <span class="nt">-h</span> hono.eclipse.org <span class="nt">-p</span> 8883 <span class="nt">-u</span> <span class="s1">'teapot@org.eclipse.ditto'</span> <span class="nt">-P</span> teapot <span class="se">\</span>
               <span class="nt">-t</span> control///res/013command-and-controlreplies/200 <span class="se">\</span>
               <span class="nt">-m</span> <span class="s1">'{
@@ -535,7 +535,7 @@ The Eclipse Ditto team</p>
                     </div>
                     <p class="notice">
                         &copy;2024 Eclipse Ditto™.
-                         Site last generated: Feb 27, 2024 <br />
+                         Site last generated: Apr 10, 2024 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

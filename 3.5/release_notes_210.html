@@ -278,6 +278,13 @@
               
               
               
+              <li><a href="release_notes_354.html">3.5.4</a></li>
+              
+              
+              
+              
+              
+              
               <li><a href="release_notes_353.html">3.5.3</a></li>
               
               
@@ -2158,7 +2165,7 @@ bugfixes were added.</p>
 
 <h4 id="support-using-urls-in-definitions"><a href="https://github.com/eclipse-ditto/ditto/pull/1185">Support using URLs in “definitions”</a></h4>
 
-<p>In addition to using the currently supported pattern <code class="highlighter-rouge">&lt;namespace&gt;:&lt;name&gt;:&lt;version&gt;</code> in 
+<p>In addition to using the currently supported pattern <code class="language-plaintext highlighter-rouge">&lt;namespace&gt;:&lt;name&gt;:&lt;version&gt;</code> in 
 <a href="basic-thing.html#definition">thing definitions</a> and 
 <a href="basic-feature.html#feature-definition">feature definitions</a>, the definitions now additionally support saving HTTP URLs.</p>
 
@@ -2171,10 +2178,10 @@ bugfixes were added.</p>
 <h4 id="addition-of-category-misconfigured-for-current-connection-status"><a href="https://github.com/eclipse-ditto/ditto/pull/1151">Addition of category “misconfigured” for current connection status</a></h4>
 
 <p>When <a href="connectivity-manage-connections.html#retrieve-connection-status">retrieving the connection status</a>, a connection 
-was previously in status <code class="highlighter-rouge">"failed"</code> when e.g. the credentials to an endpoint were wrong or a queue in a message broker
+was previously in status <code class="language-plaintext highlighter-rouge">"failed"</code> when e.g. the credentials to an endpoint were wrong or a queue in a message broker
 was not existing.</p>
 
-<p>By adding a new status <code class="highlighter-rouge">"misconfigured"</code> such configuration errors are now differentiable from real “failures”.</p>
+<p>By adding a new status <code class="language-plaintext highlighter-rouge">"misconfigured"</code> such configuration errors are now differentiable from real “failures”.</p>
 
 <h4 id="tracing-support-reporting-traces-to-an-open-telemetry-endpoint"><a href="https://github.com/eclipse-ditto/ditto/issues/1135">Tracing support, reporting traces to an “Open Telemetry” endpoint</a></h4>
 
@@ -2225,7 +2232,7 @@ integrate your favorite Digital Twin framework with your favorite event streamin
 
 <h4 id="conditional-requests-updates--retrieves"><a href="https://github.com/eclipse-ditto/ditto/issues/559">Conditional requests (updates + retrieves)</a></h4>
 
-<p>Utilizing the existing <a href="basic-rql.html">RQL</a> filters, it is now possible to specify a <code class="highlighter-rouge">condition</code> when performing any of
+<p>Utilizing the existing <a href="basic-rql.html">RQL</a> filters, it is now possible to specify a <code class="language-plaintext highlighter-rouge">condition</code> when performing any of
 operations (like modifications or retrievals) on a thing.</p>
 
 <p>Using a “conditional update”, you may for example specify to update a property of a thing only if it changed.<br />
@@ -2237,7 +2244,7 @@ older than a specified timestamp in the condition.</p>
 
 <h4 id="enrichment-of-thingdeleted-events-with-extra-fields"><a href="https://github.com/eclipse-ditto/ditto/pull/1184">Enrichment of “ThingDeleted” events with extra fields</a></h4>
 
-<p>Previously, Eclipse Ditto could not <a href="basic-enrichment.html">enrich</a> <code class="highlighter-rouge">ThingDeleted</code> events with additional data from the
+<p>Previously, Eclipse Ditto could not <a href="basic-enrichment.html">enrich</a> <code class="language-plaintext highlighter-rouge">ThingDeleted</code> events with additional data from the
 deleted thing - this now is supported.</p>
 
 <h4 id="hmac-based-authentication-for-ditto-managed-connections"><a href="https://github.com/eclipse-ditto/ditto/issues/1060">HMAC based authentication for Ditto managed connections</a></h4>
@@ -2284,30 +2291,30 @@ configured. This has been fixed.</p>
 <h3 id="adapt-kafka-client-configuration">Adapt Kafka client configuration</h3>
 
 <p>The connection configuration for Kafka producers was changed in order to align it with the new consumer properties.<br />
-All properties moved from <code class="highlighter-rouge">ditto.connectivity.connection.kafka.producer.internal.kafka-clients</code> to
-<code class="highlighter-rouge">ditto.connectivity.connection.kafka.producer</code>.</p>
+All properties moved from <code class="language-plaintext highlighter-rouge">ditto.connectivity.connection.kafka.producer.internal.kafka-clients</code> to
+<code class="language-plaintext highlighter-rouge">ditto.connectivity.connection.kafka.producer</code>.</p>
 
 <p>The complete configuration looks like:</p>
 
-<pre><code class="language-hocon">ditto.connectivity.connection {
-  kafka {
-    consumer {
+<div class="language-hocon highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nl">ditto.connectivity.connection</span><span class="w"> </span><span class="p">{</span><span class="w">
+  </span><span class="nl">kafka</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">consumer</span><span class="w"> </span><span class="p">{</span><span class="w">
 
-    }
+    </span><span class="p">}</span><span class="w">
 
-    producer {
-      connections.max.idle.ms = 540000
-      reconnect.backoff.max.ms = 10000
-      reconnect.backoff.ms = 500
-      acks = "1"
-      retries = 0
-      request.timeout.ms = 10000
-      delivery.timeout.ms = 10000
-      max.block.ms = 10000
-    }
-  }
-}
-</code></pre>
+    </span><span class="nl">producer</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">connections.max.idle.ms</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">540000</span><span class="w">
+      </span><span class="nl">reconnect.backoff.max.ms</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">10000</span><span class="w">
+      </span><span class="nl">reconnect.backoff.ms</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">500</span><span class="w">
+      </span><span class="nl">acks</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s2">"1"</span><span class="w">
+      </span><span class="nl">retries</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">0</span><span class="w">
+      </span><span class="nl">request.timeout.ms</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">10000</span><span class="w">
+      </span><span class="nl">delivery.timeout.ms</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">10000</span><span class="w">
+      </span><span class="nl">max.block.ms</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">10000</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
 
 <h2 id="ditto-clients">Ditto clients</h2>
 
@@ -2372,7 +2379,7 @@ use “twin” or “live” channel</li>
                     </div>
                     <p class="notice">
                         &copy;2024 Eclipse Ditto™.
-                         Site last generated: Feb 27, 2024 <br />
+                         Site last generated: Apr 10, 2024 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

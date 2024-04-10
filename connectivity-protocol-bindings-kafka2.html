@@ -278,6 +278,13 @@
               
               
               
+              <li><a href="release_notes_354.html">3.5.4</a></li>
+              
+              
+              
+              
+              
+              
               <li><a href="release_notes_353.html">3.5.3</a></li>
               
               
@@ -2104,10 +2111,10 @@ $('#toc').on('click', 'a', function() {
 
 <h2 id="content-type">Content-type</h2>
 
-<p>When messages are sent in <a href="protocol-overview.html">Ditto Protocol</a> (as <code class="highlighter-rouge">UTF-8</code> encoded String payload),
-the <code class="highlighter-rouge">content-type</code> of Apache Kafka messages must be set to:</p>
+<p>When messages are sent in <a href="protocol-overview.html">Ditto Protocol</a> (as <code class="language-plaintext highlighter-rouge">UTF-8</code> encoded String payload),
+the <code class="language-plaintext highlighter-rouge">content-type</code> of Apache Kafka messages must be set to:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>application/vnd.eclipse.ditto+json
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>application/vnd.eclipse.ditto+json
 </code></pre></div></div>
 
 <p>If messages, which are not in Ditto Protocol, should be processed, a <a href="connectivity-mapping.html">payload mapping</a> must
@@ -2116,11 +2123,11 @@ be configured for the connection in order to transform the messages.</p>
 <h2 id="global-kafka-client-configuration">Global Kafka client configuration</h2>
 
 <p>The behavior of the used Kafka client can be configured in the <a href="https://github.com/eclipse-ditto/ditto/blob/master/connectivity/service/src/main/resources/connectivity.conf">connectivity.conf</a>
-under key <code class="highlighter-rouge">ditto.connectivity.connection.kafka</code>:</p>
+under key <code class="language-plaintext highlighter-rouge">ditto.connectivity.connection.kafka</code>:</p>
 <ul>
-  <li><code class="highlighter-rouge">consumer</code>: The Kafka consumer configuration applied when configuring <a href="#source-format">sources</a> in order to consume messages from Kafka</li>
-  <li><code class="highlighter-rouge">committer</code>: The Kafka committer configuration to apply when consuming messages, e.g. the <code class="highlighter-rouge">max-batch</code> size and <code class="highlighter-rouge">max-interval</code> duration</li>
-  <li><code class="highlighter-rouge">producer</code>: The Kafka producer configuration applied when configuring <a href="#target-format">targets</a> in order to publish messages to Kafka</li>
+  <li><code class="language-plaintext highlighter-rouge">consumer</code>: The Kafka consumer configuration applied when configuring <a href="#source-format">sources</a> in order to consume messages from Kafka</li>
+  <li><code class="language-plaintext highlighter-rouge">committer</code>: The Kafka committer configuration to apply when consuming messages, e.g. the <code class="language-plaintext highlighter-rouge">max-batch</code> size and <code class="language-plaintext highlighter-rouge">max-interval</code> duration</li>
+  <li><code class="language-plaintext highlighter-rouge">producer</code>: The Kafka producer configuration applied when configuring <a href="#target-format">targets</a> in order to publish messages to Kafka</li>
 </ul>
 
 <h2 id="specific-connection-configuration">Specific connection configuration</h2>
@@ -2129,48 +2136,48 @@ under key <code class="highlighter-rouge">ditto.connectivity.connection.kafka</c
 as well. Following are some specifics for Apache Kafka 2.x connections:</p>
 
 <h3 id="source-format">Source format</h3>
-<p>For a Kafka connection source “addresses” are Kafka topics to subscribe to. Legal characters are <code class="highlighter-rouge">[a-z]</code>, <code class="highlighter-rouge">[A-Z]</code>, <code class="highlighter-rouge">[0-9]</code>, <code class="highlighter-rouge">.</code>, <code class="highlighter-rouge">_</code> and <code class="highlighter-rouge">-</code>.</p>
+<p>For a Kafka connection source “addresses” are Kafka topics to subscribe to. Legal characters are <code class="language-plaintext highlighter-rouge">[a-z]</code>, <code class="language-plaintext highlighter-rouge">[A-Z]</code>, <code class="language-plaintext highlighter-rouge">[0-9]</code>, <code class="language-plaintext highlighter-rouge">.</code>, <code class="language-plaintext highlighter-rouge">_</code> and <code class="language-plaintext highlighter-rouge">-</code>.</p>
 
 <p>Messages are either consumed in an “at-most-once” or “at-least-once” manner depending on the 
-configured <code class="highlighter-rouge">"qos"</code> (Quality of Service) value of the source:</p>
+configured <code class="language-plaintext highlighter-rouge">"qos"</code> (Quality of Service) value of the source:</p>
 <ul>
-  <li><code class="highlighter-rouge">"qos": 0</code> (at-most-once): This means that the offset will be committed after Ditto consumed the message from Kafka, 
+  <li><code class="language-plaintext highlighter-rouge">"qos": 0</code> (at-most-once): This means that the offset will be committed after Ditto consumed the message from Kafka, 
 no matter if the message could be processed or not.</li>
-  <li><code class="highlighter-rouge">"qos": 1</code> (at-least-once): This means that the offset will only be committed after 
+  <li><code class="language-plaintext highlighter-rouge">"qos": 1</code> (at-least-once): This means that the offset will only be committed after 
 <a href="basic-acknowledgements.html#requesting-acks">requested acknowledgements</a> were successfully issued.</li>
 </ul>
 
 <p>The following example shows a valid Kafka source:</p>
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"addresses"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"theTopic"</span><span class="p">],</span><span class="w">
-  </span><span class="s2">"consumerCount"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"qos"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"ditto:inbound-auth-subject"</span><span class="p">],</span><span class="w">
-  </span><span class="s2">"enforcement"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"input"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{{ header:device_id }}"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"filters"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"{{ entity:id }}"</span><span class="p">]</span><span class="w">
+  </span><span class="nl">"addresses"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"theTopic"</span><span class="p">],</span><span class="w">
+  </span><span class="nl">"consumerCount"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"qos"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"ditto:inbound-auth-subject"</span><span class="p">],</span><span class="w">
+  </span><span class="nl">"enforcement"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"input"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{{ header:device_id }}"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"filters"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"{{ entity:id }}"</span><span class="p">]</span><span class="w">
   </span><span class="p">},</span><span class="w">
-  </span><span class="s2">"headerMapping"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
-  </span><span class="s2">"payloadMapping"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"Ditto"</span><span class="p">],</span><span class="w">
-  </span><span class="s2">"replyTarget"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"theReplyTopic"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"headerMapping"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
-    </span><span class="s2">"expectedResponseTypes"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"response"</span><span class="p">,</span><span class="w"> </span><span class="s2">"error"</span><span class="p">,</span><span class="w"> </span><span class="s2">"nack"</span><span class="p">]</span><span class="w">
+  </span><span class="nl">"headerMapping"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
+  </span><span class="nl">"payloadMapping"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"Ditto"</span><span class="p">],</span><span class="w">
+  </span><span class="nl">"replyTarget"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"theReplyTopic"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"headerMapping"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
+    </span><span class="nl">"expectedResponseTypes"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"response"</span><span class="p">,</span><span class="w"> </span><span class="s2">"error"</span><span class="p">,</span><span class="w"> </span><span class="s2">"nack"</span><span class="p">]</span><span class="w">
   </span><span class="p">},</span><span class="w">
-  </span><span class="s2">"acknowledgementRequests"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"includes"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+  </span><span class="nl">"acknowledgementRequests"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"includes"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
   </span><span class="p">},</span><span class="w">
-  </span><span class="s2">"declaredAcks"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+  </span><span class="nl">"declaredAcks"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 <h4 id="quality-of-service">Quality of Service</h4>
 
-<p>The shown example with the configured <code class="highlighter-rouge">"qos": 1</code> has the following behavior:</p>
+<p>The shown example with the configured <code class="language-plaintext highlighter-rouge">"qos": 1</code> has the following behavior:</p>
 <ul>
-  <li>Kafka messages from the topic <code class="highlighter-rouge">"theAddress"</code> are consumed in an “at-least-once” fashion, e.g.
+  <li>Kafka messages from the topic <code class="language-plaintext highlighter-rouge">"theAddress"</code> are consumed in an “at-least-once” fashion, e.g.
 <a href="basic-signals-command.html#modify-commands">twin modify commands</a> will implicitly request the 
-<a href="basic-acknowledgements.html#built-in-acknowledgement-labels">built-in acknowledgement label</a> <code class="highlighter-rouge">"twin-persisted"</code> meaning
+<a href="basic-acknowledgements.html#built-in-acknowledgement-labels">built-in acknowledgement label</a> <code class="language-plaintext highlighter-rouge">"twin-persisted"</code> meaning
 that the consumed message will only be committed to Kafka after it was successfully persisted by Ditto</li>
   <li>When a consumed Kafka message could not be acknowledged by Ditto (e.g. because persisting a consumed command failed), 
 consuming from the Kafka source will be restarted which means that message consumption will restart from the last 
@@ -2180,7 +2187,7 @@ committed offset of the Kafka topic, already successfully processed messages cou
 
 <p>For Kafka sources, it is not possible to have different Quality of Service on a per message basis.
 Either all messages from a source are consumed in an “at-most-once” or in an “at-least-once” semantic, depending on the 
-configured <code class="highlighter-rouge">"qos"</code> value.</p>
+configured <code class="language-plaintext highlighter-rouge">"qos"</code> value.</p>
 
 <h4 id="source-header-mapping">Source header mapping</h4>
 
@@ -2190,16 +2197,16 @@ processed by Ditto (see <a href="connectivity-header-mapping.html">Header Mappin
 <p>In addition, there are three special headers extracted from every received record that can be used in a payload or 
 header mapping:</p>
 <ul>
-  <li><code class="highlighter-rouge">kafka.topic</code>: contains the Kafka topic the record was received from</li>
-  <li><code class="highlighter-rouge">kafka.key</code>: contains the key of the received record (only set if key is available)</li>
-  <li><code class="highlighter-rouge">kafka.timestamp</code>: contains the timestamp of the received record</li>
+  <li><code class="language-plaintext highlighter-rouge">kafka.topic</code>: contains the Kafka topic the record was received from</li>
+  <li><code class="language-plaintext highlighter-rouge">kafka.key</code>: contains the key of the received record (only set if key is available)</li>
+  <li><code class="language-plaintext highlighter-rouge">kafka.timestamp</code>: contains the timestamp of the received record</li>
 </ul>
 
 <p>These headers may be used in a source header mapping:</p>
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"headerMapping"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"the-topic"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{{ header:kafka.topic }}"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"the-key"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{{ header:kafka.key }}"</span><span class="w">
+  </span><span class="nl">"headerMapping"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"the-topic"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{{ header:kafka.topic }}"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"the-key"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{{ header:kafka.key }}"</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
@@ -2209,11 +2216,11 @@ header mapping:</p>
 <p>In the Ditto implementation for consuming messages from Kafka we also added a feature for message expiration. This way a device can express for how long a message is valid to be processed.
 To use this feature, two headers are relevant:</p>
 <ul>
-  <li><code class="highlighter-rouge">creation-time</code>: Epoch millis value when the message was created.</li>
-  <li><code class="highlighter-rouge">ttl</code>: Number milliseconds the message should be considered as valid.</li>
+  <li><code class="language-plaintext highlighter-rouge">creation-time</code>: Epoch millis value when the message was created.</li>
+  <li><code class="language-plaintext highlighter-rouge">ttl</code>: Number milliseconds the message should be considered as valid.</li>
 </ul>
 
-<p>When Ditto consumes such a message it checks whether the amount of milliseconds since <code class="highlighter-rouge">creation-time</code> is larger than specified by <code class="highlighter-rouge">ttl</code>.
+<p>When Ditto consumes such a message it checks whether the amount of milliseconds since <code class="language-plaintext highlighter-rouge">creation-time</code> is larger than specified by <code class="language-plaintext highlighter-rouge">ttl</code>.
 If so, the message will be ignored.
 If this is not the case or the headers are not specified at all, the message will be processed normally.</p>
 
@@ -2222,16 +2229,16 @@ If this is not the case or the headers are not specified at all, the message wil
 <p>For Kafka Sources one can use <a href="basic-acknowledgements.html">acknowledements</a> to achieve backpressure from the event/message consuming application down to the Kafka consumer in Ditto.
 So if for example <a href="basic-messages.html">live messages</a> should be consumed via the Kafka connection, you could want that the consume rate adapts to the performance of the message consuming and responding application.</p>
 
-<p>For this scenario there is nothing that needs to be configured explicitly. Since the <code class="highlighter-rouge">live-response</code> is a built in acknowledgement, it is requested by default.
+<p>For this scenario there is nothing that needs to be configured explicitly. Since the <code class="language-plaintext highlighter-rouge">live-response</code> is a built in acknowledgement, it is requested by default.
 The same applies for <a href="basic-signals-command.html#modify-commands">twin modify commands</a>. 
-For those type of commands the <code class="highlighter-rouge">twin-persisted</code> acknowledgement is requested automatically which would cause backpressure from the persistence to the Kafka consumer.</p>
+For those type of commands the <code class="language-plaintext highlighter-rouge">twin-persisted</code> acknowledgement is requested automatically which would cause backpressure from the persistence to the Kafka consumer.</p>
 
 <p>If for some reason you don’t want to have this backpressure, because losing some messages due to for example overflowing buffers is not a problem for you, you can disable requesting acknowledgements for the Kafka source.
 This can be done by configuring the following for your source:</p>
 
-<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="s2">"acknowledgementRequests"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-  </span><span class="s2">"includes"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
-  </span><span class="s2">"filter"</span><span class="p">:</span><span class="w"> </span><span class="s2">"fn:delete()"</span><span class="w">
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nl">"acknowledgementRequests"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+  </span><span class="nl">"includes"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+  </span><span class="nl">"filter"</span><span class="p">:</span><span class="w"> </span><span class="s2">"fn:delete()"</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
@@ -2239,32 +2246,32 @@ This can be done by configuring the following for your source:</p>
 
 <h3 id="target-format">Target format</h3>
 
-<p>A Kafka 2.x connection requires the protocol configuration target object to have an <code class="highlighter-rouge">address</code> property.
+<p>A Kafka 2.x connection requires the protocol configuration target object to have an <code class="language-plaintext highlighter-rouge">address</code> property.
 This property may have different formats:</p>
 
 <ul>
-  <li><code class="highlighter-rouge">topic</code>: Contains a Kafka topic - a partition will be assigned in a round-robin fashion.</li>
-  <li><code class="highlighter-rouge">topic/key</code>: Contains a Kafka topic and a key - Kafka ensures that messages with the same key end up in the same partition.</li>
-  <li><code class="highlighter-rouge">topic#partitionNumber</code>: Contains a Kafka topic and a specific partition number - that partition will be used when sending records.</li>
+  <li><code class="language-plaintext highlighter-rouge">topic</code>: Contains a Kafka topic - a partition will be assigned in a round-robin fashion.</li>
+  <li><code class="language-plaintext highlighter-rouge">topic/key</code>: Contains a Kafka topic and a key - Kafka ensures that messages with the same key end up in the same partition.</li>
+  <li><code class="language-plaintext highlighter-rouge">topic#partitionNumber</code>: Contains a Kafka topic and a specific partition number - that partition will be used when sending records.</li>
 </ul>
 
 <p>The target address may contain placeholders; see
 <a href="basic-connections.html#placeholder-for-target-addresses">placeholders</a> section for more information.</p>
 
-<p>Further, <code class="highlighter-rouge">"topics"</code> is a list of strings, each list entry representing a subscription of
+<p>Further, <code class="language-plaintext highlighter-rouge">"topics"</code> is a list of strings, each list entry representing a subscription of
 <a href="protocol-specification-topic.html">Ditto protocol topics</a>, see 
 <a href="basic-connections.html#target-topics-and-filtering">target topics and filtering</a> for more information on that.</p>
 
-<p>Outbound messages are published to the configured target address if one of the subjects in <code class="highlighter-rouge">"authorizationContext"</code>
+<p>Outbound messages are published to the configured target address if one of the subjects in <code class="language-plaintext highlighter-rouge">"authorizationContext"</code>
 has READ permission on the thing, which is associated with a message.</p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;kafka_topic&gt;/&lt;kafka_key&gt;"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"topics"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+  </span><span class="nl">"address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;kafka_topic&gt;/&lt;kafka_key&gt;"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"topics"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
     </span><span class="s2">"_/_/things/twin/events"</span><span class="p">,</span><span class="w">
     </span><span class="s2">"_/_/things/live/messages"</span><span class="w">
   </span><span class="p">],</span><span class="w">
-  </span><span class="s2">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"ditto:outbound-auth-subject"</span><span class="p">]</span><span class="w">
+  </span><span class="nl">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"ditto:outbound-auth-subject"</span><span class="p">]</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
@@ -2279,23 +2286,23 @@ to the automatically created <a href="protocol-specification-acks.html#acknowled
 <ul>
   <li>Acknowledgement.status:
     <ul>
-      <li>will be <code class="highlighter-rouge">204</code>, if Kafka debug mode was disabled and the message was successfully consumed by Kafka</li>
-      <li>will be <code class="highlighter-rouge">200</code>, if Kafka debug mode was enabled (see <a href="#specific-configuration-properties">specific config</a> <code class="highlighter-rouge">"debugEnabled"</code>) and the message was successfully consumed by Kafka</li>
-      <li>will be <code class="highlighter-rouge">4xx</code>, if Kafka failed to consume the message but retrying sending the message does not make sense</li>
-      <li>will be <code class="highlighter-rouge">5xx</code>, if Kafka failed to consume the message but retrying sending the message is feasible</li>
+      <li>will be <code class="language-plaintext highlighter-rouge">204</code>, if Kafka debug mode was disabled and the message was successfully consumed by Kafka</li>
+      <li>will be <code class="language-plaintext highlighter-rouge">200</code>, if Kafka debug mode was enabled (see <a href="#specific-configuration-properties">specific config</a> <code class="language-plaintext highlighter-rouge">"debugEnabled"</code>) and the message was successfully consumed by Kafka</li>
+      <li>will be <code class="language-plaintext highlighter-rouge">4xx</code>, if Kafka failed to consume the message but retrying sending the message does not make sense</li>
+      <li>will be <code class="language-plaintext highlighter-rouge">5xx</code>, if Kafka failed to consume the message but retrying sending the message is feasible</li>
     </ul>
   </li>
   <li>Acknowledgement.value:
     <ul>
-      <li>will be missing, if Kafka debug mode (see <a href="#specific-configuration-properties">specific config</a> <code class="highlighter-rouge">"debugEnabled"</code>) was disabled</li>
-      <li>will include the Kafka <code class="highlighter-rouge">RecordMetadata</code> as JsonObject:
+      <li>will be missing, if Kafka debug mode (see <a href="#specific-configuration-properties">specific config</a> <code class="language-plaintext highlighter-rouge">"debugEnabled"</code>) was disabled</li>
+      <li>will include the Kafka <code class="language-plaintext highlighter-rouge">RecordMetadata</code> as JsonObject:
         <ul>
-          <li><code class="highlighter-rouge">timestamp</code> (if present)</li>
-          <li><code class="highlighter-rouge">serializedKeySize</code></li>
-          <li><code class="highlighter-rouge">serializedValueSize</code></li>
-          <li><code class="highlighter-rouge">topic</code></li>
-          <li><code class="highlighter-rouge">partition</code></li>
-          <li><code class="highlighter-rouge">offset</code> (if present)</li>
+          <li><code class="language-plaintext highlighter-rouge">timestamp</code> (if present)</li>
+          <li><code class="language-plaintext highlighter-rouge">serializedKeySize</code></li>
+          <li><code class="language-plaintext highlighter-rouge">serializedValueSize</code></li>
+          <li><code class="language-plaintext highlighter-rouge">topic</code></li>
+          <li><code class="language-plaintext highlighter-rouge">partition</code></li>
+          <li><code class="language-plaintext highlighter-rouge">offset</code> (if present)</li>
         </ul>
       </li>
     </ul>
@@ -2306,19 +2313,19 @@ to the automatically created <a href="protocol-specification-acks.html#acknowled
 
 <p>The specific configuration properties contain the following keys:</p>
 <ul>
-  <li><code class="highlighter-rouge">bootstrapServers</code> (required): contains a comma separated list of Kafka bootstrap servers to use for connecting to
+  <li><code class="language-plaintext highlighter-rouge">bootstrapServers</code> (required): contains a comma separated list of Kafka bootstrap servers to use for connecting to
 (in addition to the still required connection uri)</li>
-  <li><code class="highlighter-rouge">saslMechanism</code> (required if connection uri contains username\/password): contains one of the following SASL mechanisms to use for authentication at Kafka:
+  <li><code class="language-plaintext highlighter-rouge">saslMechanism</code> (required if connection uri contains username\/password): contains one of the following SASL mechanisms to use for authentication at Kafka:
     <ul>
-      <li><code class="highlighter-rouge">plain</code></li>
-      <li><code class="highlighter-rouge">scram-sha-256</code></li>
-      <li><code class="highlighter-rouge">scram-sha-512</code></li>
+      <li><code class="language-plaintext highlighter-rouge">plain</code></li>
+      <li><code class="language-plaintext highlighter-rouge">scram-sha-256</code></li>
+      <li><code class="language-plaintext highlighter-rouge">scram-sha-512</code></li>
     </ul>
   </li>
-  <li><code class="highlighter-rouge">debugEnabled</code>: determines whether for acknowledgements 
+  <li><code class="language-plaintext highlighter-rouge">debugEnabled</code>: determines whether for acknowledgements 
 <a href="#target-acknowledgement-handling">automatically issued by Kafka targets</a> additional debug information should be 
-included as payload or not - default: <code class="highlighter-rouge">false</code></li>
-  <li><code class="highlighter-rouge">groupId</code>: The consumer group ID to be used by the kafka consumer. If not defined the group ID will be equal to the connection ID.</li>
+included as payload or not - default: <code class="language-plaintext highlighter-rouge">false</code></li>
+  <li><code class="language-plaintext highlighter-rouge">groupId</code>: The consumer group ID to be used by the kafka consumer. If not defined the group ID will be equal to the connection ID.</li>
 </ul>
 
 <h2 id="establishing-connecting-to-an-apache-kafka-endpoint">Establishing connecting to an Apache Kafka endpoint</h2>
@@ -2332,48 +2339,48 @@ existing connections.</p>
 <p>Example connection configuration to create a new Kafka 2.x connection in order to connect to a running Apache Kafka server:</p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"connection"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"kafka-example-connection-123"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"connectionType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"kafka"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"connectionStatus"</span><span class="p">:</span><span class="w"> </span><span class="s2">"open"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"failoverEnabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"uri"</span><span class="p">:</span><span class="w"> </span><span class="s2">"tcp://user:password@localhost:9092"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"specificConfig"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"bootstrapServers"</span><span class="p">:</span><span class="w"> </span><span class="s2">"localhost:9092,other.host:9092"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"saslMechanism"</span><span class="p">:</span><span class="w"> </span><span class="s2">"plain"</span><span class="w">
+  </span><span class="nl">"connection"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"kafka-example-connection-123"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"connectionType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"kafka"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"connectionStatus"</span><span class="p">:</span><span class="w"> </span><span class="s2">"open"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"failoverEnabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"uri"</span><span class="p">:</span><span class="w"> </span><span class="s2">"tcp://user:password@localhost:9092"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"specificConfig"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"bootstrapServers"</span><span class="p">:</span><span class="w"> </span><span class="s2">"localhost:9092,other.host:9092"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"saslMechanism"</span><span class="p">:</span><span class="w"> </span><span class="s2">"plain"</span><span class="w">
     </span><span class="p">},</span><span class="w">
-    </span><span class="s2">"sources"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="nl">"sources"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
       </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"addresses"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"theTopic"</span><span class="p">],</span><span class="w">
-        </span><span class="s2">"consumerCount"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"qos"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"ditto:inbound-auth-subject"</span><span class="p">],</span><span class="w">
-        </span><span class="s2">"enforcement"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-          </span><span class="s2">"input"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{{ header:device_id }}"</span><span class="p">,</span><span class="w">
-          </span><span class="s2">"filters"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"{{ entity:id }}"</span><span class="p">]</span><span class="w">
+        </span><span class="nl">"addresses"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"theTopic"</span><span class="p">],</span><span class="w">
+        </span><span class="nl">"consumerCount"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"qos"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"ditto:inbound-auth-subject"</span><span class="p">],</span><span class="w">
+        </span><span class="nl">"enforcement"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"input"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{{ header:device_id }}"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"filters"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"{{ entity:id }}"</span><span class="p">]</span><span class="w">
         </span><span class="p">},</span><span class="w">
-        </span><span class="s2">"headerMapping"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
-        </span><span class="s2">"payloadMapping"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"Ditto"</span><span class="p">],</span><span class="w">
-        </span><span class="s2">"replyTarget"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-          </span><span class="s2">"enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-          </span><span class="s2">"address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"theReplyTopic"</span><span class="p">,</span><span class="w">
-          </span><span class="s2">"headerMapping"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
-          </span><span class="s2">"expectedResponseTypes"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"response"</span><span class="p">,</span><span class="w"> </span><span class="s2">"error"</span><span class="p">,</span><span class="w"> </span><span class="s2">"nack"</span><span class="p">]</span><span class="w">
+        </span><span class="nl">"headerMapping"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
+        </span><span class="nl">"payloadMapping"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"Ditto"</span><span class="p">],</span><span class="w">
+        </span><span class="nl">"replyTarget"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"theReplyTopic"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"headerMapping"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
+          </span><span class="nl">"expectedResponseTypes"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"response"</span><span class="p">,</span><span class="w"> </span><span class="s2">"error"</span><span class="p">,</span><span class="w"> </span><span class="s2">"nack"</span><span class="p">]</span><span class="w">
         </span><span class="p">},</span><span class="w">
-        </span><span class="s2">"acknowledgementRequests"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-          </span><span class="s2">"includes"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+        </span><span class="nl">"acknowledgementRequests"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"includes"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
         </span><span class="p">},</span><span class="w">
-        </span><span class="s2">"declaredAcks"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+        </span><span class="nl">"declaredAcks"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
       </span><span class="p">}</span><span class="w">
     </span><span class="p">],</span><span class="w">
-    </span><span class="s2">"targets"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="nl">"targets"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
       </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"topic/key"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"topics"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="nl">"address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"topic/key"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"topics"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
           </span><span class="s2">"_/_/things/twin/events"</span><span class="p">,</span><span class="w">
           </span><span class="s2">"_/_/things/live/messages"</span><span class="w">
         </span><span class="p">],</span><span class="w">
-        </span><span class="s2">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"ditto:outbound-auth-subject"</span><span class="p">]</span><span class="w">
+        </span><span class="nl">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"ditto:outbound-auth-subject"</span><span class="p">]</span><span class="w">
       </span><span class="p">}</span><span class="w">
     </span><span class="p">]</span><span class="w">
   </span><span class="p">}</span><span class="w">
@@ -2413,7 +2420,7 @@ existing connections.</p>
                     </div>
                     <p class="notice">
                         &copy;2024 Eclipse Ditto™.
-                         Site last generated: Feb 27, 2024 <br />
+                         Site last generated: Apr 10, 2024 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

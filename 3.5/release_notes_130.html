@@ -278,6 +278,13 @@
               
               
               
+              <li><a href="release_notes_354.html">3.5.4</a></li>
+              
+              
+              
+              
+              
+              
               <li><a href="release_notes_353.html">3.5.3</a></li>
               
               
@@ -2119,14 +2126,14 @@ and overall performance.</p>
 <h4 id="removed-owasp-security-headers"><a href="https://github.com/eclipse-ditto/ditto/pull/804">Removed OWASP security headers</a></h4>
 
 <p>Setting the <a href="https://owasp.org/www-project-secure-headers/">OWASP recommended secure HTTP headers</a> 
-(e.g. <code class="highlighter-rouge">X-Frame-Options</code>, <code class="highlighter-rouge">X-Content-Type-Options</code>, <code class="highlighter-rouge">X-XSS-Protection</code>) was removed from the Ditto codebase as such 
+(e.g. <code class="language-plaintext highlighter-rouge">X-Frame-Options</code>, <code class="language-plaintext highlighter-rouge">X-Content-Type-Options</code>, <code class="language-plaintext highlighter-rouge">X-XSS-Protection</code>) was removed from the Ditto codebase as such 
 headers are typically set in a reverse proxy (e.g. nginx) or in a cloud loadbalancer in front of Ditto.</p>
 
 <h4 id="ditto-java-client-changed-default-initial-reconnect-behavior"><a href="https://github.com/eclipse-ditto/ditto-clients/pull/86">Ditto Java Client: Changed default initial reconnect behavior</a></h4>
 
 <p>A newly created configuration was added whether a Ditto Java Client should retry connecting to a Ditto backend
 even when the initial connection attempt failed 
-(see the <code class="highlighter-rouge">initialConnectRetryEnabled(boolean)</code> option on the <code class="highlighter-rouge">WebSocketMessagingConfiguration</code> builder).</p>
+(see the <code class="language-plaintext highlighter-rouge">initialConnectRetryEnabled(boolean)</code> option on the <code class="language-plaintext highlighter-rouge">WebSocketMessagingConfiguration</code> builder).</p>
 
 <div class="alert alert-danger" role="alert"><i class="fa fa-exclamation-circle"></i> <b>Warning:</b> The default behavior was changed so that a Ditto Java Client <strong>does not reconnect</strong> 
     when the initial connection to a Ditto WebSocket failed! <strong>Have a look at <a href="#migration-notes">the migration notes</a> 
@@ -2179,11 +2186,11 @@ Here as well for the Ditto Java Client: <a href="https://github.com/eclipse-ditt
 
 <h4 id="responses-from-http-messages-api-were-json-escaped"><a href="https://github.com/eclipse-ditto/ditto/issues/805">Responses from HTTP /messages API were JSON escaped</a></h4>
 
-<p>With Ditto 1.2.0 HTTP responses to the <code class="highlighter-rouge">POST /messages</code> APIs which transported <code class="highlighter-rouge">application/json</code> were falsely JSON 
+<p>With Ditto 1.2.0 HTTP responses to the <code class="language-plaintext highlighter-rouge">POST /messages</code> APIs which transported <code class="language-plaintext highlighter-rouge">application/json</code> were falsely JSON 
 escaped. As the fix for that had to be done in several steps and at several places, the fix is not backported to the 
 Ditto 1.2.0 line and it is suggested to update to Ditto 1.3.0 right away, if affected by this bug.</p>
 
-<h4 id="putting-_metadata-while-creating-a-thing-does-not-work-bug"><a href="https://github.com/eclipse-ditto/ditto/issues/801">Putting <code class="highlighter-rouge">_metadata</code> while creating a Thing does not work bug</a></h4>
+<h4 id="putting-_metadata-while-creating-a-thing-does-not-work-bug"><a href="https://github.com/eclipse-ditto/ditto/issues/801">Putting <code class="language-plaintext highlighter-rouge">_metadata</code> while creating a Thing does not work bug</a></h4>
 
 <p>When putting <a href="basic-metadata.html">Metadata</a> as part of a “create thing” API call, the metadata was not applied. Only
 when updating an existing thing, the metadata was applied.</p>
@@ -2194,21 +2201,21 @@ when updating an existing thing, the metadata was applied.</p>
 
 <h2 id="migration-notes">Migration notes</h2>
 
-<h3 id="check-initialconnectretryenabled-option-when-upgrading-to-ditto-java-client-130">Check <code class="highlighter-rouge">initialConnectRetryEnabled</code> option when upgrading to Ditto Java Client 1.3.0</h3>
+<h3 id="check-initialconnectretryenabled-option-when-upgrading-to-ditto-java-client-130">Check <code class="language-plaintext highlighter-rouge">initialConnectRetryEnabled</code> option when upgrading to Ditto Java Client 1.3.0</h3>
 
 <p>If you require that you Ditto Java Client reconnects even when the first connection attempt failed (this might e.g.
 be useful when you use the client in a backend application which might be restarted or scaled up/down at any given time),
-please configure the <code class="highlighter-rouge">initialConnectRetryEnabled(boolean)</code> to <code class="highlighter-rouge">true</code>:</p>
+please configure the <code class="language-plaintext highlighter-rouge">initialConnectRetryEnabled(boolean)</code> to <code class="language-plaintext highlighter-rouge">true</code>:</p>
 
-<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">AuthenticationProvider</span> <span class="n">authenticationProvider</span> <span class="o">=</span> <span class="o">...;</span>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">AuthenticationProvider</span> <span class="n">authenticationProvider</span> <span class="o">=</span> <span class="o">...;</span>
 
-<span class="n">MessagingProvider</span> <span class="n">messagingProvider</span> <span class="o">=</span>
-    <span class="n">MessagingProviders</span><span class="o">.</span><span class="na">webSocket</span><span class="o">(</span><span class="n">WebSocketMessagingConfiguration</span><span class="o">.</span><span class="na">newBuilder</span><span class="o">()</span>
+<span class="nc">MessagingProvider</span> <span class="n">messagingProvider</span> <span class="o">=</span>
+    <span class="nc">MessagingProviders</span><span class="o">.</span><span class="na">webSocket</span><span class="o">(</span><span class="nc">WebSocketMessagingConfiguration</span><span class="o">.</span><span class="na">newBuilder</span><span class="o">()</span>
         <span class="o">.</span><span class="na">endpoint</span><span class="o">(</span><span class="s">"wss://ditto.eclipseprojects.io"</span><span class="o">)</span>
         <span class="o">.</span><span class="na">initialConnectRetryEnabled</span><span class="o">(</span><span class="kc">true</span><span class="o">)</span> <span class="c1">// set this to true in order to enable retry on initial connection errors</span>
         <span class="o">.</span><span class="na">build</span><span class="o">(),</span> <span class="n">authenticationProvider</span><span class="o">);</span>
 
-<span class="n">DittoClient</span> <span class="n">client</span> <span class="o">=</span> <span class="n">DittoClients</span><span class="o">.</span><span class="na">newInstance</span><span class="o">(</span><span class="n">messagingProvider</span><span class="o">);</span>
+<span class="nc">DittoClient</span> <span class="n">client</span> <span class="o">=</span> <span class="nc">DittoClients</span><span class="o">.</span><span class="na">newInstance</span><span class="o">(</span><span class="n">messagingProvider</span><span class="o">);</span>
 
 <span class="c1">// ...</span>
 </code></pre></div></div>
@@ -2238,7 +2245,7 @@ please configure the <code class="highlighter-rouge">initialConnectRetryEnabled(
                     </div>
                     <p class="notice">
                         &copy;2024 Eclipse Ditto™.
-                         Site last generated: Feb 27, 2024 <br />
+                         Site last generated: Apr 10, 2024 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

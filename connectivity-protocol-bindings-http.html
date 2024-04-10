@@ -278,6 +278,13 @@
               
               
               
+              <li><a href="release_notes_354.html">3.5.4</a></li>
+              
+              
+              
+              
+              
+              
               <li><a href="release_notes_353.html">3.5.3</a></li>
               
               
@@ -2112,10 +2119,10 @@ as well. Following are some specifics for HTTP connections:</p>
 
 <h3 id="target-format">Target format</h3>
 
-<p>A HTTP connection requires the protocol configuration target object to have an <code class="highlighter-rouge">address</code> property.
-This property has the following format: <code class="highlighter-rouge">&lt;http_verb&gt;:&lt;http_path&gt;</code></p>
+<p>A HTTP connection requires the protocol configuration target object to have an <code class="language-plaintext highlighter-rouge">address</code> property.
+This property has the following format: <code class="language-plaintext highlighter-rouge">&lt;http_verb&gt;:&lt;http_path&gt;</code></p>
 
-<p>The supported HTTP <code class="highlighter-rouge">&lt;http_verb&gt;</code> values are:</p>
+<p>The supported HTTP <code class="language-plaintext highlighter-rouge">&lt;http_verb&gt;</code> values are:</p>
 <ul>
   <li>GET</li>
   <li>POST</li>
@@ -2123,8 +2130,8 @@ This property has the following format: <code class="highlighter-rouge">&lt;http
   <li>PATCH</li>
 </ul>
 
-<p>The specified <code class="highlighter-rouge">&lt;http_path&gt;</code> contains the path - including optionally potential query parameters - to be appended to the 
-configured <code class="highlighter-rouge">uri</code> of the connection.</p>
+<p>The specified <code class="language-plaintext highlighter-rouge">&lt;http_path&gt;</code> contains the path - including optionally potential query parameters - to be appended to the 
+configured <code class="language-plaintext highlighter-rouge">uri</code> of the connection.</p>
 
 <p>The body of the HTTP request is either the outgoing <a href="protocol-specification.html">Ditto Protocol</a> message (e.g. an event)
 or - if a <a href="connectivity-mapping.html">payload mapping</a> was specified in the connection - a transformed body.</p>
@@ -2135,22 +2142,22 @@ or - if a <a href="connectivity-mapping.html">payload mapping</a> was specified 
 <p>The target may define a <a href="connectivity-header-mapping.html">header mapping</a> specifying which additional HTTP headers to
 send along with the performed HTTP requests.</p>
 
-<p>Further, <code class="highlighter-rouge">"topics"</code> is a list of strings, each list entry representing a subscription of
+<p>Further, <code class="language-plaintext highlighter-rouge">"topics"</code> is a list of strings, each list entry representing a subscription of
 <a href="protocol-specification-topic.html">Ditto protocol topics</a>, see 
 <a href="basic-connections.html#target-topics-and-filtering">target topics and filtering</a> for more information on that.</p>
 
-<p>Outbound messages are published to the configured target address if one of the subjects in <code class="highlighter-rouge">"authorizationContext"</code>
+<p>Outbound messages are published to the configured target address if one of the subjects in <code class="language-plaintext highlighter-rouge">"authorizationContext"</code>
 has READ permission on the thing, which is associated with a message.</p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;http_verb&gt;:&lt;http_path&gt;"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"topics"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+  </span><span class="nl">"address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;http_verb&gt;:&lt;http_path&gt;"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"topics"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
     </span><span class="s2">"_/_/things/twin/events"</span><span class="p">,</span><span class="w">
     </span><span class="s2">"_/_/things/live/messages"</span><span class="w">
   </span><span class="p">],</span><span class="w">
-  </span><span class="s2">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"ditto:outbound-auth-subject"</span><span class="p">],</span><span class="w">
-  </span><span class="s2">"headerMapping"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"content-type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"application/json"</span><span class="w">
+  </span><span class="nl">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"ditto:outbound-auth-subject"</span><span class="p">],</span><span class="w">
+  </span><span class="nl">"headerMapping"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"content-type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"application/json"</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
@@ -2160,8 +2167,8 @@ has READ permission on the thing, which is associated with a message.</p>
 
 <p>The following header have a special meaning in that the values are applied directly to the published message:</p>
 <ul>
-  <li><code class="highlighter-rouge">http.query</code>: sets the value of this header as query parameter</li>
-  <li><code class="highlighter-rouge">http.path</code>: sets the value of this header as the path of the HTTP request</li>
+  <li><code class="language-plaintext highlighter-rouge">http.query</code>: sets the value of this header as query parameter</li>
+  <li><code class="language-plaintext highlighter-rouge">http.path</code>: sets the value of this header as the path of the HTTP request</li>
 </ul>
 
 <h4 id="target-acknowledgement-handling">Target acknowledgement handling</h4>
@@ -2174,7 +2181,7 @@ acknowledge receiving the message:</p>
 <p>Whenever an HTTP endpoint, which received a message 
 <a href="basic-acknowledgements.html#requesting-acks">requesting acknowledgements</a>,
 responds with a <a href="protocol-specification-acks.html#acknowledgement">Ditto Protocol Acknowledgement</a> and sets the 
-<code class="highlighter-rouge">Content-Type</code> header of the HTTP response to <code class="highlighter-rouge">application/vnd.eclipse.ditto+json</code>, this received message is treated
+<code class="language-plaintext highlighter-rouge">Content-Type</code> header of the HTTP response to <code class="language-plaintext highlighter-rouge">application/vnd.eclipse.ditto+json</code>, this received message is treated
 as custom <a href="basic-acknowledgements.html">acknowledgement</a>.</p>
 
 <p>This however is only the case if no 
@@ -2186,16 +2193,16 @@ issued instead of a custom sent back Ditto Protocol Acknowledgement.</p>
 
 <p>When for the target an 
 <a href="basic-connections.html#target-issued-acknowledgement-label">automatically issued acknowledgement label</a> was configured 
-and the HTTP response was not a Ditto Protocol message (with Content-Type header <code class="highlighter-rouge">application/vnd.eclipse.ditto+json</code>), 
+and the HTTP response was not a Ditto Protocol message (with Content-Type header <code class="language-plaintext highlighter-rouge">application/vnd.eclipse.ditto+json</code>), 
 an acknowledgement is produced automatically in the following way:</p>
 
 <p>The HTTP response and following HTTP response information is mapped to the 
 automatically created <a href="protocol-specification-acks.html#acknowledgement">acknowledgement</a>:</p>
 <ul>
-  <li><code class="highlighter-rouge">Acknowledgement.headers</code>: the HTTP response headers are added.</li>
-  <li><code class="highlighter-rouge">Acknowledgement.status</code>: the HTTP response status code is used.</li>
-  <li><code class="highlighter-rouge">Acknowledgement.value</code>: the HTTP response body is used - if the response body was of 
-<code class="highlighter-rouge">content-type: application/json</code>, the JSON is inlined into the acknowledgement, otherwise the payload is added as 
+  <li><code class="language-plaintext highlighter-rouge">Acknowledgement.headers</code>: the HTTP response headers are added.</li>
+  <li><code class="language-plaintext highlighter-rouge">Acknowledgement.status</code>: the HTTP response status code is used.</li>
+  <li><code class="language-plaintext highlighter-rouge">Acknowledgement.value</code>: the HTTP response body is used - if the response body was of 
+<code class="language-plaintext highlighter-rouge">content-type: application/json</code>, the JSON is inlined into the acknowledgement, otherwise the payload is added as 
 JSON string.</li>
 </ul>
 
@@ -2208,27 +2215,27 @@ respond to that message:</p>
 
 <p>Whenever an HTTP endpoint, which received a <a href="basic-messages.html">live message</a>,
 responds with a <a href="protocol-specification-things-messages.html#responding-to-a-message">Ditto Protocol Message Response</a> 
-and sets the <code class="highlighter-rouge">Content-Type</code> header of the HTTP response to <code class="highlighter-rouge">application/vnd.eclipse.ditto+json</code>, this received message 
+and sets the <code class="language-plaintext highlighter-rouge">Content-Type</code> header of the HTTP response to <code class="language-plaintext highlighter-rouge">application/vnd.eclipse.ditto+json</code>, this received message 
 is treated as custom <a href="basic-messages.html#responding-to-messages">live message response</a>.</p>
 
-<p>In this case, the <code class="highlighter-rouge">correlation-id</code>, <code class="highlighter-rouge">thing-id</code> and potentially <code class="highlighter-rouge">feature-id</code> of the response have to match the 
+<p>In this case, the <code class="language-plaintext highlighter-rouge">correlation-id</code>, <code class="language-plaintext highlighter-rouge">thing-id</code> and potentially <code class="language-plaintext highlighter-rouge">feature-id</code> of the response have to match the 
 message properties to respond to.</p>
 
 <h5 id="implicitly-responding-via-http-response">Implicitly responding via HTTP response</h5>
 
 <p>When for the target an 
 <a href="basic-connections.html#target-issued-acknowledgement-label">automatically issued acknowledgement label</a> with the label 
-<code class="highlighter-rouge">live-response</code> was configured and the HTTP response was not a Ditto Protocol message 
-(with Content-Type header <code class="highlighter-rouge">application/vnd.eclipse.ditto+json</code>), a message response is produced automatically in the 
+<code class="language-plaintext highlighter-rouge">live-response</code> was configured and the HTTP response was not a Ditto Protocol message 
+(with Content-Type header <code class="language-plaintext highlighter-rouge">application/vnd.eclipse.ditto+json</code>), a message response is produced automatically in the 
 following way:</p>
 
 <p>The HTTP response and following HTTP response information is mapped to the 
 automatically created <a href="protocol-specification-things-messages.html#responding-to-a-message">message response</a>:</p>
 <ul>
-  <li><code class="highlighter-rouge">Message.headers</code>: the HTTP response headers are added.</li>
-  <li><code class="highlighter-rouge">Message.status</code>: the HTTP response status code is used.</li>
-  <li><code class="highlighter-rouge">Message.value</code>: the HTTP response body is used - if the response body was of 
-<code class="highlighter-rouge">content-type: application/json</code>, the JSON is inlined into the acknowledgement, otherwise the payload is added as 
+  <li><code class="language-plaintext highlighter-rouge">Message.headers</code>: the HTTP response headers are added.</li>
+  <li><code class="language-plaintext highlighter-rouge">Message.status</code>: the HTTP response status code is used.</li>
+  <li><code class="language-plaintext highlighter-rouge">Message.value</code>: the HTTP response body is used - if the response body was of 
+<code class="language-plaintext highlighter-rouge">content-type: application/json</code>, the JSON is inlined into the acknowledgement, otherwise the payload is added as 
 JSON string.</li>
 </ul>
 
@@ -2236,10 +2243,10 @@ JSON string.</li>
 
 <p>The specific configuration properties contain the following optional keys:</p>
 <ul>
-  <li><code class="highlighter-rouge">parallelism</code> (optional): Configures how many parallel requests per connection to perform, each takes one outgoing 
+  <li><code class="language-plaintext highlighter-rouge">parallelism</code> (optional): Configures how many parallel requests per connection to perform, each takes one outgoing 
 TCP connection. Default (if not provided): 1</li>
-  <li><code class="highlighter-rouge">omitRequestBody</code> (optional): Configures for which HTTP methods, provided as a comma separated list, the request 
-body is omitted for requests made via this connection. Default (if not provided): <code class="highlighter-rouge">GET,DELETE</code>. Leave empty to 
+  <li><code class="language-plaintext highlighter-rouge">omitRequestBody</code> (optional): Configures for which HTTP methods, provided as a comma separated list, the request 
+body is omitted for requests made via this connection. Default (if not provided): <code class="language-plaintext highlighter-rouge">GET,DELETE</code>. Leave empty to 
 always send the request body.</li>
 </ul>
 
@@ -2254,26 +2261,26 @@ existing connections.</p>
 <p>Example connection configuration to create a new HTTP connection in order to make request to an HTTP endpoint:</p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"connection"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http-example-connection-123"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"connectionType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http-push"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"connectionStatus"</span><span class="p">:</span><span class="w"> </span><span class="s2">"open"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"failoverEnabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"uri"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://user:password@localhost:80"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"specificConfig"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"parallelism"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2"</span><span class="w">
+  </span><span class="nl">"connection"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http-example-connection-123"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"connectionType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http-push"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"connectionStatus"</span><span class="p">:</span><span class="w"> </span><span class="s2">"open"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"failoverEnabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"uri"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://user:password@localhost:80"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"specificConfig"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"parallelism"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2"</span><span class="w">
     </span><span class="p">},</span><span class="w">
-    </span><span class="s2">"sources"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
-    </span><span class="s2">"targets"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="nl">"sources"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+    </span><span class="nl">"targets"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
       </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"PUT:/api/2/some-entity/{{ thing:id }}"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"topics"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="nl">"address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"PUT:/api/2/some-entity/{{ thing:id }}"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"topics"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
           </span><span class="s2">"_/_/things/twin/events"</span><span class="w">
         </span><span class="p">],</span><span class="w">
-        </span><span class="s2">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"ditto:outbound-auth-subject"</span><span class="p">,</span><span class="w"> </span><span class="s2">"..."</span><span class="p">],</span><span class="w">
-        </span><span class="s2">"headerMapping"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-          </span><span class="s2">"content-type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{{ header:content-type }}"</span><span class="p">,</span><span class="w">
-          </span><span class="s2">"api-key"</span><span class="p">:</span><span class="w"> </span><span class="s2">"this-is-a-secret-api-key-to-send-along"</span><span class="w">
+        </span><span class="nl">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"ditto:outbound-auth-subject"</span><span class="p">,</span><span class="w"> </span><span class="s2">"..."</span><span class="p">],</span><span class="w">
+        </span><span class="nl">"headerMapping"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"content-type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{{ header:content-type }}"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"api-key"</span><span class="p">:</span><span class="w"> </span><span class="s2">"this-is-a-secret-api-key-to-send-along"</span><span class="w">
          </span><span class="p">}</span><span class="w">
       </span><span class="p">}</span><span class="w">
     </span><span class="p">]</span><span class="w">
@@ -2290,33 +2297,33 @@ for how to set it up.</p>
 <p>Here is an example HTTP connection that checks the server certificate and authenticates by a client certificate.</p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"connection"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http-example-connection-123"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"connectionType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http-push"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"connectionStatus"</span><span class="p">:</span><span class="w"> </span><span class="s2">"open"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"failoverEnabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"uri"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://localhost:443"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"validateCertificates"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"ca"</span><span class="p">:</span><span class="w"> </span><span class="s2">"-----BEGIN CERTIFICATE-----</span><span class="se">\n</span><span class="s2">&lt;localhost certificate&gt;</span><span class="se">\n</span><span class="s2">-----END CERTIFICATE-----"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"credentials"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"client-cert"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"cert"</span><span class="p">:</span><span class="w"> </span><span class="s2">"-----BEGIN CERTIFICATE-----</span><span class="se">\n</span><span class="s2">&lt;signed client certificate&gt;</span><span class="se">\n</span><span class="s2">-----END CERTIFICATE-----"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"key"</span><span class="p">:</span><span class="w"> </span><span class="s2">"-----BEGIN PRIVATE KEY-----</span><span class="se">\n</span><span class="s2">&lt;client private key&gt;</span><span class="se">\n</span><span class="s2">-----END PRIVATE KEY-----"</span><span class="w">
+  </span><span class="nl">"connection"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http-example-connection-123"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"connectionType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http-push"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"connectionStatus"</span><span class="p">:</span><span class="w"> </span><span class="s2">"open"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"failoverEnabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"uri"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://localhost:443"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"validateCertificates"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"ca"</span><span class="p">:</span><span class="w"> </span><span class="s2">"-----BEGIN CERTIFICATE-----</span><span class="se">\n</span><span class="s2">&lt;localhost certificate&gt;</span><span class="se">\n</span><span class="s2">-----END CERTIFICATE-----"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"credentials"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"client-cert"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"cert"</span><span class="p">:</span><span class="w"> </span><span class="s2">"-----BEGIN CERTIFICATE-----</span><span class="se">\n</span><span class="s2">&lt;signed client certificate&gt;</span><span class="se">\n</span><span class="s2">-----END CERTIFICATE-----"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"key"</span><span class="p">:</span><span class="w"> </span><span class="s2">"-----BEGIN PRIVATE KEY-----</span><span class="se">\n</span><span class="s2">&lt;client private key&gt;</span><span class="se">\n</span><span class="s2">-----END PRIVATE KEY-----"</span><span class="w">
     </span><span class="p">},</span><span class="w">
-    </span><span class="s2">"specificConfig"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"parallelism"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2"</span><span class="w">
+    </span><span class="nl">"specificConfig"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"parallelism"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2"</span><span class="w">
     </span><span class="p">},</span><span class="w">
-    </span><span class="s2">"sources"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
-    </span><span class="s2">"targets"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="nl">"sources"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+    </span><span class="nl">"targets"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
       </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"PUT:/api/2/some-entity/{{ thing:id }}"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"topics"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="nl">"address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"PUT:/api/2/some-entity/{{ thing:id }}"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"topics"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
           </span><span class="s2">"_/_/things/twin/events"</span><span class="w">
         </span><span class="p">],</span><span class="w">
-        </span><span class="s2">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"ditto:outbound-auth-subject"</span><span class="p">,</span><span class="w"> </span><span class="s2">"..."</span><span class="p">],</span><span class="w">
-        </span><span class="s2">"headerMapping"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-          </span><span class="s2">"content-type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{{ header:content-type }}"</span><span class="p">,</span><span class="w">
-          </span><span class="s2">"api-key"</span><span class="p">:</span><span class="w"> </span><span class="s2">"this-is-a-secret-api-key-to-send-along"</span><span class="w">
+        </span><span class="nl">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"ditto:outbound-auth-subject"</span><span class="p">,</span><span class="w"> </span><span class="s2">"..."</span><span class="p">],</span><span class="w">
+        </span><span class="nl">"headerMapping"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"content-type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{{ header:content-type }}"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"api-key"</span><span class="p">:</span><span class="w"> </span><span class="s2">"this-is-a-secret-api-key-to-send-along"</span><span class="w">
          </span><span class="p">}</span><span class="w">
       </span><span class="p">}</span><span class="w">
     </span><span class="p">]</span><span class="w">
@@ -2335,60 +2342,60 @@ for how to set it up.</p>
 <a href="https://datatracker.ietf.org/doc/html/rfc6749#section-4.4">section 4.4 of RFC-6749</a>.
 To configure OAuth2 credentials:</p>
 <ul>
-  <li>Set <code class="highlighter-rouge">type</code> to <code class="highlighter-rouge">oauth-client-credentials</code></li>
-  <li>Set <code class="highlighter-rouge">tokenEndpoint</code> to the URI of the access token request endpoint</li>
-  <li>Set <code class="highlighter-rouge">clientId</code> to the client ID to include in access token requests</li>
-  <li>Set <code class="highlighter-rouge">clientSecret</code> to the client secret to include in access token requests</li>
-  <li>Set <code class="highlighter-rouge">requestedScopes</code> to the scopes to request in access token requests</li>
+  <li>Set <code class="language-plaintext highlighter-rouge">type</code> to <code class="language-plaintext highlighter-rouge">oauth-client-credentials</code></li>
+  <li>Set <code class="language-plaintext highlighter-rouge">tokenEndpoint</code> to the URI of the access token request endpoint</li>
+  <li>Set <code class="language-plaintext highlighter-rouge">clientId</code> to the client ID to include in access token requests</li>
+  <li>Set <code class="language-plaintext highlighter-rouge">clientSecret</code> to the client secret to include in access token requests</li>
+  <li>Set <code class="language-plaintext highlighter-rouge">requestedScopes</code> to the scopes to request in access token requests</li>
 </ul>
 
 <p>This is an example connection with OAuth2 credentials.</p>
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"connection"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http-example-connection-124"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"connectionType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http-push"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"connectionStatus"</span><span class="p">:</span><span class="w"> </span><span class="s2">"open"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"uri"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://localhost:443/event-publication"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"credentials"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"oauth-client-credentials"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"tokenEndpoint"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://localhost:443/oauth2/token"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"clientId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"my-client-id"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"clientSecret"</span><span class="p">:</span><span class="w"> </span><span class="s2">"my-client-secret"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"requestedScopes"</span><span class="p">:</span><span class="w"> </span><span class="s2">"user-scope-1 role-scope-2"</span><span class="w">
+  </span><span class="nl">"connection"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http-example-connection-124"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"connectionType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http-push"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"connectionStatus"</span><span class="p">:</span><span class="w"> </span><span class="s2">"open"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"uri"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://localhost:443/event-publication"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"credentials"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"oauth-client-credentials"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"tokenEndpoint"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://localhost:443/oauth2/token"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"clientId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"my-client-id"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"clientSecret"</span><span class="p">:</span><span class="w"> </span><span class="s2">"my-client-secret"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"requestedScopes"</span><span class="p">:</span><span class="w"> </span><span class="s2">"user-scope-1 role-scope-2"</span><span class="w">
     </span><span class="p">},</span><span class="w">
     </span><span class="err">...</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
-<p>Each HTTP request to <code class="highlighter-rouge">https://localhost:443/event-publication</code> includes a bearer token issued by
-<code class="highlighter-rouge">https://localhost:443/oauth2/token</code>. The HTTP connection will obtain a new token before the old token expires
-according to a configured <code class="highlighter-rouge">max-clock-skew</code>. To prevent looping access token requests, each token is used once even if
+<p>Each HTTP request to <code class="language-plaintext highlighter-rouge">https://localhost:443/event-publication</code> includes a bearer token issued by
+<code class="language-plaintext highlighter-rouge">https://localhost:443/oauth2/token</code>. The HTTP connection will obtain a new token before the old token expires
+according to a configured <code class="language-plaintext highlighter-rouge">max-clock-skew</code>. To prevent looping access token requests, each token is used once even if
 the token endpoint responds with expired tokens. Rejected or malformed access token responses are considered
 misconfiguration errors.</p>
 
-<p>It is possible to configure <code class="highlighter-rouge">max-clock-skew</code> and whether to enforce HTTPS for token endpoints in
-<code class="highlighter-rouge">connectivity-extension.conf</code> or by environment variables.</p>
-<pre><code class="language-hocon">ditto {
-  connectivity {
-    connection {
-      http-push {
-        oauth2 {
-          # Maximum clock skew of OAuth2 token endpoints.
-          # Access tokens are refreshed this long before expiration.
-          max-clock-skew = 60s
-          max-clock-skew = ${?CONNECTIVITY_HTTP_OAUTH2_MAX_CLOCK_SKEW}
+<p>It is possible to configure <code class="language-plaintext highlighter-rouge">max-clock-skew</code> and whether to enforce HTTPS for token endpoints in
+<code class="language-plaintext highlighter-rouge">connectivity-extension.conf</code> or by environment variables.</p>
+<div class="language-hocon highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nl">ditto</span><span class="w"> </span><span class="p">{</span><span class="w">
+  </span><span class="nl">connectivity</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">connection</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">http-push</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">oauth2</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="c1"># Maximum clock skew of OAuth2 token endpoints.</span><span class="w">
+          </span><span class="c1"># Access tokens are refreshed this long before expiration.</span><span class="w">
+          </span><span class="nl">max-clock-skew</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">60</span><span class="l">s</span><span class="w">
+          </span><span class="nl">max-clock-skew</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="si">${?</span><span class="nv">CONNECTIVITY_HTTP_OAUTH2_MAX_CLOCK_SKEW</span><span class="si">}</span><span class="w">
 
-          # Whether to enforce HTTPS for OAuth2 token endpoints.
-          # Should be `true` for production environments
-          # in order not to transmit client secrets in plain text.
-          enforce-https = true
-          enforce-https = ${?CONNECTIVITY_HTTP_OAUTH2_ENFORCE_HTTPS}
-        }
-      }
-    }
-  }
-}
-</code></pre>
+          </span><span class="c1"># Whether to enforce HTTPS for OAuth2 token endpoints.</span><span class="w">
+          </span><span class="c1"># Should be `true` for production environments</span><span class="w">
+          </span><span class="c1"># in order not to transmit client secrets in plain text.</span><span class="w">
+          </span><span class="nl">enforce-https</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="kc">true</span><span class="w">
+          </span><span class="nl">enforce-https</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="si">${?</span><span class="nv">CONNECTIVITY_HTTP_OAUTH2_ENFORCE_HTTPS</span><span class="si">}</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
 
 
     <div class="tags">
@@ -2423,7 +2430,7 @@ misconfiguration errors.</p>
                     </div>
                     <p class="notice">
                         &copy;2024 Eclipse Ditto™.
-                         Site last generated: Feb 27, 2024 <br />
+                         Site last generated: Apr 10, 2024 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

@@ -278,6 +278,13 @@
               
               
               
+              <li><a href="release_notes_354.html">3.5.4</a></li>
+              
+              
+              
+              
+              
+              
               <li><a href="release_notes_353.html">3.5.3</a></li>
               
               
@@ -2189,16 +2196,16 @@ Eclipse Ditto supports running against MongoDB 4.0 compatible mode, however with
 
 <p>If DocumentDB compatibility mode shall be enabled, the following environment variable has to be configured for all Ditto
 services:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>MONGO_DB_DOCUMENTDB_COMPATIBILITY_MODE=true
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>MONGO_DB_DOCUMENTDB_COMPATIBILITY_MODE=true
 </code></pre></div></div>
 
 <p>Effects:</p>
 <ul>
-  <li>That configuration will change a behavior in Ditto’s <code class="highlighter-rouge">MongoReadJournal</code> concerning the sorting based on priority of 
+  <li>That configuration will change a behavior in Ditto’s <code class="language-plaintext highlighter-rouge">MongoReadJournal</code> concerning the sorting based on priority of 
 connections to recover after a “cold start” of Ditto (e.g. after a “recreate” deployment)
     <ul>
       <li>as DocumentDB does not support configuring 
-<a href="https://www.mongodb.com/docs/v4.2/reference/collation/"><code class="highlighter-rouge">collation</code> and <code class="highlighter-rouge">numericOrdering=true</code></a>, a workaround was 
+<a href="https://www.mongodb.com/docs/v4.2/reference/collation/"><code class="language-plaintext highlighter-rouge">collation</code> and <code class="language-plaintext highlighter-rouge">numericOrdering=true</code></a>, a workaround was 
 added which disables this configuration</li>
       <li>the workaround for DocumentDB only correctly sorts connection priorities less than 1000 - connections with higher 
 priorities will be started in an order not reflected by their priority value</li>
@@ -2223,22 +2230,22 @@ runs against DocumentDB - can have a poor performance.</p>
 
 <p>Without the index, every performed query will basically have to search through all documents in the search collection.<br />
 The amount of documents to search in however can significantly be reduced by executing the search with users 
-(<a href="basic-auth.html#authenticated-subjects">authenticated subjects</a>) which are only allowed to <code class="highlighter-rouge">READ</code> a smaller set of 
+(<a href="basic-auth.html#authenticated-subjects">authenticated subjects</a>) which are only allowed to <code class="language-plaintext highlighter-rouge">READ</code> a smaller set of 
 things.<br />
-That is due to the fact, that every “authenticated subject” which is allowed to <code class="highlighter-rouge">READ</code> any field in a thing, is added 
-in an indexed field in the <code class="highlighter-rouge">search</code> collection. And the query planner always uses this index in absence of the 
+That is due to the fact, that every “authenticated subject” which is allowed to <code class="language-plaintext highlighter-rouge">READ</code> any field in a thing, is added 
+in an indexed field in the <code class="language-plaintext highlighter-rouge">search</code> collection. And the query planner always uses this index in absence of the 
 “wildcard index”.</p>
 
 <p>For example:</p>
 <ul>
   <li>assuming you in total have 300.000 things persisted</li>
-  <li>if you use a single user which is allowed to <code class="highlighter-rouge">READ</code> all of those 300k things
+  <li>if you use a single user which is allowed to <code class="language-plaintext highlighter-rouge">READ</code> all of those 300k things
     <ul>
       <li>if you do a search, all the 300k documents have to be scanned</li>
       <li>the search query performance will be really poor, probably &gt; 15 seconds, maybe even worse</li>
     </ul>
   </li>
-  <li>if you instead have 1.000 users from which every user is only allowed to <code class="highlighter-rouge">READ</code> 300 things
+  <li>if you instead have 1.000 users from which every user is only allowed to <code class="language-plaintext highlighter-rouge">READ</code> 300 things
     <ul>
       <li>only 300 documents have to be scanned</li>
       <li>the search query performance will be quite good, probably &lt; 1 second, maybe even better</li>
@@ -2278,7 +2285,7 @@ replacement for MongoDB as backing persistence for Ditto.</p>
                     </div>
                     <p class="notice">
                         &copy;2024 Eclipse Ditto™.
-                         Site last generated: Feb 27, 2024 <br />
+                         Site last generated: Apr 10, 2024 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

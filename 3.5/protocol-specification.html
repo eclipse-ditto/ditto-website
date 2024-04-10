@@ -278,6 +278,13 @@
               
               
               
+              <li><a href="release_notes_354.html">3.5.4</a></li>
+              
+              
+              
+              
+              
+              
               <li><a href="release_notes_353.html">3.5.3</a></li>
               
               
@@ -2118,7 +2125,7 @@ the data in a protocol specific way.</p>
 <p>Ditto Protocol messages are identified by the 
 <a href="https://www.iana.org/assignments/media-types/application/vnd.eclipse.ditto+json">IANA registered</a> “Content-Type”:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>application/vnd.eclipse.ditto+json
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>application/vnd.eclipse.ditto+json
 </code></pre></div></div>
 
 <h3 id="dittoProtocolEnvelope">Ditto Protocol envelope</h3>
@@ -2127,7 +2134,7 @@ the data in a protocol specific way.</p>
 version etc.) and allows the message to be routed by intermediary nodes to its final destination, without parsing the
 actual payload.</p>
 
-<p>The Protocol envelope is formatted as JSON object (<code class="highlighter-rouge">content-type=application/json</code>) and must correspond to the 
+<p>The Protocol envelope is formatted as JSON object (<code class="language-plaintext highlighter-rouge">content-type=application/json</code>) and must correspond to the 
 following JSON schema:</p>
 
 <script src="docson/widget.js" data-schema="../jsonschema/protocol-envelope.json"></script>
@@ -2162,7 +2169,7 @@ which information.</p>
 <p>Protocol messages contain a <a href="protocol-specification-topic.html">topic</a>, which is used for</p>
 <ul>
   <li>addressing an entity,</li>
-  <li>defining the <code class="highlighter-rouge">channel</code> (<em>twin</em> vs. <em>live</em>) and</li>
+  <li>defining the <code class="language-plaintext highlighter-rouge">channel</code> (<em>twin</em> vs. <em>live</em>) and</li>
   <li>specifying what the intention of the Protocol message is.</li>
 </ul>
 
@@ -2174,7 +2181,7 @@ The keys of the JSON object are the header names; the values are the header valu
 <p>The header names are <em>case-insensitive</em> and <em>case-preserving</em> in the following sense:</p>
 <ul>
   <li><strong>Case-insensitive</strong>: Capitalization of header names does not affect evaluation of the headers by Ditto;
-setting <code class="highlighter-rouge">correlation-id</code> or <code class="highlighter-rouge">CORRELATION-ID</code> has the same effect. If 2 headers differing only in capitalization
+setting <code class="language-plaintext highlighter-rouge">correlation-id</code> or <code class="language-plaintext highlighter-rouge">CORRELATION-ID</code> has the same effect. If 2 headers differing only in capitalization
 are set, Ditto’s behavior is <strong>not defined</strong>.</li>
   <li><strong>Case-preserving</strong>: Capitalization of headers by the sender of a Ditto protocol message is visible to the receiver.
 An exception to case-preservation are the headers of HTTP requests and responses,
@@ -2193,106 +2200,106 @@ since they are themselves not case-sensitive.</li>
   </thead>
   <tbody>
     <tr>
-      <td><code class="highlighter-rouge">content-type</code></td>
+      <td><code class="language-plaintext highlighter-rouge">content-type</code></td>
       <td>The content-type which describes the <a href="#value">value</a> of Ditto Protocol messages.</td>
-      <td><code class="highlighter-rouge">String</code></td>
+      <td><code class="language-plaintext highlighter-rouge">String</code></td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge">correlation-id</code></td>
+      <td><code class="language-plaintext highlighter-rouge">correlation-id</code></td>
       <td>Used for correlating protocol messages (e.g. a <strong>command</strong> would have the same correlation-id as the sent back <strong>response</strong> message).</td>
-      <td><code class="highlighter-rouge">String</code></td>
+      <td><code class="language-plaintext highlighter-rouge">String</code></td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge">ditto-originator</code></td>
+      <td><code class="language-plaintext highlighter-rouge">ditto-originator</code></td>
       <td>Contains the first authorization subject of the command that caused the sending of this message. Set by Ditto.</td>
-      <td><code class="highlighter-rouge">String</code></td>
+      <td><code class="language-plaintext highlighter-rouge">String</code></td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge">if-match</code></td>
+      <td><code class="language-plaintext highlighter-rouge">if-match</code></td>
       <td>Has the same semantics as defined for the <a href="httpapi-concepts.html#conditional-requests">HTTP API</a>.</td>
-      <td><code class="highlighter-rouge">String</code></td>
+      <td><code class="language-plaintext highlighter-rouge">String</code></td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge">if-none-match</code></td>
+      <td><code class="language-plaintext highlighter-rouge">if-none-match</code></td>
       <td>Has the same semantics as defined for the <a href="httpapi-concepts.html#conditional-requests">HTTP API</a>.</td>
-      <td><code class="highlighter-rouge">String</code></td>
+      <td><code class="language-plaintext highlighter-rouge">String</code></td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge">if-equal</code></td>
+      <td><code class="language-plaintext highlighter-rouge">if-equal</code></td>
       <td>Has the same semantics as defined for the <a href="httpapi-concepts.html#conditional-requests">HTTP API</a>.</td>
-      <td><code class="highlighter-rouge">String</code> - currently possible: [‘update’,’skip’,’skip-minimizing-merge’] - default: <code class="highlighter-rouge">'update'</code></td>
+      <td><code class="language-plaintext highlighter-rouge">String</code> - currently possible: [‘update’,’skip’,’skip-minimizing-merge’] - default: <code class="language-plaintext highlighter-rouge">'update'</code></td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge">response-required</code></td>
+      <td><code class="language-plaintext highlighter-rouge">response-required</code></td>
       <td>Configures for a <strong>command</strong> whether or not a <strong>response</strong> should be sent back.</td>
-      <td><code class="highlighter-rouge">Boolean</code> - default: <code class="highlighter-rouge">true</code></td>
+      <td><code class="language-plaintext highlighter-rouge">Boolean</code> - default: <code class="language-plaintext highlighter-rouge">true</code></td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge">requested-acks</code></td>
+      <td><code class="language-plaintext highlighter-rouge">requested-acks</code></td>
       <td>Defines which <a href="basic-acknowledgements.html">acknowledgements</a> are requested for a command processed by Ditto.</td>
-      <td><code class="highlighter-rouge">JsonArray</code> of <code class="highlighter-rouge">String</code> - default: <code class="highlighter-rouge">["twin-persisted"]</code></td>
+      <td><code class="language-plaintext highlighter-rouge">JsonArray</code> of <code class="language-plaintext highlighter-rouge">String</code> - default: <code class="language-plaintext highlighter-rouge">["twin-persisted"]</code></td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge">ditto-weak-ack</code></td>
+      <td><code class="language-plaintext highlighter-rouge">ditto-weak-ack</code></td>
       <td>Marks <a href="basic-acknowledgements.html">weak acknowledgements</a> issued by Ditto.</td>
-      <td><code class="highlighter-rouge">Boolean</code> - default: <code class="highlighter-rouge">false</code></td>
+      <td><code class="language-plaintext highlighter-rouge">Boolean</code> - default: <code class="language-plaintext highlighter-rouge">false</code></td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge">timeout</code></td>
+      <td><code class="language-plaintext highlighter-rouge">timeout</code></td>
       <td>Defines how long the Ditto server should wait, e.g. applied when waiting for requested acknowledgements.</td>
-      <td><code class="highlighter-rouge">String</code> - e.g.: <code class="highlighter-rouge">42s</code> or <code class="highlighter-rouge">250ms</code> or <code class="highlighter-rouge">1m</code> - default: <code class="highlighter-rouge">60s</code></td>
+      <td><code class="language-plaintext highlighter-rouge">String</code> - e.g.: <code class="language-plaintext highlighter-rouge">42s</code> or <code class="language-plaintext highlighter-rouge">250ms</code> or <code class="language-plaintext highlighter-rouge">1m</code> - default: <code class="language-plaintext highlighter-rouge">60s</code></td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge">version</code></td>
-      <td>Determines in which schema version the <code class="highlighter-rouge">payload</code> should be interpreted.</td>
-      <td><code class="highlighter-rouge">Number</code> - currently possible: [2] - default: <code class="highlighter-rouge">2</code></td>
+      <td><code class="language-plaintext highlighter-rouge">version</code></td>
+      <td>Determines in which schema version the <code class="language-plaintext highlighter-rouge">payload</code> should be interpreted.</td>
+      <td><code class="language-plaintext highlighter-rouge">Number</code> - currently possible: [2] - default: <code class="language-plaintext highlighter-rouge">2</code></td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge">put-metadata</code></td>
+      <td><code class="language-plaintext highlighter-rouge">put-metadata</code></td>
       <td>Determines which Metadata information is stored in the thing.</td>
-      <td><code class="highlighter-rouge">JsonArray</code> of <code class="highlighter-rouge">JsonObject</code>s containing <a href="basic-metadata.html">metadata</a> to apply.</td>
+      <td><code class="language-plaintext highlighter-rouge">JsonArray</code> of <code class="language-plaintext highlighter-rouge">JsonObject</code>s containing <a href="basic-metadata.html">metadata</a> to apply.</td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge">condition</code></td>
+      <td><code class="language-plaintext highlighter-rouge">condition</code></td>
       <td>The condition to evaluate before applying the request.</td>
-      <td><code class="highlighter-rouge">String</code> containing <a href="basic-conditional-requests.html">condition</a> to apply.</td>
+      <td><code class="language-plaintext highlighter-rouge">String</code> containing <a href="basic-conditional-requests.html">condition</a> to apply.</td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge">live-channel-condition</code></td>
+      <td><code class="language-plaintext highlighter-rouge">live-channel-condition</code></td>
       <td>The condition to evaluate before retrieving thing data from the device.</td>
-      <td><code class="highlighter-rouge">String</code> containing <a href="basic-conditional-requests.html#live-channel-condition">live channel condition</a> to apply.</td>
+      <td><code class="language-plaintext highlighter-rouge">String</code> containing <a href="basic-conditional-requests.html#live-channel-condition">live channel condition</a> to apply.</td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge">live-channel-timeout-strategy</code></td>
-      <td>The strategy to apply when a <a href="protocol-twinlive.html#live">live</a> command was not answered by the actual device within the defined <code class="highlighter-rouge">timeout</code>.</td>
-      <td><code class="highlighter-rouge">fail</code>: let the request fail with a 408 timeout error - <code class="highlighter-rouge">use-twin</code>: fall back to the twin, retrieving the persisted data.</td>
+      <td><code class="language-plaintext highlighter-rouge">live-channel-timeout-strategy</code></td>
+      <td>The strategy to apply when a <a href="protocol-twinlive.html#live">live</a> command was not answered by the actual device within the defined <code class="language-plaintext highlighter-rouge">timeout</code>.</td>
+      <td><code class="language-plaintext highlighter-rouge">fail</code>: let the request fail with a 408 timeout error - <code class="language-plaintext highlighter-rouge">use-twin</code>: fall back to the twin, retrieving the persisted data.</td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge">at-historical-revision</code></td>
+      <td><code class="language-plaintext highlighter-rouge">at-historical-revision</code></td>
       <td>The historical revision to retrieve an entity at, using the <a href="basic-history.html">history capabilities</a>.</td>
-      <td><code class="highlighter-rouge">Number</code> - a long value of the revision to retrieve.</td>
+      <td><code class="language-plaintext highlighter-rouge">Number</code> - a long value of the revision to retrieve.</td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge">at-historical-timestamp</code></td>
+      <td><code class="language-plaintext highlighter-rouge">at-historical-timestamp</code></td>
       <td>The historical timestamp in ISO-8601 format to retrieve an entity at, using the <a href="basic-history.html">history capabilities</a>.</td>
-      <td><code class="highlighter-rouge">String</code> containing an ISO-8601 formatted timestamp.</td>
+      <td><code class="language-plaintext highlighter-rouge">String</code> containing an ISO-8601 formatted timestamp.</td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge">historical-headers</code></td>
-      <td>Contains the historical header when using <code class="highlighter-rouge">at-historical-*</code> headers to retrieve an entity at a certain history point.</td>
-      <td><code class="highlighter-rouge">JsonObject</code> of the headers which were configured to be persisted as historical headers.</td>
+      <td><code class="language-plaintext highlighter-rouge">historical-headers</code></td>
+      <td>Contains the historical header when using <code class="language-plaintext highlighter-rouge">at-historical-*</code> headers to retrieve an entity at a certain history point.</td>
+      <td><code class="language-plaintext highlighter-rouge">JsonObject</code> of the headers which were configured to be persisted as historical headers.</td>
     </tr>
   </tbody>
 </table>
 
 <p>Custom headers of messages through the <a href="protocol-twinlive.html#live">live channel</a> are delivered verbatim. When naming 
 custom headers, it is best to attach a prefix specific to your application, that does not conflict with Ditto or
-HTTP protocol, for example the prefix <code class="highlighter-rouge">ditto-*</code>.</p>
+HTTP protocol, for example the prefix <code class="language-plaintext highlighter-rouge">ditto-*</code>.</p>
 <ul>
   <li><a href="https://www.iana.org/assignments/message-headers/message-headers.xml">Permanent HTTP headers</a> are to be avoided.</li>
   <li>Ditto uses the following headers internally. If these headers are set in a Protocol message, they will be ignored 
 and will not be delivered.
-    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>channel
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>channel
 ditto-*
 raw-request-url
 read-subjects
@@ -2302,13 +2309,13 @@ timeout-access
   </li>
 </ul>
 
-<p>The interaction between the headers <code class="highlighter-rouge">response-required</code>, <code class="highlighter-rouge">requested-acks</code> and <code class="highlighter-rouge">timeout</code> is documented
+<p>The interaction between the headers <code class="language-plaintext highlighter-rouge">response-required</code>, <code class="language-plaintext highlighter-rouge">requested-acks</code> and <code class="language-plaintext highlighter-rouge">timeout</code> is documented
 <a href="basic-acknowledgements.html#interaction-between-headers">here</a>.</p>
 
 <h2 id="path">Path</h2>
 
 <p>Contains a JSON pointer of where to apply the <a href="#value">value</a> of the protocol message.
-May also be <code class="highlighter-rouge">/</code> when the value contains a replacement for the complete addressed entity (e.g. a complete
+May also be <code class="language-plaintext highlighter-rouge">/</code> when the value contains a replacement for the complete addressed entity (e.g. a complete
 <a href="basic-thing.html">Thing</a> JSON).</p>
 
 <h2 id="value">Value</h2>
@@ -2321,8 +2328,8 @@ May also be <code class="highlighter-rouge">/</code> when the value contains a r
 
 <h2 id="extra">Extra</h2>
 
-<p>When using <a href="basic-enrichment.html">signal enrichment</a>, in order to ask for <code class="highlighter-rouge">extraFields</code> to be included, the
-Ditto Protocol message contains a field <code class="highlighter-rouge">extra</code> containing a JSON object with the selected extra fields.</p>
+<p>When using <a href="basic-enrichment.html">signal enrichment</a>, in order to ask for <code class="language-plaintext highlighter-rouge">extraFields</code> to be included, the
+Ditto Protocol message contains a field <code class="language-plaintext highlighter-rouge">extra</code> containing a JSON object with the selected extra fields.</p>
 
 
     <div class="tags">
@@ -2349,7 +2356,7 @@ Ditto Protocol message contains a field <code class="highlighter-rouge">extra</c
                     </div>
                     <p class="notice">
                         &copy;2024 Eclipse Ditto™.
-                         Site last generated: Feb 27, 2024 <br />
+                         Site last generated: Apr 10, 2024 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

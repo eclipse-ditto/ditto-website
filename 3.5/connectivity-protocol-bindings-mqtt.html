@@ -278,6 +278,13 @@
               
               
               
+              <li><a href="release_notes_354.html">3.5.4</a></li>
+              
+              
+              
+              
+              
+              
               <li><a href="release_notes_353.html">3.5.3</a></li>
               
               
@@ -2105,7 +2112,7 @@ $('#toc').on('click', 'a', function() {
 <h2 id="content-type">Content-type</h2>
 
 <p>When MQTT messages are sent in <a href="protocol-overview.html">Ditto Protocol</a>,
-the payload should be <code class="highlighter-rouge">UTF-8</code> encoded strings.</p>
+the payload should be <code class="language-plaintext highlighter-rouge">UTF-8</code> encoded strings.</p>
 
 <p>If messages, which are not in Ditto Protocol, should be processed, a <a href="connectivity-mapping.html">payload mapping</a> must
 be configured for the connection in order to transform the messages.</p>
@@ -2113,13 +2120,13 @@ be configured for the connection in order to transform the messages.</p>
 <h2 id="mqtt-311-properties">MQTT 3.1.1 properties</h2>
 
 <p>MQTT 3.1.1 messages have no application headers. Transmission-relevant properties are set in the
-<code class="highlighter-rouge">"headers"</code> field as a part of <a href="protocol-specification.html#dittoProtocolEnvelope">Ditto protocol messages</a> in the
+<code class="language-plaintext highlighter-rouge">"headers"</code> field as a part of <a href="protocol-specification.html#dittoProtocolEnvelope">Ditto protocol messages</a> in the
 payload.</p>
 
 <p>This property is supported:</p>
 
 <ul>
-  <li><code class="highlighter-rouge">correlation-id</code>: For correlating request messages and events. Twin events have the correlation IDs of
+  <li><code class="language-plaintext highlighter-rouge">correlation-id</code>: For correlating request messages and events. Twin events have the correlation IDs of
 <a href="protocol-twinlive.html#twin">Twin commands</a> that produced them.</li>
 </ul>
 
@@ -2135,43 +2142,43 @@ payload.</p>
 <p>For an MQTT connection:</p>
 
 <ul>
-  <li>Source <code class="highlighter-rouge">"addresses"</code> are MQTT topics to subscribe to. Wildcards <code class="highlighter-rouge">+</code> and <code class="highlighter-rouge">#</code> are allowed.</li>
-  <li><code class="highlighter-rouge">"authorizationContext"</code> may <em>not</em> contain placeholders <code class="highlighter-rouge">{{ header:&lt;header-name&gt; }}</code> as MQTT 3.1.1
+  <li>Source <code class="language-plaintext highlighter-rouge">"addresses"</code> are MQTT topics to subscribe to. Wildcards <code class="language-plaintext highlighter-rouge">+</code> and <code class="language-plaintext highlighter-rouge">#</code> are allowed.</li>
+  <li><code class="language-plaintext highlighter-rouge">"authorizationContext"</code> may <em>not</em> contain placeholders <code class="language-plaintext highlighter-rouge">{{ header:&lt;header-name&gt; }}</code> as MQTT 3.1.1
 has no application headers.</li>
-  <li>The required field <code class="highlighter-rouge">"qos"</code> sets the maximum Quality of Service to request when subscribing for messages. Its value
-can be <code class="highlighter-rouge">0</code> for at-most-once delivery, <code class="highlighter-rouge">1</code> for at-least-once delivery and <code class="highlighter-rouge">2</code> for exactly-once delivery.
+  <li>The required field <code class="language-plaintext highlighter-rouge">"qos"</code> sets the maximum Quality of Service to request when subscribing for messages. Its value
+can be <code class="language-plaintext highlighter-rouge">0</code> for at-most-once delivery, <code class="language-plaintext highlighter-rouge">1</code> for at-least-once delivery and <code class="language-plaintext highlighter-rouge">2</code> for exactly-once delivery.
 Support of any Quality of Service depends on the external MQTT broker; <a href="https://docs.aws.amazon.com/iot/">AWS IoT</a> for example does not
-acknowledge subscriptions with <code class="highlighter-rouge">qos=2</code>.</li>
+acknowledge subscriptions with <code class="language-plaintext highlighter-rouge">qos=2</code>.</li>
 </ul>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"addresses"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+  </span><span class="nl">"addresses"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
     </span><span class="s2">"&lt;mqtt_topic&gt;"</span><span class="p">,</span><span class="w">
     </span><span class="s2">"..."</span><span class="w">
   </span><span class="p">],</span><span class="w">
-  </span><span class="s2">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"ditto:inbound-auth-subject"</span><span class="p">,</span><span class="w"> </span><span class="s2">"..."</span><span class="p">],</span><span class="w">
-  </span><span class="s2">"qos"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="w">
+  </span><span class="nl">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"ditto:inbound-auth-subject"</span><span class="p">,</span><span class="w"> </span><span class="s2">"..."</span><span class="p">],</span><span class="w">
+  </span><span class="nl">"qos"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
-<p>Note: This example assumes that there is a valid user named <code class="highlighter-rouge">ditto:inbound-auth-subject</code> in Ditto.
-If you want to use a user for the basic auth (from the <a href="connectivity-protocol-bindings-http.html">HTTP API</a>) use the prefix <code class="highlighter-rouge">nginx:</code>, e.g. <code class="highlighter-rouge">nginx:ditto</code>.
+<p>Note: This example assumes that there is a valid user named <code class="language-plaintext highlighter-rouge">ditto:inbound-auth-subject</code> in Ditto.
+If you want to use a user for the basic auth (from the <a href="connectivity-protocol-bindings-http.html">HTTP API</a>) use the prefix <code class="language-plaintext highlighter-rouge">nginx:</code>, e.g. <code class="language-plaintext highlighter-rouge">nginx:ditto</code>.
 See <a href="basic-auth.html#authorization-context-in-devops-commands">Basic Authentication</a> for more information.</p>
 
 <h4 id="source-header-mapping">Source header mapping</h4>
 
 <p>MQTT 3.1.1 does not support headers in its protocol, however Ditto extracts the following headers from each consumed message:</p>
 <ul>
-  <li><code class="highlighter-rouge">mqtt.topic</code>: contains the MQTT topic on which a message was received</li>
-  <li><code class="highlighter-rouge">mqtt.qos</code>: contains the MQTT QoS value of a received message</li>
-  <li><code class="highlighter-rouge">mqtt.retain</code>: contains the MQTT retain flag of a received message</li>
+  <li><code class="language-plaintext highlighter-rouge">mqtt.topic</code>: contains the MQTT topic on which a message was received</li>
+  <li><code class="language-plaintext highlighter-rouge">mqtt.qos</code>: contains the MQTT QoS value of a received message</li>
+  <li><code class="language-plaintext highlighter-rouge">mqtt.retain</code>: contains the MQTT retain flag of a received message</li>
 </ul>
 
 <p>These headers may be used in a source header mapping, e.g.:</p>
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"headerMapping"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"topic"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{{ header:mqtt.topic }}"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"the-qos"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{{ header:mqtt.qos }}"</span><span class="w">
+  </span><span class="nl">"headerMapping"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"topic"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{{ header:mqtt.topic }}"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"the-qos"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{{ header:mqtt.qos }}"</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
@@ -2209,18 +2216,18 @@ broker are treated in the following way:</p>
 <p>In order to enable acknowledgement processing only for MQTT messages received with QoS 1/2, the following configuration
 has to be applied:</p>
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"addresses"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+  </span><span class="nl">"addresses"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
     </span><span class="s2">"&lt;mqtt_topic&gt;"</span><span class="p">,</span><span class="w">
     </span><span class="s2">"..."</span><span class="w">
   </span><span class="p">],</span><span class="w">
-  </span><span class="s2">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+  </span><span class="nl">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
     </span><span class="s2">"ditto:inbound-auth-subject"</span><span class="p">,</span><span class="w">
     </span><span class="s2">"..."</span><span class="w">
   </span><span class="p">],</span><span class="w">
-  </span><span class="s2">"qos"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"acknowledgementRequests"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"includes"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
-    </span><span class="s2">"filter"</span><span class="p">:</span><span class="w"> </span><span class="s2">"fn:filter(header:mqtt.qos,'ne','0')"</span><span class="w">
+  </span><span class="nl">"qos"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"acknowledgementRequests"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"includes"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+    </span><span class="nl">"filter"</span><span class="p">:</span><span class="w"> </span><span class="s2">"fn:filter(header:mqtt.qos,'ne','0')"</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
@@ -2231,24 +2238,24 @@ has to be applied:</p>
 The target address may contain placeholders; see
 <a href="basic-connections.html#placeholder-for-target-addresses">placeholders</a> section for more information.</p>
 
-<p>Further, <code class="highlighter-rouge">"topics"</code> is a list of strings, each list entry representing a subscription of
+<p>Further, <code class="language-plaintext highlighter-rouge">"topics"</code> is a list of strings, each list entry representing a subscription of
 <a href="protocol-specification-topic.html">Ditto protocol topics</a>.</p>
 
-<p>Outbound messages are published to the configured target address if one of the subjects in <code class="highlighter-rouge">"authorizationContext"</code>
+<p>Outbound messages are published to the configured target address if one of the subjects in <code class="language-plaintext highlighter-rouge">"authorizationContext"</code>
 has READ permission on the thing, which is associated with a message.</p>
 
-<p>The additional field <code class="highlighter-rouge">"qos"</code> sets the Quality of Service with which messages are published.
-Its value can be <code class="highlighter-rouge">0</code> for at-most-once delivery, <code class="highlighter-rouge">1</code> for at-least-once delivery and <code class="highlighter-rouge">2</code> for exactly-once delivery.
+<p>The additional field <code class="language-plaintext highlighter-rouge">"qos"</code> sets the Quality of Service with which messages are published.
+Its value can be <code class="language-plaintext highlighter-rouge">0</code> for at-most-once delivery, <code class="language-plaintext highlighter-rouge">1</code> for at-least-once delivery and <code class="language-plaintext highlighter-rouge">2</code> for exactly-once delivery.
 Support of any Quality of Service depends on the external MQTT broker.</p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"mqtt/topic/of/my/device/{{ thing:id }}"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"topics"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+  </span><span class="nl">"address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"mqtt/topic/of/my/device/{{ thing:id }}"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"topics"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
     </span><span class="s2">"_/_/things/twin/events"</span><span class="p">,</span><span class="w">
     </span><span class="s2">"_/_/things/live/messages"</span><span class="w">
   </span><span class="p">],</span><span class="w">
-  </span><span class="s2">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"ditto:outbound-auth-subject"</span><span class="p">,</span><span class="w"> </span><span class="s2">"..."</span><span class="p">],</span><span class="w">
-  </span><span class="s2">"qos"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w">
+  </span><span class="nl">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"ditto:outbound-auth-subject"</span><span class="p">,</span><span class="w"> </span><span class="s2">"..."</span><span class="p">],</span><span class="w">
+  </span><span class="nl">"qos"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
@@ -2260,9 +2267,9 @@ not possible to configure here.</p>
 <p>However, if one of the following headers are contained in the header mapping, they are directly applied to the 
 published MQTT message:</p>
 <ul>
-  <li><code class="highlighter-rouge">mqtt.topic</code>: overwrites the topic configured for the target</li>
-  <li><code class="highlighter-rouge">mqtt.qos</code>: overwrites the qos level configured for the target</li>
-  <li><code class="highlighter-rouge">mqtt.retain</code>: controls whether the MQTT retain flag is set on the published message</li>
+  <li><code class="language-plaintext highlighter-rouge">mqtt.topic</code>: overwrites the topic configured for the target</li>
+  <li><code class="language-plaintext highlighter-rouge">mqtt.qos</code>: overwrites the qos level configured for the target</li>
+  <li><code class="language-plaintext highlighter-rouge">mqtt.retain</code>: controls whether the MQTT retain flag is set on the published message</li>
 </ul>
 
 <h4 id="target-acknowledgement-handling">Target acknowledgement handling</h4>
@@ -2276,14 +2283,14 @@ is mapped to the automatically created <a href="protocol-specification-acks.html
 <ul>
   <li>Acknowledgement.status:
     <ul>
-      <li>will be <code class="highlighter-rouge">200</code>, if the message was successfully ACKed by the MQTT 3.1.1 broker or when the target has QoS 0</li>
-      <li>will be <code class="highlighter-rouge">503</code>, if the MQTT 3.1.1 broker ran into an error before an acknowledgement message was received</li>
+      <li>will be <code class="language-plaintext highlighter-rouge">200</code>, if the message was successfully ACKed by the MQTT 3.1.1 broker or when the target has QoS 0</li>
+      <li>will be <code class="language-plaintext highlighter-rouge">503</code>, if the MQTT 3.1.1 broker ran into an error before an acknowledgement message was received</li>
     </ul>
   </li>
   <li>Acknowledgement.value:
     <ul>
-      <li>will be missing, for status <code class="highlighter-rouge">200</code></li>
-      <li>will contain more information, in case that an error <code class="highlighter-rouge">status</code> was set</li>
+      <li>will be missing, for status <code class="language-plaintext highlighter-rouge">200</code></li>
+      <li>will contain more information, in case that an error <code class="language-plaintext highlighter-rouge">status</code> was set</li>
     </ul>
   </li>
 </ul>
@@ -2293,27 +2300,27 @@ is mapped to the automatically created <a href="protocol-specification-acks.html
 <p>The MQTT 3.1.1 binding offers additional <a href="basic-connections.html#specific-configuration">specific configurations</a> 
 to apply for the used MQTT client.</p>
 
-<p>Overall example JSON of the MQTT <code class="highlighter-rouge">"specificConfig"</code>:</p>
+<p>Overall example JSON of the MQTT <code class="language-plaintext highlighter-rouge">"specificConfig"</code>:</p>
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"mqtt-example-connection-123"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"connectionType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"mqtt"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"connectionStatus"</span><span class="p">:</span><span class="w"> </span><span class="s2">"open"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"failoverEnabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"uri"</span><span class="p">:</span><span class="w"> </span><span class="s2">"tcp://test.mosquitto.org:1883"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"specificConfig"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"clientId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"my-awesome-mqtt-client-id"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"reconnectForRedelivery"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"cleanSession"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"separatePublisherClient"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"publisherId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"my-awesome-mqtt-publisher-client-id"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"reconnectForRedeliveryDelay"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5s"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"lastWillTopic"</span><span class="p">:</span><span class="w"> </span><span class="s2">"my/last/will/topic"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"lastWillQos"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"lastWillRetain"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"lastWillMessage"</span><span class="p">:</span><span class="w"> </span><span class="s2">"my last will message"</span><span class="w">
+  </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"mqtt-example-connection-123"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"connectionType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"mqtt"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"connectionStatus"</span><span class="p">:</span><span class="w"> </span><span class="s2">"open"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"failoverEnabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"uri"</span><span class="p">:</span><span class="w"> </span><span class="s2">"tcp://test.mosquitto.org:1883"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"specificConfig"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"clientId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"my-awesome-mqtt-client-id"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"reconnectForRedelivery"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"cleanSession"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"separatePublisherClient"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"publisherId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"my-awesome-mqtt-publisher-client-id"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"reconnectForRedeliveryDelay"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5s"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"lastWillTopic"</span><span class="p">:</span><span class="w"> </span><span class="s2">"my/last/will/topic"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"lastWillQos"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"lastWillRetain"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"lastWillMessage"</span><span class="p">:</span><span class="w"> </span><span class="s2">"my last will message"</span><span class="w">
   </span><span class="p">},</span><span class="w">
-  </span><span class="s2">"sources"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"..."</span><span class="p">],</span><span class="w">
-  </span><span class="s2">"targets"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"..."</span><span class="p">]</span><span class="w">
+  </span><span class="nl">"sources"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"..."</span><span class="p">],</span><span class="w">
+  </span><span class="nl">"targets"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"..."</span><span class="p">]</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
@@ -2329,63 +2336,63 @@ to apply for the used MQTT client.</p>
 (“at least once”) or 2 (“exactly once”)
 is processed but cannot be <a href="#source-acknowledgement-handling">acknowledged</a> successfully. <br />
 That causes that the MQTT broker will re-publish the message once the connection reconnected. <br />
-If configured to <code class="highlighter-rouge">false</code>, the MQTT message is simply acknowledged (<code class="highlighter-rouge">PUBACK</code> or <code class="highlighter-rouge">PUBREC</code>, <code class="highlighter-rouge">PUBREL</code>).</p>
+If configured to <code class="language-plaintext highlighter-rouge">false</code>, the MQTT message is simply acknowledged (<code class="language-plaintext highlighter-rouge">PUBACK</code> or <code class="language-plaintext highlighter-rouge">PUBREC</code>, <code class="language-plaintext highlighter-rouge">PUBREL</code>).</p>
 
-<p>Default: <code class="highlighter-rouge">false</code></p>
+<p>Default: <code class="language-plaintext highlighter-rouge">false</code></p>
 
 <p>Handle with care:</p>
 <ul>
-  <li>when set to <code class="highlighter-rouge">true</code>, incoming QoS 0 messages are lost during the reconnection phase</li>
-  <li>when set to <code class="highlighter-rouge">true</code> and there is also an MQTT target configured to publish messages,
+  <li>when set to <code class="language-plaintext highlighter-rouge">true</code>, incoming QoS 0 messages are lost during the reconnection phase</li>
+  <li>when set to <code class="language-plaintext highlighter-rouge">true</code> and there is also an MQTT target configured to publish messages,
 the messages to be published during the reconnection phase are lost
     <ul>
-      <li>to fix that, configure <code class="highlighter-rouge">"separatePublisherClient"</code> also to <code class="highlighter-rouge">true</code> in order to publish via another MQTT connection</li>
+      <li>to fix that, configure <code class="language-plaintext highlighter-rouge">"separatePublisherClient"</code> also to <code class="language-plaintext highlighter-rouge">true</code> in order to publish via another MQTT connection</li>
     </ul>
   </li>
-  <li>when set to <code class="highlighter-rouge">false</code>, MQTT messages with QoS 1 and 2 are redelivered based on the MQTT broker’s strategy, 
+  <li>when set to <code class="language-plaintext highlighter-rouge">false</code>, MQTT messages with QoS 1 and 2 are redelivered based on the MQTT broker’s strategy, 
 but may not be redelivered at all as the MQTT specification does not require unacknowledged messages to be redelivered
 without reconnection of the client</li>
 </ul>
 
 <h4 id="cleansession">cleanSession</h4>
 
-<p>Configure the MQTT client’s <code class="highlighter-rouge">cleanSession</code> flag.</p>
+<p>Configure the MQTT client’s <code class="language-plaintext highlighter-rouge">cleanSession</code> flag.</p>
 
-<p>Default: <code class="highlighter-rouge">false</code></p>
+<p>Default: <code class="language-plaintext highlighter-rouge">false</code></p>
 
 <h4 id="separatepublisherclient">separatePublisherClient</h4>
 
 <p>Configures whether to create a separate physical client and connection to the MQTT broker for publishing messages, or not.
-If configured to <code class="highlighter-rouge">true</code>, a single Ditto connection would open 2 MQTT connections/sessions: one for subscribing
+If configured to <code class="language-plaintext highlighter-rouge">true</code>, a single Ditto connection would open 2 MQTT connections/sessions: one for subscribing
 and one for publishing.<br />
-If configured to <code class="highlighter-rouge">false</code>, the same MQTT connection/session is used both: for subscribing to messages, and for publishing
+If configured to <code class="language-plaintext highlighter-rouge">false</code>, the same MQTT connection/session is used both: for subscribing to messages, and for publishing
 messages.</p>
 
-<p>Default: <code class="highlighter-rouge">false</code></p>
+<p>Default: <code class="language-plaintext highlighter-rouge">false</code></p>
 
 <h4 id="publisherid">publisherId</h4>
 
-<p>Configures a specific MQTT client ID for the case that <code class="highlighter-rouge">"separatePublisherClient"</code> is enabled.</p>
+<p>Configures a specific MQTT client ID for the case that <code class="language-plaintext highlighter-rouge">"separatePublisherClient"</code> is enabled.</p>
 
 <p>Default:</p>
 <ul>
-  <li>if client ID is configured, <code class="highlighter-rouge">clientId</code> + <code class="highlighter-rouge">"p"</code></li>
-  <li>if no client ID is configured, <code class="highlighter-rouge">connectionId</code> + <code class="highlighter-rouge">"p"</code></li>
+  <li>if client ID is configured, <code class="language-plaintext highlighter-rouge">clientId</code> + <code class="language-plaintext highlighter-rouge">"p"</code></li>
+  <li>if no client ID is configured, <code class="language-plaintext highlighter-rouge">connectionId</code> + <code class="language-plaintext highlighter-rouge">"p"</code></li>
 </ul>
 
 <h4 id="reconnectforredeliverydelay">reconnectForRedeliveryDelay</h4>
 
-<p>Configures how long to wait before reconnecting a consumer client for redelivery when <code class="highlighter-rouge">"reconnectForRedelivery"</code>
-and <code class="highlighter-rouge">separatePublisherClient</code> are both enabled. The minimum value is <code class="highlighter-rouge">1s</code>.</p>
+<p>Configures how long to wait before reconnecting a consumer client for redelivery when <code class="language-plaintext highlighter-rouge">"reconnectForRedelivery"</code>
+and <code class="language-plaintext highlighter-rouge">separatePublisherClient</code> are both enabled. The minimum value is <code class="language-plaintext highlighter-rouge">1s</code>.</p>
 
-<p>Default: <code class="highlighter-rouge">2s</code></p>
+<p>Default: <code class="language-plaintext highlighter-rouge">2s</code></p>
 
 <h4 id="keepalive">keepAlive</h4>
 
 <p>Configures the keep alive time interval (in seconds) in which the client sends a ping to the broker 
 if no other MQTT packets are sent during this period of time. It is used to determine if the connection is still up.</p>
 
-<p>Default: <code class="highlighter-rouge">60s</code> <a href="https://hivemq.github.io/hivemq-mqtt-client/docs/mqtt-operations/connect/#keep-alive">see here</a></p>
+<p>Default: <code class="language-plaintext highlighter-rouge">60s</code> <a href="https://hivemq.github.io/hivemq-mqtt-client/docs/mqtt-operations/connect/#keep-alive">see here</a></p>
 
 <h4 id="lastwilltopic">lastWillTopic</h4>
 
@@ -2395,19 +2402,19 @@ if no other MQTT packets are sent during this period of time. It is used to dete
 
 <p>Configures the QoS which should be used on Last Will:</p>
 <ul>
-  <li><code class="highlighter-rouge">0</code> = QoS 0 (“at most once”)</li>
-  <li><code class="highlighter-rouge">1</code> = QoS 1 (“at least once”)</li>
-  <li><code class="highlighter-rouge">2</code> = QoS 2 (“exactly once”)</li>
+  <li><code class="language-plaintext highlighter-rouge">0</code> = QoS 0 (“at most once”)</li>
+  <li><code class="language-plaintext highlighter-rouge">1</code> = QoS 1 (“at least once”)</li>
+  <li><code class="language-plaintext highlighter-rouge">2</code> = QoS 2 (“exactly once”)</li>
 </ul>
 
-<p>Default: <code class="highlighter-rouge">0</code></p>
+<p>Default: <code class="language-plaintext highlighter-rouge">0</code></p>
 
 <h4 id="lastwillretain">lastWillRetain</h4>
 
 <p>Configures if clients which are newly subscribed to the topic chosen in <a href="#lastwilltopic">Last Will topic</a> will 
 receive this message immediately after they subscribe.</p>
 
-<p>Default: <code class="highlighter-rouge">false</code></p>
+<p>Default: <code class="language-plaintext highlighter-rouge">false</code></p>
 
 <h4 id="lastwillmessage">lastWillMessage</h4>
 
@@ -2439,29 +2446,29 @@ existing connections.</p>
 <p>Connection configuration to create a new MQTT connection:</p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"mqtt-example-connection-123"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"connectionType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"mqtt"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"connectionStatus"</span><span class="p">:</span><span class="w"> </span><span class="s2">"open"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"failoverEnabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"uri"</span><span class="p">:</span><span class="w"> </span><span class="s2">"tcp://test.mosquitto.org:1883"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"sources"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+  </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"mqtt-example-connection-123"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"connectionType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"mqtt"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"connectionStatus"</span><span class="p">:</span><span class="w"> </span><span class="s2">"open"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"failoverEnabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"uri"</span><span class="p">:</span><span class="w"> </span><span class="s2">"tcp://test.mosquitto.org:1883"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"sources"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
     </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"addresses"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+      </span><span class="nl">"addresses"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
         </span><span class="s2">"eclipse-ditto-sandbox/#"</span><span class="w">
       </span><span class="p">],</span><span class="w">
-      </span><span class="s2">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"ditto:inbound-auth-subject"</span><span class="p">],</span><span class="w">
-      </span><span class="s2">"qos"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"filters"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+      </span><span class="nl">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"ditto:inbound-auth-subject"</span><span class="p">],</span><span class="w">
+      </span><span class="nl">"qos"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"filters"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
     </span><span class="p">}</span><span class="w">
   </span><span class="p">],</span><span class="w">
-  </span><span class="s2">"targets"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+  </span><span class="nl">"targets"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
     </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"eclipse-ditto-sandbox/{{ thing:id }}"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"topics"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+      </span><span class="nl">"address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"eclipse-ditto-sandbox/{{ thing:id }}"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"topics"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
         </span><span class="s2">"_/_/things/twin/events"</span><span class="w">
       </span><span class="p">],</span><span class="w">
-      </span><span class="s2">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"ditto:outbound-auth-subject"</span><span class="p">],</span><span class="w">
-      </span><span class="s2">"qos"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w">
+      </span><span class="nl">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"ditto:outbound-auth-subject"</span><span class="p">],</span><span class="w">
+      </span><span class="nl">"qos"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w">
     </span><span class="p">}</span><span class="w">
   </span><span class="p">]</span><span class="w">
 </span><span class="p">}</span><span class="w">
@@ -2476,36 +2483,36 @@ for how to set it up.</p>
 <p>Here is an example MQTT connection, which checks the broker certificate and authenticates by a client certificate.</p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"mqtt-example-connection-124"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"connectionType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"mqtt"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"connectionStatus"</span><span class="p">:</span><span class="w"> </span><span class="s2">"open"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"failoverEnabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"uri"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ssl://test.mosquitto.org:8884"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"validateCertificates"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"ca"</span><span class="p">:</span><span class="w"> </span><span class="s2">"-----BEGIN CERTIFICATE-----</span><span class="se">\n</span><span class="s2">&lt;test.mosquitto.org certificate&gt;</span><span class="se">\n</span><span class="s2">-----END CERTIFICATE-----"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"credentials"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"client-cert"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"cert"</span><span class="p">:</span><span class="w"> </span><span class="s2">"-----BEGIN CERTIFICATE-----</span><span class="se">\n</span><span class="s2">&lt;signed client certificate&gt;</span><span class="se">\n</span><span class="s2">-----END CERTIFICATE-----"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"key"</span><span class="p">:</span><span class="w"> </span><span class="s2">"-----BEGIN PRIVATE KEY-----</span><span class="se">\n</span><span class="s2">&lt;client private key&gt;</span><span class="se">\n</span><span class="s2">-----END PRIVATE KEY-----"</span><span class="w">
+  </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"mqtt-example-connection-124"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"connectionType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"mqtt"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"connectionStatus"</span><span class="p">:</span><span class="w"> </span><span class="s2">"open"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"failoverEnabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"uri"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ssl://test.mosquitto.org:8884"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"validateCertificates"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"ca"</span><span class="p">:</span><span class="w"> </span><span class="s2">"-----BEGIN CERTIFICATE-----</span><span class="se">\n</span><span class="s2">&lt;test.mosquitto.org certificate&gt;</span><span class="se">\n</span><span class="s2">-----END CERTIFICATE-----"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"credentials"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"client-cert"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"cert"</span><span class="p">:</span><span class="w"> </span><span class="s2">"-----BEGIN CERTIFICATE-----</span><span class="se">\n</span><span class="s2">&lt;signed client certificate&gt;</span><span class="se">\n</span><span class="s2">-----END CERTIFICATE-----"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"key"</span><span class="p">:</span><span class="w"> </span><span class="s2">"-----BEGIN PRIVATE KEY-----</span><span class="se">\n</span><span class="s2">&lt;client private key&gt;</span><span class="se">\n</span><span class="s2">-----END PRIVATE KEY-----"</span><span class="w">
   </span><span class="p">},</span><span class="w">
-  </span><span class="s2">"sources"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+  </span><span class="nl">"sources"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
     </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"addresses"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+      </span><span class="nl">"addresses"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
         </span><span class="s2">"eclipse-ditto-sandbox/#"</span><span class="w">
       </span><span class="p">],</span><span class="w">
-      </span><span class="s2">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"ditto:inbound-auth-subject"</span><span class="p">],</span><span class="w">
-      </span><span class="s2">"qos"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"filters"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+      </span><span class="nl">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"ditto:inbound-auth-subject"</span><span class="p">],</span><span class="w">
+      </span><span class="nl">"qos"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"filters"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
     </span><span class="p">}</span><span class="w">
   </span><span class="p">],</span><span class="w">
-  </span><span class="s2">"targets"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+  </span><span class="nl">"targets"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
     </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"eclipse-ditto-sandbox/{{ thing:id }}"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"topics"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+      </span><span class="nl">"address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"eclipse-ditto-sandbox/{{ thing:id }}"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"topics"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
         </span><span class="s2">"_/_/things/twin/events"</span><span class="w">
       </span><span class="p">],</span><span class="w">
-      </span><span class="s2">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"ditto:outbound-auth-subject"</span><span class="p">],</span><span class="w">
-      </span><span class="s2">"qos"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w">
+      </span><span class="nl">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"ditto:outbound-auth-subject"</span><span class="p">],</span><span class="w">
+      </span><span class="nl">"qos"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w">
     </span><span class="p">}</span><span class="w">
   </span><span class="p">]</span><span class="w">
 </span><span class="p">}</span><span class="w">
@@ -2541,7 +2548,7 @@ for how to set it up.</p>
                     </div>
                     <p class="notice">
                         &copy;2024 Eclipse Ditto™.
-                         Site last generated: Feb 27, 2024 <br />
+                         Site last generated: Apr 10, 2024 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

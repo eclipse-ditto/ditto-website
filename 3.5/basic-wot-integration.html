@@ -278,6 +278,13 @@
               
               
               
+              <li><a href="release_notes_354.html">3.5.4</a></li>
+              
+              
+              
+              
+              
+              
               <li><a href="release_notes_353.html">3.5.3</a></li>
               
               
@@ -2099,14 +2106,14 @@ $('#toc').on('click', 'a', function() {
 
     
 
-  <p>Eclipse Ditto added support for <strong>optional</strong> WoT (Web of Things) integration in Ditto version <code class="highlighter-rouge">2.4.0</code>.<br />
+  <p>Eclipse Ditto added support for <strong>optional</strong> WoT (Web of Things) integration in Ditto version <code class="language-plaintext highlighter-rouge">2.4.0</code>.<br />
 The integration is based on the
 <a href="https://www.w3.org/TR/wot-thing-description11/">Web of Things (WoT) Thing Description 1.1</a>.</p>
 
 <p>Using this integration, Ditto managed digital twins can be linked to WoT “Thing Models” from which Ditto can create
 WoT “Thing Descriptions” containing the API descriptions of the twins.</p>
 
-<p>The WoT integration is considered stable and therefore active by default starting with Ditto version <code class="highlighter-rouge">3.0.0</code>.<br />
+<p>The WoT integration is considered stable and therefore active by default starting with Ditto version <code class="language-plaintext highlighter-rouge">3.0.0</code>.<br />
 If it should be disabled, it can be deactivated via a “feature toggle”:<br />
 In order to deactivate the WoT integration, configure the following environment variable for all Ditto services:</p>
 
@@ -2132,19 +2139,19 @@ application domains.”</p>
 <p>At its core, the specification of the so-called “WoT Thing Description” (TD) defines IoT device’s metadata and 
 interaction capabilities.<br />
 The idea of such a TD (Thing Description) is that a device (or e.g. a digital twin service acting as intermediate) 
-describes in a standardized way which capabilities in form of <code class="highlighter-rouge">properties</code>, <code class="highlighter-rouge">actions</code> and <code class="highlighter-rouge">events</code> a Thing provides 
+describes in a standardized way which capabilities in form of <code class="language-plaintext highlighter-rouge">properties</code>, <code class="language-plaintext highlighter-rouge">actions</code> and <code class="language-plaintext highlighter-rouge">events</code> a Thing provides 
 and which input/output can be expected when interacting with the Thing.</p>
 
-<p>Even more, a TD contains so called <code class="highlighter-rouge">forms</code> for the mentioned interaction capabilities which map those rather abstract
+<p>Even more, a TD contains so called <code class="language-plaintext highlighter-rouge">forms</code> for the mentioned interaction capabilities which map those rather abstract
 concepts to actual endpoints, e.g. to HTTP endpoints, HTTP verbs and HTTP headers etc.<br />
 Developed under the roof of the W3C, web APIs are obviously well understood and are incorporated perfectly in the 
 “WoT Thing Description” specification.
-But also other protocol bindings may be defined in a <code class="highlighter-rouge">form</code>, e.g. MQTT or CoAP.</p>
+But also other protocol bindings may be defined in a <code class="language-plaintext highlighter-rouge">form</code>, e.g. MQTT or CoAP.</p>
 
 <p>The “WoT Thing Description” specification version 1.0 was already published as 
 <a href="https://www.w3.org/TR/wot-thing-description/">“W3C Recommendation” in April 2020</a>, the next version 1.1 adds the 
 concept of “Thing Models” (TM) which can be seen as a template for generating “Thing Descriptions” but without some of
-its mandatory fields, e.g. <code class="highlighter-rouge">forms</code> including the protocol bindings.</p>
+its mandatory fields, e.g. <code class="language-plaintext highlighter-rouge">forms</code> including the protocol bindings.</p>
 
 <p>With the addition of the “Thing Model” concept, WoT becomes a perfect fit for describing the capabilities of 
 <a href="intro-digitaltwins.html">Digital Twins</a> managed in Ditto.
@@ -2152,7 +2159,7 @@ It is completely optional and even possible as “retrofit” model addition for
 
 <p>The benefits of adding such a “Thing Model” reference to digital twins managed in Ditto are:</p>
 <ul>
-  <li>possibility to define model for data (Ditto Thing <code class="highlighter-rouge">attributes</code> + Ditto Feature <code class="highlighter-rouge">properties</code>), e.g. containing:
+  <li>possibility to define model for data (Ditto Thing <code class="language-plaintext highlighter-rouge">attributes</code> + Ditto Feature <code class="language-plaintext highlighter-rouge">properties</code>), e.g. containing:
     <ul>
       <li>data type to expect</li>
       <li>restrictions which apply (like e.g. possible min/max values)</li>
@@ -2183,7 +2190,7 @@ It is completely optional and even possible as “retrofit” model addition for
   <li>introspection of digital twins
     <ul>
       <li>Ditto managed twins can describe themselves</li>
-      <li>if backed by a WoT Thing Model, the twin can tell you (when asking for <code class="highlighter-rouge">Accept: application/td+json</code> concent-type) exactly
+      <li>if backed by a WoT Thing Model, the twin can tell you (when asking for <code class="language-plaintext highlighter-rouge">Accept: application/td+json</code> concent-type) exactly
         <ul>
           <li>what it is capable of</li>
           <li>which HTTP endpoints to invoke to access data / send messages</li>
@@ -2216,17 +2223,17 @@ Javascript</li>
 
 <p>A <a href="https://www.w3.org/TR/wot-thing-description11/#introduction-td">Thing Description</a> describes exactly one instance of 
 a device/Thing.<br />
-This description contains not only the interaction capabilities (<code class="highlighter-rouge">properties</code> the devices provide, 
-<code class="highlighter-rouge">actions</code> which can be invoked by the devices and <code class="highlighter-rouge">events</code> the devices emit), but also contain concrete API endpoints 
-(via the <code class="highlighter-rouge">forms</code>) to invoke in order to actually interact with the devices.</p>
+This description contains not only the interaction capabilities (<code class="language-plaintext highlighter-rouge">properties</code> the devices provide, 
+<code class="language-plaintext highlighter-rouge">actions</code> which can be invoked by the devices and <code class="language-plaintext highlighter-rouge">events</code> the devices emit), but also contain concrete API endpoints 
+(via the <code class="language-plaintext highlighter-rouge">forms</code>) to invoke in order to actually interact with the devices.</p>
 
 <h3 id="wot-thing-model">WoT Thing Model</h3>
 
 <p>A <a href="https://www.w3.org/TR/wot-thing-description11/#introduction-tm">Thing Model</a> can be seen as the model 
 (or interface in OOP terminology) for a potentially huge population of instances (Thing Descriptions) all “implementing”
 this contract.<br />
-It does not need to contain the instance specific parts which a TD must include (e.g. <code class="highlighter-rouge">security</code> definitions or <code class="highlighter-rouge">forms</code>).
-It focuses on the possible interactions (<code class="highlighter-rouge">properties</code>, <code class="highlighter-rouge">actions</code>, <code class="highlighter-rouge">events</code>) and their data types / semantics in a more 
+It does not need to contain the instance specific parts which a TD must include (e.g. <code class="language-plaintext highlighter-rouge">security</code> definitions or <code class="language-plaintext highlighter-rouge">forms</code>).
+It focuses on the possible interactions (<code class="language-plaintext highlighter-rouge">properties</code>, <code class="language-plaintext highlighter-rouge">actions</code>, <code class="language-plaintext highlighter-rouge">events</code>) and their data types / semantics in a more 
 abstract way.</p>
 
 <h4 id="thing-model-modeling-tips">Thing Model modeling tips</h4>
@@ -2238,7 +2245,7 @@ abstract way.</p>
     <ul>
       <li>The WoT specification does not require you to put the version of the Thing Model in the filename, however you should
 really do so.</li>
-      <li>If you don’t use a version and provide the file as <code class="highlighter-rouge">lamp.tm.jsonld</code>, you will probably overwrite the file whenever
+      <li>If you don’t use a version and provide the file as <code class="language-plaintext highlighter-rouge">lamp.tm.jsonld</code>, you will probably overwrite the file whenever
 you make a change to the model.</li>
       <li>Think about an application consuming that model - one day a Thing would be correctly defined by the model,
 but the next day the Thing would no longer follow the model, even if the URL to the model was not changed.</li>
@@ -2246,9 +2253,9 @@ but the next day the Thing would no longer follow the model, even if the URL to 
   </li>
   <li>apply semantic versioning:
     <ul>
-      <li>if you “fix a bug” in a model, increase the “micro” version: <code class="highlighter-rouge">1.0.X</code></li>
-      <li>if you add something new to a model without removing/renaming (breaking) existing definitions, increase the “minor” version: <code class="highlighter-rouge">1.X.0</code></li>
-      <li>if you need to break a model (e.g. by removing/renaming something or changing a datatype), increase the “major” version: <code class="highlighter-rouge">X.0.0</code></li>
+      <li>if you “fix a bug” in a model, increase the “micro” version: <code class="language-plaintext highlighter-rouge">1.0.X</code></li>
+      <li>if you add something new to a model without removing/renaming (breaking) existing definitions, increase the “minor” version: <code class="language-plaintext highlighter-rouge">1.X.0</code></li>
+      <li>if you need to break a model (e.g. by removing/renaming something or changing a datatype), increase the “major” version: <code class="language-plaintext highlighter-rouge">X.0.0</code></li>
     </ul>
   </li>
   <li>treat published Thing Models as “immutable”:
@@ -2256,14 +2263,14 @@ but the next day the Thing would no longer follow the model, even if the URL to 
       <li>never change a “released” TM once published and accessible via public HTTP endpoint</li>
     </ul>
   </li>
-  <li>provide a <code class="highlighter-rouge">title</code> and a <code class="highlighter-rouge">description</code> for your Thing Models
+  <li>provide a <code class="language-plaintext highlighter-rouge">title</code> and a <code class="language-plaintext highlighter-rouge">description</code> for your Thing Models
     <ul>
       <li>you as the model creator can add the most relevant human-readable descriptions</li>
-      <li>also define it for <code class="highlighter-rouge">properties</code>, <code class="highlighter-rouge">actions</code>, <code class="highlighter-rouge">events</code> and all defined data types</li>
-      <li>if you need internationalization, add those to <code class="highlighter-rouge">titles</code> and <code class="highlighter-rouge">descriptions</code></li>
+      <li>also define it for <code class="language-plaintext highlighter-rouge">properties</code>, <code class="language-plaintext highlighter-rouge">actions</code>, <code class="language-plaintext highlighter-rouge">events</code> and all defined data types</li>
+      <li>if you need internationalization, add those to <code class="language-plaintext highlighter-rouge">titles</code> and <code class="language-plaintext highlighter-rouge">descriptions</code></li>
     </ul>
   </li>
-  <li>provide a semantic context by referencing ontologies in your JSON-LD <code class="highlighter-rouge">@context</code>
+  <li>provide a semantic context by referencing ontologies in your JSON-LD <code class="language-plaintext highlighter-rouge">@context</code>
     <ul>
       <li>at some point, a machine learning or reasoning engine will try to make sense of your Things and their data</li>
       <li>support the machines to be able to understand your Things semantics</li>
@@ -2271,18 +2278,18 @@ but the next day the Thing would no longer follow the model, even if the URL to 
       <li>e.g. make use of <a href="#public-available-ontologies-to-reference">public ontologies</a></li>
     </ul>
   </li>
-  <li>use the linked ontologies in order to describe your model in a semantic way, e.g. in the <code class="highlighter-rouge">properties</code> of a 
+  <li>use the linked ontologies in order to describe your model in a semantic way, e.g. in the <code class="language-plaintext highlighter-rouge">properties</code> of a 
 “Temperature sensor” model 
 (see also the <a href="https://www.w3.org/TR/wot-thing-description11/#semantic-annotations-example-version-units">example in the TD specification</a>):
     <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="w">  </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"currentTemperature"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"@type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"om2:CelsiusTemperature"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Current temperature"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"The last or current measured temperature in '°C'."</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"number"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"unit"</span><span class="p">:</span><span class="w"> </span><span class="s2">"om2:degreeCelsius"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"minimum"</span><span class="p">:</span><span class="w"> </span><span class="mf">-273.15</span><span class="w">
+    </span><span class="nl">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"currentTemperature"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"@type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"om2:CelsiusTemperature"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Current temperature"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"The last or current measured temperature in '°C'."</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"number"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"unit"</span><span class="p">:</span><span class="w"> </span><span class="s2">"om2:degreeCelsius"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"minimum"</span><span class="p">:</span><span class="w"> </span><span class="mf">-273.15</span><span class="w">
       </span><span class="p">}</span><span class="w">
     </span><span class="p">}</span><span class="w">
   </span><span class="p">}</span><span class="w">
@@ -2296,10 +2303,10 @@ but the next day the Thing would no longer follow the model, even if the URL to 
 
 <p>To describe time related data (e.g. durations, timestamps) you can use: <a href="https://www.w3.org/TR/owl-time/">W3C Time Ontology</a></p>
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"@context"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+  </span><span class="nl">"@context"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
     </span><span class="s2">"https://www.w3.org/2022/wot/td/v1.1"</span><span class="p">,</span><span class="w">
     </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"time"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://www.w3.org/2006/time#"</span><span class="w">
+      </span><span class="nl">"time"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://www.w3.org/2006/time#"</span><span class="w">
     </span><span class="p">}</span><span class="w">
   </span><span class="p">]</span><span class="w">
 </span><span class="p">}</span><span class="w">
@@ -2307,10 +2314,10 @@ but the next day the Thing would no longer follow the model, even if the URL to 
 
 <p>To describe geolocations you can use: <a href="https://www.w3.org/2003/01/geo/">W3C Basic Geo (WGS84 lat/long) Vocabulary</a>:</p>
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"@context"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+  </span><span class="nl">"@context"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
     </span><span class="s2">"https://www.w3.org/2022/wot/td/v1.1"</span><span class="p">,</span><span class="w">
     </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"geo"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://www.w3.org/2003/01/geo/wgs84_pos#"</span><span class="w">
+      </span><span class="nl">"geo"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://www.w3.org/2003/01/geo/wgs84_pos#"</span><span class="w">
     </span><span class="p">}</span><span class="w">
   </span><span class="p">]</span><span class="w">
 </span><span class="p">}</span><span class="w">
@@ -2320,12 +2327,12 @@ but the next day the Thing would no longer follow the model, even if the URL to 
 <ul>
   <li><a href="https://www.qudt.org">QUDT.org</a>
     <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"@context"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+  </span><span class="nl">"@context"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
     </span><span class="s2">"https://www.w3.org/2022/wot/td/v1.1"</span><span class="p">,</span><span class="w">
     </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"qudt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://qudt.org/schema/qudt/"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"unit"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://qudt.org/vocab/unit/"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"quantitykind"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://qudt.org/vocab/quantitykind/"</span><span class="w">
+      </span><span class="nl">"qudt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://qudt.org/schema/qudt/"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"unit"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://qudt.org/vocab/unit/"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"quantitykind"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://qudt.org/vocab/quantitykind/"</span><span class="w">
     </span><span class="p">}</span><span class="w">
   </span><span class="p">]</span><span class="w">
 </span><span class="p">}</span><span class="w">
@@ -2333,10 +2340,10 @@ but the next day the Thing would no longer follow the model, even if the URL to 
   </li>
   <li><a href="http://www.ontology-of-units-of-measure.org/page/om-2">OM 2: Units of Measure</a>:
     <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"@context"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+  </span><span class="nl">"@context"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
     </span><span class="s2">"https://www.w3.org/2022/wot/td/v1.1"</span><span class="p">,</span><span class="w">
     </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"om2"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://www.ontology-of-units-of-measure.org/resource/om-2/"</span><span class="w">
+      </span><span class="nl">"om2"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://www.ontology-of-units-of-measure.org/resource/om-2/"</span><span class="w">
     </span><span class="p">}</span><span class="w">
   </span><span class="p">]</span><span class="w">
 </span><span class="p">}</span><span class="w">
@@ -2346,10 +2353,10 @@ but the next day the Thing would no longer follow the model, even if the URL to 
 
 <p>To describe “assets” you can use: <a href="https://ontology.tno.nl/saref/">SAREF</a></p>
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"@context"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+  </span><span class="nl">"@context"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
     </span><span class="s2">"https://www.w3.org/2022/wot/td/v1.1"</span><span class="p">,</span><span class="w">
     </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"saref"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://w3id.org/saref#"</span><span class="w">
+      </span><span class="nl">"saref"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://w3id.org/saref#"</span><span class="w">
     </span><span class="p">}</span><span class="w">
   </span><span class="p">]</span><span class="w">
 </span><span class="p">}</span><span class="w">
@@ -2371,13 +2378,13 @@ but the next day the Thing would no longer follow the model, even if the URL to 
 
 <p>The third option adds the possibility to provide common aspects which many similar devices support as part of the similar 
 devices, all implementing the same “contract” (Thing Model) with the same interaction capabilities 
-(<code class="highlighter-rouge">properties</code>, <code class="highlighter-rouge">actions</code> and <code class="highlighter-rouge">events</code>), the same data formats and semantic context.</p>
+(<code class="language-plaintext highlighter-rouge">properties</code>, <code class="language-plaintext highlighter-rouge">actions</code> and <code class="language-plaintext highlighter-rouge">events</code>), the same data formats and semantic context.</p>
 
 <h3 id="thing-description-vs-thing-model">Thing Description vs. Thing Model</h3>
 
 <p>A WoT TD describes the instance (the Ditto Thing), a WoT TM provides the model of a Thing. The model can be referenced
 in the <a href="basic-thing.html#definition">Thing Definition</a> with its HTTP endpoint.
-Ditto supports adding a valid HTTP(s) URL in the <code class="highlighter-rouge">"definition"</code>.</p>
+Ditto supports adding a valid HTTP(s) URL in the <code class="language-plaintext highlighter-rouge">"definition"</code>.</p>
 
 <p>The same applies for the <a href="basic-feature.html#feature-definition">Feature Definition</a> which may also contain HTTP
 endpoints to a valid WoT Thing Model.</p>
@@ -2414,7 +2421,7 @@ endpoints to a valid WoT Thing Model.</p>
       <td>Thing <a href="basic-messages.html#elements">messages</a> with <strong>Direction</strong> <em>from</em> (messages in the “outbox”) of a Thing ID.</td>
     </tr>
     <tr>
-      <td><a href="https://www.w3.org/TR/wot-thing-description11/#thing-model-composition">Composition via <code class="highlighter-rouge">tm:submodel</code></a></td>
+      <td><a href="https://www.w3.org/TR/wot-thing-description11/#thing-model-composition">Composition via <code class="language-plaintext highlighter-rouge">tm:submodel</code></a></td>
       <td>Thing <a href="basic-thing.html#features">features</a> representing different aspects of a Ditto Thing.</td>
     </tr>
   </tbody>
@@ -2458,8 +2465,8 @@ endpoints to a valid WoT Thing Model.</p>
   <li>referencing HTTP(s) URLs to WoT Thing Models in <a href="basic-thing.html#definition">Thing Definitions</a> and in <a href="basic-feature.html#feature-definition">Feature Definitions</a></li>
   <li>generation of WoT Thing Descriptions for Thing and Feature instances based on referenced Thing Models
     <ul>
-      <li>resolving potential <a href="https://www.w3.org/TR/wot-thing-description11/#thing-model-extension-import">extensions via <code class="highlighter-rouge">tm:extends</code> and imports via <code class="highlighter-rouge">tm:ref</code></a></li>
-      <li>resolving potential Thing level <a href="https://www.w3.org/TR/wot-thing-description11/#thing-model-composition">compositions via <code class="highlighter-rouge">tm:submodel</code></a></li>
+      <li>resolving potential <a href="https://www.w3.org/TR/wot-thing-description11/#thing-model-extension-import">extensions via <code class="language-plaintext highlighter-rouge">tm:extends</code> and imports via <code class="language-plaintext highlighter-rouge">tm:ref</code></a></li>
+      <li>resolving potential Thing level <a href="https://www.w3.org/TR/wot-thing-description11/#thing-model-composition">compositions via <code class="language-plaintext highlighter-rouge">tm:submodel</code></a></li>
       <li>resolving potential <a href="https://www.w3.org/TR/wot-thing-description11/#thing-model-td-placeholder">TM placeholders</a></li>
     </ul>
   </li>
@@ -2474,16 +2481,16 @@ the rules for doing that are specified:
 
 <p>Prerequisites to use the Thing Description generation:</p>
 <ul>
-  <li>the feature toggle (environment variable <code class="highlighter-rouge">DITTO_DEVOPS_FEATURE_WOT_INTEGRATION_ENABLED=true</code>) is activated</li>
-  <li>HTTP content negotiation is applied, setting the <code class="highlighter-rouge">Accept</code> header to the registered WoT TD
-<a href="https://www.iana.org/assignments/media-types/application/td+json">IANA content type <code class="highlighter-rouge">application/td+json</code></a>
-when retrieving the Thing via HTTP <code class="highlighter-rouge">GET /api/2/&lt;namespace&gt;:&lt;thing-name&gt;</code></li>
+  <li>the feature toggle (environment variable <code class="language-plaintext highlighter-rouge">DITTO_DEVOPS_FEATURE_WOT_INTEGRATION_ENABLED=true</code>) is activated</li>
+  <li>HTTP content negotiation is applied, setting the <code class="language-plaintext highlighter-rouge">Accept</code> header to the registered WoT TD
+<a href="https://www.iana.org/assignments/media-types/application/td+json">IANA content type <code class="language-plaintext highlighter-rouge">application/td+json</code></a>
+when retrieving the Thing via HTTP <code class="language-plaintext highlighter-rouge">GET /api/2/&lt;namespace&gt;:&lt;thing-name&gt;</code></li>
 </ul>
 
 <p>The available configuration of the WoT integration can be found in the 
 <a href="https://github.com/eclipse-ditto/ditto/blob/master/things/service/src/main/resources/things.conf">things.conf</a>
-config file of the <a href="architecture-services-things.html">things service</a> at path <code class="highlighter-rouge">ditto.things.wot</code>.<br />
-There you can configure which <code class="highlighter-rouge">securityDefinitions</code> shall be added to the generated TDs and which <code class="highlighter-rouge">base</code> path 
+config file of the <a href="architecture-services-things.html">things service</a> at path <code class="language-plaintext highlighter-rouge">ditto.things.wot</code>.<br />
+There you can configure which <code class="language-plaintext highlighter-rouge">securityDefinitions</code> shall be added to the generated TDs and which <code class="language-plaintext highlighter-rouge">base</code> path 
 prefix to create into the TDs, depending on your public Ditto endpoint.</p>
 
 <h4 id="security-td-access--authorization">Security: TD access / authorization</h4>
@@ -2494,7 +2501,7 @@ prefix to create into the TDs, depending on your public Ditto endpoint.</p>
 <p>As the Thing Model must be a publicly available resource and the Thing ID is also known for a user requesting the TD of 
 a Thing, there is no additional information to disclose.</p>
 
-<p>Accessing the <code class="highlighter-rouge">properties</code>, invoking <code class="highlighter-rouge">actions</code> and subscribing for <code class="highlighter-rouge">events</code> is of course authorized by the Thing’s 
+<p>Accessing the <code class="language-plaintext highlighter-rouge">properties</code>, invoking <code class="language-plaintext highlighter-rouge">actions</code> and subscribing for <code class="language-plaintext highlighter-rouge">events</code> is of course authorized by the Thing’s 
 Policy via its <a href="basic-policy.html#thing">Thing</a>, <a href="basic-policy.html#feature">Feature</a> and 
 <a href="basic-policy.html#message">Message</a> resources.</p>
 
@@ -2513,9 +2520,9 @@ publicly downloadable via its HTTP(s) URL</li>
   <li>Ditto saves the downloaded TM to a local cache</li>
   <li>Ditto generates a WoT Thing Description and returns it as JSON response
     <ul>
-      <li>defined TM <code class="highlighter-rouge">tm:extends</code> extensions are resolved by downloading those TMs as well</li>
-      <li>defined TM <code class="highlighter-rouge">tm:refs</code> imports are also resolved by downloading those TMs as well</li>
-      <li>defined TM <code class="highlighter-rouge">tm:submodel</code>s are added to the <code class="highlighter-rouge">links</code> of the TD pointing to the TDs of the Features of the Thing</li>
+      <li>defined TM <code class="language-plaintext highlighter-rouge">tm:extends</code> extensions are resolved by downloading those TMs as well</li>
+      <li>defined TM <code class="language-plaintext highlighter-rouge">tm:refs</code> imports are also resolved by downloading those TMs as well</li>
+      <li>defined TM <code class="language-plaintext highlighter-rouge">tm:submodel</code>s are added to the <code class="language-plaintext highlighter-rouge">links</code> of the TD pointing to the TDs of the Features of the Thing</li>
       <li>metadata available in the Thing or in the Ditto configuration is also included in the generated TD</li>
     </ul>
   </li>
@@ -2546,8 +2553,8 @@ publicly downloadable via its HTTP(s) URL</li>
   <li>Ditto saves the downloaded TM to a local cache</li>
   <li>Ditto generates a WoT Thing Description and returns it as JSON response
     <ul>
-      <li>defined TM <code class="highlighter-rouge">tm:extends</code> extensions are resolved by downloading those TMs as well</li>
-      <li>defined TM <code class="highlighter-rouge">tm:refs</code> imports are also resolved by downloading those TMs as well</li>
+      <li>defined TM <code class="language-plaintext highlighter-rouge">tm:extends</code> extensions are resolved by downloading those TMs as well</li>
+      <li>defined TM <code class="language-plaintext highlighter-rouge">tm:refs</code> imports are also resolved by downloading those TMs as well</li>
       <li>metadata available in the Thing or in the Ditto configuration is also included in the generated TD</li>
     </ul>
   </li>
@@ -2566,19 +2573,19 @@ which <strong>must</strong> be resolved during generation of the TD from a TM.</
 
 <p>In order to resolve TM placeholders, Ditto applies the following strategy:</p>
 <ul>
-  <li>when generating a TD for a Thing, it looks in the Things’ attribute <code class="highlighter-rouge">"model-placeholders"</code> (being a JSONObject) in
+  <li>when generating a TD for a Thing, it looks in the Things’ attribute <code class="language-plaintext highlighter-rouge">"model-placeholders"</code> (being a JSONObject) in
  order to lookup placeholders</li>
-  <li>when generating a TD for a Feature, it looks in the Feature’s property <code class="highlighter-rouge">"model-placeholders"</code> (being a JSON Object) in
+  <li>when generating a TD for a Feature, it looks in the Feature’s property <code class="language-plaintext highlighter-rouge">"model-placeholders"</code> (being a JSON Object) in
  order to lookup placeholders</li>
-  <li>when a placeholder was not found in the <code class="highlighter-rouge">"model-placeholders"</code> of the Thing/Feature, a fallback to the Ditto 
+  <li>when a placeholder was not found in the <code class="language-plaintext highlighter-rouge">"model-placeholders"</code> of the Thing/Feature, a fallback to the Ditto 
 configuration is done:
     <ul>
       <li>placeholder fallbacks can be configured in Ditto via the 
 <a href="https://github.com/eclipse-ditto/ditto/blob/master/things/service/src/main/resources/things.conf">things.conf</a> 
 configuration file of the <a href="architecture-services-things.html">things service</a> at path 
-<code class="highlighter-rouge">ditto.things.wot.to-thing-description.placeholders</code>.<br /><br />
+<code class="language-plaintext highlighter-rouge">ditto.things.wot.to-thing-description.placeholders</code>.<br /><br />
 This map may contain static values, but use and JSON type as value (e.g. also a JSON Object), e.g.:
-        <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>FOO = "bar"
+        <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>FOO = "bar"
 TM_OPTIONAL = [
   "/properties/status",
   "/actions/toggle"
@@ -2589,7 +2596,7 @@ TM_OPTIONAL = [
   </li>
 </ul>
 
-<div class="alert alert-danger" role="alert"><i class="fa fa-exclamation-circle"></i> <b>Warning:</b> Please be aware that placeholders put into the <code class="highlighter-rouge">"model-placeholders"</code> attribute/property 
+<div class="alert alert-danger" role="alert"><i class="fa fa-exclamation-circle"></i> <b>Warning:</b> Please be aware that placeholders put into the <code class="language-plaintext highlighter-rouge">"model-placeholders"</code> attribute/property 
     of a Thing/Feature may be used in TM placeholders and therefore are not 
     protected by any authorization check based on the Thing’s <a href="basic-policy.html">Policy</a> as TDs are available for all
     authenticated users which know the Thing ID.</div>
@@ -2598,7 +2605,7 @@ TM_OPTIONAL = [
 
 <p>Prerequisites to use the skeleton generation during Thing creation:</p>
 <ul>
-  <li>the feature toggle (environment variable <code class="highlighter-rouge">DITTO_DEVOPS_FEATURE_WOT_INTEGRATION_ENABLED=true</code>) is activated</li>
+  <li>the feature toggle (environment variable <code class="language-plaintext highlighter-rouge">DITTO_DEVOPS_FEATURE_WOT_INTEGRATION_ENABLED=true</code>) is activated</li>
   <li>the created Thing references a valid WoT Thing Model in its <a href="basic-thing.html#definition">Thing Definition</a> and this 
 TM is publicly downloadable via its HTTP(s) URL</li>
 </ul>
@@ -2610,18 +2617,18 @@ TM is publicly downloadable via its HTTP(s) URL</li>
   <li>Ditto saves the downloaded TM to a local cache</li>
   <li>Ditto uses the Thing Model as template for generating JSON elements:
     <ul>
-      <li>attributes based on the contained TM <code class="highlighter-rouge">properties</code></li>
-      <li>features based on the contained TM <code class="highlighter-rouge">tm:submodel</code>s using the <code class="highlighter-rouge">instanceName</code> as Feature ID
+      <li>attributes based on the contained TM <code class="language-plaintext highlighter-rouge">properties</code></li>
+      <li>features based on the contained TM <code class="language-plaintext highlighter-rouge">tm:submodel</code>s using the <code class="language-plaintext highlighter-rouge">instanceName</code> as Feature ID
         <ul>
-          <li>properties based on the submodel <code class="highlighter-rouge">properties</code></li>
+          <li>properties based on the submodel <code class="language-plaintext highlighter-rouge">properties</code></li>
         </ul>
       </li>
     </ul>
   </li>
-  <li>when a <code class="highlighter-rouge">default</code> is specified for the TM property, this default is used as value, otherwise the “neutral element” of 
+  <li>when a <code class="language-plaintext highlighter-rouge">default</code> is specified for the TM property, this default is used as value, otherwise the “neutral element” of 
 the datatype is used as initial value of the property</li>
   <li>if any error happens during the skeleton creation (e.g. a Thing Model can’t be downloaded or is invalid),
-the Thing is created without the skeleton model, just containing the specified <code class="highlighter-rouge">"definition"</code></li>
+the Thing is created without the skeleton model, just containing the specified <code class="language-plaintext highlighter-rouge">"definition"</code></li>
 </ul>
 
 <h2 id="ditto-wot-extension-ontology">Ditto WoT Extension Ontology</h2>
@@ -2643,41 +2650,41 @@ It can be used to apply an optional categorization of the property.</p>
 <p>Such a category could, for example, be a categorization of configuration vs. status properties.</p>
 
 <p>In order to use that categorization, you need to enhance your JSON-LD context with the Ditto WoT extension. You can then
-make use of the <code class="highlighter-rouge">"category"</code> in properties defined in your TM/TD.</p>
+make use of the <code class="language-plaintext highlighter-rouge">"category"</code> in properties defined in your TM/TD.</p>
 
 <p>Example:</p>
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"@context"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+  </span><span class="nl">"@context"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
     </span><span class="s2">"https://www.w3.org/2022/wot/td/v1.1"</span><span class="p">,</span><span class="w">
     </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"ditto"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://ditto.eclipseprojects.io/wot/ditto-extension#"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"om2"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://www.ontology-of-units-of-measure.org/resource/om-2/"</span><span class="w">
+      </span><span class="nl">"ditto"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://ditto.eclipseprojects.io/wot/ditto-extension#"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"om2"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://www.ontology-of-units-of-measure.org/resource/om-2/"</span><span class="w">
     </span><span class="p">}</span><span class="w">
   </span><span class="p">],</span><span class="w">
   </span><span class="err">...</span><span class="w">
-  </span><span class="s2">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"on"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"On"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"boolean"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"ditto:category"</span><span class="p">:</span><span class="w"> </span><span class="s2">"configuration"</span><span class="w">
+  </span><span class="nl">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"on"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"On"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"boolean"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"ditto:category"</span><span class="p">:</span><span class="w"> </span><span class="s2">"configuration"</span><span class="w">
     </span><span class="p">},</span><span class="w">
-    </span><span class="s2">"power-consumption"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"@type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"om2:Power"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Power consumption"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"number"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"unit"</span><span class="p">:</span><span class="w"> </span><span class="s2">"om2:kilowatt"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"ditto:category"</span><span class="p">:</span><span class="w"> </span><span class="s2">"status"</span><span class="w">
+    </span><span class="nl">"power-consumption"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"@type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"om2:Power"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Power consumption"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"number"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"unit"</span><span class="p">:</span><span class="w"> </span><span class="s2">"om2:kilowatt"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"ditto:category"</span><span class="p">:</span><span class="w"> </span><span class="s2">"status"</span><span class="w">
     </span><span class="p">}</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
-<p>The effect of this Ditto <code class="highlighter-rouge">"category"</code> for properties is the following:</p>
+<p>The effect of this Ditto <code class="language-plaintext highlighter-rouge">"category"</code> for properties is the following:</p>
 <ul>
   <li>for <a href="#td-generation-for-things">Things TD generation</a> the category will be used as an additional path element in the
-created <code class="highlighter-rouge">"href"</code> link of the attribute.</li>
+created <code class="language-plaintext highlighter-rouge">"href"</code> link of the attribute.</li>
   <li>for <a href="#td-generation-for-features">Feature TD generation</a> the category will be used as an additional path element in 
-the created <code class="highlighter-rouge">"href"</code> link of the property.</li>
+the created <code class="language-plaintext highlighter-rouge">"href"</code> link of the property.</li>
   <li>for <a href="#thing-skeleton-generation-upon-thing-creation">Thing skeleton generation</a> the category will be used as a 
 “grouping JSON object”.<br />
 All WoT properties with the same category will be placed in either an attribute or a feature property JSON object 
@@ -2686,15 +2693,15 @@ having the category name.</li>
 
 <p>Based on the example above, a generated feature JSON would for example look like this:</p>
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"definition"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+  </span><span class="nl">"definition"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
     </span><span class="s2">"https://some.domain/some.tm.jsonld"</span><span class="w">
   </span><span class="p">],</span><span class="w">
-  </span><span class="s2">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"configuration"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"on"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+  </span><span class="nl">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"configuration"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"on"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
     </span><span class="p">},</span><span class="w">
-    </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"power-consumption"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.0</span><span class="w">
+    </span><span class="nl">"status"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"power-consumption"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.0</span><span class="w">
     </span><span class="p">}</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
@@ -2730,7 +2737,7 @@ example are quite long.</p>
                     </div>
                     <p class="notice">
                         &copy;2024 Eclipse Ditto™.
-                         Site last generated: Feb 27, 2024 <br />
+                         Site last generated: Apr 10, 2024 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

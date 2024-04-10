@@ -292,23 +292,23 @@ Each partition would then be consumed by one client.</p>
 <p>This perfectly matches with Ditto connections scaling, each Ditto connection builds such a consumer group.  <br />
 For a connection there are two ways of scaling:</p>
 <ol>
-  <li><code class="highlighter-rouge">clientCount</code> on <a href="basic-connections.html#connection-model">connection level</a></li>
-  <li><code class="highlighter-rouge">consumerCount</code> on <a href="basic-connections.html#sources">source level</a></li>
+  <li><code class="language-plaintext highlighter-rouge">clientCount</code> on <a href="basic-connections.html#connection-model">connection level</a></li>
+  <li><code class="language-plaintext highlighter-rouge">consumerCount</code> on <a href="basic-connections.html#sources">source level</a></li>
 </ol>
 
 <p>A connection client bundles all consumers for all sources and all publishers for all targets.
 It is guaranteed that for a single connection only one client can be instantiated per instance of the connectivity microservice.<br />
 This way Ditto provides horizontal scaling.</p>
 
-<p>Therefore, the <code class="highlighter-rouge">clientCount</code> should never be configured higher than the number of available connectivity instances.</p>
+<p>Therefore, the <code class="language-plaintext highlighter-rouge">clientCount</code> should never be configured higher than the number of available connectivity instances.</p>
 
-<p>If the connectivity instance is not fully used by a single connection client, the <code class="highlighter-rouge">consumerCount</code> can be used to scale a 
+<p>If the connectivity instance is not fully used by a single connection client, the <code class="language-plaintext highlighter-rouge">consumerCount</code> can be used to scale a 
 connection’s consumers vertically.
-The <code class="highlighter-rouge">consumerCount</code> of a source indicates how many consumers should be started for a single connection client for this source.
+The <code class="language-plaintext highlighter-rouge">consumerCount</code> of a source indicates how many consumers should be started for a single connection client for this source.
 Each consumer is a separate consuming client in the consumer group of the connection.</p>
 
-<p>This means that the number of partition should be greater or equal than <code class="highlighter-rouge">clientCount</code> multiplied by the highest 
-<code class="highlighter-rouge">consumerCount</code> of a source.</p>
+<p>This means that the number of partition should be greater or equal than <code class="language-plaintext highlighter-rouge">clientCount</code> multiplied by the highest 
+<code class="language-plaintext highlighter-rouge">consumerCount</code> of a source.</p>
 
 <h3 id="backpressure-and-quality-of-service">Backpressure and Quality of Service</h3>
 
@@ -321,7 +321,7 @@ The answer is: “It depends.”</p>
 <p>There are two steps of increasing delivery guarantee for messages to the connected application.</p>
 <ol>
   <li>Make use of <a href="basic-connections.html#source-acknowledgement-requests">acknowledgements</a></li>
-  <li>Configure the <code class="highlighter-rouge">qos</code> for the <a href="basic-connections.html#sources">source</a> to <code class="highlighter-rouge">1</code></li>
+  <li>Configure the <code class="language-plaintext highlighter-rouge">qos</code> for the <a href="basic-connections.html#sources">source</a> to <code class="language-plaintext highlighter-rouge">1</code></li>
 </ol>
 
 <p>The first will introduce backpressure from the consuming application to the Kafka consumer in Ditto.<br />
@@ -371,7 +371,7 @@ The Eclipse Ditto team</p>
                     </div>
                     <p class="notice">
                         &copy;2024 Eclipse Ditto™.
-                         Site last generated: Feb 27, 2024 <br />
+                         Site last generated: Apr 10, 2024 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

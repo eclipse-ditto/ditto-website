@@ -278,6 +278,13 @@
               
               
               
+              <li><a href="release_notes_354.html">3.5.4</a></li>
+              
+              
+              
+              
+              
+              
               <li><a href="release_notes_353.html">3.5.3</a></li>
               
               
@@ -2101,27 +2108,27 @@ $('#toc').on('click', 'a', function() {
 
   <h2 id="create-extensions-for-ditto">Create Extensions for Ditto</h2>
 <p>Ditto offers the possibility to execute custom behaviour by utilizing Pekko extensions. The places which can be 
-extended by such custom behaviour are marked by extending the <code class="highlighter-rouge">DittoExtensionPoint</code> interface. Add a new 
-implementation of an interface extending <code class="highlighter-rouge">DittoExtensionPoint</code> for changing its behaviour.</p>
+extended by such custom behaviour are marked by extending the <code class="language-plaintext highlighter-rouge">DittoExtensionPoint</code> interface. Add a new 
+implementation of an interface extending <code class="language-plaintext highlighter-rouge">DittoExtensionPoint</code> for changing its behaviour.</p>
 
 <p>The implementation needs a public constructor accepting an ActorSystem and Config, for the Pekko Classloader to load 
 the extension via reflection.</p>
-<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="nf">CustomExtension</span><span class="o">(</span><span class="kd">final</span> <span class="n">ActorSystem</span> <span class="n">actorSystem</span><span class="o">,</span> <span class="kd">final</span> <span class="n">Config</span> <span class="n">config</span><span class="o">)</span> <span class="o">{}</span>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="nf">CustomExtension</span><span class="o">(</span><span class="kd">final</span> <span class="nc">ActorSystem</span> <span class="n">actorSystem</span><span class="o">,</span> <span class="kd">final</span> <span class="nc">Config</span> <span class="n">config</span><span class="o">)</span> <span class="o">{}</span>
 </code></pre></div></div>
 
 <h2 id="configure-extensions">Configure Extensions</h2>
-<p>In order for the Pekko Classloader to load the correct implementation of a <code class="highlighter-rouge">DittoExtensionPoint</code>, the 
-implementation has to be configured. This can be done by adding the <code class="highlighter-rouge">CONFIG_KEY</code> of the extension either to the 
-<code class="highlighter-rouge">&lt;service-name&gt;-extension.conf</code> if the extension should only be loaded in specific services, or to the <code class="highlighter-rouge">reference.conf</code>
+<p>In order for the Pekko Classloader to load the correct implementation of a <code class="language-plaintext highlighter-rouge">DittoExtensionPoint</code>, the 
+implementation has to be configured. This can be done by adding the <code class="language-plaintext highlighter-rouge">CONFIG_KEY</code> of the extension either to the 
+<code class="language-plaintext highlighter-rouge">&lt;service-name&gt;-extension.conf</code> if the extension should only be loaded in specific services, or to the <code class="language-plaintext highlighter-rouge">reference.conf</code>
 for a global scope.</p>
 
 <p>The configuration for an extension consists of two parts:</p>
 <ul>
-  <li><code class="highlighter-rouge">extension-class</code>: specify the implementation that should be used by the canonical name.</li>
-  <li><code class="highlighter-rouge">extension-config</code>: specify custom configurations for the extension.</li>
+  <li><code class="language-plaintext highlighter-rouge">extension-class</code>: specify the implementation that should be used by the canonical name.</li>
+  <li><code class="language-plaintext highlighter-rouge">extension-config</code>: specify custom configurations for the extension.</li>
 </ul>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ditto.extensions.signal-enrichment-provider {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ditto.extensions.signal-enrichment-provider {
   extension-class = org.eclipse.ditto.gateway.service.endpoints.utils.DefaultGatewaySignalEnrichmentProvider
   extension-config = {
     ask-timeout = 10s
@@ -2135,10 +2142,10 @@ for a global scope.</p>
 }
 </code></pre></div></div>
 
-<p>If no custom configuration is needed, the <code class="highlighter-rouge">extension-config</code> can be omitted, thus directly specifying the 
+<p>If no custom configuration is needed, the <code class="language-plaintext highlighter-rouge">extension-config</code> can be omitted, thus directly specifying the 
 implementation.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ditto.extensions.signal-enrichment-provider = org.eclipse.ditto.gateway.service.endpoints.utils.DefaultGatewaySignalEnrichmentProvider
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ditto.extensions.signal-enrichment-provider = org.eclipse.ditto.gateway.service.endpoints.utils.DefaultGatewaySignalEnrichmentProvider
 </code></pre></div></div>
 
 <h2 id="extend-ditto-docker-images">Extend Ditto Docker images</h2>
@@ -2147,14 +2154,14 @@ implementation.</p>
 <p>Adjusting configuration is also possible using <a href="installation-operating.html#ditto-configuration">system properties</a>.<br />
 If however lots of configuration changes should be done, a more feasible approach is to provide a 
 <a href="https://github.com/lightbend/config/blob/main/HOCON.md">HOCON</a> formatted configuration file named 
-<code class="highlighter-rouge">&lt;ditto-service-name&gt;-extension.conf</code> in the working directory of Ditto’s Docker container:</p>
+<code class="language-plaintext highlighter-rouge">&lt;ditto-service-name&gt;-extension.conf</code> in the working directory of Ditto’s Docker container:</p>
 
 <ul>
-  <li>for extending Ditto’s Policies service: <code class="highlighter-rouge">/opt/ditto/policies-extension.conf</code></li>
-  <li>for extending Ditto’s Things service: <code class="highlighter-rouge">/opt/ditto/things-extension.conf</code></li>
-  <li>for extending Ditto’s Search service: <code class="highlighter-rouge">/opt/ditto/search-extension.conf</code></li>
-  <li>for extending Ditto’s Connectivity service: <code class="highlighter-rouge">/opt/ditto/connectivity-extension.conf</code></li>
-  <li>for extending Ditto’s Gateway service: <code class="highlighter-rouge">/opt/ditto/gateway-extension.conf</code></li>
+  <li>for extending Ditto’s Policies service: <code class="language-plaintext highlighter-rouge">/opt/ditto/policies-extension.conf</code></li>
+  <li>for extending Ditto’s Things service: <code class="language-plaintext highlighter-rouge">/opt/ditto/things-extension.conf</code></li>
+  <li>for extending Ditto’s Search service: <code class="language-plaintext highlighter-rouge">/opt/ditto/search-extension.conf</code></li>
+  <li>for extending Ditto’s Connectivity service: <code class="language-plaintext highlighter-rouge">/opt/ditto/connectivity-extension.conf</code></li>
+  <li>for extending Ditto’s Gateway service: <code class="language-plaintext highlighter-rouge">/opt/ditto/gateway-extension.conf</code></li>
 </ul>
 
 <p>Those configuration files can contain any <a href="installation-operating.html#ditto-configuration">Ditto configuration</a> done in
@@ -2162,75 +2169,75 @@ the service config files.</p>
 
 <p>For example, the <a href="https://github.com/eclipse-ditto/ditto/blob/master/gateway/service/src/main/resources/gateway.conf">gateway.conf</a>
 contains the following configuration snippet:</p>
-<pre><code class="language-hocon">ditto {
-  gateway {
-    health-check {
-      cluster-roles = {
-        enabled = true
-        enabled = ${?HEALTH_CHECK_ROLES_ENABLED} # may be overridden with this environment variable
+<div class="language-hocon highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nl">ditto</span><span class="w"> </span><span class="p">{</span><span class="w">
+  </span><span class="nl">gateway</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">health-check</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">cluster-roles</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">enabled</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="kc">true</span><span class="w">
+        </span><span class="nl">enabled</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="si">${?</span><span class="nv">HEALTH_CHECK_ROLES_ENABLED</span><span class="si">}</span><span class="w"> </span><span class="c1"># may be overridden with this environment variable</span><span class="w">
 
-        expected = [
-          "policies",
-          "things",
-          "search",
-          "gateway",
-          "connectivity"
-        ]
-      }
-    }
-  }
-}
-</code></pre>
+        </span><span class="nl">expected</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="p">[</span><span class="w">
+          </span><span class="s2">"policies"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"things"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"search"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"gateway"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"connectivity"</span><span class="w">
+        </span><span class="p">]</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
 
 <p>If this needs to be adjusted, e.g. because the “connectivity” role should not be checked in the health-check 
-(which could be the case if <code class="highlighter-rouge">ditto-connectivity</code> should not be started at all in a Ditto installation), this would be 
-possible by creating a <code class="highlighter-rouge">gateway-extension.conf</code> and adding the following content:</p>
-<pre><code class="language-hocon">ditto.gateway.health-check.cluster-roles = {
-  expected = [
-    "policies",
-    "things",
-    "search",
-    "gateway"
-  ]
-}
-</code></pre>
+(which could be the case if <code class="language-plaintext highlighter-rouge">ditto-connectivity</code> should not be started at all in a Ditto installation), this would be 
+possible by creating a <code class="language-plaintext highlighter-rouge">gateway-extension.conf</code> and adding the following content:</p>
+<div class="language-hocon highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nl">ditto.gateway.health-check.cluster-roles</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="p">{</span><span class="w">
+  </span><span class="nl">expected</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="s2">"policies"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"things"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"search"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"gateway"</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
 
-<p>And then by putting this <code class="highlighter-rouge">gateway-extension.conf</code>, e.g. as a Docker volume mount, to the path <code class="highlighter-rouge">/opt/ditto/gateway-extension.conf</code>.</p>
+<p>And then by putting this <code class="language-plaintext highlighter-rouge">gateway-extension.conf</code>, e.g. as a Docker volume mount, to the path <code class="language-plaintext highlighter-rouge">/opt/ditto/gateway-extension.conf</code>.</p>
 
-<h3 id="providing-additional-functionality-by-adding-jars-to-the-classpath">Providing additional functionality by adding <code class="highlighter-rouge">.jars</code> to the classpath</h3>
+<h3 id="providing-additional-functionality-by-adding-jars-to-the-classpath">Providing additional functionality by adding <code class="language-plaintext highlighter-rouge">.jars</code> to the classpath</h3>
 <p>The new extensions and their corresponding configuration have to be in the Java classpath of the Ditto service which 
 loads them. To achieve this, the Ditto Docker images automatically add all jars, that are in the home directory of 
 the docker container into the classpath:</p>
 <ul>
-  <li><code class="highlighter-rouge">/opt/ditto</code></li>
-  <li><code class="highlighter-rouge">/opt/ditto/extensions</code></li>
+  <li><code class="language-plaintext highlighter-rouge">/opt/ditto</code></li>
+  <li><code class="language-plaintext highlighter-rouge">/opt/ditto/extensions</code></li>
 </ul>
 
 <p>The easiest way to achieve this, is thus building an 
-extension jar (including the extension classes and extension config files) and adding it to the home <code class="highlighter-rouge">extensions</code> 
+extension jar (including the extension classes and extension config files) and adding it to the home <code class="language-plaintext highlighter-rouge">extensions</code> 
 directory of the Docker container.</p>
 
 <h2 id="example">Example</h2>
 <ul>
-  <li>Create a new implementation of the <code class="highlighter-rouge">CustomApiRoutesProvider</code>, overriding the <code class="highlighter-rouge">unauthorized(*)</code> and 
-<code class="highlighter-rouge">authorized(*)</code> functions, returning custom HTTP API routes.</li>
-  <li>Build the project to a new <code class="highlighter-rouge">gateway-extension.jar</code></li>
-  <li>Add the <code class="highlighter-rouge">gateway-extension.jar</code> to the <code class="highlighter-rouge">/opt/ditto/extensions</code> directory of the Docker images, by i.e. copying the jar 
+  <li>Create a new implementation of the <code class="language-plaintext highlighter-rouge">CustomApiRoutesProvider</code>, overriding the <code class="language-plaintext highlighter-rouge">unauthorized(*)</code> and 
+<code class="language-plaintext highlighter-rouge">authorized(*)</code> functions, returning custom HTTP API routes.</li>
+  <li>Build the project to a new <code class="language-plaintext highlighter-rouge">gateway-extension.jar</code></li>
+  <li>Add the <code class="language-plaintext highlighter-rouge">gateway-extension.jar</code> to the <code class="language-plaintext highlighter-rouge">/opt/ditto/extensions</code> directory of the Docker images, by i.e. copying the jar 
 into the container.
-    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  docker cp gateway-extension.jar container_id:/opt/ditto/extensions/
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  docker cp gateway-extension.jar container_id:/opt/ditto/extensions/
 </code></pre></div>    </div>
   </li>
-  <li>Configure the new <code class="highlighter-rouge">CustomApiRoutesProvider</code> via a file <code class="highlighter-rouge">gateway-extension.conf</code>
-    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  ditto.extensions.custom-api-routes-provider = org.company.project.gateway.service.endpoints.utils.MyCustomApiRoutesProvider
+  <li>Configure the new <code class="language-plaintext highlighter-rouge">CustomApiRoutesProvider</code> via a file <code class="language-plaintext highlighter-rouge">gateway-extension.conf</code>
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  ditto.extensions.custom-api-routes-provider = org.company.project.gateway.service.endpoints.utils.MyCustomApiRoutesProvider
 </code></pre></div>    </div>
   </li>
-  <li>Add the <code class="highlighter-rouge">gateway-extension.conf</code> to the <code class="highlighter-rouge">/opt/ditto</code> directory of the Docker images
-    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  docker cp gateway-extension.conf container_id:/opt/ditto/
+  <li>Add the <code class="language-plaintext highlighter-rouge">gateway-extension.conf</code> to the <code class="language-plaintext highlighter-rouge">/opt/ditto</code> directory of the Docker images
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  docker cp gateway-extension.conf container_id:/opt/ditto/
 </code></pre></div>    </div>
   </li>
 </ul>
 
-<p>Alternatively, you can of course also mount the extension <code class="highlighter-rouge">.jar</code> and <code class="highlighter-rouge">.conf</code> file into the Docker containers, e.g.
+<p>Alternatively, you can of course also mount the extension <code class="language-plaintext highlighter-rouge">.jar</code> and <code class="language-plaintext highlighter-rouge">.conf</code> file into the Docker containers, e.g.
 via docker-compose:</p>
 <div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="na">connectivity</span><span class="pi">:</span>
     <span class="na">image</span><span class="pi">:</span> <span class="s">docker.io/eclipse/ditto-gateway:${DITTO_VERSION:-latest}</span>
@@ -2273,7 +2280,7 @@ via docker-compose:</p>
                     </div>
                     <p class="notice">
                         &copy;2024 Eclipse Ditto™.
-                         Site last generated: Feb 27, 2024 <br />
+                         Site last generated: Apr 10, 2024 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

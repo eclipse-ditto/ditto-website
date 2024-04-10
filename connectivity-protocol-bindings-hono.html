@@ -278,6 +278,13 @@
               
               
               
+              <li><a href="release_notes_354.html">3.5.4</a></li>
+              
+              
+              
+              
+              
+              
               <li><a href="release_notes_353.html">3.5.3</a></li>
               
               
@@ -2103,7 +2110,7 @@ $('#toc').on('click', 'a', function() {
 Eclipse Hono in the same manner as the <a href="connectivity-protocol-bindings-kafka2.html">Kafka connection</a> does.</p>
 
 <p>The Hono connection type is implemented just for convenience - to avoid the need for the user to be aware of the specific 
-header mappings, address formats and Kafka <code class="highlighter-rouge">specificConfig</code> settings, which are required to connect to Eclipse Hono. 
+header mappings, address formats and Kafka <code class="language-plaintext highlighter-rouge">specificConfig</code> settings, which are required to connect to Eclipse Hono. 
 These specifics are applied automatically at runtime for the connections of type Hono.</p>
 
 <p>The Hono connection is based on the Kafka connection and uses it behind the scenes, so most of the 
@@ -2114,85 +2121,85 @@ but with some exceptions, as described below.</p>
             needs to be created. The tenant ID is used in the source and target connection addresses, representing the Kafka
             topics used by Hono for sending and receiving messages for this tenant. See below sections <a href="#source-addresses">Source addresses</a>,
             <a href="#source-reply-target">Source reply target</a> and <a href="#target-address">Target Address</a>. The Hono tenant ID for the connection is defined in the
-            <a href="#specific-configuration-properties">specific config</a> <code class="highlighter-rouge">honoTenantId</code> property.</div>
+            <a href="#specific-configuration-properties">specific config</a> <code class="language-plaintext highlighter-rouge">honoTenantId</code> property.</div>
 
 <h2 id="specific-hono-connection-configuration">Specific Hono connection configuration</h2>
 
 <h3 id="connection-uri">Connection URI</h3>
-<p>In the Hono connection definition, the <code class="highlighter-rouge">uri</code> property should not be specified (any specified value will be ignored). 
+<p>In the Hono connection definition, the <code class="language-plaintext highlighter-rouge">uri</code> property should not be specified (any specified value will be ignored). 
 The connection URI and credentials are common for all Hono connections and are derived from the <a href="installation-operating.html#ditto-configuration">configuration</a> of the connectivity service.
-<code class="highlighter-rouge">uri</code> will be automatically generated, based on the values of 3 configuration properties of the connectivity service - 
-<code class="highlighter-rouge">ditto.connectivity.hono.base-uri</code>, <code class="highlighter-rouge">ditto.connectivity.hono.username</code> and <code class="highlighter-rouge">ditto.connectivity.hono.password</code>.
-The connectivity service property <code class="highlighter-rouge">base-uri</code> must specify protocol, host and port number (see the <a href="#connectivity-configuration-example">example below</a>). 
-In order to connect to Kafka brokers, <code class="highlighter-rouge">username</code> and <code class="highlighter-rouge">password</code> values will be inserted at runtime between the 
-protocol identifier and the host name parts of <code class="highlighter-rouge">base-uri</code>, resulting in a connection URI of the form <code class="highlighter-rouge">tcp://username:password@host.name:port</code>.</p>
+<code class="language-plaintext highlighter-rouge">uri</code> will be automatically generated, based on the values of 3 configuration properties of the connectivity service - 
+<code class="language-plaintext highlighter-rouge">ditto.connectivity.hono.base-uri</code>, <code class="language-plaintext highlighter-rouge">ditto.connectivity.hono.username</code> and <code class="language-plaintext highlighter-rouge">ditto.connectivity.hono.password</code>.
+The connectivity service property <code class="language-plaintext highlighter-rouge">base-uri</code> must specify protocol, host and port number (see the <a href="#connectivity-configuration-example">example below</a>). 
+In order to connect to Kafka brokers, <code class="language-plaintext highlighter-rouge">username</code> and <code class="language-plaintext highlighter-rouge">password</code> values will be inserted at runtime between the 
+protocol identifier and the host name parts of <code class="language-plaintext highlighter-rouge">base-uri</code>, resulting in a connection URI of the form <code class="language-plaintext highlighter-rouge">tcp://username:password@host.name:port</code>.</p>
 
 <p>Note: If any of these parameters has to be changed, the service must be restarted to apply the new values.</p>
 
 <h3 id="source-format">Source format</h3>
 <h4 id="source-addresses">Source addresses</h4>
 <p>For a Hono connection, source “addresses” are specified as aliases, which are resolved at runtime to Kafka topics to subscribe to. 
-Valid source addresses (aliases) are <code class="highlighter-rouge">event</code>, <code class="highlighter-rouge">telemetry</code> and <code class="highlighter-rouge">command_response</code>. 
+Valid source addresses (aliases) are <code class="language-plaintext highlighter-rouge">event</code>, <code class="language-plaintext highlighter-rouge">telemetry</code> and <code class="language-plaintext highlighter-rouge">command_response</code>. 
 At runtime, these are resolved as follows:</p>
 <ul>
-  <li><code class="highlighter-rouge">event</code> -&gt; <code class="highlighter-rouge">hono.event.&lt;honoTenantId&gt;</code></li>
-  <li><code class="highlighter-rouge">telemetry</code> -&gt; <code class="highlighter-rouge">hono.telemetry.&lt;honoTenantId&gt;</code></li>
-  <li><code class="highlighter-rouge">command_response</code> -&gt; <code class="highlighter-rouge">hono.command_response.&lt;honoTenantId&gt;</code></li>
+  <li><code class="language-plaintext highlighter-rouge">event</code> -&gt; <code class="language-plaintext highlighter-rouge">hono.event.&lt;honoTenantId&gt;</code></li>
+  <li><code class="language-plaintext highlighter-rouge">telemetry</code> -&gt; <code class="language-plaintext highlighter-rouge">hono.telemetry.&lt;honoTenantId&gt;</code></li>
+  <li><code class="language-plaintext highlighter-rouge">command_response</code> -&gt; <code class="language-plaintext highlighter-rouge">hono.command_response.&lt;honoTenantId&gt;</code></li>
 </ul>
 
-<p><code class="highlighter-rouge">&lt;honoTenantId&gt;</code> will be replaced by the value of <code class="highlighter-rouge">specificConfig.honoTenantId</code> or, if not set,
+<p><code class="language-plaintext highlighter-rouge">&lt;honoTenantId&gt;</code> will be replaced by the value of <code class="language-plaintext highlighter-rouge">specificConfig.honoTenantId</code> or, if not set,
 by the connection id.</p>
 
 <h4 id="source-reply-target">Source reply target</h4>
-<p>Similar to source addresses, the reply target <code class="highlighter-rouge">address</code> is an alias as well. The single valid value for it is <code class="highlighter-rouge">command</code>. 
+<p>Similar to source addresses, the reply target <code class="language-plaintext highlighter-rouge">address</code> is an alias as well. The single valid value for it is <code class="language-plaintext highlighter-rouge">command</code>. 
 It is resolved to Kafka topic/key like this:</p>
 <ul>
-  <li><code class="highlighter-rouge">command</code> -&gt; <code class="highlighter-rouge">hono.command.&lt;honoTenantId&gt;/&lt;thingId&gt;</code></li>
+  <li><code class="language-plaintext highlighter-rouge">command</code> -&gt; <code class="language-plaintext highlighter-rouge">hono.command.&lt;honoTenantId&gt;/&lt;thingId&gt;</code></li>
 </ul>
 
-<p><code class="highlighter-rouge">&lt;honoTenantId&gt;</code> will be replaced by the value of <code class="highlighter-rouge">specificConfig.honoTenantId</code> or, if not set,
-by the connection id. <code class="highlighter-rouge">&lt;thingId&gt;</code> is substituted by the thing ID value.</p>
+<p><code class="language-plaintext highlighter-rouge">&lt;honoTenantId&gt;</code> will be replaced by the value of <code class="language-plaintext highlighter-rouge">specificConfig.honoTenantId</code> or, if not set,
+by the connection id. <code class="language-plaintext highlighter-rouge">&lt;thingId&gt;</code> is substituted by the thing ID value.</p>
 
-<p>The needed header mappings for the <code class="highlighter-rouge">replyTarget</code> are also populated automatically at runtime and there is 
+<p>The needed header mappings for the <code class="language-plaintext highlighter-rouge">replyTarget</code> are also populated automatically at runtime and there is 
 no need to specify them in the connection definition. Any of the following specified value will be substituted (i.e. ignored).
-Actually the <code class="highlighter-rouge">headerMapping</code> subsection is not required and could be omitted completely (in the context of <code class="highlighter-rouge">replyTarget</code>).</p>
+Actually the <code class="language-plaintext highlighter-rouge">headerMapping</code> subsection is not required and could be omitted completely (in the context of <code class="language-plaintext highlighter-rouge">replyTarget</code>).</p>
 
-<p>For addresses <code class="highlighter-rouge">telemetry</code> and <code class="highlighter-rouge">event</code>, the following header mappings will be automatically applied:</p>
+<p>For addresses <code class="language-plaintext highlighter-rouge">telemetry</code> and <code class="language-plaintext highlighter-rouge">event</code>, the following header mappings will be automatically applied:</p>
 <ul>
-  <li><code class="highlighter-rouge">device_id</code>: <code class="highlighter-rouge">{{ thing:id }}</code></li>
-  <li><code class="highlighter-rouge">subject</code>: <code class="highlighter-rouge">{{ header:subject \| fn:default(topic:action-subject) \| fn:default(topic:criterion) }}-response</code></li>
-  <li><code class="highlighter-rouge">correlation-id</code>: <code class="highlighter-rouge">{{ header:correlation-id }}</code></li>
+  <li><code class="language-plaintext highlighter-rouge">device_id</code>: <code class="language-plaintext highlighter-rouge">{{ thing:id }}</code></li>
+  <li><code class="language-plaintext highlighter-rouge">subject</code>: <code class="language-plaintext highlighter-rouge">{{ header:subject \| fn:default(topic:action-subject) \| fn:default(topic:criterion) }}-response</code></li>
+  <li><code class="language-plaintext highlighter-rouge">correlation-id</code>: <code class="language-plaintext highlighter-rouge">{{ header:correlation-id }}</code></li>
 </ul>
 
-<p>For address <code class="highlighter-rouge">command_response</code>, the following header mappings will be automatically applied:</p>
+<p>For address <code class="language-plaintext highlighter-rouge">command_response</code>, the following header mappings will be automatically applied:</p>
 <ul>
-  <li><code class="highlighter-rouge">correlation-id</code>: <code class="highlighter-rouge">{{ header:correlation-id }}</code></li>
-  <li><code class="highlighter-rouge">status</code>: <code class="highlighter-rouge">{{ header:status }}</code></li>
+  <li><code class="language-plaintext highlighter-rouge">correlation-id</code>: <code class="language-plaintext highlighter-rouge">{{ header:correlation-id }}</code></li>
+  <li><code class="language-plaintext highlighter-rouge">status</code>: <code class="language-plaintext highlighter-rouge">{{ header:status }}</code></li>
 </ul>
 
 <p>Note: Any other header mappings defined manually will be merged with the auto-generated ones.</p>
 
 <p>The following example shows a valid Hono-connection source:</p>
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"addresses"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"event"</span><span class="p">],</span><span class="w">
-  </span><span class="s2">"consumerCount"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"qos"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"ditto:inbound-auth-subject"</span><span class="p">],</span><span class="w">
-  </span><span class="s2">"enforcement"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"input"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{{ header:device_id }}"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"filters"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"{{ entity:id }}"</span><span class="p">]</span><span class="w">
+  </span><span class="nl">"addresses"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"event"</span><span class="p">],</span><span class="w">
+  </span><span class="nl">"consumerCount"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"qos"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"ditto:inbound-auth-subject"</span><span class="p">],</span><span class="w">
+  </span><span class="nl">"enforcement"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"input"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{{ header:device_id }}"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"filters"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"{{ entity:id }}"</span><span class="p">]</span><span class="w">
   </span><span class="p">},</span><span class="w">
-  </span><span class="s2">"headerMapping"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
-  </span><span class="s2">"payloadMapping"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"Ditto"</span><span class="p">],</span><span class="w">
-  </span><span class="s2">"replyTarget"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"command"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"expectedResponseTypes"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"response"</span><span class="p">,</span><span class="w"> </span><span class="s2">"error"</span><span class="p">,</span><span class="w"> </span><span class="s2">"nack"</span><span class="p">]</span><span class="w">
+  </span><span class="nl">"headerMapping"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
+  </span><span class="nl">"payloadMapping"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"Ditto"</span><span class="p">],</span><span class="w">
+  </span><span class="nl">"replyTarget"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"command"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"expectedResponseTypes"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"response"</span><span class="p">,</span><span class="w"> </span><span class="s2">"error"</span><span class="p">,</span><span class="w"> </span><span class="s2">"nack"</span><span class="p">]</span><span class="w">
   </span><span class="p">},</span><span class="w">
-  </span><span class="s2">"acknowledgementRequests"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"includes"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+  </span><span class="nl">"acknowledgementRequests"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"includes"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
   </span><span class="p">},</span><span class="w">
-  </span><span class="s2">"declaredAcks"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+  </span><span class="nl">"declaredAcks"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 <h4 id="source-header-mapping">Source header mapping</h4>
@@ -2204,108 +2211,108 @@ and <a href="connectivity-header-mapping.html">Header mapping for connections</a
 
 <h3 id="target-format">Target format</h3>
 <h4 id="target-address">Target address</h4>
-<p>The target <code class="highlighter-rouge">address</code> is specified as an alias and the only valid alias is <code class="highlighter-rouge">command</code>. 
+<p>The target <code class="language-plaintext highlighter-rouge">address</code> is specified as an alias and the only valid alias is <code class="language-plaintext highlighter-rouge">command</code>. 
 It is automatically resolved at runtime to the following Kafka topic/key:</p>
 <ul>
-  <li><code class="highlighter-rouge">command</code> -&gt; <code class="highlighter-rouge">hono.command.&lt;honoTenantId&gt;/&lt;thingId&gt;</code></li>
+  <li><code class="language-plaintext highlighter-rouge">command</code> -&gt; <code class="language-plaintext highlighter-rouge">hono.command.&lt;honoTenantId&gt;/&lt;thingId&gt;</code></li>
 </ul>
 
-<p><code class="highlighter-rouge">&lt;honoTenantId&gt;</code> will be replaced by the value of <code class="highlighter-rouge">specificConfig.honoTenantId</code> or, if not set,
-by the connection id. <code class="highlighter-rouge">&lt;thingId&gt;</code> is substituted by the thing ID value.</p>
+<p><code class="language-plaintext highlighter-rouge">&lt;honoTenantId&gt;</code> will be replaced by the value of <code class="language-plaintext highlighter-rouge">specificConfig.honoTenantId</code> or, if not set,
+by the connection id. <code class="language-plaintext highlighter-rouge">&lt;thingId&gt;</code> is substituted by the thing ID value.</p>
 
 <h4 id="target-header-mapping">Target header mapping</h4>
-<p>The target <code class="highlighter-rouge">headerMapping</code> section is also populated automatically at runtime and there is
+<p>The target <code class="language-plaintext highlighter-rouge">headerMapping</code> section is also populated automatically at runtime and there is
 no need to specify it the connection definition i.e. could be omitted. <br />
 If any of the following keys are specified in the connection, they will be ignored and automatically substituted as follows:</p>
 <ul>
-  <li><code class="highlighter-rouge">device_id</code>: <code class="highlighter-rouge">{{ thing:id }}</code></li>
-  <li><code class="highlighter-rouge">subject</code>: <code class="highlighter-rouge">{{ header:subject \| fn:default(topic:action-subject) }}</code></li>
-  <li><code class="highlighter-rouge">response-required</code>: <code class="highlighter-rouge">{{ header:response-required }}</code></li>
-  <li><code class="highlighter-rouge">correlation-id</code>: <code class="highlighter-rouge">{{ header:correlation-id }}</code></li>
+  <li><code class="language-plaintext highlighter-rouge">device_id</code>: <code class="language-plaintext highlighter-rouge">{{ thing:id }}</code></li>
+  <li><code class="language-plaintext highlighter-rouge">subject</code>: <code class="language-plaintext highlighter-rouge">{{ header:subject \| fn:default(topic:action-subject) }}</code></li>
+  <li><code class="language-plaintext highlighter-rouge">response-required</code>: <code class="language-plaintext highlighter-rouge">{{ header:response-required }}</code></li>
+  <li><code class="language-plaintext highlighter-rouge">correlation-id</code>: <code class="language-plaintext highlighter-rouge">{{ header:correlation-id }}</code></li>
 </ul>
 
 <p>Note: Any other header mappings defined manually will be merged with the auto-generated ones.</p>
 
 <p>The following example shows a valid Hono-connection target:</p>
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"command"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"topics"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+  </span><span class="nl">"address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"command"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"topics"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
     </span><span class="s2">"_/_/things/twin/events"</span><span class="p">,</span><span class="w">
     </span><span class="s2">"_/_/things/live/messages"</span><span class="w">
   </span><span class="p">],</span><span class="w">
-  </span><span class="s2">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"ditto:outbound-auth-subject"</span><span class="p">]</span><span class="w">
+  </span><span class="nl">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"ditto:outbound-auth-subject"</span><span class="p">]</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
 <h3 id="specific-configuration-properties">Specific configuration properties</h3>
 
-<p>In the <code class="highlighter-rouge">specificConfig</code> section, the Hono tenant of the connection is specified in the <code class="highlighter-rouge">honoTenantId</code> property.
+<p>In the <code class="language-plaintext highlighter-rouge">specificConfig</code> section, the Hono tenant of the connection is specified in the <code class="language-plaintext highlighter-rouge">honoTenantId</code> property.
 If that property is not set, the connection ID will be taken as Hono tenant ID.</p>
 
-<p>The following Kafka connection related properties in the <code class="highlighter-rouge">specificConfig</code> section will be automatically added at runtime
-to the connection. Any manually specified definition of <code class="highlighter-rouge">bootstrapServers</code> and <code class="highlighter-rouge">saslMechanism</code> will be ignored, but <code class="highlighter-rouge">groupId</code> will not.</p>
+<p>The following Kafka connection related properties in the <code class="language-plaintext highlighter-rouge">specificConfig</code> section will be automatically added at runtime
+to the connection. Any manually specified definition of <code class="language-plaintext highlighter-rouge">bootstrapServers</code> and <code class="language-plaintext highlighter-rouge">saslMechanism</code> will be ignored, but <code class="language-plaintext highlighter-rouge">groupId</code> will not.</p>
 <ul>
-  <li><code class="highlighter-rouge">bootstrapServers</code> The value will be taken from the configuration property <code class="highlighter-rouge">ditto.connectivity.hono.bootstrap-servers</code> of the connectivity service. 
+  <li><code class="language-plaintext highlighter-rouge">bootstrapServers</code> The value will be taken from the configuration property <code class="language-plaintext highlighter-rouge">ditto.connectivity.hono.bootstrap-servers</code> of the connectivity service. 
 It must contain a comma separated list of Kafka bootstrap servers to use for connecting to (in addition to the automatically added connection uri).</li>
-  <li><code class="highlighter-rouge">saslMechanism</code> The value will be taken from configuration property <code class="highlighter-rouge">ditto.connectivity.hono.sasl-mechanism</code>. 
-The value must be one of <code class="highlighter-rouge">SaslMechanism</code> enum values to select the SASL mechanisms to use for authentication at Kafka:
+  <li><code class="language-plaintext highlighter-rouge">saslMechanism</code> The value will be taken from configuration property <code class="language-plaintext highlighter-rouge">ditto.connectivity.hono.sasl-mechanism</code>. 
+The value must be one of <code class="language-plaintext highlighter-rouge">SaslMechanism</code> enum values to select the SASL mechanisms to use for authentication at Kafka:
     <ul>
-      <li><code class="highlighter-rouge">PLAIN</code></li>
-      <li><code class="highlighter-rouge">SCRAM-SHA-256</code></li>
-      <li><code class="highlighter-rouge">SCRAM-SHA-512</code></li>
+      <li><code class="language-plaintext highlighter-rouge">PLAIN</code></li>
+      <li><code class="language-plaintext highlighter-rouge">SCRAM-SHA-256</code></li>
+      <li><code class="language-plaintext highlighter-rouge">SCRAM-SHA-512</code></li>
     </ul>
   </li>
-  <li><code class="highlighter-rouge">groupId</code>: could be specified by the user, but is not required. If omitted, the value of the connection ID will be automatically used.</li>
+  <li><code class="language-plaintext highlighter-rouge">groupId</code>: could be specified by the user, but is not required. If omitted, the value of the connection ID will be automatically used.</li>
 </ul>
 
-<p>Hono connection still allows to manually specify additional properties (like <code class="highlighter-rouge">debugEnabled</code>), which will be merged with the auto-generated ones.</p>
+<p>Hono connection still allows to manually specify additional properties (like <code class="language-plaintext highlighter-rouge">debugEnabled</code>), which will be merged with the auto-generated ones.</p>
 
 <h3 id="certificate-validation">Certificate validation</h3>
-<p>The connection property <code class="highlighter-rouge">validateCertificates</code> is also set automatically. The value is taken from the <code class="highlighter-rouge">ditto.connectivity.hono.validate-certificates</code> property.
+<p>The connection property <code class="language-plaintext highlighter-rouge">validateCertificates</code> is also set automatically. The value is taken from the <code class="language-plaintext highlighter-rouge">ditto.connectivity.hono.validate-certificates</code> property.
 For more details see <a href="connectivity-tls-certificates.html">Connection configuration</a>.</p>
 
 <h2 id="examples">Examples</h2>
 <h3 id="example-of-hono-connection">Example of Hono connection</h3>
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"connection"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"connection-for-hono-example-tenant"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"connectionType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"hono"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"connectionStatus"</span><span class="p">:</span><span class="w"> </span><span class="s2">"open"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"failoverEnabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"specificConfig"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"honoTenantId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"example-tenant"</span><span class="w">
+  </span><span class="nl">"connection"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"connection-for-hono-example-tenant"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"connectionType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"hono"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"connectionStatus"</span><span class="p">:</span><span class="w"> </span><span class="s2">"open"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"failoverEnabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"specificConfig"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"honoTenantId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"example-tenant"</span><span class="w">
     </span><span class="p">},</span><span class="w">
-    </span><span class="s2">"sources"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="nl">"sources"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
       </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"addresses"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"event"</span><span class="p">],</span><span class="w">
-        </span><span class="s2">"consumerCount"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"qos"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"ditto:inbound-auth-subject"</span><span class="p">],</span><span class="w">
-        </span><span class="s2">"enforcement"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-          </span><span class="s2">"input"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{{ header:device_id }}"</span><span class="p">,</span><span class="w">
-          </span><span class="s2">"filters"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"{{ entity:id }}"</span><span class="p">]</span><span class="w">
+        </span><span class="nl">"addresses"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"event"</span><span class="p">],</span><span class="w">
+        </span><span class="nl">"consumerCount"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"qos"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"ditto:inbound-auth-subject"</span><span class="p">],</span><span class="w">
+        </span><span class="nl">"enforcement"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"input"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{{ header:device_id }}"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"filters"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"{{ entity:id }}"</span><span class="p">]</span><span class="w">
         </span><span class="p">},</span><span class="w">
-        </span><span class="s2">"headerMapping"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
-        </span><span class="s2">"payloadMapping"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"Ditto"</span><span class="p">],</span><span class="w">
-        </span><span class="s2">"replyTarget"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-          </span><span class="s2">"enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-          </span><span class="s2">"address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"command"</span><span class="p">,</span><span class="w">
-          </span><span class="s2">"expectedResponseTypes"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"response"</span><span class="p">,</span><span class="w"> </span><span class="s2">"error"</span><span class="p">,</span><span class="w"> </span><span class="s2">"nack"</span><span class="p">]</span><span class="w">
+        </span><span class="nl">"headerMapping"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
+        </span><span class="nl">"payloadMapping"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"Ditto"</span><span class="p">],</span><span class="w">
+        </span><span class="nl">"replyTarget"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"command"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"expectedResponseTypes"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"response"</span><span class="p">,</span><span class="w"> </span><span class="s2">"error"</span><span class="p">,</span><span class="w"> </span><span class="s2">"nack"</span><span class="p">]</span><span class="w">
         </span><span class="p">},</span><span class="w">
-        </span><span class="s2">"acknowledgementRequests"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-          </span><span class="s2">"includes"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+        </span><span class="nl">"acknowledgementRequests"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"includes"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
         </span><span class="p">},</span><span class="w">
-        </span><span class="s2">"declaredAcks"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+        </span><span class="nl">"declaredAcks"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
       </span><span class="p">}</span><span class="w">
     </span><span class="p">],</span><span class="w">
-    </span><span class="s2">"targets"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="nl">"targets"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
       </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"command"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"topics"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="nl">"address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"command"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"topics"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
           </span><span class="s2">"_/_/things/twin/events"</span><span class="p">,</span><span class="w">
           </span><span class="s2">"_/_/things/live/messages"</span><span class="w">
         </span><span class="p">],</span><span class="w">
-        </span><span class="s2">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"ditto:outbound-auth-subject"</span><span class="p">]</span><span class="w">
+        </span><span class="nl">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"ditto:outbound-auth-subject"</span><span class="p">]</span><span class="w">
       </span><span class="p">}</span><span class="w">
     </span><span class="p">]</span><span class="w">
   </span><span class="p">}</span><span class="w">
@@ -2313,7 +2320,7 @@ For more details see <a href="connectivity-tls-certificates.html">Connection con
 </span></code></pre></div></div>
 <h3 id="connectivity-configuration-example">Connectivity configuration example</h3>
 <p>Here is an example with all the configuration options of the connectivity service that are needed by Hono connections:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ditto {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ditto {
   connection {
     hono {
       base-uri = "tcp://localhost:9092"
@@ -2328,7 +2335,7 @@ For more details see <a href="connectivity-tls-certificates.html">Connection con
 }
 </code></pre></div></div>
 <h2 id="troubleshooting-hono-connection-configuration">Troubleshooting Hono connection configuration</h2>
-<p>To help the troubleshooting, a separate Piggyback command <code class="highlighter-rouge">retrieveHonoConnection</code> is implemented. 
+<p>To help the troubleshooting, a separate Piggyback command <code class="language-plaintext highlighter-rouge">retrieveHonoConnection</code> is implemented. 
 It is valid only for Hono connections. It returns the “real” Hono connection after all its properties being resolved or auto-generated.
 The returned value could be used for inspection, but not for example to create a new Hono connection using it.</p>
 
@@ -2357,7 +2364,7 @@ The returned value could be used for inspection, but not for example to create a
                     </div>
                     <p class="notice">
                         &copy;2024 Eclipse Ditto™.
-                         Site last generated: Feb 27, 2024 <br />
+                         Site last generated: Apr 10, 2024 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

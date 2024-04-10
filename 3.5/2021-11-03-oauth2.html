@@ -285,15 +285,15 @@ via OAuth2 client credentials flow as described in
 <a href="connectivity-protocol-bindings-http.html#oauth2-client-credentials-flow">Connectivity API &gt; HTTP 1.1 protocol binding</a>.</p>
 
 <p>This blog post shows an example of publishing a twin event to an HTTP endpoint via OAuth2 client credentials flow.
-For simplicity, we will use <code class="highlighter-rouge">webhook.site</code> for both the token endpoint and the event publishing destination.
+For simplicity, we will use <code class="language-plaintext highlighter-rouge">webhook.site</code> for both the token endpoint and the event publishing destination.
 Feel free to substitute them for real OAuth and HTTP servers.</p>
 
 <h1 id="prerequisites">Prerequisites</h1>
 
 <p>This example requires 2 webhooks. We will use</p>
 <ul>
-  <li><code class="highlighter-rouge">https://webhook.site/785e80cd-e6e6-452a-be97-a59c53edb4d9</code> for access token requests, and</li>
-  <li><code class="highlighter-rouge">https://webhook.site/6148b899-736f-47e6-9382-90b1d721630e</code> for event publishing.</li>
+  <li><code class="language-plaintext highlighter-rouge">https://webhook.site/785e80cd-e6e6-452a-be97-a59c53edb4d9</code> for access token requests, and</li>
+  <li><code class="language-plaintext highlighter-rouge">https://webhook.site/6148b899-736f-47e6-9382-90b1d721630e</code> for event publishing.</li>
 </ul>
 
 <p>Replace the webhook URIs by your own.</p>
@@ -301,51 +301,51 @@ Feel free to substitute them for real OAuth and HTTP servers.</p>
 <h1 id="configure-the-token-endpoint">Configure the token endpoint</h1>
 
 <p>Configure the token webhook to return a valid access token response. Here is an example for a token expiring
-at 00:00 on 1 January 3000. The field <code class="highlighter-rouge">expires_in</code> is an arbitrary big number not reflecting the actual expiration
+at 00:00 on 1 January 3000. The field <code class="language-plaintext highlighter-rouge">expires_in</code> is an arbitrary big number not reflecting the actual expiration
 time of the access token.</p>
 
 <ul>
   <li>Status code: 200</li>
-  <li>Content type: <code class="highlighter-rouge">application/json</code></li>
+  <li>Content type: <code class="language-plaintext highlighter-rouge">application/json</code></li>
   <li>Response body:
     <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"access_token"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ewogICJhbGciOiAiUlMyNTYiLAogICJ0eXAiOiAiSldUIgp9.ewogICJhdWQiOiBbXSwKICAiY2xpZW50X2lkIjogIm15LWNsaWVudC1pZCIsCiAgImV4cCI6IDMyNTAzNjgwMDAwLAogICJleHQiOiB7fSwKICAiaWF0IjogMCwKICAiaXNzIjogImh0dHBzOi8vbG9jYWxob3N0LyIsCiAgImp0aSI6ICI3ODVlODBjZC1lNmU2LTQ1MmEtYmU5Ny1hNTljNTNlZGI0ZDkiLAogICJuYmYiOiAwLAogICJzY3AiOiBbCiAgICAibXktc2NvcGUiCiAgXSwKICAic3ViIjogIm15LXN1YmplY3QiCn0.QUJD"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"expires_in"</span><span class="p">:</span><span class="w"> </span><span class="mi">1048576</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"scope"</span><span class="p">:</span><span class="w"> </span><span class="s2">"my-scope"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"token_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"bearer"</span><span class="w">
+  </span><span class="nl">"access_token"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ewogICJhbGciOiAiUlMyNTYiLAogICJ0eXAiOiAiSldUIgp9.ewogICJhdWQiOiBbXSwKICAiY2xpZW50X2lkIjogIm15LWNsaWVudC1pZCIsCiAgImV4cCI6IDMyNTAzNjgwMDAwLAogICJleHQiOiB7fSwKICAiaWF0IjogMCwKICAiaXNzIjogImh0dHBzOi8vbG9jYWxob3N0LyIsCiAgImp0aSI6ICI3ODVlODBjZC1lNmU2LTQ1MmEtYmU5Ny1hNTljNTNlZGI0ZDkiLAogICJuYmYiOiAwLAogICJzY3AiOiBbCiAgICAibXktc2NvcGUiCiAgXSwKICAic3ViIjogIm15LXN1YmplY3QiCn0.QUJD"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"expires_in"</span><span class="p">:</span><span class="w"> </span><span class="mi">1048576</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"scope"</span><span class="p">:</span><span class="w"> </span><span class="s2">"my-scope"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"token_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"bearer"</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div>    </div>
   </li>
 </ul>
 
-<p>The access token has the form <code class="highlighter-rouge">&lt;headers&gt;.&lt;body&gt;.&lt;signature&gt;</code>, where <code class="highlighter-rouge">&lt;headers&gt;</code> and <code class="highlighter-rouge">&lt;body&gt;</code> are base64-encoding
-of the headers and the body in JSON format, and <code class="highlighter-rouge">&lt;signature&gt;</code> is the base-64 encoded signature computed according
+<p>The access token has the form <code class="language-plaintext highlighter-rouge">&lt;headers&gt;.&lt;body&gt;.&lt;signature&gt;</code>, where <code class="language-plaintext highlighter-rouge">&lt;headers&gt;</code> and <code class="language-plaintext highlighter-rouge">&lt;body&gt;</code> are base64-encoding
+of the headers and the body in JSON format, and <code class="language-plaintext highlighter-rouge">&lt;signature&gt;</code> is the base-64 encoded signature computed according
 to the issuer’s key pair. Since the token webhook is not a real OAuth2 server, the signature in the example is a
 placeholder. The unencoded headers and body are as follows.</p>
 
 <h3 id="headers">Headers</h3>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"alg"</span><span class="p">:</span><span class="w"> </span><span class="s2">"RS256"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"typ"</span><span class="p">:</span><span class="w"> </span><span class="s2">"JWT"</span><span class="w">
+  </span><span class="nl">"alg"</span><span class="p">:</span><span class="w"> </span><span class="s2">"RS256"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"typ"</span><span class="p">:</span><span class="w"> </span><span class="s2">"JWT"</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
 <h3 id="body">Body</h3>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"aud"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
-  </span><span class="s2">"client_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"my-client-id"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"exp"</span><span class="p">:</span><span class="w"> </span><span class="mi">32503680000</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"ext"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
-  </span><span class="s2">"iat"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"iss"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://localhost/"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"jti"</span><span class="p">:</span><span class="w"> </span><span class="s2">"785e80cd-e6e6-452a-be97-a59c53edb4d9"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"nbf"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"scp"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+  </span><span class="nl">"aud"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+  </span><span class="nl">"client_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"my-client-id"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"exp"</span><span class="p">:</span><span class="w"> </span><span class="mi">32503680000</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"ext"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
+  </span><span class="nl">"iat"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"iss"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://localhost/"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"jti"</span><span class="p">:</span><span class="w"> </span><span class="s2">"785e80cd-e6e6-452a-be97-a59c53edb4d9"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"nbf"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"scp"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
     </span><span class="s2">"my-scope"</span><span class="w">
   </span><span class="p">],</span><span class="w">
-  </span><span class="s2">"sub"</span><span class="p">:</span><span class="w"> </span><span class="s2">"my-subject"</span><span class="w">
+  </span><span class="nl">"sub"</span><span class="p">:</span><span class="w"> </span><span class="s2">"my-subject"</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
@@ -353,27 +353,27 @@ placeholder. The unencoded headers and body are as follows.</p>
 
 <p><a href="connectivity-manage-connections.html#create-connection">Create a connection</a>
 publishing twin events to the event publishing webhook using OAuth2 credentials.
-The <code class="highlighter-rouge">tokenEndpoint</code> field is set to the access token webhook.</p>
+The <code class="language-plaintext highlighter-rouge">tokenEndpoint</code> field is set to the access token webhook.</p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http_oauth2"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http_oauth2"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"connectionType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http-push"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"connectionStatus"</span><span class="p">:</span><span class="w"> </span><span class="s2">"open"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"uri"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://webhook.site:443"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"targets"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+  </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http_oauth2"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http_oauth2"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"connectionType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http-push"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"connectionStatus"</span><span class="p">:</span><span class="w"> </span><span class="s2">"open"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"uri"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://webhook.site:443"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"targets"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
     </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"POST:/6148b899-736f-47e6-9382-90b1d721630e"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"topics"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"_/_/things/twin/events"</span><span class="p">],</span><span class="w">
-      </span><span class="s2">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"integration:ditto"</span><span class="p">]</span><span class="w">
+      </span><span class="nl">"address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"POST:/6148b899-736f-47e6-9382-90b1d721630e"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"topics"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"_/_/things/twin/events"</span><span class="p">],</span><span class="w">
+      </span><span class="nl">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"integration:ditto"</span><span class="p">]</span><span class="w">
     </span><span class="p">}</span><span class="w">
   </span><span class="p">],</span><span class="w">
-  </span><span class="s2">"credentials"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"oauth-client-credentials"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"tokenEndpoint"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://webhook.site/785e80cd-e6e6-452a-be97-a59c53edb4d9"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"clientId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"my-client-id"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"clientSecret"</span><span class="p">:</span><span class="w"> </span><span class="s2">"my-client-secret"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"requestedScopes"</span><span class="p">:</span><span class="w"> </span><span class="s2">"my-scope"</span><span class="w">
+  </span><span class="nl">"credentials"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"oauth-client-credentials"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"tokenEndpoint"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://webhook.site/785e80cd-e6e6-452a-be97-a59c53edb4d9"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"clientId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"my-client-id"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"clientSecret"</span><span class="p">:</span><span class="w"> </span><span class="s2">"my-client-secret"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"requestedScopes"</span><span class="p">:</span><span class="w"> </span><span class="s2">"my-scope"</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
@@ -385,25 +385,25 @@ granting read access to the connection’s subject. The thing-created event will
 to the connection for publishing.</p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"_policy"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"entries"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"DEFAULT"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"subjects"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-          </span><span class="s2">"{{ request:subjectId }}"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"the creator"</span><span class="w">
+  </span><span class="nl">"_policy"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"entries"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"DEFAULT"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"subjects"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"{{ request:subjectId }}"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"the creator"</span><span class="w">
           </span><span class="p">},</span><span class="w">
-          </span><span class="s2">"integration:ditto"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"the connection"</span><span class="w">
+          </span><span class="nl">"integration:ditto"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"the connection"</span><span class="w">
           </span><span class="p">}</span><span class="w">
         </span><span class="p">},</span><span class="w">
-        </span><span class="s2">"resources"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-          </span><span class="s2">"policy:/"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-            </span><span class="s2">"grant"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"READ"</span><span class="p">,</span><span class="w"> </span><span class="s2">"WRITE"</span><span class="p">],</span><span class="w">
-            </span><span class="s2">"revoke"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+        </span><span class="nl">"resources"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"policy:/"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"grant"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"READ"</span><span class="p">,</span><span class="w"> </span><span class="s2">"WRITE"</span><span class="p">],</span><span class="w">
+            </span><span class="nl">"revoke"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
           </span><span class="p">},</span><span class="w">
-          </span><span class="s2">"thing:/"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-            </span><span class="s2">"grant"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"READ"</span><span class="p">,</span><span class="w"> </span><span class="s2">"WRITE"</span><span class="p">],</span><span class="w">
-            </span><span class="s2">"revoke"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+          </span><span class="nl">"thing:/"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"grant"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"READ"</span><span class="p">,</span><span class="w"> </span><span class="s2">"WRITE"</span><span class="p">],</span><span class="w">
+            </span><span class="nl">"revoke"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
           </span><span class="p">}</span><span class="w">
         </span><span class="p">}</span><span class="w">
       </span><span class="p">}</span><span class="w">
@@ -417,7 +417,7 @@ to the connection for publishing.</p>
 <p>Before the HTTP connection publishes the thing-created event, it makes an access token request against the token
 endpoint to obtain a bearer token.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>POST /785e80cd-e6e6-452a-be97-a59c53edb4d9 HTTP/1.1
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>POST /785e80cd-e6e6-452a-be97-a59c53edb4d9 HTTP/1.1
 Host: webhook.site
 Accept: application/json
 Content-Type: application/x-www-form-urlencoded
@@ -431,17 +431,17 @@ grant_type=client_credentials
 <p>The request should appear at the access token webhook. The webhook should return the configured access token response.</p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"access_token"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ewogICJhbGciOiAiUlMyNTYiLAogICJ0eXAiOiAiSldUIgp9.ewogICJhdWQiOiBbXSwKICAiY2xpZW50X2lkIjogIm15LWNsaWVudC1pZCIsCiAgImV4cCI6IDMyNTAzNjgwMDAwLAogICJleHQiOiB7fSwKICAiaWF0IjogMCwKICAiaXNzIjogImh0dHBzOi8vbG9jYWxob3N0LyIsCiAgImp0aSI6ICI3ODVlODBjZC1lNmU2LTQ1MmEtYmU5Ny1hNTljNTNlZGI0ZDkiLAogICJuYmYiOiAwLAogICJzY3AiOiBbCiAgICAibXktc2NvcGUiCiAgXSwKICAic3ViIjogIm15LXN1YmplY3QiCn0.QUJD"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"expires_in"</span><span class="p">:</span><span class="w"> </span><span class="mi">1048576</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"scope"</span><span class="p">:</span><span class="w"> </span><span class="s2">"my-scope"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"token_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"bearer"</span><span class="w">
+  </span><span class="nl">"access_token"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ewogICJhbGciOiAiUlMyNTYiLAogICJ0eXAiOiAiSldUIgp9.ewogICJhdWQiOiBbXSwKICAiY2xpZW50X2lkIjogIm15LWNsaWVudC1pZCIsCiAgImV4cCI6IDMyNTAzNjgwMDAwLAogICJleHQiOiB7fSwKICAiaWF0IjogMCwKICAiaXNzIjogImh0dHBzOi8vbG9jYWxob3N0LyIsCiAgImp0aSI6ICI3ODVlODBjZC1lNmU2LTQ1MmEtYmU5Ny1hNTljNTNlZGI0ZDkiLAogICJuYmYiOiAwLAogICJzY3AiOiBbCiAgICAibXktc2NvcGUiCiAgXSwKICAic3ViIjogIm15LXN1YmplY3QiCn0.QUJD"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"expires_in"</span><span class="p">:</span><span class="w"> </span><span class="mi">1048576</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"scope"</span><span class="p">:</span><span class="w"> </span><span class="s2">"my-scope"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"token_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"bearer"</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
 <p>The HTTP connection will cache the access token and use it to authenticate itself at the event publishing webhook
 for each thing event, including the first thing-created event.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>POST /6148b899-736f-47e6-9382-90b1d721630e HTTP/1.1
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>POST /6148b899-736f-47e6-9382-90b1d721630e HTTP/1.1
 Host: webhook.site
 Content-Type: application/vnd.eclipse.ditto+json
 Authorization: Bearer ewogICJhbGciOiAiUlMyNTYiLAogICJ0eXAiOiAiSldUIgp9.ewogICJhdWQiOiBbXSwKICAiY2xpZW50X2lkIjogIm15LWNsaWVudC1pZCIsCiAgImV4cCI6IDMyNTAzNjgwMDAwLAogICJleHQiOiB7fSwKICAiaWF0IjogMCwKICAiaXNzIjogImh0dHBzOi8vbG9jYWxob3N0LyIsCiAgImp0aSI6ICI3ODVlODBjZC1lNmU2LTQ1MmEtYmU5Ny1hNTljNTNlZGI0ZDkiLAogICJuYmYiOiAwLAogICJzY3AiOiBbCiAgICAibXktc2NvcGUiCiAgXSwKICAic3ViIjogIm15LXN1YmplY3QiCn0.QUJD
@@ -483,7 +483,7 @@ The Eclipse Ditto team</p>
                     </div>
                     <p class="notice">
                         &copy;2024 Eclipse Ditto™.
-                         Site last generated: Feb 27, 2024 <br />
+                         Site last generated: Apr 10, 2024 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

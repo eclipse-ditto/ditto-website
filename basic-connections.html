@@ -278,6 +278,13 @@
               
               
               
+              <li><a href="release_notes_354.html">3.5.4</a></li>
+              
+              
+              
+              
+              
+              
               <li><a href="release_notes_353.html">3.5.3</a></li>
               
               
@@ -2137,7 +2144,7 @@ for custom payload formats. Currently, the following connection types are suppor
   <li><a href="connectivity-protocol-bindings-kafka2.html">Kafka 2.x</a></li>
 </ul>
 
-<p>The <code class="highlighter-rouge">sources</code> and <code class="highlighter-rouge">targets</code> address formats depends on the <code class="highlighter-rouge">connectionType</code> and has therefore <code class="highlighter-rouge">connectionType</code> 
+<p>The <code class="language-plaintext highlighter-rouge">sources</code> and <code class="language-plaintext highlighter-rouge">targets</code> address formats depends on the <code class="language-plaintext highlighter-rouge">connectionType</code> and has therefore <code class="language-plaintext highlighter-rouge">connectionType</code> 
 specific limitations. Those are documented with the corresponding protocol bindings.</p>
 
 <h3 id="sources">Sources</h3>
@@ -2186,12 +2193,12 @@ external system e.g. by properly authenticating the devices and providing the id
 
 <p>The enforcement configuration consists of two fields:</p>
 <ul>
-  <li><code class="highlighter-rouge">input</code>: Defines where device identity is extracted.</li>
-  <li><code class="highlighter-rouge">filters</code>: Defines the filters that are matched against the input. At least one filter must match the input value, 
+  <li><code class="language-plaintext highlighter-rouge">input</code>: Defines where device identity is extracted.</li>
+  <li><code class="language-plaintext highlighter-rouge">filters</code>: Defines the filters that are matched against the input. At least one filter must match the input value, 
 otherwise the message is rejected.</li>
 </ul>
 
-<p>The following placeholders are available for the <code class="highlighter-rouge">input</code> field:</p>
+<p>The following placeholders are available for the <code class="language-plaintext highlighter-rouge">input</code> field:</p>
 
 <table>
   <thead>
@@ -2203,19 +2210,19 @@ otherwise the message is rejected.</li>
   </thead>
   <tbody>
     <tr>
-      <td><code class="highlighter-rouge">{{ header:&lt;name&gt; }}</code></td>
+      <td><code class="language-plaintext highlighter-rouge">{{ header:&lt;name&gt; }}</code></td>
       <td>Any header from the message received via the source (case-insensitive).</td>
-      <td><code class="highlighter-rouge">{{header:device_id }}</code></td>
+      <td><code class="language-plaintext highlighter-rouge">{{header:device_id }}</code></td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge">{{ source:address }}</code></td>
+      <td><code class="language-plaintext highlighter-rouge">{{ source:address }}</code></td>
       <td>The address on which the message was received.</td>
       <td>devices/sensors/temperature1</td>
     </tr>
   </tbody>
 </table>
 
-<p>The following placeholders are available for the <code class="highlighter-rouge">filters</code> field:</p>
+<p>The following placeholders are available for the <code class="language-plaintext highlighter-rouge">filters</code> field:</p>
 
 <table>
   <thead>
@@ -2227,39 +2234,39 @@ otherwise the message is rejected.</li>
   </thead>
   <tbody>
     <tr>
-      <td><code class="highlighter-rouge">{{ thing:id }}</code></td>
+      <td><code class="language-plaintext highlighter-rouge">{{ thing:id }}</code></td>
       <td>Full ID composed of ‘‘namespace’’ + ‘’:’’ as a separator + ‘‘name’’</td>
       <td>eclipse.ditto:thing-42</td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge">{{ thing:namespace }}</code></td>
+      <td><code class="language-plaintext highlighter-rouge">{{ thing:namespace }}</code></td>
       <td>Namespace (i.e. first part of an ID)</td>
       <td>eclipse.ditto</td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge">{{ thing:name }}</code></td>
+      <td><code class="language-plaintext highlighter-rouge">{{ thing:name }}</code></td>
       <td>Name (i.e. second part of an ID )</td>
       <td>thing-42</td>
     </tr>
   </tbody>
 </table>
 
-<p>Assuming a device <code class="highlighter-rouge">sensor:temperature1</code> pushes its telemetry data to Ditto which is stored in a thing named
-<code class="highlighter-rouge">sensor:temperature1</code>. The device identity is provided in a header field <code class="highlighter-rouge">device_id</code>. To enforce that the device can 
-only send data to the Thing <code class="highlighter-rouge">sensor:temperature1</code> the following enforcement configuration can be used:</p>
+<p>Assuming a device <code class="language-plaintext highlighter-rouge">sensor:temperature1</code> pushes its telemetry data to Ditto which is stored in a thing named
+<code class="language-plaintext highlighter-rouge">sensor:temperature1</code>. The device identity is provided in a header field <code class="language-plaintext highlighter-rouge">device_id</code>. To enforce that the device can 
+only send data to the Thing <code class="language-plaintext highlighter-rouge">sensor:temperature1</code> the following enforcement configuration can be used:</p>
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"addresses"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="s2">"telemetry/hono_tenant"</span><span class="w"> </span><span class="p">],</span><span class="w">
-  </span><span class="s2">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"ditto:inbound-auth-subject"</span><span class="p">],</span><span class="w">
-  </span><span class="s2">"enforcement"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"input"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{{ header:device_id }}"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"filters"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="s2">"{{ thing:id }}"</span><span class="w"> </span><span class="p">]</span><span class="w">
+  </span><span class="nl">"addresses"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="s2">"telemetry/hono_tenant"</span><span class="w"> </span><span class="p">],</span><span class="w">
+  </span><span class="nl">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"ditto:inbound-auth-subject"</span><span class="p">],</span><span class="w">
+  </span><span class="nl">"enforcement"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"input"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{{ header:device_id }}"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"filters"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="s2">"{{ thing:id }}"</span><span class="w"> </span><span class="p">]</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
-<p>Note: This example assumes that there is a valid user named <code class="highlighter-rouge">ditto:inbound-auth-subject</code> in Ditto.
+<p>Note: This example assumes that there is a valid user named <code class="language-plaintext highlighter-rouge">ditto:inbound-auth-subject</code> in Ditto.
 If you want to use a user for the basic auth (from the <a href="connectivity-protocol-bindings-http.html">HTTP API</a>) use 
-the prefix <code class="highlighter-rouge">nginx:</code>, e.g. <code class="highlighter-rouge">nginx:ditto</code>.
+the prefix <code class="language-plaintext highlighter-rouge">nginx:</code>, e.g. <code class="language-plaintext highlighter-rouge">nginx:ditto</code>.
 See <a href="basic-auth.html#authorization-context-in-devops-commands">Basic Authentication</a> for more information.</p>
 
 <h4 id="source-acknowledgement-requests">Source acknowledgement requests</h4>
@@ -2271,7 +2278,7 @@ See <a href="basic-auth.html#authorization-context-in-devops-commands">Basic Aut
 which is “at most once” (or QoS 0).</p>
 
 <p>In order to process messages from sources with an “at least once” (or QoS 1) semantic, configure the source’s 
-<code class="highlighter-rouge">"acknowledgementRequests/includes"</code> to add the 
+<code class="language-plaintext highlighter-rouge">"acknowledgementRequests/includes"</code> to add the 
 <a href="basic-acknowledgements.html#built-in-acknowledgement-labels">“twin-persisted”</a> acknowledgement request, which will 
 cause that a consumed message over this source will technically be acknowledged, it the twin was 
 successfully updated/persisted by Ditto.</p>
@@ -2279,45 +2286,45 @@ successfully updated/persisted by Ditto.</p>
 <p>How the technical acknowledgment is done is specific for the used <a href="#connection-types">connection type</a> and documented 
 in scope of that connection type.</p>
 
-<p>In addition to the <code class="highlighter-rouge">"includes"</code> defining which acknowledgements to request for each incoming message, the optional 
-<code class="highlighter-rouge">"filter"</code> holds an <a href="basic-placeholders.html#function-library">fn:filter()</a> function defining when to request 
+<p>In addition to the <code class="language-plaintext highlighter-rouge">"includes"</code> defining which acknowledgements to request for each incoming message, the optional 
+<code class="language-plaintext highlighter-rouge">"filter"</code> holds an <a href="basic-placeholders.html#function-library">fn:filter()</a> function defining when to request 
 acknowledgements at all for an incoming message. This filter is applied on both acknowledgements: those 
 <a href="basic-acknowledgements.html#requesting-acks-via-ditto-protocol-message">requested in the message</a> and the ones requested 
-via the configured <code class="highlighter-rouge">"includes"</code> array.</p>
+via the configured <code class="language-plaintext highlighter-rouge">"includes"</code> array.</p>
 
-<p>The JSON for a source with acknowledgement requests could look like this. The <code class="highlighter-rouge">"filter"</code> in the example causes that 
-acknowledgements are only requested if the “qos” header was either not present or does not equal <code class="highlighter-rouge">0</code>:</p>
+<p>The JSON for a source with acknowledgement requests could look like this. The <code class="language-plaintext highlighter-rouge">"filter"</code> in the example causes that 
+acknowledgements are only requested if the “qos” header was either not present or does not equal <code class="language-plaintext highlighter-rouge">0</code>:</p>
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"addresses"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+  </span><span class="nl">"addresses"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
     </span><span class="s2">"&lt;source&gt;"</span><span class="w">
   </span><span class="p">],</span><span class="w">
-  </span><span class="s2">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"ditto:inbound-auth-subject"</span><span class="p">],</span><span class="w">
-  </span><span class="s2">"headerMapping"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"qos"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{{ header:qos }}"</span><span class="w">
+  </span><span class="nl">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"ditto:inbound-auth-subject"</span><span class="p">],</span><span class="w">
+  </span><span class="nl">"headerMapping"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"qos"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{{ header:qos }}"</span><span class="w">
   </span><span class="p">},</span><span class="w">
-  </span><span class="s2">"acknowledgementRequests"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"includes"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+  </span><span class="nl">"acknowledgementRequests"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"includes"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
       </span><span class="s2">"twin-persisted"</span><span class="p">,</span><span class="w">
       </span><span class="s2">"receiver-connection-id:my-custom-ack"</span><span class="w">
     </span><span class="p">],</span><span class="w">
-    </span><span class="s2">"filter"</span><span class="p">:</span><span class="w"> </span><span class="s2">"fn:filter(header:qos,'ne','0')"</span><span class="w">
+    </span><span class="nl">"filter"</span><span class="p">:</span><span class="w"> </span><span class="s2">"fn:filter(header:qos,'ne','0')"</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
 <h4 id="source-declared-acknowledgement-labels">Source declared acknowledgement labels</h4>
 
-<p>The acknowledgements sent via a source must have their labels declared in the field <code class="highlighter-rouge">declardAcks</code> as a JSON array.<br />
-If the label of an acknowledgement is not in the <code class="highlighter-rouge">declaredAcks</code> array, then the acknowledgement is rejected with
+<p>The acknowledgements sent via a source must have their labels declared in the field <code class="language-plaintext highlighter-rouge">declardAcks</code> as a JSON array.<br />
+If the label of an acknowledgement is not in the <code class="language-plaintext highlighter-rouge">declaredAcks</code> array, then the acknowledgement is rejected with
 an error. The declared labels must be prefixed by the connection ID followed by a colon or the 
-<code class="highlighter-rouge">{{connection:id}}</code> placeholder followed by a colon. For example:</p>
+<code class="language-plaintext highlighter-rouge">{{connection:id}}</code> placeholder followed by a colon. For example:</p>
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="w">
 </span><span class="p">{</span><span class="w">
-  </span><span class="s2">"addresses"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+  </span><span class="nl">"addresses"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
     </span><span class="s2">"&lt;source&gt;"</span><span class="w">
   </span><span class="p">],</span><span class="w">
-  </span><span class="s2">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"ditto:inbound-auth-subject"</span><span class="p">],</span><span class="w">
-  </span><span class="s2">"declaredAcks"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+  </span><span class="nl">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"ditto:inbound-auth-subject"</span><span class="p">],</span><span class="w">
+  </span><span class="nl">"declaredAcks"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
     </span><span class="s2">"{{connection:id}}:my-custom-ack"</span><span class="w">
   </span><span class="p">]</span><span class="w">
 </span><span class="p">}</span><span class="w">
@@ -2333,13 +2340,13 @@ in this case all Ditto protocol headers come from the header mapping.</p>
 
 <p>The JSON for a source with header mapping could look like this:</p>
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"addresses"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+  </span><span class="nl">"addresses"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
     </span><span class="s2">"&lt;source&gt;"</span><span class="w">
   </span><span class="p">],</span><span class="w">
-  </span><span class="s2">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"ditto:inbound-auth-subject"</span><span class="p">],</span><span class="w">
-  </span><span class="s2">"headerMapping"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"correlation-id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{{ header:message-id }}"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"content-type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{{ header:content-type }}"</span><span class="w">
+  </span><span class="nl">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"ditto:inbound-auth-subject"</span><span class="p">],</span><span class="w">
+  </span><span class="nl">"headerMapping"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"correlation-id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{{ header:message-id }}"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"content-type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{{ header:content-type }}"</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
@@ -2351,23 +2358,23 @@ For a reply target, the address and header mapping are defined in itself, wherea
 from the parent source, because a payload mapping definition specifies the transformation for both: incoming and outgoing
 messages.</p>
 
-<p>For example, to publish responses at the target address equal to the <code class="highlighter-rouge">reply-to</code> header of incoming commands,
-define source header mapping and reply target as follows. If an incoming command does not have the <code class="highlighter-rouge">reply-to</code> header,
+<p>For example, to publish responses at the target address equal to the <code class="language-plaintext highlighter-rouge">reply-to</code> header of incoming commands,
+define source header mapping and reply target as follows. If an incoming command does not have the <code class="language-plaintext highlighter-rouge">reply-to</code> header,
 then its response is dropped.</p>
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"headerMapping"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"reply-to"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{{ header:reply-to }}"</span><span class="w">
+  </span><span class="nl">"headerMapping"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"reply-to"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{{ header:reply-to }}"</span><span class="w">
   </span><span class="p">},</span><span class="w">
-  </span><span class="s2">"replyTarget"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{{ header:reply-to }}"</span><span class="w">
+  </span><span class="nl">"replyTarget"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{{ header:reply-to }}"</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
-<p>The reply target may contain its own header mapping (<code class="highlighter-rouge">"headerMapping"</code>) in order to map response headers.</p>
+<p>The reply target may contain its own header mapping (<code class="language-plaintext highlighter-rouge">"headerMapping"</code>) in order to map response headers.</p>
 
-<p>In addition, the reply target contains the expected response types (<code class="highlighter-rouge">"expectedResponseTypes"</code>) which should be 
+<p>In addition, the reply target contains the expected response types (<code class="language-plaintext highlighter-rouge">"expectedResponseTypes"</code>) which should be 
 published to the reply target.<br />
 The following reply targets are available to choose from:</p>
 <ul>
@@ -2378,15 +2385,15 @@ Includes positive <a href="protocol-specification-acks.html#acknowledgements-agg
   <li><strong>nack</strong>: If negative <a href="protocol-specification-acks.html#acknowledgements-aggregating">acknowledgement</a> responses should be delivered.</li>
 </ul>
 
-<p>This is an example <code class="highlighter-rouge">"replyTarget"</code> containing both header mapping and expected response types:</p>
+<p>This is an example <code class="language-plaintext highlighter-rouge">"replyTarget"</code> containing both header mapping and expected response types:</p>
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"replyTarget"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{{ header:reply-to }}"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"headerMapping"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"correlation-id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{{ header:correlation-id }}"</span><span class="w">
+  </span><span class="nl">"replyTarget"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{{ header:reply-to }}"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"headerMapping"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"correlation-id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{{ header:correlation-id }}"</span><span class="w">
     </span><span class="p">},</span><span class="w">
-    </span><span class="s2">"expectedResponseTypes"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="nl">"expectedResponseTypes"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
       </span><span class="s2">"response"</span><span class="p">,</span><span class="w">
       </span><span class="s2">"error"</span><span class="p">,</span><span class="w">
       </span><span class="s2">"nack"</span><span class="w">
@@ -2422,7 +2429,7 @@ Includes positive <a href="protocol-specification-acks.html#acknowledgements-agg
 <p>Which types of messages should be published to the target address, can be defined via configuration.</p>
 
 <p>In order to only consume specific events like described in <a href="basic-changenotifications.html">change notifications</a>, the
-following parameters can additionally be provided when specifying the <code class="highlighter-rouge">topics</code> of a target:</p>
+following parameters can additionally be provided when specifying the <code class="language-plaintext highlighter-rouge">topics</code> of a target:</p>
 
 <table>
   <thead>
@@ -2436,63 +2443,63 @@ following parameters can additionally be provided when specifying the <code clas
   <tbody>
     <tr>
       <td>Subscribe for <a href="basic-changenotifications.html">Thing events/change notifications</a></td>
-      <td><code class="highlighter-rouge">_/_/things/twin/events</code></td>
+      <td><code class="language-plaintext highlighter-rouge">_/_/things/twin/events</code></td>
       <td>✔</td>
       <td>✔</td>
     </tr>
     <tr>
       <td>Subscribe for <a href="basic-messages.html">Thing messages</a></td>
-      <td><code class="highlighter-rouge">_/_/things/live/messages</code></td>
+      <td><code class="language-plaintext highlighter-rouge">_/_/things/live/messages</code></td>
       <td>✔</td>
       <td>✔</td>
     </tr>
     <tr>
       <td>Subscribe for <a href="protocol-twinlive.html">Thing live commands</a></td>
-      <td><code class="highlighter-rouge">_/_/things/live/commands</code></td>
+      <td><code class="language-plaintext highlighter-rouge">_/_/things/live/commands</code></td>
       <td>✔</td>
       <td>❌</td>
     </tr>
     <tr>
       <td>Subscribe for <a href="protocol-twinlive.html">Thing live events</a></td>
-      <td><code class="highlighter-rouge">_/_/things/live/events</code></td>
+      <td><code class="language-plaintext highlighter-rouge">_/_/things/live/events</code></td>
       <td>✔</td>
       <td>✔</td>
     </tr>
     <tr>
       <td>Subscribe for <a href="protocol-specification-policies-announcement.html">Policy announcements</a></td>
-      <td><code class="highlighter-rouge">_/_/policies/announcements</code></td>
+      <td><code class="language-plaintext highlighter-rouge">_/_/policies/announcements</code></td>
       <td>✔</td>
       <td>❌</td>
     </tr>
     <tr>
       <td>Subscribe for <a href="protocol-specification-connections-announcement.html">Connection announcements</a></td>
-      <td><code class="highlighter-rouge">_/_/connections/announcements</code></td>
+      <td><code class="language-plaintext highlighter-rouge">_/_/connections/announcements</code></td>
       <td>❌</td>
       <td>❌</td>
     </tr>
   </tbody>
 </table>
 
-<p>The parameters are specified similar to HTTP query parameters, the first one separated with a <code class="highlighter-rouge">?</code> and all following ones
-with <code class="highlighter-rouge">&amp;</code>. You need to URL-encode the filter values before using them in a configuration.</p>
+<p>The parameters are specified similar to HTTP query parameters, the first one separated with a <code class="language-plaintext highlighter-rouge">?</code> and all following ones
+with <code class="language-plaintext highlighter-rouge">&amp;</code>. You need to URL-encode the filter values before using them in a configuration.</p>
 
-<p>For example, this way the connection session would register for all events in the namespace <code class="highlighter-rouge">org.eclipse.ditto</code> and which
+<p>For example, this way the connection session would register for all events in the namespace <code class="language-plaintext highlighter-rouge">org.eclipse.ditto</code> and which
 would match an attribute “counter” to be greater than 42. Additionally, it would subscribe to messages in the namespace
-<code class="highlighter-rouge">org.eclipse.ditto</code>:</p>
+<code class="language-plaintext highlighter-rouge">org.eclipse.ditto</code>:</p>
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;target-address&gt;"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"topics"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+  </span><span class="nl">"address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;target-address&gt;"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"topics"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
     </span><span class="s2">"_/_/things/twin/events?namespaces=org.eclipse.ditto&amp;filter=gt(attributes/counter,42)"</span><span class="p">,</span><span class="w">
     </span><span class="s2">"_/_/things/twin/events?extraFields=attributes/placement&amp;filter=gt(attributes/placement,'Kitchen')"</span><span class="p">,</span><span class="w">
     </span><span class="s2">"_/_/things/live/messages?namespaces=org.eclipse.ditto"</span><span class="w">
   </span><span class="p">],</span><span class="w">
-  </span><span class="s2">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"ditto:outbound-auth-subject"</span><span class="p">,</span><span class="w"> </span><span class="s2">"..."</span><span class="p">]</span><span class="w">
+  </span><span class="nl">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"ditto:outbound-auth-subject"</span><span class="p">,</span><span class="w"> </span><span class="s2">"..."</span><span class="p">]</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
 <h4 id="target-topics-and-enrichment">Target topics and enrichment</h4>
 
-<p>When extra fields should be added to outgoing messages on a connection, an <code class="highlighter-rouge">extraFields</code> parameter can be added
+<p>When extra fields should be added to outgoing messages on a connection, an <code class="language-plaintext highlighter-rouge">extraFields</code> parameter can be added
 to the topic. This is supported for all topics:</p>
 
 <table>
@@ -2506,32 +2513,32 @@ to the topic. This is supported for all topics:</p>
   <tbody>
     <tr>
       <td>Subscribe for <a href="basic-changenotifications.html">Thing events/change notifications</a></td>
-      <td><code class="highlighter-rouge">_/_/things/twin/events</code></td>
+      <td><code class="language-plaintext highlighter-rouge">_/_/things/twin/events</code></td>
       <td>✔</td>
     </tr>
     <tr>
       <td>Subscribe for <a href="basic-messages.html">Thing messages</a></td>
-      <td><code class="highlighter-rouge">_/_/things/live/messages</code></td>
+      <td><code class="language-plaintext highlighter-rouge">_/_/things/live/messages</code></td>
       <td>✔</td>
     </tr>
     <tr>
       <td>Subscribe for <a href="protocol-twinlive.html">Thing live commands</a></td>
-      <td><code class="highlighter-rouge">_/_/things/live/commands</code></td>
+      <td><code class="language-plaintext highlighter-rouge">_/_/things/live/commands</code></td>
       <td>✔</td>
     </tr>
     <tr>
       <td>Subscribe for <a href="protocol-twinlive.html">Thing live events</a></td>
-      <td><code class="highlighter-rouge">_/_/things/live/events</code></td>
+      <td><code class="language-plaintext highlighter-rouge">_/_/things/live/events</code></td>
       <td>✔</td>
     </tr>
     <tr>
       <td>Subscribe for <a href="protocol-specification-policies-announcement.html">Policy announcements</a></td>
-      <td><code class="highlighter-rouge">_/_/policies/announcements</code></td>
+      <td><code class="language-plaintext highlighter-rouge">_/_/policies/announcements</code></td>
       <td>❌</td>
     </tr>
     <tr>
       <td>Subscribe for <a href="protocol-specification-connections-announcement.html">Connection announcements</a></td>
-      <td><code class="highlighter-rouge">_/_/connections/announcements</code></td>
+      <td><code class="language-plaintext highlighter-rouge">_/_/connections/announcements</code></td>
       <td>❌</td>
     </tr>
   </tbody>
@@ -2539,12 +2546,12 @@ to the topic. This is supported for all topics:</p>
 
 <p>Example:</p>
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;target-address&gt;"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"topics"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+  </span><span class="nl">"address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;target-address&gt;"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"topics"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
     </span><span class="s2">"_/_/things/twin/events?extraFields=attributes/placement"</span><span class="p">,</span><span class="w">
     </span><span class="s2">"_/_/things/live/messages?extraFields=features/ConnectionStatus"</span><span class="w">
   </span><span class="p">],</span><span class="w">
-  </span><span class="s2">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"ditto:outbound-auth-subject"</span><span class="p">,</span><span class="w"> </span><span class="s2">"..."</span><span class="p">]</span><span class="w">
+  </span><span class="nl">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"ditto:outbound-auth-subject"</span><span class="p">,</span><span class="w"> </span><span class="s2">"..."</span><span class="p">]</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
@@ -2564,16 +2571,16 @@ forwarded into another system.</p>
 <a href="#connection-types">connection type</a> and documented in scope of that connection type.</p>
 
 <p>The issued acknowledgement label must be prefixed by the connection ID followed by a colon or the 
-<code class="highlighter-rouge">{{connection:id}}</code> placeholder followed by a colon.<br />
+<code class="language-plaintext highlighter-rouge">{{connection:id}}</code> placeholder followed by a colon.<br />
 The JSON for a target with issued acknowledgement labels could look like this:</p>
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="w">
 </span><span class="p">{</span><span class="w">
-  </span><span class="s2">"address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;target&gt;"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"topics"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+  </span><span class="nl">"address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;target&gt;"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"topics"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
     </span><span class="s2">"_/_/things/twin/events"</span><span class="w">
   </span><span class="p">],</span><span class="w">
-  </span><span class="s2">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"ditto:inbound-auth-subject"</span><span class="p">],</span><span class="w">
-  </span><span class="s2">"issuedAcknowledgementLabel"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{{connection:id}}:my-custom-ack"</span><span class="w">
+  </span><span class="nl">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"ditto:inbound-auth-subject"</span><span class="p">],</span><span class="w">
+  </span><span class="nl">"issuedAcknowledgementLabel"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{{connection:id}}:my-custom-ack"</span><span class="w">
 </span><span class="p">}</span><span class="w">
 
 </span></code></pre></div></div>
@@ -2587,17 +2594,17 @@ in this case, all external headers come from the header mapping.</p>
 
 <p>The JSON for a target with header mapping could like this:</p>
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;target&gt;"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"topics"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+  </span><span class="nl">"address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;target&gt;"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"topics"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
     </span><span class="s2">"_/_/things/twin/events"</span><span class="p">,</span><span class="w">
     </span><span class="s2">"_/_/things/live/messages?namespaces=org.eclipse.ditto"</span><span class="w">
   </span><span class="p">],</span><span class="w">
-  </span><span class="s2">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"ditto:inbound-auth-subject"</span><span class="p">],</span><span class="w">
-  </span><span class="s2">"headerMapping"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"message-id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{{ header:correlation-id }}"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"content-type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{{ header:content-type }}"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"subject"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{{ topic:subject }}"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"reply-to"</span><span class="p">:</span><span class="w"> </span><span class="s2">"all-replies"</span><span class="w">
+  </span><span class="nl">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"ditto:inbound-auth-subject"</span><span class="p">],</span><span class="w">
+  </span><span class="nl">"headerMapping"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"message-id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{{ header:correlation-id }}"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"content-type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{{ header:content-type }}"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"subject"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{{ topic:subject }}"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"reply-to"</span><span class="p">:</span><span class="w"> </span><span class="s2">"all-replies"</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
@@ -2606,9 +2613,9 @@ in this case, all external headers come from the header mapping.</p>
 
 <p>A connection is initiated by the connectivity service. This obviates the need for client authorization, because
 Ditto becomes the client in this case. Nevertheless, to access resources within Ditto, the connection must know on 
-whose behalf it is acting. This is controlled via the configured <code class="highlighter-rouge">authorizationContext</code>, which holds a list of
+whose behalf it is acting. This is controlled via the configured <code class="language-plaintext highlighter-rouge">authorizationContext</code>, which holds a list of
 self-assigned authorization subjects. Before a connection can access a Ditto resource, one of its 
-<code class="highlighter-rouge">authorizationSubject</code>s must be granted the access rights by the authorization mechanism of a 
+<code class="language-plaintext highlighter-rouge">authorizationSubject</code>s must be granted the access rights by the authorization mechanism of a 
 <a href="basic-policy.html">Policies</a>.</p>
 
 <p>A connection target can only send data for things to which it has READ rights, as data flows from a thing to a target. 
@@ -2617,7 +2624,7 @@ A connection source can only receive data for things to which it has WRITE right
 <h3 id="specific-configuration">Specific configuration</h3>
 
 <p>Some <a href="#connection-types">connection types</a> require specific configuration, which is not supported for other connection types.
-Those are put into the <code class="highlighter-rouge">specificConfig</code> field.</p>
+Those are put into the <code class="language-plaintext highlighter-rouge">specificConfig</code> field.</p>
 
 <h3 id="payload-mapping">Payload Mapping</h3>
 
@@ -2627,7 +2634,7 @@ Those are put into the <code class="highlighter-rouge">specificConfig</code> fie
 
 <p>The configuration of a connection allows to use placeholders at certain places. This allows more fine-grained control 
 over how messages are consumed or where they are published to. The general syntax of a placeholder is 
-<code class="highlighter-rouge">{{ placeholder }}</code>. Have a look at the <a href="basic-placeholders.html">placeholders concept</a> for 
+<code class="language-plaintext highlighter-rouge">{{ placeholder }}</code>. Have a look at the <a href="basic-placeholders.html">placeholders concept</a> for 
 more details on that.</p>
 
 <h3 id="placeholder-for-source-authorization-subjects">Placeholder for source authorization subjects</h3>
@@ -2641,18 +2648,18 @@ message to provide necessary information about the original issuer of the messag
 
 <div class="alert alert-warning" role="alert" style=""><i class="fa fa-warning"></i> <b>Important:</b> Only use this kind of placeholder if you trust the source of the message. The value from the header is used as the <strong>authorized subject</strong>.</div>
 
-<p>You can access any header value of the incoming message by using a placeholder like <code class="highlighter-rouge">{{ header:name }}</code>.</p>
+<p>You can access any header value of the incoming message by using a placeholder like <code class="language-plaintext highlighter-rouge">{{ header:name }}</code>.</p>
 
 <p>Example:</p>
 
-<p>Assuming the messages received from the source <em>telemetry</em> contain a <code class="highlighter-rouge">device_id</code> header (e.g. <em>sensor-123</em>), 
+<p>Assuming the messages received from the source <em>telemetry</em> contain a <code class="language-plaintext highlighter-rouge">device_id</code> header (e.g. <em>sensor-123</em>), 
 you may configure your source’s authorization subject as follows:</p>
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="w">   </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"auth-subject-placeholder-example"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"sources"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+      </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"auth-subject-placeholder-example"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"sources"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
         </span><span class="p">{</span><span class="w">
-          </span><span class="s2">"addresses"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="s2">"telemetry"</span><span class="w"> </span><span class="p">],</span><span class="w">
-          </span><span class="s2">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"device:{{ header:device_id }}"</span><span class="p">]</span><span class="w">
+          </span><span class="nl">"addresses"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="s2">"telemetry"</span><span class="w"> </span><span class="p">],</span><span class="w">
+          </span><span class="nl">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"device:{{ header:device_id }}"</span><span class="p">]</span><span class="w">
         </span><span class="p">}</span><span class="w">
       </span><span class="p">]</span><span class="w">
   </span><span class="p">}</span><span class="w">
@@ -2666,8 +2673,8 @@ back to the sender as an error message, if a valid <em>reply-to</em> header was 
 
 <p>Another use case for placeholders may be to publish twin events or live commands and events to a target address 
 containing thing-specific information e.g. you can distribute things from different namespaces to different target addresses.
-You can use the placeholders <code class="highlighter-rouge">{{ thing:id }}</code>, <code class="highlighter-rouge">{{ thing:namespace }}</code> 
-and <code class="highlighter-rouge">{{ thing:name }}</code> in the target address for this purpose.
+You can use the placeholders <code class="language-plaintext highlighter-rouge">{{ thing:id }}</code>, <code class="language-plaintext highlighter-rouge">{{ thing:namespace }}</code> 
+and <code class="language-plaintext highlighter-rouge">{{ thing:name }}</code> in the target address for this purpose.
 For a thing with the ID <em>org.eclipse.ditto:device-123</em> these placeholders would be resolved as follows:</p>
 
 <table>
@@ -2680,17 +2687,17 @@ For a thing with the ID <em>org.eclipse.ditto:device-123</em> these placeholders
   </thead>
   <tbody>
     <tr>
-      <td><code class="highlighter-rouge">thing:id</code></td>
-      <td>Full ID composed of <em>namespace</em>  <code class="highlighter-rouge">:</code> (as a separator), and <em>name</em></td>
+      <td><code class="language-plaintext highlighter-rouge">thing:id</code></td>
+      <td>Full ID composed of <em>namespace</em>  <code class="language-plaintext highlighter-rouge">:</code> (as a separator), and <em>name</em></td>
       <td><em>org.eclipse.ditto:device-123</em></td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge">thing:namespace</code></td>
+      <td><code class="language-plaintext highlighter-rouge">thing:namespace</code></td>
       <td>Namespace (i.e. first part of an ID)</td>
       <td><em>org.eclipse.ditto</em></td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge">thing:name</code></td>
+      <td><code class="language-plaintext highlighter-rouge">thing:name</code></td>
       <td>Name (i.e. second part of an ID )</td>
       <td><em>device-123</em></td>
     </tr>
@@ -2706,12 +2713,12 @@ dropped.</p>
 
 <p>Sending live commands and events to a target address that contains the thing’s namespace.</p>
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="w">   </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"target-placeholder-example"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"targets"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+      </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"target-placeholder-example"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"targets"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
         </span><span class="p">{</span><span class="w">
-          </span><span class="s2">"addresses"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="s2">"live/{{ thing:namespace }}"</span><span class="w"> </span><span class="p">],</span><span class="w">
-          </span><span class="s2">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"ditto:auth-subject"</span><span class="p">],</span><span class="w">
-          </span><span class="s2">"topics"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="s2">"_/_/things/live/events"</span><span class="p">,</span><span class="w"> </span><span class="s2">"_/_/things/live/commands"</span><span class="w"> </span><span class="p">]</span><span class="w">
+          </span><span class="nl">"addresses"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="s2">"live/{{ thing:namespace }}"</span><span class="w"> </span><span class="p">],</span><span class="w">
+          </span><span class="nl">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"ditto:auth-subject"</span><span class="p">],</span><span class="w">
+          </span><span class="nl">"topics"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="s2">"_/_/things/live/events"</span><span class="p">,</span><span class="w"> </span><span class="s2">"_/_/things/live/commands"</span><span class="w"> </span><span class="p">]</span><span class="w">
         </span><span class="p">}</span><span class="w">
       </span><span class="p">]</span><span class="w">
   </span><span class="p">}</span><span class="w">
@@ -2748,7 +2755,7 @@ dropped.</p>
                     </div>
                     <p class="notice">
                         &copy;2024 Eclipse Ditto™.
-                         Site last generated: Feb 27, 2024 <br />
+                         Site last generated: Apr 10, 2024 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

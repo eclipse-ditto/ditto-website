@@ -278,6 +278,13 @@
               
               
               
+              <li><a href="release_notes_354.html">3.5.4</a></li>
+              
+              
+              
+              
+              
+              
               <li><a href="release_notes_353.html">3.5.3</a></li>
               
               
@@ -2114,14 +2121,14 @@ This section will cover some of Ditto’s config parameters.</p>
 the following environment variables in order to configure the connection to the MongoDB.</p>
 
 <ul>
-  <li><code class="highlighter-rouge">MONGO_DB_URI</code>: Connection string to MongoDB</li>
-  <li><code class="highlighter-rouge">MONGO_DB_SSL_ENABLED</code>: Enabled SSL connection to MongoDB</li>
-  <li><code class="highlighter-rouge">MONGO_DB_CONNECTION_MIN_POOL_SIZE</code>: Configure MongoDB minimum connection pool size</li>
-  <li><code class="highlighter-rouge">MONGO_DB_CONNECTION_POOL_SIZE</code>: Configure MongoDB connection pool size</li>
-  <li><code class="highlighter-rouge">MONGO_DB_READ_PREFERENCE</code>: Configure MongoDB read preference</li>
-  <li><code class="highlighter-rouge">MONGO_DB_WRITE_CONCERN</code>: Configure MongoDB write concern</li>
-  <li><code class="highlighter-rouge">PEKKO_PERSISTENCE_MONGO_JOURNAL_WRITE_CONCERN</code>: Configure Pekko Persistence MongoDB journal write concern</li>
-  <li><code class="highlighter-rouge">PEKKO_PERSISTENCE_MONGO_SNAPS_WRITE_CONCERN</code>: Configure Pekko Persistence MongoDB snapshot write concern</li>
+  <li><code class="language-plaintext highlighter-rouge">MONGO_DB_URI</code>: Connection string to MongoDB</li>
+  <li><code class="language-plaintext highlighter-rouge">MONGO_DB_SSL_ENABLED</code>: Enabled SSL connection to MongoDB</li>
+  <li><code class="language-plaintext highlighter-rouge">MONGO_DB_CONNECTION_MIN_POOL_SIZE</code>: Configure MongoDB minimum connection pool size</li>
+  <li><code class="language-plaintext highlighter-rouge">MONGO_DB_CONNECTION_POOL_SIZE</code>: Configure MongoDB connection pool size</li>
+  <li><code class="language-plaintext highlighter-rouge">MONGO_DB_READ_PREFERENCE</code>: Configure MongoDB read preference</li>
+  <li><code class="language-plaintext highlighter-rouge">MONGO_DB_WRITE_CONCERN</code>: Configure MongoDB write concern</li>
+  <li><code class="language-plaintext highlighter-rouge">PEKKO_PERSISTENCE_MONGO_JOURNAL_WRITE_CONCERN</code>: Configure Pekko Persistence MongoDB journal write concern</li>
+  <li><code class="language-plaintext highlighter-rouge">PEKKO_PERSISTENCE_MONGO_SNAPS_WRITE_CONCERN</code>: Configure Pekko Persistence MongoDB snapshot write concern</li>
 </ul>
 
 <h3 id="ditto-configuration">Ditto configuration</h3>
@@ -2138,15 +2145,15 @@ configuration files of Ditto’s microservices:</p>
   <li>Gateway: <a href="https://github.com/eclipse-ditto/ditto/blob/master/gateway/service/src/main/resources/gateway.conf">gateway.conf</a></li>
 </ul>
 
-<p>Whenever you find the syntax <code class="highlighter-rouge">${?UPPER_CASE_ENV_NAME}</code> in the configuration files, you may overwrite the default value
+<p>Whenever you find the syntax <code class="language-plaintext highlighter-rouge">${?UPPER_CASE_ENV_NAME}</code> in the configuration files, you may overwrite the default value
 by specifying that environment variable when running the container.</p>
 
 <p>When no environment variable is defined in the config, you may change the default value anyway by specifying a
 “System property” you pass to the Java process.</p>
 
 <p>The following example configures the devops password of the gateway-service started via docker-compose. In order
-to supply additional configuration one has to add the variable in the corresponding <code class="highlighter-rouge">command</code> section of the
-<code class="highlighter-rouge">docker-compose.yml</code> file.</p>
+to supply additional configuration one has to add the variable in the corresponding <code class="language-plaintext highlighter-rouge">command</code> section of the
+<code class="language-plaintext highlighter-rouge">docker-compose.yml</code> file.</p>
 
 <div class="language-yml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nn">...</span>
 <span class="c1"># Alternative approach for configuration of the service</span>
@@ -2154,8 +2161,8 @@ to supply additional configuration one has to add the variable in the correspond
   <span class="pi">-</span> <span class="s">JAVA_TOOL_OPTIONS=-Dditto.gateway.authentication.devops.password=foobar</span>
 </code></pre></div></div>
 
-<p>The executable for the microservice is called <code class="highlighter-rouge">starter.jar</code>. The configuration variables have to be set before
-the <code class="highlighter-rouge">-jar</code> option.</p>
+<p>The executable for the microservice is called <code class="language-plaintext highlighter-rouge">starter.jar</code>. The configuration variables have to be set before
+the <code class="language-plaintext highlighter-rouge">-jar</code> option.</p>
 
 <h3 id="pre-authentication">Pre-authentication</h3>
 
@@ -2166,17 +2173,17 @@ the <code class="highlighter-rouge">-jar</code> option.</p>
   <li>ensures that this HTTP header can never be written by the end-user</li>
 </ul>
 
-<p>By default, <code class="highlighter-rouge">pre-authentication</code> is <strong>disabled</strong> in the Ditto <a href="architecture-services-gateway.html">gateway</a> services.
-It can however be enabled by configuring the environment variable <code class="highlighter-rouge">ENABLE_PRE_AUTHENTICATION</code> to the value <code class="highlighter-rouge">true</code>.</p>
+<p>By default, <code class="language-plaintext highlighter-rouge">pre-authentication</code> is <strong>disabled</strong> in the Ditto <a href="architecture-services-gateway.html">gateway</a> services.
+It can however be enabled by configuring the environment variable <code class="language-plaintext highlighter-rouge">ENABLE_PRE_AUTHENTICATION</code> to the value <code class="language-plaintext highlighter-rouge">true</code>.</p>
 
-<p>When it is enabled, the reverse proxy has to set the HTTP header <code class="highlighter-rouge">x-ditto-pre-authenticated</code>.<br />
-The format of the “pre-authenticated” string is: <code class="highlighter-rouge">&lt;issuer&gt;:&lt;subject&gt;</code>. The issuer defines which system authenticated 
+<p>When it is enabled, the reverse proxy has to set the HTTP header <code class="language-plaintext highlighter-rouge">x-ditto-pre-authenticated</code>.<br />
+The format of the “pre-authenticated” string is: <code class="language-plaintext highlighter-rouge">&lt;issuer&gt;:&lt;subject&gt;</code>. The issuer defines which system authenticated 
 the user and the subject contains e.g. the user-id or -name.</p>
 
 <p>This string must then be used in <a href="basic-policy.html#subjects">policies</a> as “Subject ID”.</p>
 
 <p>Example for a nginx “proxy” configuration:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>auth_basic                    "Authentication required";
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>auth_basic                    "Authentication required";
 auth_basic_user_file          nginx.htpasswd;
 ...
 proxy_set_header              x-ditto-pre-authenticated "nginx:${remote_user}";
@@ -2185,21 +2192,21 @@ proxy_set_header              x-ditto-pre-authenticated "nginx:${remote_user}";
 <h3 id="openid-connect">OpenID Connect</h3>
 
 <p>The authentication provider must be added to the ditto-gateway configuration with unique configuration key 
-(e.g. <code class="highlighter-rouge">myprovier</code> in the example below).</p>
+(e.g. <code class="language-plaintext highlighter-rouge">myprovier</code> in the example below).</p>
 
-<p>Either <code class="highlighter-rouge">issuer</code> as single supported JWT <code class="highlighter-rouge">"iss"</code> claim or <code class="highlighter-rouge">issuers</code> (as a list of supported JWT <code class="highlighter-rouge">"iss"</code> claims) has to be 
-configured. If <code class="highlighter-rouge">issuers</code> is configured, this list has priority and the value configured in <code class="highlighter-rouge">issuer</code> will be ignored.</p>
+<p>Either <code class="language-plaintext highlighter-rouge">issuer</code> as single supported JWT <code class="language-plaintext highlighter-rouge">"iss"</code> claim or <code class="language-plaintext highlighter-rouge">issuers</code> (as a list of supported JWT <code class="language-plaintext highlighter-rouge">"iss"</code> claims) has to be 
+configured. If <code class="language-plaintext highlighter-rouge">issuers</code> is configured, this list has priority and the value configured in <code class="language-plaintext highlighter-rouge">issuer</code> will be ignored.</p>
 
-<p>The configured <code class="highlighter-rouge">auth-subjects</code>, an optional field, takes a list of placeholders that will be
+<p>The configured <code class="language-plaintext highlighter-rouge">auth-subjects</code>, an optional field, takes a list of placeholders that will be
 evaluated against incoming JWTs.<br />
-For each entry in <code class="highlighter-rouge">auth-subjects</code> an authorization subject will be generated.
+For each entry in <code class="language-plaintext highlighter-rouge">auth-subjects</code> an authorization subject will be generated.
 If the entry contains unresolvable placeholders, it will be ignored in full.
-When <code class="highlighter-rouge">auth-subjects</code> is not provided, the <code class="highlighter-rouge">"sub"</code> claim (<code class="highlighter-rouge">{{ jwt:sub }}</code>) is used by default.</p>
+When <code class="language-plaintext highlighter-rouge">auth-subjects</code> is not provided, the <code class="language-plaintext highlighter-rouge">"sub"</code> claim (<code class="language-plaintext highlighter-rouge">{{ jwt:sub }}</code>) is used by default.</p>
 
 <p>Please read <a href="basic-placeholders.html#scope-openid-connect-configuration">more details on the OpenId Connect configuration placeholder</a>
-to find out what is possible when defining the <code class="highlighter-rouge">auth-subjects</code>.</p>
+to find out what is possible when defining the <code class="language-plaintext highlighter-rouge">auth-subjects</code>.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ditto.gateway.authentication {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ditto.gateway.authentication {
     oauth {
       openid-connect-issuers = {
         myprovider = {
@@ -2221,8 +2228,8 @@ to find out what is possible when defining the <code class="highlighter-rouge">a
 }
 </code></pre></div></div>
 
-<div class="alert alert-info" role="alert"><i class="fa fa-info-circle"></i> <b>Note:</b> The issuer <strong>must not</strong> include the <code class="highlighter-rouge">http://</code> or <code class="highlighter-rouge">https://</code> prefix as this is added 
-    based on the configuration value of <code class="highlighter-rouge">ditto.gateway.authentication.oauth.protocol</code>.</div>
+<div class="alert alert-info" role="alert"><i class="fa fa-info-circle"></i> <b>Note:</b> The issuer <strong>must not</strong> include the <code class="language-plaintext highlighter-rouge">http://</code> or <code class="language-plaintext highlighter-rouge">https://</code> prefix as this is added 
+    based on the configuration value of <code class="language-plaintext highlighter-rouge">ditto.gateway.authentication.oauth.protocol</code>.</div>
 
 <p>In order to do this by specifying a Java system property, use the following:</p>
 
@@ -2231,35 +2238,35 @@ to find out what is possible when defining the <code class="highlighter-rouge">a
 
 </code></pre></div></div>
 
-<p>The configured subject-issuer will be used to prefix the value of each individual <code class="highlighter-rouge">auth-subject</code>.</p>
+<p>The configured subject-issuer will be used to prefix the value of each individual <code class="language-plaintext highlighter-rouge">auth-subject</code>.</p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"subjects"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"&lt;provider&gt;:&lt;auth-subject-0&gt;"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"generated"</span><span class="w">
+  </span><span class="nl">"subjects"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"&lt;provider&gt;:&lt;auth-subject-0&gt;"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"generated"</span><span class="w">
     </span><span class="p">},</span><span class="w">
     </span><span class="err">...</span><span class="w">
-    </span><span class="s2">"&lt;provider&gt;:&lt;auth-subject-n&gt;"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"generated"</span><span class="w">
+    </span><span class="nl">"&lt;provider&gt;:&lt;auth-subject-n&gt;"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"generated"</span><span class="w">
     </span><span class="p">}</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
-<p>As of the OAuth2.0 and OpenID Connect standards Ditto expects the headers <code class="highlighter-rouge">Authorization: Bearer &lt;JWT&gt;</code> and
-<code class="highlighter-rouge">Content-Type: application/json</code>, containing the issued token of the provider.</p>
+<p>As of the OAuth2.0 and OpenID Connect standards Ditto expects the headers <code class="language-plaintext highlighter-rouge">Authorization: Bearer &lt;JWT&gt;</code> and
+<code class="language-plaintext highlighter-rouge">Content-Type: application/json</code>, containing the issued token of the provider.</p>
 
 <p><strong>The token has to be issued beforehand. The required logic is not provided by Ditto.</strong></p>
 
 <p>This can e.g. be done by an OIDC provider like <a href="https://www.keycloak.org/">Keycloak</a>.<br />
 A project like <a href="https://github.com/oauth2-proxy/oauth2-proxy">oauth2-proxy</a>
 may be put in front of Ditto to handle the token-logic like e.g. loading/saving the token from/to a Cookie and passing
-it to Ditto as <code class="highlighter-rouge">Authorization</code> header.</p>
+it to Ditto as <code class="language-plaintext highlighter-rouge">Authorization</code> header.</p>
 
 <p><strong>If the chosen OIDC provider uses a self-signed certificate</strong>, the certificate has to be retrieved and configured for 
 the pekko-http ssl configuration.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ssl-config {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ssl-config {
   trustManager = {
     stores = [
       { type = "PEM", path = "/path/to/cert/globalsign.crt" }
@@ -2288,7 +2295,7 @@ at <a href="https://github.com/eclipse-ditto/ditto/blob/master/connectivity/serv
 
 <p>or you can use the java standard library</p>
 
-<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code>        <span class="n">javax</span><span class="o">.</span><span class="na">crypto</span><span class="o">.</span><span class="na">KeyGenerator</span> <span class="n">keyGen</span><span class="o">=</span><span class="n">KeyGenerator</span><span class="o">.</span><span class="na">getInstance</span><span class="o">(</span><span class="s">"AES"</span><span class="o">);</span>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code>        <span class="n">javax</span><span class="o">.</span><span class="na">crypto</span><span class="o">.</span><span class="na">KeyGenerator</span> <span class="n">keyGen</span><span class="o">=</span><span class="nc">KeyGenerator</span><span class="o">.</span><span class="na">getInstance</span><span class="o">(</span><span class="s">"AES"</span><span class="o">);</span>
         <span class="n">keyGen</span><span class="o">.</span><span class="na">init</span><span class="o">(</span><span class="mi">256</span><span class="o">);</span>
         <span class="n">javax</span><span class="o">.</span><span class="na">crypto</span><span class="o">.</span><span class="na">SecretKey</span> <span class="n">aes256SymetricKey</span> <span class="o">=</span> <span class="n">keyGen</span><span class="o">.</span><span class="na">generateKey</span><span class="o">();</span>
 </code></pre></div></div>
@@ -2305,7 +2312,7 @@ above (<a href="https://github.com/eclipse-ditto/ditto/blob/master/connectivity/
 <h4 id="fields-config">Fields config</h4>
 <p>The fields to be encrypted are configurable as json pointers and the default ones are:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>        /uri
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>        /uri
         /credentials/key
         /sshTunnel/credentials/password
         /sshTunnel/credentials/privateKey
@@ -2333,7 +2340,7 @@ the encrypted parts and save them.</p>
 are no longer artificially throttled / rate limited when <em>consuming messages</em>.<br />
 There are however configuration options in place in order to enable throttling on a “per-connection” / “per-websocket”
 basis.<br />
-Please consult the available <code class="highlighter-rouge">throttling</code> configuration sections in the 
+Please consult the available <code class="language-plaintext highlighter-rouge">throttling</code> configuration sections in the 
 <a href="#ditto-configuration">Ditto service configuration files</a>.</p>
 
 <h2 id="restricting-entity-creation">Restricting entity creation</h2>
@@ -2341,10 +2348,10 @@ Please consult the available <code class="highlighter-rouge">throttling</code> c
 <p>By default, Ditto allows anyone to create a new entity (policy or thing) in any namespace. However, this behavior can
 be customized, and the ability to create new entities can be restricted.</p>
 
-<p>In the <code class="highlighter-rouge">ditto-entity-creation.conf</code>, you can re-configure the <code class="highlighter-rouge">entity-creation</code> section to suit your needs.<br />
+<p>In the <code class="language-plaintext highlighter-rouge">ditto-entity-creation.conf</code>, you can re-configure the <code class="language-plaintext highlighter-rouge">entity-creation</code> section to suit your needs.<br />
 The basic schema is:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># restrict entity creation
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># restrict entity creation
 ditto.entity-creation {
    # this default entry allows every authenticated "auth-subject" to create any "resource-type" in any "namespace":
   grant = [
@@ -2370,8 +2377,8 @@ ditto.entity-creation {
 <p>When enforcing, the logic is:</p>
 
 <ul>
-  <li>Find a matching entry in the <code class="highlighter-rouge">grant</code> list</li>
-  <li>If one was found, ensure there is no matching entry in the <code class="highlighter-rouge">revoke</code> list</li>
+  <li>Find a matching entry in the <code class="language-plaintext highlighter-rouge">grant</code> list</li>
+  <li>If one was found, ensure there is no matching entry in the <code class="language-plaintext highlighter-rouge">revoke</code> list</li>
   <li>If that is the case, accept the request, otherwise deny it</li>
 </ul>
 
@@ -2386,7 +2393,7 @@ ditto.entity-creation {
 <p>This means, an existing entry, with all empty lists, will match. So the default configuration, allowing all access,
 can be as simple as:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ditto.entity-creation {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ditto.entity-creation {
   grant = [{}]
 }
 </code></pre></div></div>
@@ -2394,18 +2401,18 @@ can be as simple as:</p>
 <p>The resource types can be any of:</p>
 
 <ul>
-  <li><code class="highlighter-rouge">policy</code></li>
-  <li><code class="highlighter-rouge">thing</code></li>
+  <li><code class="language-plaintext highlighter-rouge">policy</code></li>
+  <li><code class="language-plaintext highlighter-rouge">thing</code></li>
 </ul>
 
-<p>The namespace wildcard list, is a list of wildcard patters, which must match the namespace. <code class="highlighter-rouge">*</code> will match any number
-of characters, and <code class="highlighter-rouge">?</code> will match exactly one character.</p>
+<p>The namespace wildcard list, is a list of wildcard patters, which must match the namespace. <code class="language-plaintext highlighter-rouge">*</code> will match any number
+of characters, and <code class="language-plaintext highlighter-rouge">?</code> will match exactly one character.</p>
 
-<p>The auth subject wildcard list requires only a single entry of the requests auth subjects to match, like <code class="highlighter-rouge">oauth:user-id</code>
-or <code class="highlighter-rouge">pre-authenticated:service</code>. <code class="highlighter-rouge">*</code> will match any number of characters, and <code class="highlighter-rouge">?</code> will match exactly one character.</p>
+<p>The auth subject wildcard list requires only a single entry of the requests auth subjects to match, like <code class="language-plaintext highlighter-rouge">oauth:user-id</code>
+or <code class="language-plaintext highlighter-rouge">pre-authenticated:service</code>. <code class="language-plaintext highlighter-rouge">*</code> will match any number of characters, and <code class="language-plaintext highlighter-rouge">?</code> will match exactly one character.</p>
 
 <p>Example for configuring it via system properties.<br />
-This would only allow the subjects authenticated as either <code class="highlighter-rouge">"pre:admin"</code> or <code class="highlighter-rouge">"integration:some-connection"</code> to create 
+This would only allow the subjects authenticated as either <code class="language-plaintext highlighter-rouge">"pre:admin"</code> or <code class="language-plaintext highlighter-rouge">"integration:some-connection"</code> to create 
 entities (things/policies) and no-one other:</p>
 
 <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">-Dditto</span>.entity-creation.grant.0.auth-subjects.0<span class="o">=</span>pre:admin
@@ -2424,32 +2431,32 @@ entities (things/policies) and no-one other:</p>
 
 <p>Since Ditto <em>3.5.0</em>, there is a configuration to specify, by a namespace pattern, which fields will be included in the search database.</p>
 
-<p>To enable this functionality, there are two new options in the <code class="highlighter-rouge">thing-search.conf</code> configuration:</p>
+<p>To enable this functionality, there are two new options in the <code class="language-plaintext highlighter-rouge">thing-search.conf</code> configuration:</p>
 
-<pre><code class="language-hocon">ditto {
-  //...
-  caching-signal-enrichment-facade-provider = org.eclipse.ditto.thingsearch.service.persistence.write.streaming.SearchIndexingSignalEnrichmentFacadeProvider
-  //...
-  search {
-    namespace-indexed-fields = [
-      {
-        namespace-pattern = "org.eclipse.test"
-        indexed-fields = [
-           "attributes",
-           "features/info/properties",
-           "features/info/other"
-        ]
-      },
-      {
-        namespace-pattern = "org.eclipse*"
-        indexed-fields = [
-           "attributes",
-           "features/info"
-        ]
-      }
-    ]
-  }
-</code></pre>
+<div class="language-hocon highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nl">ditto</span><span class="w"> </span><span class="p">{</span><span class="w">
+  </span><span class="c1">//...</span><span class="w">
+  </span><span class="nl">caching-signal-enrichment-facade-provider</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="l">org.eclipse.ditto.thingsearch.service.persistence.write.streaming.SearchIndexingSignalEnrichmentFacadeProvider</span><span class="w">
+  </span><span class="c1">//...</span><span class="w">
+  </span><span class="nl">search</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">namespace-indexed-fields</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="p">[</span><span class="w">
+      </span><span class="p">{</span><span class="w">
+        </span><span class="nl">namespace-pattern</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s2">"org.eclipse.test"</span><span class="w">
+        </span><span class="nl">indexed-fields</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="p">[</span><span class="w">
+           </span><span class="s2">"attributes"</span><span class="p">,</span><span class="w">
+           </span><span class="s2">"features/info/properties"</span><span class="p">,</span><span class="w">
+           </span><span class="s2">"features/info/other"</span><span class="w">
+        </span><span class="p">]</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="p">{</span><span class="w">
+        </span><span class="nl">namespace-pattern</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s2">"org.eclipse*"</span><span class="w">
+        </span><span class="nl">indexed-fields</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="p">[</span><span class="w">
+           </span><span class="s2">"attributes"</span><span class="p">,</span><span class="w">
+           </span><span class="s2">"features/info"</span><span class="w">
+        </span><span class="p">]</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
 
 <p>There is a new implementation of the caching signal enrichment facade provider that must be configured to enable this
 functionality.</p>
@@ -2468,7 +2475,7 @@ configured namespace-patterns are unique enough to match.</li>
 necessary.</li>
 </ul>
 
-<p>Example for configuring the same configuration via system properties for the <code class="highlighter-rouge">things-search</code> service:</p>
+<p>Example for configuring the same configuration via system properties for the <code class="language-plaintext highlighter-rouge">things-search</code> service:</p>
 
 <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">-Dditto</span>.search.namespace-indexed-fields.0.namespace-pattern<span class="o">=</span>org.eclipse.test
 <span class="nt">-Dditto</span>.search.namespace-indexed-fields.0.indexed-fields.0<span class="o">=</span>attributes
@@ -2486,32 +2493,32 @@ necessary.</li>
 <ul>
   <li>sending logs to STDOUT/STDERR: this is the default
     <ul>
-      <li>can be disabled by setting the environment variable <code class="highlighter-rouge">DITTO_LOGGING_DISABLE_SYSOUT_LOG</code> to <code class="highlighter-rouge">true</code></li>
+      <li>can be disabled by setting the environment variable <code class="language-plaintext highlighter-rouge">DITTO_LOGGING_DISABLE_SYSOUT_LOG</code> to <code class="language-plaintext highlighter-rouge">true</code></li>
       <li>Benefits: simple, works with all Docker logging drivers (e.g. “awslogs”, “splunk”, etc.)</li>
     </ul>
   </li>
-  <li>pushing logs into ELK stack: this can be done by setting the environment variable <code class="highlighter-rouge">DITTO_LOGGING_LOGSTASH_SERVER</code>
+  <li>pushing logs into ELK stack: this can be done by setting the environment variable <code class="language-plaintext highlighter-rouge">DITTO_LOGGING_LOGSTASH_SERVER</code>
     <ul>
-      <li>configure <code class="highlighter-rouge">DITTO_LOGGING_LOGSTASH_SERVER</code> to contain the endpoint of a logstash server</li>
+      <li>configure <code class="language-plaintext highlighter-rouge">DITTO_LOGGING_LOGSTASH_SERVER</code> to contain the endpoint of a logstash server</li>
     </ul>
   </li>
-  <li>writing logs to log files: this can be done by setting the environment variable <code class="highlighter-rouge">DITTO_LOGGING_FILE_APPENDER</code> to <code class="highlighter-rouge">true</code>
+  <li>writing logs to log files: this can be done by setting the environment variable <code class="language-plaintext highlighter-rouge">DITTO_LOGGING_FILE_APPENDER</code> to <code class="language-plaintext highlighter-rouge">true</code>
     <ul>
       <li>configure the amount of log files, and the total amount of space used for logs files via these environment 
 variables. It is also possible to clean up old log files and archives at start up.
-In case <code class="highlighter-rouge">DITTO_LOGGING_TOTAL_LOG_FILE_SIZE</code> is used it is necessary to configure also <code class="highlighter-rouge">DITTO_LOGGING_MAX_LOG_FILE_HISTORY</code>.
+In case <code class="language-plaintext highlighter-rouge">DITTO_LOGGING_TOTAL_LOG_FILE_SIZE</code> is used it is necessary to configure also <code class="language-plaintext highlighter-rouge">DITTO_LOGGING_MAX_LOG_FILE_HISTORY</code>.
 The detailed meaning of these config values is described in the <a href="https://logback.qos.ch/manual/appenders.html#TimeBasedRollingPolicy">logback documentation</a>.
         <ul>
-          <li><code class="highlighter-rouge">DITTO_LOGGING_FILE_APPENDER_THRESHOLD</code> (default: <code class="highlighter-rouge">info</code>) - the threshold <code class="highlighter-rouge">level</code> to use for logging (only greater or equal levels will be logged)</li>
-          <li><code class="highlighter-rouge">DITTO_LOGGING_FILE_NAME_PATTERN</code> (default: <code class="highlighter-rouge">/var/log/ditto/&lt;service-name&gt;.log.%d{yyyy-MM-dd}.gz</code>) - the rollover period is inferred from the fileNamePattern</li>
-          <li><code class="highlighter-rouge">DITTO_LOGGING_MAX_LOG_FILE_HISTORY</code> (default: <code class="highlighter-rouge">10</code>)</li>
-          <li><code class="highlighter-rouge">DITTO_LOGGING_TOTAL_LOG_FILE_SIZE</code> (default: <code class="highlighter-rouge">1GB</code>)</li>
-          <li><code class="highlighter-rouge">DITTO_LOGGING_CLEAN_HISTORY_ON_START</code> (default: <code class="highlighter-rouge">false</code>)</li>
+          <li><code class="language-plaintext highlighter-rouge">DITTO_LOGGING_FILE_APPENDER_THRESHOLD</code> (default: <code class="language-plaintext highlighter-rouge">info</code>) - the threshold <code class="language-plaintext highlighter-rouge">level</code> to use for logging (only greater or equal levels will be logged)</li>
+          <li><code class="language-plaintext highlighter-rouge">DITTO_LOGGING_FILE_NAME_PATTERN</code> (default: <code class="language-plaintext highlighter-rouge">/var/log/ditto/&lt;service-name&gt;.log.%d{yyyy-MM-dd}.gz</code>) - the rollover period is inferred from the fileNamePattern</li>
+          <li><code class="language-plaintext highlighter-rouge">DITTO_LOGGING_MAX_LOG_FILE_HISTORY</code> (default: <code class="language-plaintext highlighter-rouge">10</code>)</li>
+          <li><code class="language-plaintext highlighter-rouge">DITTO_LOGGING_TOTAL_LOG_FILE_SIZE</code> (default: <code class="language-plaintext highlighter-rouge">1GB</code>)</li>
+          <li><code class="language-plaintext highlighter-rouge">DITTO_LOGGING_CLEAN_HISTORY_ON_START</code> (default: <code class="language-plaintext highlighter-rouge">false</code>)</li>
         </ul>
       </li>
       <li>the format in which logging is done is “LogstashEncoder” format - that way the logfiles may easily be imported into
 an ELK stack</li>
-      <li>when running Ditto in Kubernetes apply the <code class="highlighter-rouge">ditto-log-files.yaml</code> to your Kubernetes cluster in order to 
+      <li>when running Ditto in Kubernetes apply the <code class="language-plaintext highlighter-rouge">ditto-log-files.yaml</code> to your Kubernetes cluster in order to 
 mount log files to the host system.</li>
     </ul>
   </li>
@@ -2526,9 +2533,9 @@ backend, from where the metrics can be accessed to display in dashboards (e.g. w
 <h3 id="monitoring-configuration">Monitoring configuration</h3>
 
 <p>In the default configuration, each Ditto service opens a HTTP endpoint, where it provides the Prometheus metrics 
-on port <code class="highlighter-rouge">9095</code>. This can be changed via the environment variable <code class="highlighter-rouge">PROMETHEUS_PORT</code>.</p>
+on port <code class="language-plaintext highlighter-rouge">9095</code>. This can be changed via the environment variable <code class="language-plaintext highlighter-rouge">PROMETHEUS_PORT</code>.</p>
 
-<p>Ditto will automatically publish gathered metrics at the endpoint <code class="highlighter-rouge">http://&lt;container-host-or-ip&gt;:9095/</code>.</p>
+<p>Ditto will automatically publish gathered metrics at the endpoint <code class="language-plaintext highlighter-rouge">http://&lt;container-host-or-ip&gt;:9095/</code>.</p>
 
 <p>Further, Prometheus can be configured to poll on all Ditto service endpoints in order to persist the historical metrics.
 Grafana can add a Prometheus server as its data source and can display
@@ -2537,12 +2544,12 @@ the metrics based on the keys mentioned in section <a href="#gathered-metrics">�
 <h3 id="gathered-metrics">Gathered metrics</h3>
 
 <p>In order to inspect which metrics are exported to Prometheus, just visit the Prometheus HTTP endpoint of a Ditto service:
-<code class="highlighter-rouge">http://&lt;container-host-or-ip&gt;:9095/</code>.</p>
+<code class="language-plaintext highlighter-rouge">http://&lt;container-host-or-ip&gt;:9095/</code>.</p>
 
 <p>The following example shows an excerpt of metrics gathered for the
 <a href="architecture-services-gateway.html">gateway-service</a>.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#Kamon Metrics
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#Kamon Metrics
 # TYPE jvm_threads gauge
 jvm_threads{component="system-metrics",measure="total"} 72.0
 # TYPE jvm_memory_buffer_pool_count gauge
@@ -2614,33 +2621,33 @@ This is configured via the <a href="architecture-services-things-search.html">se
 Ditto fulfilling a certain condition.</p>
 
 <p>This would be an example search service configuration snippet for e.g. providing a metric named 
-<code class="highlighter-rouge">all_produced_and_not_installed_devices</code> defining a query on existence of a <code class="highlighter-rouge">production-date</code> and absence of 
-an <code class="highlighter-rouge">installation-date</code> attribute:</p>
-<pre><code class="language-hocon">ditto {
-  search {
-    operator-metrics {
-      enabled = true
-      scrape-interval = 15m
-      custom-metrics {
-        all_produced_and_not_installed_devices {
-          scrape-interval = 5m # overwrite scrape interval, run each 5 minutes
-          namespaces = [
-            "org.eclipse.ditto.smokedetectors"
-            "org.eclipse.ditto.cameras"
-          ]
-          filter = "and(exists(attributes/production-date),not(exists(attributes/installation-date)))"
-          tags {
-            company = "acme-corp"
-          }
-        }
-      }
-    }
-  }
-}
-</code></pre>
+<code class="language-plaintext highlighter-rouge">all_produced_and_not_installed_devices</code> defining a query on existence of a <code class="language-plaintext highlighter-rouge">production-date</code> and absence of 
+an <code class="language-plaintext highlighter-rouge">installation-date</code> attribute:</p>
+<div class="language-hocon highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nl">ditto</span><span class="w"> </span><span class="p">{</span><span class="w">
+  </span><span class="nl">search</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">operator-metrics</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">enabled</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="kc">true</span><span class="w">
+      </span><span class="nl">scrape-interval</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">15</span><span class="l">m</span><span class="w">
+      </span><span class="nl">custom-metrics</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">all_produced_and_not_installed_devices</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nl">scrape-interval</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">5</span><span class="l">m</span><span class="w"> </span><span class="c1"># overwrite scrape interval, run each 5 minutes</span><span class="w">
+          </span><span class="nl">namespaces</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="p">[</span><span class="w">
+            </span><span class="s2">"org.eclipse.ditto.smokedetectors"</span><span class="w">
+            </span><span class="s2">"org.eclipse.ditto.cameras"</span><span class="w">
+          </span><span class="p">]</span><span class="w">
+          </span><span class="nl">filter</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s2">"and(exists(attributes/production-date),not(exists(attributes/installation-date)))"</span><span class="w">
+          </span><span class="nl">tags</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="nl">company</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s2">"acme-corp"</span><span class="w">
+          </span><span class="p">}</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
 
 <p>In order to add custom metrics via System properties, the following example shows how the above metric can be configured:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>-Dditto.search.operator-metrics.custom-metrics.all_produced_and_not_installed_devices.enabled=true
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>-Dditto.search.operator-metrics.custom-metrics.all_produced_and_not_installed_devices.enabled=true
 -Dditto.search.operator-metrics.custom-metrics.all_produced_and_not_installed_devices.scrape-interval=5m
 -Dditto.search.operator-metrics.custom-metrics.all_produced_and_not_installed_devices.namespaces.0=org.eclipse.ditto.smokedetectors
 -Dditto.search.operator-metrics.custom-metrics.all_produced_and_not_installed_devices.namespaces.1=org.eclipse.ditto.cameras
@@ -2648,11 +2655,11 @@ an <code class="highlighter-rouge">installation-date</code> attribute:</p>
 -Dditto.search.operator-metrics.custom-metrics.all_produced_and_not_installed_devices.tags.company=acme-corp
 </code></pre></div></div>
 
-<p>Ditto will perform a <a href="basic-search.html#search-count-queries">count things operation</a> each <code class="highlighter-rouge">5m</code> (5 minutes), providing
-a gauge named <code class="highlighter-rouge">all_produced_and_not_installed_devices</code> with the count of the query, adding the tag <code class="highlighter-rouge">company="acme-corp"</code>.</p>
+<p>Ditto will perform a <a href="basic-search.html#search-count-queries">count things operation</a> each <code class="language-plaintext highlighter-rouge">5m</code> (5 minutes), providing
+a gauge named <code class="language-plaintext highlighter-rouge">all_produced_and_not_installed_devices</code> with the count of the query, adding the tag <code class="language-plaintext highlighter-rouge">company="acme-corp"</code>.</p>
 
 <p>In Prometheus format this would look like:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>all_produced_and_not_installed_devices{company="acme-corp"} 42.0
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>all_produced_and_not_installed_devices{company="acme-corp"} 42.0
 </code></pre></div></div>
 
 <h2 id="tracing">Tracing</h2>
@@ -2664,17 +2671,17 @@ kamon-opentelemetry library.</p>
 
 <p>Adjust the following environment variables to configure the Ditto services to produce traces:</p>
 <ul>
-  <li><code class="highlighter-rouge">DITTO_TRACING_ENABLED</code>: determines whether tracing is enabled (default: <code class="highlighter-rouge">false</code>)</li>
-  <li><code class="highlighter-rouge">DITTO_TRACING_SAMPLER</code>: defines the used sampler
+  <li><code class="language-plaintext highlighter-rouge">DITTO_TRACING_ENABLED</code>: determines whether tracing is enabled (default: <code class="language-plaintext highlighter-rouge">false</code>)</li>
+  <li><code class="language-plaintext highlighter-rouge">DITTO_TRACING_SAMPLER</code>: defines the used sampler
     <ul>
-      <li><code class="highlighter-rouge">always</code>: report all traces</li>
-      <li><code class="highlighter-rouge">never</code>:  don’t report any trace (default)</li>
-      <li><code class="highlighter-rouge">random</code>: randomly decide using the probability defined in the <code class="highlighter-rouge">DITTO_TRACING_RANDOM_SAMPLER_PROBABILITY</code> environment variable</li>
-      <li><code class="highlighter-rouge">adaptive</code>: keeps dynamic samplers for each operation while trying to achieve a set throughput goal (<code class="highlighter-rouge">DITTO_TRACING_ADAPTIVE_SAMPLER_THROUGHPUT</code>)</li>
+      <li><code class="language-plaintext highlighter-rouge">always</code>: report all traces</li>
+      <li><code class="language-plaintext highlighter-rouge">never</code>:  don’t report any trace (default)</li>
+      <li><code class="language-plaintext highlighter-rouge">random</code>: randomly decide using the probability defined in the <code class="language-plaintext highlighter-rouge">DITTO_TRACING_RANDOM_SAMPLER_PROBABILITY</code> environment variable</li>
+      <li><code class="language-plaintext highlighter-rouge">adaptive</code>: keeps dynamic samplers for each operation while trying to achieve a set throughput goal (<code class="language-plaintext highlighter-rouge">DITTO_TRACING_ADAPTIVE_SAMPLER_THROUGHPUT</code>)</li>
     </ul>
   </li>
-  <li><code class="highlighter-rouge">DITTO_TRACING_OTEL_TRACE_REPORTER_ENABLED</code>: whether reporting traces via the OLTP endpoint should be activated (default: <code class="highlighter-rouge">false</code>)</li>
-  <li><code class="highlighter-rouge">OTEL_EXPORTER_OTLP_ENDPOINT</code>: the OTLP endpoint where to report the gathered traces (default: <code class="highlighter-rouge">http://localhost:4317</code>)</li>
+  <li><code class="language-plaintext highlighter-rouge">DITTO_TRACING_OTEL_TRACE_REPORTER_ENABLED</code>: whether reporting traces via the OLTP endpoint should be activated (default: <code class="language-plaintext highlighter-rouge">false</code>)</li>
+  <li><code class="language-plaintext highlighter-rouge">OTEL_EXPORTER_OTLP_ENDPOINT</code>: the OTLP endpoint where to report the gathered traces (default: <code class="language-plaintext highlighter-rouge">http://localhost:4317</code>)</li>
 </ul>
 
 <h2 id="devops-commands">DevOps commands</h2>
@@ -2693,11 +2700,11 @@ kamon-opentelemetry library.</p>
 
 <p>Used for authenticating the following endpoints:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/devops
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/devops
 /api/2/connections
 </code></pre></div></div>
 
-<div class="alert alert-info" role="alert"><i class="fa fa-info-circle"></i> <b>Note:</b> The default devops credentials are username: <code class="highlighter-rouge">devops</code>, password: <code class="highlighter-rouge">foobar</code>. The password can be changed by setting the environment variable <code class="highlighter-rouge">DEVOPS_PASSWORD</code> in the gateway service.</div>
+<div class="alert alert-info" role="alert"><i class="fa fa-info-circle"></i> <b>Note:</b> The default devops credentials are username: <code class="language-plaintext highlighter-rouge">devops</code>, password: <code class="language-plaintext highlighter-rouge">foobar</code>. The password can be changed by setting the environment variable <code class="language-plaintext highlighter-rouge">DEVOPS_PASSWORD</code> in the gateway service.</div>
 
 <h3 id="dynamically-adjust-log-levels">Dynamically adjust log levels</h3>
 
@@ -2707,39 +2714,39 @@ since the cause of the problem could be lost on service restart.</p>
 <h4 id="retrieve-all-log-levels">Retrieve all log levels</h4>
 
 <p>Example for retrieving all currently configured log levels:<br />
-<code class="highlighter-rouge">GET /devops/logging</code></p>
+<code class="language-plaintext highlighter-rouge">GET /devops/logging</code></p>
 
 <p>Response:</p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-    </span><span class="s2">"gateway"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"10.0.0.1"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"devops.responses:retrieveLoggerConfig"</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="mi">200</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"serviceName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"gateway"</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"instance"</span><span class="p">:</span><span class="w"> </span><span class="s2">"10.0.0.1"</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"loggerConfigs"</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="w">
-                </span><span class="s2">"level"</span><span class="p">:</span><span class="w"> </span><span class="s2">"info"</span><span class="p">,</span><span class="w">
-                </span><span class="s2">"logger"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ROOT"</span><span class="w">
+    </span><span class="nl">"gateway"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"10.0.0.1"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"devops.responses:retrieveLoggerConfig"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"status"</span><span class="p">:</span><span class="w"> </span><span class="mi">200</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"serviceName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"gateway"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"instance"</span><span class="p">:</span><span class="w"> </span><span class="s2">"10.0.0.1"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"loggerConfigs"</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="w">
+                </span><span class="nl">"level"</span><span class="p">:</span><span class="w"> </span><span class="s2">"info"</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"logger"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ROOT"</span><span class="w">
             </span><span class="p">},</span><span class="w"> </span><span class="p">{</span><span class="w">
-                </span><span class="s2">"level"</span><span class="p">:</span><span class="w"> </span><span class="s2">"info"</span><span class="p">,</span><span class="w">
-                </span><span class="s2">"logger"</span><span class="p">:</span><span class="w"> </span><span class="s2">"org.eclipse.ditto"</span><span class="w">
+                </span><span class="nl">"level"</span><span class="p">:</span><span class="w"> </span><span class="s2">"info"</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"logger"</span><span class="p">:</span><span class="w"> </span><span class="s2">"org.eclipse.ditto"</span><span class="w">
             </span><span class="p">},</span><span class="w"> </span><span class="p">{</span><span class="w">
-                </span><span class="s2">"level"</span><span class="p">:</span><span class="w"> </span><span class="s2">"warn"</span><span class="p">,</span><span class="w">
-                </span><span class="s2">"logger"</span><span class="p">:</span><span class="w"> </span><span class="s2">"org.mongodb.driver"</span><span class="w">
+                </span><span class="nl">"level"</span><span class="p">:</span><span class="w"> </span><span class="s2">"warn"</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"logger"</span><span class="p">:</span><span class="w"> </span><span class="s2">"org.mongodb.driver"</span><span class="w">
             </span><span class="p">}]</span><span class="w">
         </span><span class="p">}</span><span class="w">
     </span><span class="p">},</span><span class="w">
-    </span><span class="s2">"things-search"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"things-search"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
         </span><span class="err">...</span><span class="w">
     </span><span class="p">},</span><span class="w">
-    </span><span class="s2">"policies"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"policies"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
         </span><span class="err">...</span><span class="w">
     </span><span class="p">},</span><span class="w">
-    </span><span class="s2">"things"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"things"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
         </span><span class="err">...</span><span class="w">
     </span><span class="p">},</span><span class="w">
-    </span><span class="s2">"connectivity"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"connectivity"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
         </span><span class="err">...</span><span class="w">
     </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
@@ -2747,37 +2754,37 @@ since the cause of the problem could be lost on service restart.</p>
 
 <h4 id="change-a-specific-log-level-for-all-services">Change a specific log level for all services</h4>
 
-<p>Example request payload to change the log level of logger <code class="highlighter-rouge">org.eclipse.ditto</code> in all services to <code class="highlighter-rouge">DEBUG</code>:<br />
-<code class="highlighter-rouge">PUT /devops/logging</code></p>
+<p>Example request payload to change the log level of logger <code class="language-plaintext highlighter-rouge">org.eclipse.ditto</code> in all services to <code class="language-plaintext highlighter-rouge">DEBUG</code>:<br />
+<code class="language-plaintext highlighter-rouge">PUT /devops/logging</code></p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-    </span><span class="s2">"logger"</span><span class="p">:</span><span class="w"> </span><span class="s2">"org.eclipse.ditto"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"level"</span><span class="p">:</span><span class="w"> </span><span class="s2">"debug"</span><span class="w">
+    </span><span class="nl">"logger"</span><span class="p">:</span><span class="w"> </span><span class="s2">"org.eclipse.ditto"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"level"</span><span class="p">:</span><span class="w"> </span><span class="s2">"debug"</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
 <h4 id="retrieve-log-levels-of-a-service">Retrieve log levels of a service</h4>
 
 <p>Example response for retrieving all currently configured log levels of gateways services:<br />
-<code class="highlighter-rouge">GET /devops/logging/gateway</code></p>
+<code class="language-plaintext highlighter-rouge">GET /devops/logging/gateway</code></p>
 
 <p>Response:</p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-    </span><span class="s2">"1"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"devops.responses:retrieveLoggerConfig"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="mi">200</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"serviceName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"gateway"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"instance"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"loggerConfigs"</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="w">
-            </span><span class="s2">"level"</span><span class="p">:</span><span class="w"> </span><span class="s2">"info"</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"logger"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ROOT"</span><span class="w">
+    </span><span class="nl">"1"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"devops.responses:retrieveLoggerConfig"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"status"</span><span class="p">:</span><span class="w"> </span><span class="mi">200</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"serviceName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"gateway"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"instance"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"loggerConfigs"</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="w">
+            </span><span class="nl">"level"</span><span class="p">:</span><span class="w"> </span><span class="s2">"info"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"logger"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ROOT"</span><span class="w">
         </span><span class="p">},</span><span class="w"> </span><span class="p">{</span><span class="w">
-            </span><span class="s2">"level"</span><span class="p">:</span><span class="w"> </span><span class="s2">"info"</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"logger"</span><span class="p">:</span><span class="w"> </span><span class="s2">"org.eclipse.ditto"</span><span class="w">
+            </span><span class="nl">"level"</span><span class="p">:</span><span class="w"> </span><span class="s2">"info"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"logger"</span><span class="p">:</span><span class="w"> </span><span class="s2">"org.eclipse.ditto"</span><span class="w">
         </span><span class="p">},</span><span class="w"> </span><span class="p">{</span><span class="w">
-            </span><span class="s2">"level"</span><span class="p">:</span><span class="w"> </span><span class="s2">"warn"</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"logger"</span><span class="p">:</span><span class="w"> </span><span class="s2">"org.mongodb.driver"</span><span class="w">
+            </span><span class="nl">"level"</span><span class="p">:</span><span class="w"> </span><span class="s2">"warn"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"logger"</span><span class="p">:</span><span class="w"> </span><span class="s2">"org.mongodb.driver"</span><span class="w">
         </span><span class="p">}]</span><span class="w">
     </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
@@ -2785,68 +2792,68 @@ since the cause of the problem could be lost on service restart.</p>
 
 <h4 id="change-a-specific-log-level-for-one-service">Change a specific log level for one service</h4>
 
-<p>Example request payload to change the log level of logger <code class="highlighter-rouge">org.eclipse.ditto</code> in all instances of gateway-service to 
-<code class="highlighter-rouge">DEBUG</code>:</p>
+<p>Example request payload to change the log level of logger <code class="language-plaintext highlighter-rouge">org.eclipse.ditto</code> in all instances of gateway-service to 
+<code class="language-plaintext highlighter-rouge">DEBUG</code>:</p>
 
-<p><code class="highlighter-rouge">PUT /devops/logging/gateway</code></p>
+<p><code class="language-plaintext highlighter-rouge">PUT /devops/logging/gateway</code></p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-    </span><span class="s2">"logger"</span><span class="p">:</span><span class="w"> </span><span class="s2">"org.eclipse.ditto"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"level"</span><span class="p">:</span><span class="w"> </span><span class="s2">"debug"</span><span class="w">
+    </span><span class="nl">"logger"</span><span class="p">:</span><span class="w"> </span><span class="s2">"org.eclipse.ditto"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"level"</span><span class="p">:</span><span class="w"> </span><span class="s2">"debug"</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
 <h3 id="dynamically-retrieve-configurations">Dynamically retrieve configurations</h3>
 
 <p>Runtime configurations of services are available for the Ditto operator at
-<code class="highlighter-rouge">/devops/config/</code> with optional restrictions by service name, instance ID and configuration path.
+<code class="language-plaintext highlighter-rouge">/devops/config/</code> with optional restrictions by service name, instance ID and configuration path.
 The entire runtime configuration of a service may be dozens of kilobytes big. If it exceeds the cluster message size
-of 250 kB, then it can only be read piece by piece via the <code class="highlighter-rouge">path</code> query parameter.</p>
+of 250 kB, then it can only be read piece by piece via the <code class="language-plaintext highlighter-rouge">path</code> query parameter.</p>
 
 <h4 id="retrieve-all-service-configurations">Retrieve all service configurations</h4>
 
-<p>Retrieve the configuration at the path <code class="highlighter-rouge">ditto.info</code> thus:</p>
+<p>Retrieve the configuration at the path <code class="language-plaintext highlighter-rouge">ditto.info</code> thus:</p>
 
-<p><code class="highlighter-rouge">GET /devops/config?path=ditto.info</code></p>
+<p><code class="language-plaintext highlighter-rouge">GET /devops/config?path=ditto.info</code></p>
 
-<p>It is recommended to not omit the query parameter <code class="highlighter-rouge">path</code>. Otherwise, the full configurations of all services are
+<p>It is recommended to not omit the query parameter <code class="language-plaintext highlighter-rouge">path</code>. Otherwise, the full configurations of all services are
 aggregated in the response, which can become megabytes big.</p>
 
-<p>The path <code class="highlighter-rouge">ditto.info</code> points to information on service name, service instance index, JVM arguments and environment
+<p>The path <code class="language-plaintext highlighter-rouge">ditto.info</code> points to information on service name, service instance index, JVM arguments and environment
 variables. Response example:</p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"gateway"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"10.0.0.1"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"common.responses:retrieveConfig"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="mi">200</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"config"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"env"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-          </span><span class="s2">"PATH"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/usr/games:/usr/local/games"</span><span class="w">
+  </span><span class="nl">"gateway"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"10.0.0.1"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"common.responses:retrieveConfig"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"status"</span><span class="p">:</span><span class="w"> </span><span class="mi">200</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"config"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"env"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"PATH"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/usr/games:/usr/local/games"</span><span class="w">
         </span><span class="p">},</span><span class="w">
-        </span><span class="s2">"service"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-          </span><span class="s2">"instance-id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"10.0.0.1"</span><span class="p">,</span><span class="w">
-          </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"gateway"</span><span class="w">
+        </span><span class="nl">"service"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"instance-id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"10.0.0.1"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"gateway"</span><span class="w">
         </span><span class="p">},</span><span class="w">
-        </span><span class="s2">"vm-args"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="nl">"vm-args"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
           </span><span class="s2">"-Dfile.encoding=UTF-8"</span><span class="w">
         </span><span class="p">]</span><span class="w">
       </span><span class="p">}</span><span class="w">
     </span><span class="p">}</span><span class="w">
   </span><span class="p">},</span><span class="w">
-  </span><span class="s2">"connectivity"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"10.0.0.1"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"common.responses:retrieveConfig"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="mi">200</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"config"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"env"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-          </span><span class="s2">"CONNECTIVITY_FLUSH_PENDING_RESPONSES_TIMEOUT"</span><span class="p">:</span><span class="w"> </span><span class="s2">"3d"</span><span class="w">
+  </span><span class="nl">"connectivity"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"10.0.0.1"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"common.responses:retrieveConfig"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"status"</span><span class="p">:</span><span class="w"> </span><span class="mi">200</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"config"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"env"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"CONNECTIVITY_FLUSH_PENDING_RESPONSES_TIMEOUT"</span><span class="p">:</span><span class="w"> </span><span class="s2">"3d"</span><span class="w">
         </span><span class="p">},</span><span class="w">
-        </span><span class="s2">"service"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-          </span><span class="s2">"instance-id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"10.0.0.1"</span><span class="p">,</span><span class="w">
-          </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"connectivity"</span><span class="w">
+        </span><span class="nl">"service"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"instance-id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"10.0.0.1"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"connectivity"</span><span class="w">
         </span><span class="p">},</span><span class="w">
-        </span><span class="s2">"vm-args"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="nl">"vm-args"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
           </span><span class="s2">"-Dditto.connectivity.connection.snapshot.threshold=2"</span><span class="w">
         </span><span class="p">]</span><span class="w">
       </span><span class="p">}</span><span class="w">
@@ -2859,26 +2866,26 @@ variables. Response example:</p>
 
 <p>Retrieving the configuration of a specific service instance is much faster
 because the response is not aggregated from an unknown number of respondents
-over the duration given in the query parameter <code class="highlighter-rouge">timeout</code>.</p>
+over the duration given in the query parameter <code class="language-plaintext highlighter-rouge">timeout</code>.</p>
 
-<p>To retrieve <code class="highlighter-rouge">ditto</code> configuration from Gateway instance <code class="highlighter-rouge">1</code>:</p>
+<p>To retrieve <code class="language-plaintext highlighter-rouge">ditto</code> configuration from Gateway instance <code class="language-plaintext highlighter-rouge">1</code>:</p>
 
-<p><code class="highlighter-rouge">GET /devops/config/gateway/1?path=ditto</code></p>
+<p><code class="language-plaintext highlighter-rouge">GET /devops/config/gateway/1?path=ditto</code></p>
 
 <p>Response example:</p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"common.responses:retrieveConfig"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="mi">200</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"config"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"cluster"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"number-of-shards"</span><span class="p">:</span><span class="w"> </span><span class="mi">20</span><span class="w">
+  </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"common.responses:retrieveConfig"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"status"</span><span class="p">:</span><span class="w"> </span><span class="mi">200</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"config"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"cluster"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"number-of-shards"</span><span class="p">:</span><span class="w"> </span><span class="mi">20</span><span class="w">
     </span><span class="p">},</span><span class="w">
-    </span><span class="s2">"gateway"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"authentication"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"devops"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-          </span><span class="s2">"password"</span><span class="p">:</span><span class="w"> </span><span class="s2">"foobar"</span><span class="p">,</span><span class="w">
-          </span><span class="s2">"secured"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+    </span><span class="nl">"gateway"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"authentication"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"devops"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"password"</span><span class="p">:</span><span class="w"> </span><span class="s2">"foobar"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"secured"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
         </span><span class="p">}</span><span class="w">
       </span><span class="p">}</span><span class="w">
     </span><span class="p">}</span><span class="w">
@@ -2901,8 +2908,8 @@ To have control over this there are two headers which can be used for piggyback 
     <table>
       <tbody>
         <tr>
-          <td><code class="highlighter-rouge">"is-group-topic"</code>: <code class="highlighter-rouge">true</code></td>
-          <td><code class="highlighter-rouge">false</code> - Default: <code class="highlighter-rouge">false</code></td>
+          <td><code class="language-plaintext highlighter-rouge">"is-group-topic"</code>: <code class="language-plaintext highlighter-rouge">true</code></td>
+          <td><code class="language-plaintext highlighter-rouge">false</code> - Default: <code class="language-plaintext highlighter-rouge">false</code></td>
         </tr>
       </tbody>
     </table>
@@ -2911,32 +2918,32 @@ To have control over this there are two headers which can be used for piggyback 
     <table>
       <tbody>
         <tr>
-          <td><code class="highlighter-rouge">"aggregate"</code>: <code class="highlighter-rouge">true</code></td>
-          <td><code class="highlighter-rouge">false</code> - Default: <code class="highlighter-rouge">true</code></td>
+          <td><code class="language-plaintext highlighter-rouge">"aggregate"</code>: <code class="language-plaintext highlighter-rouge">true</code></td>
+          <td><code class="language-plaintext highlighter-rouge">false</code> - Default: <code class="language-plaintext highlighter-rouge">true</code></td>
         </tr>
       </tbody>
     </table>
   </li>
 </ul>
 
-<p>The <code class="highlighter-rouge">"is-group-topic"</code> header indicates if the piggyback command should be forwarded to only one actor or all actors of a group.
-The <code class="highlighter-rouge">"aggregate"</code> header indicates if the responses should be aggregated or not. 
-If <code class="highlighter-rouge">false</code> the first response is sent back and all other responses are ignored (if <code class="highlighter-rouge">is-group-topic</code> was <code class="highlighter-rouge">false</code>).</p>
+<p>The <code class="language-plaintext highlighter-rouge">"is-group-topic"</code> header indicates if the piggyback command should be forwarded to only one actor or all actors of a group.
+The <code class="language-plaintext highlighter-rouge">"aggregate"</code> header indicates if the responses should be aggregated or not. 
+If <code class="language-plaintext highlighter-rouge">false</code> the first response is sent back and all other responses are ignored (if <code class="language-plaintext highlighter-rouge">is-group-topic</code> was <code class="language-plaintext highlighter-rouge">false</code>).</p>
 
-<p>Additionally, the <code class="highlighter-rouge">"ditto-sudo"</code> header can be used in order to bypass any enforcement/authorization the service performs
-when processing commands. By explicitly setting this header to <code class="highlighter-rouge">true</code>, you bypass enforcement.</p>
+<p>Additionally, the <code class="language-plaintext highlighter-rouge">"ditto-sudo"</code> header can be used in order to bypass any enforcement/authorization the service performs
+when processing commands. By explicitly setting this header to <code class="language-plaintext highlighter-rouge">true</code>, you bypass enforcement.</p>
 
 <p>Example:</p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"targetActorSelection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/system/sharding/connection"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"aggregate"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"is-group-topic"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"ditto-sudo"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+  </span><span class="nl">"targetActorSelection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/system/sharding/connection"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"aggregate"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"is-group-topic"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"ditto-sudo"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
   </span><span class="p">},</span><span class="w">
-  </span><span class="s2">"piggybackCommand"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"connectivity.commands:createConnection"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"piggybackCommand"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"connectivity.commands:createConnection"</span><span class="p">,</span><span class="w">
       </span><span class="err">...</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
@@ -2952,22 +2959,22 @@ when processing commands. By explicitly setting this header to <code class="high
 may be sent via piggyback - however be aware that the internal JSON representation of the policy commands must be used 
 and not the <a href="protocol-specification-policies.html">Ditto Protocol</a>.</p>
 
-<p>The internal JSON representation can be found in the code, e.g. defined in the static <code class="highlighter-rouge">fromJson</code> methods of the commands.</p>
+<p>The internal JSON representation can be found in the code, e.g. defined in the static <code class="language-plaintext highlighter-rouge">fromJson</code> methods of the commands.</p>
 
 <p>Example piggyback for 
 <a href="https://github.com/eclipse-ditto/ditto/blob/master/policies/model/src/main/java/org/eclipse/ditto/policies/model/signals/commands/modify/CreatePolicy.java">CreatePolicy</a>:</p>
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"targetActorSelection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/system/sharding/policy"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"aggregate"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"is-group-topic"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"ditto-sudo"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+  </span><span class="nl">"targetActorSelection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/system/sharding/policy"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"aggregate"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"is-group-topic"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"ditto-sudo"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
   </span><span class="p">},</span><span class="w">
-  </span><span class="s2">"piggybackCommand"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"policies.commands:createPolicy"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"policy"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"policyId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;insert-the-policy-id-to-create-here&gt;"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"entries"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+  </span><span class="nl">"piggybackCommand"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"policies.commands:createPolicy"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"policy"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"policyId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;insert-the-policy-id-to-create-here&gt;"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"entries"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
         </span><span class="err">...</span><span class="w">
       </span><span class="p">}</span><span class="w">
     </span><span class="p">}</span><span class="w">
@@ -2978,15 +2985,15 @@ and not the <a href="protocol-specification-policies.html">Ditto Protocol</a>.</
 <p>Example piggyback for 
 <a href="https://github.com/eclipse-ditto/ditto/blob/master/policies/model/src/main/java/org/eclipse/ditto/policies/model/signals/commands/query/RetrievePolicy.java">RetrievePolicy</a>:</p>
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"targetActorSelection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/system/sharding/policy"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"aggregate"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"is-group-topic"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"ditto-sudo"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+  </span><span class="nl">"targetActorSelection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/system/sharding/policy"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"aggregate"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"is-group-topic"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"ditto-sudo"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
   </span><span class="p">},</span><span class="w">
-  </span><span class="s2">"piggybackCommand"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"policies.commands:retrievePolicy"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"policyId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;insert-the-policy-id-to-retrieve-here&gt;"</span><span class="w">
+  </span><span class="nl">"piggybackCommand"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"policies.commands:retrievePolicy"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"policyId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;insert-the-policy-id-to-retrieve-here&gt;"</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
@@ -3001,22 +3008,22 @@ and not the <a href="protocol-specification-policies.html">Ditto Protocol</a>.</
 may be sent via piggyback - however be aware that the internal JSON representation of the thing commands must be used
 and not the <a href="protocol-specification-things.html">Ditto Protocol</a>.</p>
 
-<p>The internal JSON representation can be found in the code, e.g. defined in the static <code class="highlighter-rouge">fromJson</code> methods of the commands.</p>
+<p>The internal JSON representation can be found in the code, e.g. defined in the static <code class="language-plaintext highlighter-rouge">fromJson</code> methods of the commands.</p>
 
 <p>Example piggyback for
 <a href="https://github.com/eclipse-ditto/ditto/blob/master/things/model/src/main/java/org/eclipse/ditto/things/model/signals/commands/modify/CreateThing.java">CreateThing</a>:</p>
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"targetActorSelection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/system/sharding/thing"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"aggregate"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"is-group-topic"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"ditto-sudo"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+  </span><span class="nl">"targetActorSelection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/system/sharding/thing"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"aggregate"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"is-group-topic"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"ditto-sudo"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
   </span><span class="p">},</span><span class="w">
-  </span><span class="s2">"piggybackCommand"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"things.commands:createThing"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"thing"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"thingId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;insert-the-thing-id-to-create-here&gt;"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"policyId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;insert-the-policy-id-to-use-here&gt;"</span><span class="w">
+  </span><span class="nl">"piggybackCommand"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"things.commands:createThing"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"thing"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"thingId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;insert-the-thing-id-to-create-here&gt;"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"policyId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;insert-the-policy-id-to-use-here&gt;"</span><span class="w">
     </span><span class="p">}</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
@@ -3025,15 +3032,15 @@ and not the <a href="protocol-specification-things.html">Ditto Protocol</a>.</p>
 <p>Example piggyback for
 <a href="https://github.com/eclipse-ditto/ditto/blob/master/things/model/src/main/java/org/eclipse/ditto/things/model/signals/commands/query/RetrieveThing.java">RetrieveThing</a>:</p>
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"targetActorSelection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/system/sharding/thing"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"aggregate"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"is-group-topic"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"ditto-sudo"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+  </span><span class="nl">"targetActorSelection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/system/sharding/thing"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"aggregate"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"is-group-topic"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"ditto-sudo"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
   </span><span class="p">},</span><span class="w">
-  </span><span class="s2">"piggybackCommand"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"things.commands:retrieveThing"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"thingId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;insert-the-thing-id-to-retrieve-here&gt;"</span><span class="w">
+  </span><span class="nl">"piggybackCommand"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"things.commands:retrieveThing"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"thingId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;insert-the-thing-id-to-retrieve-here&gt;"</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
@@ -3057,69 +3064,69 @@ and not the <a href="protocol-specification-things.html">Ditto Protocol</a>.</p>
 </ul>
 
 <p>And has the following config parameters:</p>
-<pre><code class="language-hocon">cleanup {
-  # enabled configures whether background cleanup is enabled or not
-  # If enabled, stale "snapshot" and "journal" entries will be cleaned up from the MongoDB by a background process
-  enabled = true
-  enabled = ${?CLEANUP_ENABLED}
+<div class="language-hocon highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nl">cleanup</span><span class="w"> </span><span class="p">{</span><span class="w">
+  </span><span class="c1"># enabled configures whether background cleanup is enabled or not</span><span class="w">
+  </span><span class="c1"># If enabled, stale "snapshot" and "journal" entries will be cleaned up from the MongoDB by a background process</span><span class="w">
+  </span><span class="nl">enabled</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="kc">true</span><span class="w">
+  </span><span class="nl">enabled</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="si">${?</span><span class="nv">CLEANUP_ENABLED</span><span class="si">}</span><span class="w">
 
-  # history-retention-duration configures the duration of how long to "keep" events and snapshots before being
-  # allowed to remove them in scope of cleanup.
-  # If this e.g. is set to 30d - then effectively an event history of 30 days would be available via the read
-  # journal.
-  history-retention-duration = 3d
-  history-retention-duration = ${?CLEANUP_HISTORY_RETENTION_DURATION}
+  </span><span class="c1"># history-retention-duration configures the duration of how long to "keep" events and snapshots before being</span><span class="w">
+  </span><span class="c1"># allowed to remove them in scope of cleanup.</span><span class="w">
+  </span><span class="c1"># If this e.g. is set to 30d - then effectively an event history of 30 days would be available via the read</span><span class="w">
+  </span><span class="c1"># journal.</span><span class="w">
+  </span><span class="nl">history-retention-duration</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">3</span><span class="l">d</span><span class="w">
+  </span><span class="nl">history-retention-duration</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="si">${?</span><span class="nv">CLEANUP_HISTORY_RETENTION_DURATION</span><span class="si">}</span><span class="w">
 
-  # quiet-period defines how long to stay in a state where the background cleanup is not yet started
-  # Applies after:
-  # - starting the service
-  # - each "completed" background cleanup run (all entities were cleaned up)
-  quiet-period = 5m
-  quiet-period = ${?CLEANUP_QUIET_PERIOD}
+  </span><span class="c1"># quiet-period defines how long to stay in a state where the background cleanup is not yet started</span><span class="w">
+  </span><span class="c1"># Applies after:</span><span class="w">
+  </span><span class="c1"># - starting the service</span><span class="w">
+  </span><span class="c1"># - each "completed" background cleanup run (all entities were cleaned up)</span><span class="w">
+  </span><span class="nl">quiet-period</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">5</span><span class="l">m</span><span class="w">
+  </span><span class="nl">quiet-period</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="si">${?</span><span class="nv">CLEANUP_QUIET_PERIOD</span><span class="si">}</span><span class="w">
 
-  # interval configures how often a "credit decision" is made.
-  # The background cleanup works with a credit system and does only generate new "cleanup credits" if the MongoDB
-  # currently has capacity to do cleanups.
-  interval = 3s
-  interval = ${?CLEANUP_INTERVAL}
+  </span><span class="c1"># interval configures how often a "credit decision" is made.</span><span class="w">
+  </span><span class="c1"># The background cleanup works with a credit system and does only generate new "cleanup credits" if the MongoDB</span><span class="w">
+  </span><span class="c1"># currently has capacity to do cleanups.</span><span class="w">
+  </span><span class="nl">interval</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">3</span><span class="l">s</span><span class="w">
+  </span><span class="nl">interval</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="si">${?</span><span class="nv">CLEANUP_INTERVAL</span><span class="si">}</span><span class="w">
 
-  # timer-threshold configures the maximum database latency to give out credit for cleanup actions.
-  # If write operations to the MongoDB within the last `interval` had a `max` value greater to the configured
-  # threshold, no new cleanup credits will be issued for the next `interval`.
-  # Which throttles cleanup when MongoDB is currently under heavy (write) load.
-  timer-threshold = 150ms
-  timer-threshold = ${?CLEANUP_TIMER_THRESHOLD}
+  </span><span class="c1"># timer-threshold configures the maximum database latency to give out credit for cleanup actions.</span><span class="w">
+  </span><span class="c1"># If write operations to the MongoDB within the last `interval` had a `max` value greater to the configured</span><span class="w">
+  </span><span class="c1"># threshold, no new cleanup credits will be issued for the next `interval`.</span><span class="w">
+  </span><span class="c1"># Which throttles cleanup when MongoDB is currently under heavy (write) load.</span><span class="w">
+  </span><span class="nl">timer-threshold</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">150</span><span class="l">ms</span><span class="w">
+  </span><span class="nl">timer-threshold</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="si">${?</span><span class="nv">CLEANUP_TIMER_THRESHOLD</span><span class="si">}</span><span class="w">
 
-  # credits-per-batch configures how many "cleanup credits" should be generated per `interval` as long as the
-  # write operations to the MongoDB are less than the configured `timer-threshold`.
-  # Limits the rate of cleanup actions to this many per credit decision interval.
-  # One credit means that the "journal" and "snapshot" entries of one entity are cleaned up each `interval`.
-  credits-per-batch = 3
-  credits-per-batch = ${?CLEANUP_CREDITS_PER_BATCH}
+  </span><span class="c1"># credits-per-batch configures how many "cleanup credits" should be generated per `interval` as long as the</span><span class="w">
+  </span><span class="c1"># write operations to the MongoDB are less than the configured `timer-threshold`.</span><span class="w">
+  </span><span class="c1"># Limits the rate of cleanup actions to this many per credit decision interval.</span><span class="w">
+  </span><span class="c1"># One credit means that the "journal" and "snapshot" entries of one entity are cleaned up each `interval`.</span><span class="w">
+  </span><span class="nl">credits-per-batch</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">3</span><span class="w">
+  </span><span class="nl">credits-per-batch</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="si">${?</span><span class="nv">CLEANUP_CREDITS_PER_BATCH</span><span class="si">}</span><span class="w">
 
-  # reads-per-query configures the number of snapshots to scan per MongoDB query.
-  # Configuring this to high values will reduce the need to query MongoDB too often - it should however be aligned
-  # with the amount of "cleanup credits" issued per `interval` - in order to avoid long running queries.
-  reads-per-query = 100
-  reads-per-query = ${?CLEANUP_READS_PER_QUERY}
+  </span><span class="c1"># reads-per-query configures the number of snapshots to scan per MongoDB query.</span><span class="w">
+  </span><span class="c1"># Configuring this to high values will reduce the need to query MongoDB too often - it should however be aligned</span><span class="w">
+  </span><span class="c1"># with the amount of "cleanup credits" issued per `interval` - in order to avoid long running queries.</span><span class="w">
+  </span><span class="nl">reads-per-query</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">100</span><span class="w">
+  </span><span class="nl">reads-per-query</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="si">${?</span><span class="nv">CLEANUP_READS_PER_QUERY</span><span class="si">}</span><span class="w">
 
-  # writes-per-credit configures the number of documents to delete for each credit.
-  # If for example one entity would have 1000 journal entries to cleanup, a `writes-per-credit` of 100 would lead
-  # to 10 delete operations performed against MongoDB.
-  writes-per-credit = 100
-  writes-per-credit = ${?CLEANUP_WRITES_PER_CREDIT}
+  </span><span class="c1"># writes-per-credit configures the number of documents to delete for each credit.</span><span class="w">
+  </span><span class="c1"># If for example one entity would have 1000 journal entries to cleanup, a `writes-per-credit` of 100 would lead</span><span class="w">
+  </span><span class="c1"># to 10 delete operations performed against MongoDB.</span><span class="w">
+  </span><span class="nl">writes-per-credit</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">100</span><span class="w">
+  </span><span class="nl">writes-per-credit</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="si">${?</span><span class="nv">CLEANUP_WRITES_PER_CREDIT</span><span class="si">}</span><span class="w">
 
-  # delete-final-deleted-snapshot configures whether for a deleted entity, the final snapshot (containing the
-  # "deleted" information) should be deleted or not.
-  # If the final snapshot is not deleted, re-creating the entity will cause that the recreated entity starts with
-  # a revision number 1 higher than the previously deleted entity. If the final snapshot is deleted as well,
-  # recreation of an entity with the same ID will lead to revisionNumber=1 after its recreation.
-  delete-final-deleted-snapshot = false
-  delete-final-deleted-snapshot = ${?CLEANUP_DELETE_FINAL_DELETED_SNAPSHOT}
-}
-</code></pre>
+  </span><span class="c1"># delete-final-deleted-snapshot configures whether for a deleted entity, the final snapshot (containing the</span><span class="w">
+  </span><span class="c1"># "deleted" information) should be deleted or not.</span><span class="w">
+  </span><span class="c1"># If the final snapshot is not deleted, re-creating the entity will cause that the recreated entity starts with</span><span class="w">
+  </span><span class="c1"># a revision number 1 higher than the previously deleted entity. If the final snapshot is deleted as well,</span><span class="w">
+  </span><span class="c1"># recreation of an entity with the same ID will lead to revisionNumber=1 after its recreation.</span><span class="w">
+  </span><span class="nl">delete-final-deleted-snapshot</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="kc">false</span><span class="w">
+  </span><span class="nl">delete-final-deleted-snapshot</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="si">${?</span><span class="nv">CLEANUP_DELETE_FINAL_DELETED_SNAPSHOT</span><span class="si">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
 
-<p>By default, background cleanup is enabled for all entities and the retention duration is configured to <code class="highlighter-rouge">0d</code> (0 days), 
+<p>By default, background cleanup is enabled for all entities and the retention duration is configured to <code class="language-plaintext highlighter-rouge">0d</code> (0 days), 
 meaning that no history will be kept for a longer time.</p>
 
 <p>In order to use Ditto’s <a href="basic-history.html">history capabilities</a>, the configuration has to be adjusted accordingly.</p>
@@ -3130,20 +3137,20 @@ meaning that no history will be kept for a longer time.</p>
 The actor responds to piggyback-commands to query its state and configuration, modify its configuration, and restart the background cleanup
 process.</p>
 
-<p>Each command is sent to the actor selection <code class="highlighter-rouge">/user/&lt;SERVICE_NAME&gt;Root/persistenceCleanup</code>, where
-<code class="highlighter-rouge">SERVICE_NAME</code> is <code class="highlighter-rouge">things</code>, <code class="highlighter-rouge">policies</code> or <code class="highlighter-rouge">connectivity</code>:</p>
+<p>Each command is sent to the actor selection <code class="language-plaintext highlighter-rouge">/user/&lt;SERVICE_NAME&gt;Root/persistenceCleanup</code>, where
+<code class="language-plaintext highlighter-rouge">SERVICE_NAME</code> is <code class="language-plaintext highlighter-rouge">things</code>, <code class="language-plaintext highlighter-rouge">policies</code> or <code class="language-plaintext highlighter-rouge">connectivity</code>:</p>
 
-<p><code class="highlighter-rouge">POST /devops/piggyback/&lt;SERVICE_NAME&gt;?timeout=10s</code></p>
+<p><code class="language-plaintext highlighter-rouge">POST /devops/piggyback/&lt;SERVICE_NAME&gt;?timeout=10s</code></p>
 
 <h5 id="query-background-cleanup-coordinator-state">Query background cleanup coordinator state</h5>
 
-<p><code class="highlighter-rouge">POST /devops/piggyback/&lt;SERVICE_NAME&gt;?timeout=10s</code></p>
+<p><code class="language-plaintext highlighter-rouge">POST /devops/piggyback/&lt;SERVICE_NAME&gt;?timeout=10s</code></p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"targetActorSelection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/user/&lt;SERVICE_NAME&gt;Root/persistenceCleanup"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
-  </span><span class="s2">"piggybackCommand"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"status.commands:retrieveHealth"</span><span class="w">
+  </span><span class="nl">"targetActorSelection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/user/&lt;SERVICE_NAME&gt;Root/persistenceCleanup"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
+  </span><span class="nl">"piggybackCommand"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"status.commands:retrieveHealth"</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
@@ -3151,20 +3158,20 @@ process.</p>
 <p>The response has the following details:</p>
 
 <ul>
-  <li><code class="highlighter-rouge">state</code>: The current state of the actor.</li>
-  <li><code class="highlighter-rouge">pid</code>: The last persistence ID being cleaned up. It has the form <code class="highlighter-rouge">&lt;entity-type&gt;:&lt;entity-id&gt;</code>.</li>
+  <li><code class="language-plaintext highlighter-rouge">state</code>: The current state of the actor.</li>
+  <li><code class="language-plaintext highlighter-rouge">pid</code>: The last persistence ID being cleaned up. It has the form <code class="language-plaintext highlighter-rouge">&lt;entity-type&gt;:&lt;entity-id&gt;</code>.</li>
 </ul>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"status.responses:retrieveHealth"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="mi">200</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"statusInfo"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"UP"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"details"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+  </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"status.responses:retrieveHealth"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"status"</span><span class="p">:</span><span class="w"> </span><span class="mi">200</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"statusInfo"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"UP"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"details"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
       </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"INFO"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-          </span><span class="s2">"state"</span><span class="p">:</span><span class="w"> </span><span class="s2">"RUNNING"</span><span class="p">,</span><span class="w">
-          </span><span class="s2">"pid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"thing:org.eclipse.ditto:fancy-thing_53"</span><span class="w">
+        </span><span class="nl">"INFO"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"state"</span><span class="p">:</span><span class="w"> </span><span class="s2">"RUNNING"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"pid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"thing:org.eclipse.ditto:fancy-thing_53"</span><span class="w">
         </span><span class="p">}</span><span class="w">
       </span><span class="p">}</span><span class="w">
     </span><span class="p">]</span><span class="w">
@@ -3174,13 +3181,13 @@ process.</p>
 
 <h5 id="query-background-cleanup-coordinator-configuration">Query background cleanup coordinator configuration</h5>
 
-<p><code class="highlighter-rouge">POST /devops/piggyback/&lt;SERVICE_NAME&gt;?timeout=10s</code></p>
+<p><code class="language-plaintext highlighter-rouge">POST /devops/piggyback/&lt;SERVICE_NAME&gt;?timeout=10s</code></p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"targetActorSelection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/user/&lt;SERVICE_NAME&gt;Root/persistenceCleanup"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
-  </span><span class="s2">"piggybackCommand"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"common.commands:retrieveConfig"</span><span class="w">
+  </span><span class="nl">"targetActorSelection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/user/&lt;SERVICE_NAME&gt;Root/persistenceCleanup"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
+  </span><span class="nl">"piggybackCommand"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"common.commands:retrieveConfig"</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
@@ -3188,41 +3195,41 @@ process.</p>
 <p>Response example:</p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"common.responses:retrieveConfig"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="mi">200</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"config"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"interval"</span><span class="p">:</span><span class="w"> </span><span class="s2">"3s"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"quiet-period"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5m"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"timer-threshold"</span><span class="p">:</span><span class="w"> </span><span class="s2">"150ms"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"credits-per-batch"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"reads-per-query"</span><span class="p">:</span><span class="w"> </span><span class="mi">100</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"writes-per-credit"</span><span class="p">:</span><span class="w"> </span><span class="mi">100</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"delete-final-deleted-snapshot"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+  </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"common.responses:retrieveConfig"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"status"</span><span class="p">:</span><span class="w"> </span><span class="mi">200</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"config"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"interval"</span><span class="p">:</span><span class="w"> </span><span class="s2">"3s"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"quiet-period"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5m"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"timer-threshold"</span><span class="p">:</span><span class="w"> </span><span class="s2">"150ms"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"credits-per-batch"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"reads-per-query"</span><span class="p">:</span><span class="w"> </span><span class="mi">100</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"writes-per-credit"</span><span class="p">:</span><span class="w"> </span><span class="mi">100</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"delete-final-deleted-snapshot"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
 <h5 id="modify-background-cleanup-coordinator-configuration">Modify background cleanup coordinator configuration</h5>
 
-<p>Send a piggyback command of type <code class="highlighter-rouge">common.commands:modifyConfig</code> to change the configuration of the persistence cleanup
+<p>Send a piggyback command of type <code class="language-plaintext highlighter-rouge">common.commands:modifyConfig</code> to change the configuration of the persistence cleanup
 process. All subsequent cleanup processes will use the new configuration. The ongoing cleanup process is aborted.
 Configurations absent in the payload of the piggyback command remain unchanged.
-Set the special key <code class="highlighter-rouge">last-pid</code> to set the lower bound of PIDs to clean up in the next run.</p>
+Set the special key <code class="language-plaintext highlighter-rouge">last-pid</code> to set the lower bound of PIDs to clean up in the next run.</p>
 
-<p><code class="highlighter-rouge">POST /devops/piggyback/&lt;SERVICE_NAME&gt;?timeout=10s</code></p>
+<p><code class="language-plaintext highlighter-rouge">POST /devops/piggyback/&lt;SERVICE_NAME&gt;?timeout=10s</code></p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"targetActorSelection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/user/&lt;SERVICE_NAME&gt;Root/persistenceCleanup"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"aggregate"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"is-group-topic"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+  </span><span class="nl">"targetActorSelection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/user/&lt;SERVICE_NAME&gt;Root/persistenceCleanup"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"aggregate"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"is-group-topic"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
   </span><span class="p">},</span><span class="w">
-  </span><span class="s2">"piggybackCommand"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"common.commands:modifyConfig"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"config"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"quiet-period"</span><span class="p">:</span><span class="w"> </span><span class="s2">"240d"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"last-pid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"thing:namespace:PID-lower-bound"</span><span class="w">
+  </span><span class="nl">"piggybackCommand"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"common.commands:modifyConfig"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"config"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"quiet-period"</span><span class="p">:</span><span class="w"> </span><span class="s2">"240d"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"last-pid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"thing:namespace:PID-lower-bound"</span><span class="w">
     </span><span class="p">}</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
@@ -3230,20 +3237,20 @@ Set the special key <code class="highlighter-rouge">last-pid</code> to set the l
 
 <p>The response contains the effective configuration of the background cleanup coordinator. If the configuration in the
 piggyback command contains any error, then an error is logged and the actor’s configuration is unchanged.
-The field <code class="highlighter-rouge">last-pid</code> is not a part of the configuration.</p>
+The field <code class="language-plaintext highlighter-rouge">last-pid</code> is not a part of the configuration.</p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"common.responses:modifyConfig"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="mi">200</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"config"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"interval"</span><span class="p">:</span><span class="w"> </span><span class="s2">"3s"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"quiet-period"</span><span class="p">:</span><span class="w"> </span><span class="s2">"240d"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"timer-threshold"</span><span class="p">:</span><span class="w"> </span><span class="s2">"150ms"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"credits-per-batch"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"reads-per-query"</span><span class="p">:</span><span class="w"> </span><span class="mi">100</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"writes-per-credit"</span><span class="p">:</span><span class="w"> </span><span class="mi">100</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"delete-final-deleted-snapshot"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+  </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"common.responses:modifyConfig"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"status"</span><span class="p">:</span><span class="w"> </span><span class="mi">200</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"config"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"interval"</span><span class="p">:</span><span class="w"> </span><span class="s2">"3s"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"quiet-period"</span><span class="p">:</span><span class="w"> </span><span class="s2">"240d"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"timer-threshold"</span><span class="p">:</span><span class="w"> </span><span class="s2">"150ms"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"credits-per-batch"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"reads-per-query"</span><span class="p">:</span><span class="w"> </span><span class="mi">100</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"writes-per-credit"</span><span class="p">:</span><span class="w"> </span><span class="mi">100</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"delete-final-deleted-snapshot"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
@@ -3252,18 +3259,18 @@ The field <code class="highlighter-rouge">last-pid</code> is not a part of the c
 
 <p>Send a cleanup command by piggyback to the entity’s service and shard region to trigger removal of stale events and
 snapshots manually. Here is an example for things. Change the service name and shard region name accordingly for
-policies and connections. Typically, in a docker based environment, use <code class="highlighter-rouge">INSTANCE_INDEX=1</code>.</p>
+policies and connections. Typically, in a docker based environment, use <code class="language-plaintext highlighter-rouge">INSTANCE_INDEX=1</code>.</p>
 
-<p><code class="highlighter-rouge">POST /devops/piggyback/things/&lt;INSTANCE_INDEX&gt;?timeout=10s</code></p>
+<p><code class="language-plaintext highlighter-rouge">POST /devops/piggyback/things/&lt;INSTANCE_INDEX&gt;?timeout=10s</code></p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"targetActorSelection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/system/sharding/thing"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"aggregate"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+  </span><span class="nl">"targetActorSelection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/system/sharding/thing"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"aggregate"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
   </span><span class="p">},</span><span class="w">
-  </span><span class="s2">"piggybackCommand"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"cleanup.sudo.commands:cleanupPersistence"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"entityId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ditto:thing1"</span><span class="w">
+  </span><span class="nl">"piggybackCommand"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"cleanup.sudo.commands:cleanupPersistence"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"entityId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ditto:thing1"</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
@@ -3271,9 +3278,9 @@ policies and connections. Typically, in a docker based environment, use <code cl
 <p>Response example:</p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"cleanup.sudo.responses:cleanupPersistence"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="mi">200</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"entityId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"thing:ditto:thing1"</span><span class="w">
+  </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"cleanup.sudo.responses:cleanupPersistence"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"status"</span><span class="p">:</span><span class="w"> </span><span class="mi">200</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"entityId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"thing:ditto:thing1"</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
@@ -3283,50 +3290,50 @@ policies and connections. Typically, in a docker based environment, use <code cl
 of the search index. The actor operates in the same manner as the background cleanup coordinator and responds to
 the same commands.</p>
 
-<p><code class="highlighter-rouge">POST /devops/piggyback/search/&lt;INSTANCE_INDEX&gt;?timeout=10s</code></p>
+<p><code class="language-plaintext highlighter-rouge">POST /devops/piggyback/search/&lt;INSTANCE_INDEX&gt;?timeout=10s</code></p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"targetActorSelection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/user/thingsWildcardSearchRoot/searchUpdaterRoot/backgroundSync/singleton"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"aggregate"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"is-group-topic"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+  </span><span class="nl">"targetActorSelection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/user/thingsWildcardSearchRoot/searchUpdaterRoot/backgroundSync/singleton"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"aggregate"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"is-group-topic"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
   </span><span class="p">},</span><span class="w">
-  </span><span class="s2">"piggybackCommand"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;COMMAND-TYPE&gt;"</span><span class="w">
+  </span><span class="nl">"piggybackCommand"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;COMMAND-TYPE&gt;"</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
-<p><code class="highlighter-rouge">COMMAND-TYPE</code> can be:</p>
+<p><code class="language-plaintext highlighter-rouge">COMMAND-TYPE</code> can be:</p>
 <ul>
-  <li><code class="highlighter-rouge">common.commands:shutdown</code> to shutdown or restart a background sync stream,</li>
-  <li><code class="highlighter-rouge">common.commands:retrieveConfig</code> to retrieve the current configuration,</li>
-  <li><code class="highlighter-rouge">common.commands:modifyConfig</code> to modify the current configuration, or</li>
-  <li><code class="highlighter-rouge">status.commands:retrieveHealth</code> to query the current progress and event log.</li>
+  <li><code class="language-plaintext highlighter-rouge">common.commands:shutdown</code> to shutdown or restart a background sync stream,</li>
+  <li><code class="language-plaintext highlighter-rouge">common.commands:retrieveConfig</code> to retrieve the current configuration,</li>
+  <li><code class="language-plaintext highlighter-rouge">common.commands:modifyConfig</code> to modify the current configuration, or</li>
+  <li><code class="language-plaintext highlighter-rouge">status.commands:retrieveHealth</code> to query the current progress and event log.</li>
 </ul>
 
 <p>For each command type, please refer to the corresponding segment of “Managing background cleanup” for the exact format.</p>
 
-<div class="alert alert-info" role="alert"><i class="fa fa-info-circle"></i> <b>Note:</b> Only a subset of the configuration has an effect when changed via <code class="highlighter-rouge">common.commands:modifyConfig</code> command: <code class="highlighter-rouge">enabled</code>, <code class="highlighter-rouge">quiet-period</code> and <code class="highlighter-rouge">keep.events</code>. Refer to <a href="installation-operating.html#ditto-configuration">Ditto configuration</a> for instructions how to modify the other configuration settings.</div>
+<div class="alert alert-info" role="alert"><i class="fa fa-info-circle"></i> <b>Note:</b> Only a subset of the configuration has an effect when changed via <code class="language-plaintext highlighter-rouge">common.commands:modifyConfig</code> command: <code class="language-plaintext highlighter-rouge">enabled</code>, <code class="language-plaintext highlighter-rouge">quiet-period</code> and <code class="language-plaintext highlighter-rouge">keep.events</code>. Refer to <a href="installation-operating.html#ditto-configuration">Ditto configuration</a> for instructions how to modify the other configuration settings.</div>
 
 <h4 id="force-search-index-update-of-all-things">Force search index update of all things</h4>
 
-<p>You can trigger a search index update for all things by sending a command of type <code class="highlighter-rouge">common.commands:shutdown</code> with the 
-<code class="highlighter-rouge">force-update</code> header set to <code class="highlighter-rouge">true</code>. The next background sync iteration  (starting after the configured quiet period)<br />
+<p>You can trigger a search index update for all things by sending a command of type <code class="language-plaintext highlighter-rouge">common.commands:shutdown</code> with the 
+<code class="language-plaintext highlighter-rouge">force-update</code> header set to <code class="language-plaintext highlighter-rouge">true</code>. The next background sync iteration  (starting after the configured quiet period)<br />
 will trigger an update of the search index for all things. After the iteration of forced updates is complete 
 (or interrupted), the background sync will continue its normal operation.</p>
 
-<p><code class="highlighter-rouge">POST /devops/piggyback/search?timeout=10s</code></p>
+<p><code class="language-plaintext highlighter-rouge">POST /devops/piggyback/search?timeout=10s</code></p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"targetActorSelection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/user/thingsWildcardSearchRoot/searchUpdaterRoot/backgroundSyncProxy"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"aggregate"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"is-group-topic"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"force-update"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+  </span><span class="nl">"targetActorSelection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/user/thingsWildcardSearchRoot/searchUpdaterRoot/backgroundSyncProxy"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"aggregate"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"is-group-topic"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"force-update"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
   </span><span class="p">},</span><span class="w">
-  </span><span class="s2">"piggybackCommand"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"common.commands:shutdown"</span><span class="w">
+  </span><span class="nl">"piggybackCommand"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"common.commands:shutdown"</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
@@ -3335,24 +3342,24 @@ will trigger an update of the search index for all things. After the iteration o
 
 <h4 id="force-search-index-update-for-all-things-of-one-or-multiple-namespaces">Force search index update for all things of one or multiple namespaces</h4>
 
-<p>You can trigger a search index update for things of multiple namespaces by sending a <code class="highlighter-rouge">common.commands:shutdown</code> command 
-with the <code class="highlighter-rouge">force-update</code> header set to <code class="highlighter-rouge">true</code> and the relevant namespaces specified in the <code class="highlighter-rouge">namespaces</code> header. The next 
+<p>You can trigger a search index update for things of multiple namespaces by sending a <code class="language-plaintext highlighter-rouge">common.commands:shutdown</code> command 
+with the <code class="language-plaintext highlighter-rouge">force-update</code> header set to <code class="language-plaintext highlighter-rouge">true</code> and the relevant namespaces specified in the <code class="language-plaintext highlighter-rouge">namespaces</code> header. The next 
 background sync iteration (starting after the configured quiet period) will trigger an update of the search index for 
 the things in the specified namespaces. After the iteration of forced updates is complete (or interrupted), 
 the background sync will continue its normal operation.</p>
 
-<p><code class="highlighter-rouge">POST /devops/piggyback/search?timeout=10s</code></p>
+<p><code class="language-plaintext highlighter-rouge">POST /devops/piggyback/search?timeout=10s</code></p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"targetActorSelection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/user/thingsWildcardSearchRoot/searchUpdaterRoot/backgroundSyncProxy"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"aggregate"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"is-group-topic"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"force-update"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"namespaces"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"namespace1"</span><span class="p">,</span><span class="w"> </span><span class="s2">"namespace2"</span><span class="p">]</span><span class="w">
+  </span><span class="nl">"targetActorSelection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/user/thingsWildcardSearchRoot/searchUpdaterRoot/backgroundSyncProxy"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"aggregate"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"is-group-topic"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"force-update"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"namespaces"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"namespace1"</span><span class="p">,</span><span class="w"> </span><span class="s2">"namespace2"</span><span class="p">]</span><span class="w">
   </span><span class="p">},</span><span class="w">
-  </span><span class="s2">"piggybackCommand"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"common.commands:shutdown"</span><span class="w">
+  </span><span class="nl">"piggybackCommand"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"common.commands:shutdown"</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
@@ -3365,17 +3372,17 @@ the background sync will continue its normal operation.</p>
 of any inconsistencies detected at query time. Nevertheless, you can trigger search index update
 for a particular thing by a DevOps-command and bring the entry up-to-date immediately.</p>
 
-<p><code class="highlighter-rouge">POST /devops/piggyback/search/&lt;INSTANCE_INDEX&gt;?timeout=0</code></p>
+<p><code class="language-plaintext highlighter-rouge">POST /devops/piggyback/search/&lt;INSTANCE_INDEX&gt;?timeout=0</code></p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"targetActorSelection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/user/thingsWildcardSearchRoot/searchUpdaterRoot/thingsUpdater"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"aggregate"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"is-group-topic"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+  </span><span class="nl">"targetActorSelection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/user/thingsWildcardSearchRoot/searchUpdaterRoot/thingsUpdater"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"aggregate"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"is-group-topic"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
   </span><span class="p">},</span><span class="w">
-  </span><span class="s2">"piggybackCommand"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"thing-search.sudo.commands:sudoUpdateThing"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"thingId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;THING-ID&gt;"</span><span class="w">
+  </span><span class="nl">"piggybackCommand"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"thing-search.sudo.commands:sudoUpdateThing"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"thingId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;THING-ID&gt;"</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
@@ -3400,19 +3407,19 @@ so that the old namespace could be reused at a later point in time.</li>
 
 <h5 id="block-all-messages-to-a-namespace">Block all messages to a namespace</h5>
 
-<p>Send a piggyback command to <a href="https://pekko.apache.org/docs/pekko/current/distributed-pub-sub.html">Pekko’s pub-sub-mediator</a> with type <code class="highlighter-rouge">namespaces.commands:blockNamespace</code>
+<p>Send a piggyback command to <a href="https://pekko.apache.org/docs/pekko/current/distributed-pub-sub.html">Pekko’s pub-sub-mediator</a> with type <code class="language-plaintext highlighter-rouge">namespaces.commands:blockNamespace</code>
 to block all messages sent to actors belonging to a namespace.</p>
 
-<p><code class="highlighter-rouge">PUT /devops/piggyback?timeout=10s</code></p>
+<p><code class="language-plaintext highlighter-rouge">PUT /devops/piggyback?timeout=10s</code></p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"targetActorSelection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/system/distributedPubSubMediator"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"aggregate"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+  </span><span class="nl">"targetActorSelection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/system/distributedPubSubMediator"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"aggregate"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
   </span><span class="p">},</span><span class="w">
-  </span><span class="s2">"piggybackCommand"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"namespaces.commands:blockNamespace"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"namespace"</span><span class="p">:</span><span class="w"> </span><span class="s2">"namespaceToBlock"</span><span class="w">
+  </span><span class="nl">"piggybackCommand"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"namespaces.commands:blockNamespace"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"namespace"</span><span class="p">:</span><span class="w"> </span><span class="s2">"namespaceToBlock"</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
@@ -3422,40 +3429,40 @@ similar to the one below. The namespace will remain blocked for the lifetime of 
 or until you proceed with <a href="#unblock-messages-to-a-namespace">step 4</a>, which unblocks it.</p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"namespaces.responses:blockNamespace"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="mi">200</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"namespace"</span><span class="p">:</span><span class="w"> </span><span class="s2">"namespaceToBlock"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"resourceType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"namespaces"</span><span class="w">
+  </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"namespaces.responses:blockNamespace"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"status"</span><span class="p">:</span><span class="w"> </span><span class="mi">200</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"namespace"</span><span class="p">:</span><span class="w"> </span><span class="s2">"namespaceToBlock"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"resourceType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"namespaces"</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
 <h5 id="shutdown-all-actors-in-a-namespace">Shutdown all actors in a namespace</h5>
 
-<p>Send a piggyback command to <a href="https://pekko.apache.org/docs/pekko/current/distributed-pub-sub.html">Pekko’s pub-sub-mediator</a> with type <code class="highlighter-rouge">common.commands:shutdown</code>
-to request all actors in a namespace to shut down. The value of <code class="highlighter-rouge">piggybackCommand/reason/type</code> must be
-<code class="highlighter-rouge">purge-namespace</code>; otherwise, the namespace’s actors will not stop themselves.</p>
+<p>Send a piggyback command to <a href="https://pekko.apache.org/docs/pekko/current/distributed-pub-sub.html">Pekko’s pub-sub-mediator</a> with type <code class="language-plaintext highlighter-rouge">common.commands:shutdown</code>
+to request all actors in a namespace to shut down. The value of <code class="language-plaintext highlighter-rouge">piggybackCommand/reason/type</code> must be
+<code class="language-plaintext highlighter-rouge">purge-namespace</code>; otherwise, the namespace’s actors will not stop themselves.</p>
 
-<p><code class="highlighter-rouge">PUT /devops/piggyback?timeout=0</code></p>
+<p><code class="language-plaintext highlighter-rouge">PUT /devops/piggyback?timeout=0</code></p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"targetActorSelection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/system/distributedPubSubMediator"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"piggybackCommand"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"common.commands:shutdown"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"reason"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"purge-namespace"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"details"</span><span class="p">:</span><span class="w"> </span><span class="s2">"namespaceToShutdown"</span><span class="w">
+  </span><span class="nl">"targetActorSelection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/system/distributedPubSubMediator"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"piggybackCommand"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"common.commands:shutdown"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"reason"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"purge-namespace"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"details"</span><span class="p">:</span><span class="w"> </span><span class="s2">"namespaceToShutdown"</span><span class="w">
     </span><span class="p">}</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
 <p>The shutdown command has no response because the number of actors shutting down can be very large.
-The response will always be <code class="highlighter-rouge">408</code> timeout.
+The response will always be <code class="language-plaintext highlighter-rouge">408</code> timeout.
 Feel free to send the shutdown command several times to make sure.</p>
 
 <h5 id="erase-all-data-in-a-namespace-from-the-persistence">Erase all data in a namespace from the persistence</h5>
 
-<p>Send a piggyback command to <a href="https://pekko.apache.org/docs/pekko/current/distributed-pub-sub.html">Pekko’s pub-sub-mediator</a> with type <code class="highlighter-rouge">namespaces.commands:purgeNamespace</code>
+<p>Send a piggyback command to <a href="https://pekko.apache.org/docs/pekko/current/distributed-pub-sub.html">Pekko’s pub-sub-mediator</a> with type <code class="language-plaintext highlighter-rouge">namespaces.commands:purgeNamespace</code>
 to erase all data from the persistence.
 It is better to purge a namespace after
 <a href="#block-all-messages-to-a-namespace">blocking</a> it and
@@ -3465,46 +3472,46 @@ all its actors so that no data is written in the namespace while erasing is ongo
 <p>The erasure may take a long time if the namespace has a lot of data associated with it or if the persistent storage is
 slow. Set the timeout to a safe margin above the estimated erasure time in milliseconds.</p>
 
-<p><code class="highlighter-rouge">PUT /devops/piggyback?timeout=10s</code></p>
+<p><code class="language-plaintext highlighter-rouge">PUT /devops/piggyback?timeout=10s</code></p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"targetActorSelection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/system/distributedPubSubMediator"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"aggregate"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"is-group-topic"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+  </span><span class="nl">"targetActorSelection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/system/distributedPubSubMediator"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"aggregate"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"is-group-topic"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
   </span><span class="p">},</span><span class="w">
-  </span><span class="s2">"piggybackCommand"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"namespaces.commands:purgeNamespace"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"namespace"</span><span class="p">:</span><span class="w"> </span><span class="s2">"namespaceToPurge"</span><span class="w">
+  </span><span class="nl">"piggybackCommand"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"namespaces.commands:purgeNamespace"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"namespace"</span><span class="p">:</span><span class="w"> </span><span class="s2">"namespaceToPurge"</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
 <p>The response contains results of the data purge, one for each resource type.
-Note that to see responses from multiple resource types, the header <code class="highlighter-rouge">aggregate</code> must not be <code class="highlighter-rouge">false</code>.</p>
+Note that to see responses from multiple resource types, the header <code class="language-plaintext highlighter-rouge">aggregate</code> must not be <code class="language-plaintext highlighter-rouge">false</code>.</p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"?"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"?"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"namespaces.responses:purgeNamespace"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="mi">200</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"namespace"</span><span class="p">:</span><span class="w"> </span><span class="s2">"namespaceToPurge"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"resourceType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"thing"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"successful"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+  </span><span class="nl">"?"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"?"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"namespaces.responses:purgeNamespace"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"status"</span><span class="p">:</span><span class="w"> </span><span class="mi">200</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"namespace"</span><span class="p">:</span><span class="w"> </span><span class="s2">"namespaceToPurge"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"resourceType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"thing"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"successful"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
     </span><span class="p">},</span><span class="w">
-    </span><span class="s2">"?1"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"namespaces.responses:purgeNamespace"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="mi">200</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"namespace"</span><span class="p">:</span><span class="w"> </span><span class="s2">"namespaceToPurge"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"resourceType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"policy"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"successful"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+    </span><span class="nl">"?1"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"namespaces.responses:purgeNamespace"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"status"</span><span class="p">:</span><span class="w"> </span><span class="mi">200</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"namespace"</span><span class="p">:</span><span class="w"> </span><span class="s2">"namespaceToPurge"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"resourceType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"policy"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"successful"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
     </span><span class="p">},</span><span class="w">
-    </span><span class="s2">"?2"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"namespaces.responses:purgeNamespace"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="mi">200</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"namespace"</span><span class="p">:</span><span class="w"> </span><span class="s2">"namespaceToPurge"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"resourceType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"thing-search"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"successful"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+    </span><span class="nl">"?2"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"namespaces.responses:purgeNamespace"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"status"</span><span class="p">:</span><span class="w"> </span><span class="mi">200</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"namespace"</span><span class="p">:</span><span class="w"> </span><span class="s2">"namespaceToPurge"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"resourceType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"thing-search"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"successful"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
     </span><span class="p">}</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
@@ -3512,19 +3519,19 @@ Note that to see responses from multiple resource types, the header <code class=
 
 <h5 id="unblock-messages-to-a-namespace">Unblock messages to a namespace</h5>
 
-<p>Send a piggyback command to <a href="https://pekko.apache.org/docs/pekko/current/distributed-pub-sub.html">Pekko’s pub-sub-mediator</a> with type <code class="highlighter-rouge">namespaces.commands:unblockNamespace</code>
+<p>Send a piggyback command to <a href="https://pekko.apache.org/docs/pekko/current/distributed-pub-sub.html">Pekko’s pub-sub-mediator</a> with type <code class="language-plaintext highlighter-rouge">namespaces.commands:unblockNamespace</code>
 to stop blocking messages to a namespace.</p>
 
-<p><code class="highlighter-rouge">PUT /devops/piggyback?timeout=10s</code></p>
+<p><code class="language-plaintext highlighter-rouge">PUT /devops/piggyback?timeout=10s</code></p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"targetActorSelection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/system/distributedPubSubMediator"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"aggregate"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+  </span><span class="nl">"targetActorSelection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/system/distributedPubSubMediator"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"aggregate"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
   </span><span class="p">},</span><span class="w">
-  </span><span class="s2">"piggybackCommand"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"namespaces.commands:unblockNamespace"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"namespace"</span><span class="p">:</span><span class="w"> </span><span class="s2">"namespaceToUnblock"</span><span class="w">
+  </span><span class="nl">"piggybackCommand"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"namespaces.commands:unblockNamespace"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"namespace"</span><span class="p">:</span><span class="w"> </span><span class="s2">"namespaceToUnblock"</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
@@ -3532,10 +3539,10 @@ to stop blocking messages to a namespace.</p>
 <p>A response will come once the namespace’s blockade is released on all members of the Ditto cluster.</p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"namespaces.responses:unblockNamespace"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="mi">200</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"namespace"</span><span class="p">:</span><span class="w"> </span><span class="s2">"namespaceToUnblock"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"resourceType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"namespaces"</span><span class="w">
+  </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"namespaces.responses:unblockNamespace"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"status"</span><span class="p">:</span><span class="w"> </span><span class="mi">200</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"namespace"</span><span class="p">:</span><span class="w"> </span><span class="s2">"namespaceToUnblock"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"resourceType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"namespaces"</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
@@ -3564,7 +3571,7 @@ to stop blocking messages to a namespace.</p>
                     </div>
                     <p class="notice">
                         &copy;2024 Eclipse Ditto™.
-                         Site last generated: Feb 27, 2024 <br />
+                         Site last generated: Apr 10, 2024 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

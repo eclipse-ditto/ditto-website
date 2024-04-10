@@ -278,6 +278,13 @@
               
               
               
+              <li><a href="release_notes_354.html">3.5.4</a></li>
+              
+              
+              
+              
+              
+              
               <li><a href="release_notes_353.html">3.5.3</a></li>
               
               
@@ -2104,10 +2111,10 @@ $('#toc').on('click', 'a', function() {
 
 <h2 id="content-type">Content-type</h2>
 
-<p>When messages are sent in <a href="protocol-overview.html">Ditto Protocol</a> (as <code class="highlighter-rouge">UTF-8</code> encoded String payload), 
-the <code class="highlighter-rouge">content-type</code> of AMQP 1.0 messages must be set to:</p>
+<p>When messages are sent in <a href="protocol-overview.html">Ditto Protocol</a> (as <code class="language-plaintext highlighter-rouge">UTF-8</code> encoded String payload), 
+the <code class="language-plaintext highlighter-rouge">content-type</code> of AMQP 1.0 messages must be set to:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>application/vnd.eclipse.ditto+json
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>application/vnd.eclipse.ditto+json
 </code></pre></div></div>
 
 <p>If messages, which are not in Ditto Protocol, should be processed, a <a href="connectivity-mapping.html">payload mapping</a> must
@@ -2120,57 +2127,57 @@ set to the corresponding header value. Conversely, the values of AMQP 1.0 proper
 and header mapping as external headers. The supported AMQP 1.0 properties are:</p>
 
 <ul>
-  <li><code class="highlighter-rouge">message-id</code></li>
-  <li><code class="highlighter-rouge">user-id</code></li>
-  <li><code class="highlighter-rouge">to</code></li>
-  <li><code class="highlighter-rouge">subject</code></li>
-  <li><code class="highlighter-rouge">reply-to</code></li>
-  <li><code class="highlighter-rouge">correlation-id</code></li>
-  <li><code class="highlighter-rouge">content-type</code></li>
-  <li><code class="highlighter-rouge">absolute-expiry-time</code></li>
-  <li><code class="highlighter-rouge">creation-time</code></li>
-  <li><code class="highlighter-rouge">group-id</code></li>
-  <li><code class="highlighter-rouge">group-sequence</code></li>
-  <li><code class="highlighter-rouge">reply-to-group-id</code></li>
+  <li><code class="language-plaintext highlighter-rouge">message-id</code></li>
+  <li><code class="language-plaintext highlighter-rouge">user-id</code></li>
+  <li><code class="language-plaintext highlighter-rouge">to</code></li>
+  <li><code class="language-plaintext highlighter-rouge">subject</code></li>
+  <li><code class="language-plaintext highlighter-rouge">reply-to</code></li>
+  <li><code class="language-plaintext highlighter-rouge">correlation-id</code></li>
+  <li><code class="language-plaintext highlighter-rouge">content-type</code></li>
+  <li><code class="language-plaintext highlighter-rouge">absolute-expiry-time</code></li>
+  <li><code class="language-plaintext highlighter-rouge">creation-time</code></li>
+  <li><code class="language-plaintext highlighter-rouge">group-id</code></li>
+  <li><code class="language-plaintext highlighter-rouge">group-sequence</code></li>
+  <li><code class="language-plaintext highlighter-rouge">reply-to-group-id</code></li>
 </ul>
 
 <p>External headers not on this list are mapped to AMQP application properties.
 To set an application property whose name is identical to an AMQP 1.0 property, prefix it by
-<code class="highlighter-rouge">amqp.application.property:</code>. The following <a href="basic-connections.html#target-header-mapping">target header mapping</a> sets
-the application property <code class="highlighter-rouge">to</code> to the value of the Ditto protocol header <code class="highlighter-rouge">reply-to</code>:</p>
+<code class="language-plaintext highlighter-rouge">amqp.application.property:</code>. The following <a href="basic-connections.html#target-header-mapping">target header mapping</a> sets
+the application property <code class="language-plaintext highlighter-rouge">to</code> to the value of the Ditto protocol header <code class="language-plaintext highlighter-rouge">reply-to</code>:</p>
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"headerMapping"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"amqp.application.property:to"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{{ header:reply-to }}"</span><span class="w">
+  </span><span class="nl">"headerMapping"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"amqp.application.property:to"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{{ header:reply-to }}"</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
 <p>To read an application property whose name is identical to an AMQP 1.0 property, prefix it by
-<code class="highlighter-rouge">amqp.application.property:</code>. The following <a href="basic-connections.html#source-header-mapping">source header mapping</a> sets
-the Ditto protocol header <code class="highlighter-rouge">reply-to</code> to the value of the application property <code class="highlighter-rouge">to</code>:</p>
+<code class="language-plaintext highlighter-rouge">amqp.application.property:</code>. The following <a href="basic-connections.html#source-header-mapping">source header mapping</a> sets
+the Ditto protocol header <code class="language-plaintext highlighter-rouge">reply-to</code> to the value of the application property <code class="language-plaintext highlighter-rouge">to</code>:</p>
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"headerMapping"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"reply-to"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{{ header:amqp.application.property:to }}"</span><span class="w">
+  </span><span class="nl">"headerMapping"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"reply-to"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{{ header:amqp.application.property:to }}"</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
-<p>To set a message annotation, prefix it by <code class="highlighter-rouge">amqp.message.annotation:</code>. 
+<p>To set a message annotation, prefix it by <code class="language-plaintext highlighter-rouge">amqp.message.annotation:</code>. 
 The following <a href="basic-connections.html#target-header-mapping">target header mapping</a> sets
-the message annotation <code class="highlighter-rouge">to</code> to the value of the Ditto protocol header <code class="highlighter-rouge">reply-to</code>:</p>
+the message annotation <code class="language-plaintext highlighter-rouge">to</code> to the value of the Ditto protocol header <code class="language-plaintext highlighter-rouge">reply-to</code>:</p>
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"headerMapping"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"amqp.message.annotation:to"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{{ header:reply-to }}"</span><span class="w">
+  </span><span class="nl">"headerMapping"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"amqp.message.annotation:to"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{{ header:reply-to }}"</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
-<p>To read a message annotation, prefix it by <code class="highlighter-rouge">amqp.message.annotation:</code>. 
+<p>To read a message annotation, prefix it by <code class="language-plaintext highlighter-rouge">amqp.message.annotation:</code>. 
 The following <a href="basic-connections.html#source-header-mapping">source header mapping</a> sets
-the Ditto protocol header <code class="highlighter-rouge">reply-to</code> to the value of the message annotation <code class="highlighter-rouge">to</code>:</p>
+the Ditto protocol header <code class="language-plaintext highlighter-rouge">reply-to</code> to the value of the message annotation <code class="language-plaintext highlighter-rouge">to</code>:</p>
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"headerMapping"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"reply-to"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{{ header:amqp.message.annotation:to }}"</span><span class="w">
+  </span><span class="nl">"headerMapping"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"reply-to"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{{ header:amqp.message.annotation:to }}"</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
@@ -2185,18 +2192,18 @@ Following are some specifics for AMQP 1.0 connections:</p>
 
 <h3 id="source-format">Source format</h3>
 
-<p>Any <code class="highlighter-rouge">source</code> item defines an <code class="highlighter-rouge">addresses</code> array of source identifiers (e.g. Eclipse Hono’s 
+<p>Any <code class="language-plaintext highlighter-rouge">source</code> item defines an <code class="language-plaintext highlighter-rouge">addresses</code> array of source identifiers (e.g. Eclipse Hono’s 
 Telemetry API) to consume messages from,
-and <code class="highlighter-rouge">authorizationContext</code> array that contains the authorization subjects, in whose context
+and <code class="language-plaintext highlighter-rouge">authorizationContext</code> array that contains the authorization subjects, in whose context
 inbound messages are processed. These subjects may contain placeholders, see 
 <a href="basic-connections.html#placeholder-for-source-authorization-subjects">placeholders</a> section for more information.</p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"addresses"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+  </span><span class="nl">"addresses"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
     </span><span class="s2">"&lt;source&gt;"</span><span class="p">,</span><span class="w">
     </span><span class="s2">"..."</span><span class="w">
   </span><span class="p">],</span><span class="w">
-  </span><span class="s2">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"ditto:inbound-auth-subject"</span><span class="p">,</span><span class="w"> </span><span class="s2">"..."</span><span class="p">]</span><span class="w">
+  </span><span class="nl">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"ditto:inbound-auth-subject"</span><span class="p">,</span><span class="w"> </span><span class="s2">"..."</span><span class="p">]</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
@@ -2208,53 +2215,53 @@ endpoint are treated in the following way:</p>
 
 <p>For Ditto acknowledgements with successful <a href="protocol-specification-acks.html#combined-status-code">status</a>:</p>
 <ul>
-  <li>Acknowledges the AMQP 1.0 message with <code class="highlighter-rouge">accepted</code> outcome (see <a href="https://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-messaging-v1.0-os.html#type-accepted">AMQP 1.0 spec: 3.4.2 Accepted</a>)</li>
+  <li>Acknowledges the AMQP 1.0 message with <code class="language-plaintext highlighter-rouge">accepted</code> outcome (see <a href="https://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-messaging-v1.0-os.html#type-accepted">AMQP 1.0 spec: 3.4.2 Accepted</a>)</li>
 </ul>
 
 <p>For Ditto acknowledgements with mixed successful/failed <a href="protocol-specification-acks.html#combined-status-code">status</a>:</p>
 <ul>
   <li>If some of the aggregated <a href="basic-acknowledgements.html#acknowledgements-acks">acknowledgements</a> require redelivery (e.g. based on a timeout):
     <ul>
-      <li>Negatively acknowledges the AMQP 1.0 message with <code class="highlighter-rouge">modified[delivery-failed]</code> outcome (see <a href="https://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-messaging-v1.0-os.html#type-modified">AMQP 1.0 spec: 3.4.5 Modified</a>)</li>
+      <li>Negatively acknowledges the AMQP 1.0 message with <code class="language-plaintext highlighter-rouge">modified[delivery-failed]</code> outcome (see <a href="https://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-messaging-v1.0-os.html#type-modified">AMQP 1.0 spec: 3.4.5 Modified</a>)</li>
     </ul>
   </li>
   <li>If none of the aggregated <a href="basic-acknowledgements.html#acknowledgements-acks">acknowledgements</a> require redelivery:
     <ul>
-      <li>Negatively acknowledges the AMQP 1.0 message with <code class="highlighter-rouge">rejected</code> outcome (see <a href="https://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-messaging-v1.0-os.html#type-rejected">AMQP 1.0 spec: 3.4.3 Rejected</a>) preventing redelivery by the AMQP 1.0 endpoint</li>
+      <li>Negatively acknowledges the AMQP 1.0 message with <code class="language-plaintext highlighter-rouge">rejected</code> outcome (see <a href="https://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-messaging-v1.0-os.html#type-rejected">AMQP 1.0 spec: 3.4.3 Rejected</a>) preventing redelivery by the AMQP 1.0 endpoint</li>
     </ul>
   </li>
 </ul>
 
 <h3 id="target-format">Target format</h3>
 
-<p>An AMQP 1.0 connection requires the protocol configuration target object to have an <code class="highlighter-rouge">address</code> property with a source
+<p>An AMQP 1.0 connection requires the protocol configuration target object to have an <code class="language-plaintext highlighter-rouge">address</code> property with a source
 identifier. The target address may contain placeholders; see
 <a href="basic-connections.html#placeholder-for-target-addresses">placeholders</a> section for more 
 information.</p>
 
 <p>Target addresses for AMQP 1.0 are by default handled as AMQP 1.0 “queues”. There is however the possibility to also 
-configure AMQP 1.0 “topics” as well. In fact, the following formats for the <code class="highlighter-rouge">address</code> are 
+configure AMQP 1.0 “topics” as well. In fact, the following formats for the <code class="language-plaintext highlighter-rouge">address</code> are 
 supported:</p>
 <ul>
-  <li><code class="highlighter-rouge">the-queue-name</code> (when configuring w/o prefix, the <code class="highlighter-rouge">address</code> is handled as “queue”)</li>
-  <li><code class="highlighter-rouge">queue://the-queue-name</code></li>
-  <li><code class="highlighter-rouge">topic://the-topic-name</code></li>
+  <li><code class="language-plaintext highlighter-rouge">the-queue-name</code> (when configuring w/o prefix, the <code class="language-plaintext highlighter-rouge">address</code> is handled as “queue”)</li>
+  <li><code class="language-plaintext highlighter-rouge">queue://the-queue-name</code></li>
+  <li><code class="language-plaintext highlighter-rouge">topic://the-topic-name</code></li>
 </ul>
 
-<p>Further, <code class="highlighter-rouge">"topics"</code> is a list of strings, each list entry representing a subscription of
+<p>Further, <code class="language-plaintext highlighter-rouge">"topics"</code> is a list of strings, each list entry representing a subscription of
 <a href="protocol-specification-topic.html">Ditto protocol topics</a>, see 
 <a href="basic-connections.html#target-topics-and-filtering">target topics and filtering</a> for more information on that.</p>
 
-<p>Outbound messages are published to the configured target address if one of the subjects in <code class="highlighter-rouge">"authorizationContext"</code>
+<p>Outbound messages are published to the configured target address if one of the subjects in <code class="language-plaintext highlighter-rouge">"authorizationContext"</code>
 has READ permission on the thing, which is associated with a message.</p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;target&gt;"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"topics"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+  </span><span class="nl">"address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;target&gt;"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"topics"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
     </span><span class="s2">"_/_/things/twin/events"</span><span class="p">,</span><span class="w">
     </span><span class="s2">"_/_/things/live/messages"</span><span class="w">
   </span><span class="p">],</span><span class="w">
-  </span><span class="s2">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"ditto:outbound-auth-subject"</span><span class="p">,</span><span class="w"> </span><span class="s2">"..."</span><span class="p">]</span><span class="w">
+  </span><span class="nl">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"ditto:outbound-auth-subject"</span><span class="p">,</span><span class="w"> </span><span class="s2">"..."</span><span class="p">]</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
@@ -2270,14 +2277,14 @@ is mapped to the automatically created <a href="protocol-specification-acks.html
 <ul>
   <li>Acknowledgement.status:
     <ul>
-      <li>will be <code class="highlighter-rouge">200</code>, if the message was successfully consumed by the AMQP 1.0 endpoint</li>
-      <li>will be <code class="highlighter-rouge">5xx</code>, if the AMQP 1.0 endpoint failed in consuming the message, retrying sending the message is feasible</li>
+      <li>will be <code class="language-plaintext highlighter-rouge">200</code>, if the message was successfully consumed by the AMQP 1.0 endpoint</li>
+      <li>will be <code class="language-plaintext highlighter-rouge">5xx</code>, if the AMQP 1.0 endpoint failed in consuming the message, retrying sending the message is feasible</li>
     </ul>
   </li>
   <li>Acknowledgement.value:
     <ul>
-      <li>will be missing, for status <code class="highlighter-rouge">200</code></li>
-      <li>will contain more information, in case that an error <code class="highlighter-rouge">status</code> was set</li>
+      <li>will be missing, for status <code class="language-plaintext highlighter-rouge">200</code></li>
+      <li>will contain more information, in case that an error <code class="language-plaintext highlighter-rouge">status</code> was set</li>
     </ul>
   </li>
 </ul>
@@ -2304,26 +2311,26 @@ existing connections.</p>
 <p>Example connection configuration to create a new AMQP 1.0 connection:</p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"hono-example-connection-123"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"connectionType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"amqp-10"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"connectionStatus"</span><span class="p">:</span><span class="w"> </span><span class="s2">"open"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"failoverEnabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"uri"</span><span class="p">:</span><span class="w"> </span><span class="s2">"amqps://user:password@hono.eclipse.org:5671"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"sources"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+  </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"hono-example-connection-123"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"connectionType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"amqp-10"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"connectionStatus"</span><span class="p">:</span><span class="w"> </span><span class="s2">"open"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"failoverEnabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"uri"</span><span class="p">:</span><span class="w"> </span><span class="s2">"amqps://user:password@hono.eclipse.org:5671"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"sources"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
     </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"addresses"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+      </span><span class="nl">"addresses"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
         </span><span class="s2">"telemetry/FOO"</span><span class="w">
       </span><span class="p">],</span><span class="w">
-      </span><span class="s2">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"ditto:inbound-auth-subject"</span><span class="p">]</span><span class="w">
+      </span><span class="nl">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"ditto:inbound-auth-subject"</span><span class="p">]</span><span class="w">
     </span><span class="p">}</span><span class="w">
   </span><span class="p">],</span><span class="w">
-  </span><span class="s2">"targets"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+  </span><span class="nl">"targets"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
     </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"events/twin"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"topics"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+      </span><span class="nl">"address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"events/twin"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"topics"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
         </span><span class="s2">"_/_/things/twin/events"</span><span class="w">
       </span><span class="p">],</span><span class="w">
-      </span><span class="s2">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"ditto:outbound-auth-subject"</span><span class="p">]</span><span class="w">
+      </span><span class="nl">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"ditto:outbound-auth-subject"</span><span class="p">]</span><span class="w">
     </span><span class="p">}</span><span class="w">
   </span><span class="p">]</span><span class="w">
 </span><span class="p">}</span><span class="w">
@@ -2362,7 +2369,7 @@ existing connections.</p>
                     </div>
                     <p class="notice">
                         &copy;2024 Eclipse Ditto™.
-                         Site last generated: Feb 27, 2024 <br />
+                         Site last generated: Apr 10, 2024 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

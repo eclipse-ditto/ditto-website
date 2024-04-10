@@ -280,16 +280,16 @@ the need for the one invoking the action to have “WRITE” permissions granted
 <h2 id="token-based-activation-of-subject">Token based activation of subject</h2>
 
 <p>Together with the concept of actions, a first action named 
-<a href="basic-policy.html#action-activatetokenintegration"><code class="highlighter-rouge">activateTokenIntegration</code></a> is added.<br />
+<a href="basic-policy.html#action-activatetokenintegration"><code class="language-plaintext highlighter-rouge">activateTokenIntegration</code></a> is added.<br />
 This action</p>
 <ul>
   <li>only works when using <a href="#" data-toggle="tooltip" data-original-title="JSON Web Token (JWT)">JWT</a> 
 based authentication issued by Google or other OpenID Connect providers as 
 <a href="installation-operating.html#openid-connect">documented in the installation/operation guide</a></li>
   <li>checks whether the <a href="basic-auth.html#authenticated-subjects">authenticated subjects</a> which invoked the action have the 
-permission to <code class="highlighter-rouge">EXECUTE</code> the action on a policy entry</li>
+permission to <code class="language-plaintext highlighter-rouge">EXECUTE</code> the action on a policy entry</li>
   <li>checks whether the <a href="basic-auth.html#authenticated-subjects">authenticated subjects</a> which invoked the action have at 
-least some kind of <code class="highlighter-rouge">READ</code> permission to any <code class="highlighter-rouge">thing:/</code> resource in a policy entry</li>
+least some kind of <code class="language-plaintext highlighter-rouge">READ</code> permission to any <code class="language-plaintext highlighter-rouge">thing:/</code> resource in a policy entry</li>
 </ul>
 
 <p>When all the conditions were met for a policy entry, the action will inject a new <a href="basic-policy.html#subjects">subject</a> 
@@ -297,19 +297,19 @@ into the matched policy entry which by default (the
 <a href="basic-policy.html#action-activatetokenintegration">pattern is configurable</a>) is the following.
 This syntax uses <a href="basic-placeholders.html">placeholders</a> in order to extract information from the authenticated JWT and 
 the policy entry:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
 integration:{{policy-entry:label}}:{{jwt:aud}}
 
 </code></pre></div></div>
 
 <p>The value of the injected subject will contain the <a href="basic-policy.html#expiring-policy-subjects">expiry</a> timestamp 
-copied from the JWT <code class="highlighter-rouge">"exp"</code> (the expiration time of the token) claim.</p>
+copied from the JWT <code class="language-plaintext highlighter-rouge">"exp"</code> (the expiration time of the token) claim.</p>
 
 <h2 id="example-use-case">Example use case</h2>
 
-<p>Assuming that you have configured a custom OpenID Connect provider <code class="highlighter-rouge">some-openid-connect-provider</code> as
+<p>Assuming that you have configured a custom OpenID Connect provider <code class="language-plaintext highlighter-rouge">some-openid-connect-provider</code> as
 <a href="installation-operating.html#openid-connect">documented in the installation/operation guide</a>:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ditto.gateway.authentication {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ditto.gateway.authentication {
   oauth {
     openid-connect-issuers = {
       some-openid-connect-provider = "https://some-openid-connect-provider.com"
@@ -330,39 +330,39 @@ was used in order to activate the webhook</li>
 
 <p>The underlying <a href="basic-policy.html">policy</a> shall be the following one:</p>
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"policyId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"my.namespace:policy-a"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"entries"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"owner"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"subjects"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"some-openid-connect-provider:some-admin-id"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-          </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"authenticated via OpenID connect provider &lt;some-openid-connect-provider&gt;"</span><span class="w">
+  </span><span class="nl">"policyId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"my.namespace:policy-a"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"entries"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"owner"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"subjects"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"some-openid-connect-provider:some-admin-id"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"authenticated via OpenID connect provider &lt;some-openid-connect-provider&gt;"</span><span class="w">
         </span><span class="p">}</span><span class="w">
       </span><span class="p">},</span><span class="w">
-      </span><span class="s2">"resources"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"thing:/"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-          </span><span class="s2">"grant"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"READ"</span><span class="p">,</span><span class="w"> </span><span class="s2">"WRITE"</span><span class="p">],</span><span class="w">
-          </span><span class="s2">"revoke"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+      </span><span class="nl">"resources"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"thing:/"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"grant"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"READ"</span><span class="p">,</span><span class="w"> </span><span class="s2">"WRITE"</span><span class="p">],</span><span class="w">
+          </span><span class="nl">"revoke"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
         </span><span class="p">},</span><span class="w">
-        </span><span class="s2">"policy:/"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-          </span><span class="s2">"grant"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"READ"</span><span class="p">,</span><span class="w"> </span><span class="s2">"WRITE"</span><span class="p">],</span><span class="w">
-          </span><span class="s2">"revoke"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+        </span><span class="nl">"policy:/"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"grant"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"READ"</span><span class="p">,</span><span class="w"> </span><span class="s2">"WRITE"</span><span class="p">],</span><span class="w">
+          </span><span class="nl">"revoke"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
         </span><span class="p">}</span><span class="w">
       </span><span class="p">}</span><span class="w">
     </span><span class="p">},</span><span class="w">
-    </span><span class="s2">"temperature-observer"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"subjects"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"some-openid-connect-provider:some-user-id"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-          </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"authenticated via OpenID connect provider &lt;some-openid-connect-provider&gt;"</span><span class="w">
+    </span><span class="nl">"temperature-observer"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"subjects"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"some-openid-connect-provider:some-user-id"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"authenticated via OpenID connect provider &lt;some-openid-connect-provider&gt;"</span><span class="w">
         </span><span class="p">}</span><span class="w">
       </span><span class="p">},</span><span class="w">
-      </span><span class="s2">"resources"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"thing:/features/temperature"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-          </span><span class="s2">"grant"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"READ"</span><span class="p">],</span><span class="w">
-          </span><span class="s2">"revoke"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+      </span><span class="nl">"resources"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"thing:/features/temperature"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"grant"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"READ"</span><span class="p">],</span><span class="w">
+          </span><span class="nl">"revoke"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
         </span><span class="p">},</span><span class="w">
-        </span><span class="s2">"policy:/entries/temperature-observer/actions/activateTokenIntegration"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-          </span><span class="s2">"grant"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"EXECUTE"</span><span class="p">],</span><span class="w">
-          </span><span class="s2">"revoke"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+        </span><span class="nl">"policy:/entries/temperature-observer/actions/activateTokenIntegration"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"grant"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"EXECUTE"</span><span class="p">],</span><span class="w">
+          </span><span class="nl">"revoke"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
         </span><span class="p">}</span><span class="w">
       </span><span class="p">}</span><span class="w">
     </span><span class="p">}</span><span class="w">
@@ -370,57 +370,57 @@ was used in order to activate the webhook</li>
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
-<p>The policy entry <code class="highlighter-rouge">"temperature-observer"</code> above describes that:</p>
+<p>The policy entry <code class="language-plaintext highlighter-rouge">"temperature-observer"</code> above describes that:</p>
 <ul>
-  <li>the user “some-user-id” may <code class="highlighter-rouge">READ</code> the <code class="highlighter-rouge">"temperature"</code> feature of things using this policy</li>
-  <li>is allowed to <code class="highlighter-rouge">EXECUTE</code> the <code class="highlighter-rouge">activateTokenIntegration</code> action in order to inject a subject derived from his provided 
+  <li>the user “some-user-id” may <code class="language-plaintext highlighter-rouge">READ</code> the <code class="language-plaintext highlighter-rouge">"temperature"</code> feature of things using this policy</li>
+  <li>is allowed to <code class="language-plaintext highlighter-rouge">EXECUTE</code> the <code class="language-plaintext highlighter-rouge">activateTokenIntegration</code> action in order to inject a subject derived from his provided 
 JWT</li>
 </ul>
 
 <p>Let’s assume that the authenticated JWT used for executing the action contained the following claims:</p>
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"iss"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://some-openid-connect-provider.com"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"sub"</span><span class="p">:</span><span class="w"> </span><span class="s2">"some-user-id"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"exp"</span><span class="p">:</span><span class="w"> </span><span class="mi">1622802633</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"aud"</span><span class="p">:</span><span class="w"> </span><span class="s2">"some-specific-audience-0815"</span><span class="w">
+  </span><span class="nl">"iss"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://some-openid-connect-provider.com"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"sub"</span><span class="p">:</span><span class="w"> </span><span class="s2">"some-user-id"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"exp"</span><span class="p">:</span><span class="w"> </span><span class="mi">1622802633</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"aud"</span><span class="p">:</span><span class="w"> </span><span class="s2">"some-specific-audience-0815"</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
 <p>The “exp” field contains the token expiry timestamp (seconds since epoch) and resolves to: 
-<code class="highlighter-rouge">Friday, June 4, 2021 10:30:33 AM</code>.</p>
+<code class="language-plaintext highlighter-rouge">Friday, June 4, 2021 10:30:33 AM</code>.</p>
 
 <p>Once the HTTP API 
-<a href="/http-api-doc.html#/Policies/post_policies__policyId__entries__label__actions_activateTokenIntegration">POST /api/2/policies/{policyId}/entries/{label}/actions/activateTokenIntegration</a>, with <code class="highlighter-rouge">policyId=my.namespace:policy-a</code> and <code class="highlighter-rouge">label=temperature-observer</code>,<br />
+<a href="/http-api-doc.html#/Policies/post_policies__policyId__entries__label__actions_activateTokenIntegration">POST /api/2/policies/{policyId}/entries/{label}/actions/activateTokenIntegration</a>, with <code class="language-plaintext highlighter-rouge">policyId=my.namespace:policy-a</code> and <code class="language-plaintext highlighter-rouge">label=temperature-observer</code>,<br />
 is invoked (without any payload), a new subject will be injected when the 
 <a href="basic-policy.html#action-activatetokenintegration">described prerequisites</a> were enforced successfully.</p>
 
 <p>As a simplification, all possible policy entries may be injected with the subject by invoking the top level action<br />
-<a href="/http-api-doc.html#/Policies/post_policies__policyId__actions_activateTokenIntegration">POST /api/2/policies/{policyId}/actions/activateTokenIntegration</a>, with <code class="highlighter-rouge">policyId=my.namespace:policy-a</code>.</p>
+<a href="/http-api-doc.html#/Policies/post_policies__policyId__actions_activateTokenIntegration">POST /api/2/policies/{policyId}/actions/activateTokenIntegration</a>, with <code class="language-plaintext highlighter-rouge">policyId=my.namespace:policy-a</code>.</p>
 
 <p>The value of the injected subject will contain the expiration timestamp from the JWT, so the injected policy subject 
-<code class="highlighter-rouge">integration:temperature-observer:some-specific-audience-0815</code> will result in a modified policy:</p>
+<code class="language-plaintext highlighter-rouge">integration:temperature-observer:some-specific-audience-0815</code> will result in a modified policy:</p>
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"policyId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"my.namespace:policy-a"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"entries"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"owner"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="err">//</span><span class="w"> </span><span class="err">unchanged</span><span class="w"> </span><span class="err">...</span><span class="w"> </span><span class="p">},</span><span class="w">
-    </span><span class="s2">"temperature-observer"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"subjects"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"some-openid-connect-provider:some-user-id"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-          </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"authenticated via OpenID connect provider &lt;some-openid-connect-provider&gt;"</span><span class="w">
+  </span><span class="nl">"policyId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"my.namespace:policy-a"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"entries"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"owner"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="err">//</span><span class="w"> </span><span class="err">unchanged</span><span class="w"> </span><span class="err">...</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"temperature-observer"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"subjects"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"some-openid-connect-provider:some-user-id"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"authenticated via OpenID connect provider &lt;some-openid-connect-provider&gt;"</span><span class="w">
         </span><span class="p">},</span><span class="w">
-        </span><span class="s2">"integration:temperature-observer:some-specific-audience-0815"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-          </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"added via action &lt;activateTokenIntegration&gt;"</span><span class="p">,</span><span class="w">
-          </span><span class="s2">"expiry"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2021-06-04T10:30:33Z"</span><span class="w">
+        </span><span class="nl">"integration:temperature-observer:some-specific-audience-0815"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"added via action &lt;activateTokenIntegration&gt;"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"expiry"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2021-06-04T10:30:33Z"</span><span class="w">
         </span><span class="p">}</span><span class="w">
       </span><span class="p">},</span><span class="w">
-      </span><span class="s2">"resources"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"thing:/features/temperature"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-          </span><span class="s2">"grant"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"READ"</span><span class="p">],</span><span class="w">
-          </span><span class="s2">"revoke"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+      </span><span class="nl">"resources"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"thing:/features/temperature"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"grant"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"READ"</span><span class="p">],</span><span class="w">
+          </span><span class="nl">"revoke"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
         </span><span class="p">},</span><span class="w">
-        </span><span class="s2">"policy:/entries/temperature-observer/actions/activateTokenIntegration"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-          </span><span class="s2">"grant"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"EXECUTE"</span><span class="p">],</span><span class="w">
-          </span><span class="s2">"revoke"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+        </span><span class="nl">"policy:/entries/temperature-observer/actions/activateTokenIntegration"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"grant"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"EXECUTE"</span><span class="p">],</span><span class="w">
+          </span><span class="nl">"revoke"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
         </span><span class="p">}</span><span class="w">
       </span><span class="p">}</span><span class="w">
     </span><span class="p">}</span><span class="w">
@@ -429,10 +429,10 @@ is invoked (without any payload), a new subject will be injected when the
 </span></code></pre></div></div>
 
 <p>When we now have a 
-managed HTTP connection which <a href="basic-connections.html#authorization">configures the <code class="highlighter-rouge">authorizationContext</code></a> to include
-the subject <code class="highlighter-rouge">integration:temperature-observer:some-specific-audience-0815</code> for a 
+managed HTTP connection which <a href="basic-connections.html#authorization">configures the <code class="language-plaintext highlighter-rouge">authorizationContext</code></a> to include
+the subject <code class="language-plaintext highlighter-rouge">integration:temperature-observer:some-specific-audience-0815</code> for a 
 <a href="basic-connections.html#targets">connection target</a>, this connection is allowed to publish changes to the temperature of 
-all things using the above policy until the <code class="highlighter-rouge">"expiry"</code> timestamp was reached.<br />
+all things using the above policy until the <code class="language-plaintext highlighter-rouge">"expiry"</code> timestamp was reached.<br />
 Afterwards, publishing changes automatically stops, unless the action is invoked again with a JWT having a longer “exp”
 time prolonging the injected policy subject.</p>
 
@@ -465,7 +465,7 @@ The Eclipse Ditto team</p>
                     </div>
                     <p class="notice">
                         &copy;2024 Eclipse Ditto™.
-                         Site last generated: Feb 27, 2024 <br />
+                         Site last generated: Apr 10, 2024 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

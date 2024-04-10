@@ -278,6 +278,13 @@
               
               
               
+              <li><a href="release_notes_354.html">3.5.4</a></li>
+              
+              
+              
+              
+              
+              
               <li><a href="release_notes_353.html">3.5.3</a></li>
               
               
@@ -2152,7 +2159,7 @@ It is ignored for commands in the live channel.</li>
 <h3 id="custom-acknowledgement-labels">Custom acknowledgement labels</h3>
 <p>In addition to the <a href="#built-in-acknowledgement-labels">built-in</a> acknowledgement requests, 
 a supported signal can contain custom acknowledgement requests. 
-A subscriber of such a signal can detect a requested acknowledgement via the <code class="highlighter-rouge">"requested-acks"</code> header.
+A subscriber of such a signal can detect a requested acknowledgement via the <code class="language-plaintext highlighter-rouge">"requested-acks"</code> header.
 If the subscriber is in charge of handling a requested acknowledgement it
 <a href="#issuing-acknowledgements">issues an acknowledgement</a>.</p>
 
@@ -2180,82 +2187,82 @@ Acknowledgement requests are expressed as protocol specific header fields of sig
 The following sections explain the various ways of requesting acknowledgements.</p>
 
 <p><a href="basic-signals-event.html">Events</a> emitted by Ditto will include the custom acknowledgement requests in the 
-<code class="highlighter-rouge">"requested-acks"</code> header.</p>
+<code class="language-plaintext highlighter-rouge">"requested-acks"</code> header.</p>
 
 <h3 id="requesting-acks-via-http">Requesting ACKs via HTTP</h3>
 <p>Either specify the following HTTP header fields:</p>
 <ul>
   <li><strong>requested-acks</strong>: a comma separated list of <a href="#acknowledgement-labels">acknowledgement labels</a>.<br />
-  Example: <code class="highlighter-rouge">requested-acks: twin-persisted,some-connection-id:my-custom-ack</code>.</li>
+  Example: <code class="language-plaintext highlighter-rouge">requested-acks: twin-persisted,some-connection-id:my-custom-ack</code>.</li>
   <li><strong>timeout</strong>: an optional time interval (in ms, s or m) to define how long the HTTP request should wait for
   acknowledgements and block.
-  Default and maximum value: <code class="highlighter-rouge">60s</code>.<br />
-  Examples: <code class="highlighter-rouge">timeout: 42s</code>, <code class="highlighter-rouge">timeout: 250ms</code>, <code class="highlighter-rouge">timeout: 1m</code>.</li>
+  Default and maximum value: <code class="language-plaintext highlighter-rouge">60s</code>.<br />
+  Examples: <code class="language-plaintext highlighter-rouge">timeout: 42s</code>, <code class="language-plaintext highlighter-rouge">timeout: 250ms</code>, <code class="language-plaintext highlighter-rouge">timeout: 1m</code>.</li>
 </ul>
 
 <p>Or specify the header fields as query parameters to the HTTP params, e.g.:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>PUT /api/2/things/org.eclipse.ditto:thing-1?requested-acks=twin-persisted,my-custom-ack&amp;timeout=42s
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>PUT /api/2/things/org.eclipse.ditto:thing-1?requested-acks=twin-persisted,my-custom-ack&amp;timeout=42s
 </code></pre></div></div>
 
 <p>The response of an HTTP request, which requested several acknowledgements, will differ from the response to an HTTP
 request without acknowledgement requests.</p>
 
 <p>Example response when 2 acknowledgements were requested and were successful. The overall HTTP status code will be 
-<code class="highlighter-rouge">200</code> (OK) in this case:</p>
+<code class="language-plaintext highlighter-rouge">200</code> (OK) in this case:</p>
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"twin-persisted"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="mi">201</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"payload"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"thingId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"org.eclipse.ditto:thing-1"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"policyId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"org.eclipse.ditto:thing-1"</span><span class="w">
+  </span><span class="nl">"twin-persisted"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"status"</span><span class="p">:</span><span class="w"> </span><span class="mi">201</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"payload"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"thingId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"org.eclipse.ditto:thing-1"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"policyId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"org.eclipse.ditto:thing-1"</span><span class="w">
     </span><span class="p">},</span><span class="w">
-    </span><span class="s2">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"correlation-id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"db878735-4957-4fd9-92dc-6f09bb12a093"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"version"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"etag"</span><span class="p">:</span><span class="w"> </span><span class="s2">"</span><span class="se">\"</span><span class="s2">rev:1</span><span class="se">\"</span><span class="s2">"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"location"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://127.0.0.1:8080/api/2/things/org.eclipse.ditto:thing-1"</span><span class="w">
+    </span><span class="nl">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"correlation-id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"db878735-4957-4fd9-92dc-6f09bb12a093"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"version"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"etag"</span><span class="p">:</span><span class="w"> </span><span class="s2">"</span><span class="se">\"</span><span class="s2">rev:1</span><span class="se">\"</span><span class="s2">"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"location"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://127.0.0.1:8080/api/2/things/org.eclipse.ditto:thing-1"</span><span class="w">
     </span><span class="p">}</span><span class="w">
   </span><span class="p">},</span><span class="w">
-  </span><span class="s2">"my-custom-ack"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="mi">200</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"payload"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"outcome"</span><span class="p">:</span><span class="w"> </span><span class="s2">"green"</span><span class="w">
+  </span><span class="nl">"my-custom-ack"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"status"</span><span class="p">:</span><span class="w"> </span><span class="mi">200</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"payload"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"outcome"</span><span class="p">:</span><span class="w"> </span><span class="s2">"green"</span><span class="w">
     </span><span class="p">},</span><span class="w">
-    </span><span class="s2">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"version"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"correlation-id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"db878735-4957-4fd9-92dc-6f09bb12a093"</span><span class="w">
+    </span><span class="nl">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"version"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"correlation-id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"db878735-4957-4fd9-92dc-6f09bb12a093"</span><span class="w">
     </span><span class="p">}</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
 <p>Example response when 2 acknowledgements were requested and one lead to a timeout. The overall HTTP status code will be 
-<code class="highlighter-rouge">424</code> (Dependency failed) in this case:</p>
+<code class="language-plaintext highlighter-rouge">424</code> (Dependency failed) in this case:</p>
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"twin-persisted"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="mi">201</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"payload"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"thingId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"org.eclipse.ditto:thing-1"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"policyId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"org.eclipse.ditto:thing-1"</span><span class="w">
+  </span><span class="nl">"twin-persisted"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"status"</span><span class="p">:</span><span class="w"> </span><span class="mi">201</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"payload"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"thingId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"org.eclipse.ditto:thing-1"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"policyId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"org.eclipse.ditto:thing-1"</span><span class="w">
     </span><span class="p">},</span><span class="w">
-    </span><span class="s2">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"correlation-id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"db878735-4957-4fd9-92dc-6f09bb12a093"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"version"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"etag"</span><span class="p">:</span><span class="w"> </span><span class="s2">"</span><span class="se">\"</span><span class="s2">rev:1</span><span class="se">\"</span><span class="s2">"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"location"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://127.0.0.1:8080/api/2/things/org.eclipse.ditto:thing-1"</span><span class="w">
+    </span><span class="nl">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"correlation-id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"db878735-4957-4fd9-92dc-6f09bb12a093"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"version"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"etag"</span><span class="p">:</span><span class="w"> </span><span class="s2">"</span><span class="se">\"</span><span class="s2">rev:1</span><span class="se">\"</span><span class="s2">"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"location"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://127.0.0.1:8080/api/2/things/org.eclipse.ditto:thing-1"</span><span class="w">
     </span><span class="p">}</span><span class="w">
   </span><span class="p">},</span><span class="w">
-  </span><span class="s2">"my-custom-ack"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="mi">408</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"payload"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="mi">408</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"error"</span><span class="p">:</span><span class="w"> </span><span class="s2">"acknowledgement:request.timeout"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"The acknowledgement request reached the specified timeout of 42,000ms."</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Try increasing the timeout and make sure that the requested acknowledgement is sent back in time."</span><span class="w">
+  </span><span class="nl">"my-custom-ack"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"status"</span><span class="p">:</span><span class="w"> </span><span class="mi">408</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"payload"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"status"</span><span class="p">:</span><span class="w"> </span><span class="mi">408</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"error"</span><span class="p">:</span><span class="w"> </span><span class="s2">"acknowledgement:request.timeout"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"The acknowledgement request reached the specified timeout of 42,000ms."</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Try increasing the timeout and make sure that the requested acknowledgement is sent back in time."</span><span class="w">
     </span><span class="p">},</span><span class="w">
-    </span><span class="s2">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"version"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"correlation-id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"db878735-4957-4fd9-92dc-6f09bb12a093"</span><span class="w">
+    </span><span class="nl">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"version"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"correlation-id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"db878735-4957-4fd9-92dc-6f09bb12a093"</span><span class="w">
     </span><span class="p">}</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
@@ -2263,7 +2270,7 @@ request without acknowledgement requests.</p>
 
 <h3 id="requesting-acks-via-websocket">Requesting ACKs via WebSocket</h3>
 <p>Together with a received Ditto <a href="basic-signals-command.html">command</a> in <a href="protocol-specification.html">Ditto Protocol</a>,
-<code class="highlighter-rouge">"requested-acks"</code> (as JsonArray of strings) and <code class="highlighter-rouge">"timeout"</code> headers in the 
+<code class="language-plaintext highlighter-rouge">"requested-acks"</code> (as JsonArray of strings) and <code class="language-plaintext highlighter-rouge">"timeout"</code> headers in the 
 <a href="protocol-specification.html#headers">Ditto Protocol headers</a> can be included in order to request acknowledgements via
 WebSocket.</p>
 
@@ -2274,14 +2281,14 @@ message.</p>
 <p>Acknowledgements for Ditto managed <a href="basic-connections.html#sources">connection sources</a> can be requested in 2 ways:</p>
 <ul>
   <li>specifically for each consumed supported signal as part of
-the <a href="protocol-specification.html#headers">Ditto Protocol headers</a> <code class="highlighter-rouge">"requested-acks"</code> (as JsonArray of strings)</li>
+the <a href="protocol-specification.html#headers">Ditto Protocol headers</a> <code class="language-plaintext highlighter-rouge">"requested-acks"</code> (as JsonArray of strings)</li>
   <li>by configuring the managed connection source to
 <a href="basic-connections.html#source-acknowledgement-requests">request acknowledgements for all consumed supported signals</a>.</li>
 </ul>
 
 <h4 id="requesting-acks-via-ditto-protocol-message">Requesting ACKs via Ditto Protocol message</h4>
 <p>Together with a received Ditto <a href="basic-signals-command.html">command</a> in <a href="protocol-specification.html">Ditto Protocol</a>,
-<code class="highlighter-rouge">"requested-acks"</code> (as JsonArray of strings) and <code class="highlighter-rouge">"timeout"</code> headers in the 
+<code class="language-plaintext highlighter-rouge">"requested-acks"</code> (as JsonArray of strings) and <code class="language-plaintext highlighter-rouge">"timeout"</code> headers in the 
 <a href="protocol-specification.html#headers">Ditto Protocol headers</a> can be included in order to request acknowledgements
 via established connections consuming messages from <a href="basic-connections.html#sources">sources</a>.</p>
 
@@ -2295,7 +2302,7 @@ consumed message of the underlying physical connection (e.g. to a message broker
 
 <p>This can be used in order to ensure that e.g. all messages consumed from a single source should be processed in an 
 “at least once” mode (QoS 1).
-E.g. if configured that the <a href="#built-in-acknowledgement-labels">built-in</a> <code class="highlighter-rouge">twin-persisted</code> acknowledgement is requested,
+E.g. if configured that the <a href="#built-in-acknowledgement-labels">built-in</a> <code class="language-plaintext highlighter-rouge">twin-persisted</code> acknowledgement is requested,
 a received twin-modifying command will only be technically acknowledged to the connection channel if Ditto successfully
 applied and persisted the command.</p>
 
@@ -2309,7 +2316,7 @@ applied and persisted the command.</p>
 <p>If you configured your connection source to add requested acknowledgements to your commands, this will cause all 
 produced messages to request the same acknowledgements.<br />
 If you however want to add requested acknowledgements only to some of those created messages, you need to set the 
-<code class="highlighter-rouge">"requested-acks"</code> header (as described in 
+<code class="language-plaintext highlighter-rouge">"requested-acks"</code> header (as described in 
 <a href="#requesting-acks-via-ditto-protocol-message">Requesting ACKs via Ditto Protocol message</a> section) during payload
 mapping for those commands you like to request an acknowledgement.</p>
 
@@ -2317,7 +2324,7 @@ mapping for those commands you like to request an acknowledgement.</p>
 <p>Acknowledgements are issued by subscribers of events generated by twin-modifying commands, or by subscribers of
 live commands and live messages. In order to issue a single acknowledgement, a 
 <a href="protocol-specification-acks.html#acknowledgement">Ditto Protocol acknowledgement</a> message has to be built and sent 
-back, using the same <code class="highlighter-rouge">"correlation-id"</code> in the <a href="protocol-specification.html#headers">protocol headers</a> as contained
+back, using the same <code class="language-plaintext highlighter-rouge">"correlation-id"</code> in the <a href="protocol-specification.html#headers">protocol headers</a> as contained
 in the received twin event, live command or live message.</p>
 
 <p>The labels of issued acknowledgements are globally unique for each subscriber. Before a subscriber is allowed to
@@ -2326,7 +2333,7 @@ subscriber causes an appropriate error for each channel that may issue acknowled
 
 <h3 id="semantics-of-status-codes-for-issued-acknowledgements">Semantics of status codes for issued acknowledgements</h3>
 
-<p>The <code class="highlighter-rouge">status</code> code of issued acknowledgements have certain semantics when it comes to whether Ditto shall e.g. try to 
+<p>The <code class="language-plaintext highlighter-rouge">status</code> code of issued acknowledgements have certain semantics when it comes to whether Ditto shall e.g. try to 
 retry processing a consumed message (when it was consumed from a message broker which persisted the message).</p>
 
 <p>Application specific code invoking a Ditto API and requesting acknowledgements should also adapt the semantics in order 
@@ -2343,31 +2350,31 @@ to correctly perform retries:</p>
   </thead>
   <tbody>
     <tr>
-      <td><code class="highlighter-rouge">2xx</code></td>
+      <td><code class="language-plaintext highlighter-rouge">2xx</code></td>
       <td>Successfully processed / ACKed</td>
       <td>❌</td>
       <td>Successfully received + processed.</td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge">4xx</code></td>
+      <td><code class="language-plaintext highlighter-rouge">4xx</code></td>
       <td>Request was erroneous</td>
       <td>❌</td>
       <td>Request could not be understood or authentication failed,<br />so retrying would result in the same outcome.</td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge">408</code></td>
+      <td><code class="language-plaintext highlighter-rouge">408</code></td>
       <td>Request timeout</td>
       <td>✔</td>
       <td>HTTP semantic for request timeout,<br />retrying does make sense.</td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge">424</code></td>
+      <td><code class="language-plaintext highlighter-rouge">424</code></td>
       <td>Mixed status codes,<br />with at least one request error</td>
       <td>✔</td>
       <td>There could be a timeout or server error in the mixed status codes,<br />so retrying does make sense.</td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge">5xx</code></td>
+      <td><code class="language-plaintext highlighter-rouge">5xx</code></td>
       <td>Server error</td>
       <td>✔</td>
       <td>The processing backend encountered a temporary error,<br />retrying could solve the issue.</td>
@@ -2381,12 +2388,12 @@ live commands or live messages via HTTP.</p>
 
 <h3 id="issuing-acks-via-websocket">Issuing ACKs via WebSocket</h3>
 <p>Create and send the <a href="protocol-specification-acks.html#acknowledgement">Ditto Protocol acknowledgement</a> message over an
-established WebSocket in response to a twin event, live command or live message that contains a <code class="highlighter-rouge">"requested-acks"</code>
+established WebSocket in response to a twin event, live command or live message that contains a <code class="language-plaintext highlighter-rouge">"requested-acks"</code>
 header.</p>
 
 <p>Only acknowledgements with declared labels are accepted. To declare acknowledgement labels, set them as the value
-of the query parameter <code class="highlighter-rouge">declared-acks</code> as comma-separated list:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET /ws/2?declared-acks=some-connection-id:ack-label-1,my:ack-label-2
+of the query parameter <code class="language-plaintext highlighter-rouge">declared-acks</code> as comma-separated list:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET /ws/2?declared-acks=some-connection-id:ack-label-1,my:ack-label-2
 </code></pre></div></div>
 
 <p>The websocket will be closed right after it has been opened if any other another subscriber already declared the same label.<br />
@@ -2411,17 +2418,17 @@ live commands and live messages that request them.</li>
 
 <p>Acknowledgements sent via a source must
 <a href="basic-connections.html#source-declared-acknowledgement-labels">have their labels declared</a>
-in the field <code class="highlighter-rouge">declaredAcks</code> as a JSON array.<br />
+in the field <code class="language-plaintext highlighter-rouge">declaredAcks</code> as a JSON array.<br />
 The labels of target-issued acknowledgements are declared automatically.<br />
-Acknowledgement labels of a connection must be prefixed by the connection ID or the <code class="highlighter-rouge">{{connection:id}}</code> 
-placeholder followed by a colon, for example <code class="highlighter-rouge">{{connection:id}}:my-custom-ack</code>.</p>
+Acknowledgement labels of a connection must be prefixed by the connection ID or the <code class="language-plaintext highlighter-rouge">{{connection:id}}</code> 
+placeholder followed by a colon, for example <code class="language-plaintext highlighter-rouge">{{connection:id}}:my-custom-ack</code>.</p>
 
 <p>If some source-declared or target-issued acknowledgement labels are taken by a websocket subscriber,
 all acknowledgements sent by the connection are rejected with error until the websocket is closed.</p>
 
 <h4 id="issuing-acks-via-ditto-protocol-acknowledgement-message">Issuing ACKs via Ditto Protocol acknowledgement message</h4>
 <p>Create and send the <a href="protocol-specification-acks.html#acknowledgement">Ditto Protocol acknowledgement</a> message over a<br />
-source of the connection, in response to an event, live command or live message which contained an <code class="highlighter-rouge">"requested-acks"</code>
+source of the connection, in response to an event, live command or live message which contained an <code class="language-plaintext highlighter-rouge">"requested-acks"</code>
 header.</p>
 
 <h4 id="issuing-acks-via-connection-target-configuration">Issuing ACKs via connection target configuration</h4>
@@ -2460,8 +2467,8 @@ If it could not be applied successfully, the signal will be negatively acknowled
 The <a href="protocol-specification-acks.html#combined-status-code">status code of the acknowledgement</a> reflects the failure.</p>
 
 <p>Based on the used channel, the acknowledgement will be translated to the capabilities of the command or live message
-channel, e.g. for HTTP an HTTP response will be sent with the outcome as HTTP status (<code class="highlighter-rouge">2xx</code> for a successful
-acknowledgement, and <code class="highlighter-rouge">4xx</code> for a non-successful one) together with additional details as HTTP response.</p>
+channel, e.g. for HTTP an HTTP response will be sent with the outcome as HTTP status (<code class="language-plaintext highlighter-rouge">2xx</code> for a successful
+acknowledgement, and <code class="language-plaintext highlighter-rouge">4xx</code> for a non-successful one) together with additional details as HTTP response.</p>
 
 <h3 id="assure-qos-until-persisted-in-ditto---twin-persisted">Assure QoS until persisted in Ditto - twin-persisted</h3>
 <p>In order to ensure that a <a href="protocol-specification-things-create-or-modify.html">create/modify command</a> resulted in a 
@@ -2469,7 +2476,7 @@ successful update of twin in Ditto’s managed database, <a href="#requesting-ac
 the <a href="#built-in-acknowledgement-labels">built-in “twin-persisted”</a> acknowledgement label.</p>
 
 <h3 id="assure-qos-until-processing-of-a-live-commandmessage-by-a-subscriber---live-response">Assure QoS until processing of a live command/message by a subscriber - live-response</h3>
-<p>In order to ensure that a live command or live message is processed by a subscriber, set <code class="highlighter-rouge">response-required</code> to true.
+<p>In order to ensure that a live command or live message is processed by a subscriber, set <code class="language-plaintext highlighter-rouge">response-required</code> to true.
 This way the <a href="#built-in-acknowledgement-labels">built-in “live-response” acknowledgement label</a> is <a href="#requesting-acks">automatically requested</a> for the live command/message.
 This acknowledgement request is fulfilled when the subscriber sends a live response or message response.</p>
 
@@ -2485,34 +2492,34 @@ without any live or message response, <a href="#requesting-acks">request the ack
 To avoid that a command fails because of a missing acknowledgement for those reasons, we introduced weak acknowledgements.</p>
 
 <p>These weak acknowledgements are issued automatically by ditto, in case a message or an event is filtered by a subscriber which declared to provide one or more of the requested acknowledgements for the command.
-A weak acknowledgement can be identified by checking the header with value <code class="highlighter-rouge">ditto-weak-ack</code>.
-Weak acknowledgements have this header set to <code class="highlighter-rouge">true</code>.</p>
+A weak acknowledgement can be identified by checking the header with value <code class="language-plaintext highlighter-rouge">ditto-weak-ack</code>.
+Weak acknowledgements have this header set to <code class="language-plaintext highlighter-rouge">true</code>.</p>
 
 <p>These weak acknowledgements do not cause redelivery of messages consumed by a Connection.</p>
 
 <h2 id="interaction-between-headers">Interaction between headers</h2>
-<p>Three headers control how Ditto responds to a command: <code class="highlighter-rouge">response-required</code>, <code class="highlighter-rouge">requested-acks</code>, <code class="highlighter-rouge">timeout</code>.</p>
+<p>Three headers control how Ditto responds to a command: <code class="language-plaintext highlighter-rouge">response-required</code>, <code class="language-plaintext highlighter-rouge">requested-acks</code>, <code class="language-plaintext highlighter-rouge">timeout</code>.</p>
 <ul>
-  <li><code class="highlighter-rouge">response-required</code>: <code class="highlighter-rouge">true</code> or <code class="highlighter-rouge">false</code>.<br />
+  <li><code class="language-plaintext highlighter-rouge">response-required</code>: <code class="language-plaintext highlighter-rouge">true</code> or <code class="language-plaintext highlighter-rouge">false</code>.<br />
  It governs whether the user gets a (detailed) reply.<br />
- In case of a live message or a live command it also has impact on the <code class="highlighter-rouge">requested-acks</code>:
+ In case of a live message or a live command it also has impact on the <code class="language-plaintext highlighter-rouge">requested-acks</code>:
     <ul>
-      <li>If <code class="highlighter-rouge">response-required</code> is <code class="highlighter-rouge">true</code>, the acknowledgement label <code class="highlighter-rouge">live-response</code> will be added to <code class="highlighter-rouge">requested-acks</code> if not 
-present and <code class="highlighter-rouge">requested-acks</code> was not explicitly set to an empty JSON array.<br /></li>
-      <li>If it is <code class="highlighter-rouge">false</code>, the acknowledgement label <code class="highlighter-rouge">live-response</code> will be removed from <code class="highlighter-rouge">requested-acks</code> if present.</li>
+      <li>If <code class="language-plaintext highlighter-rouge">response-required</code> is <code class="language-plaintext highlighter-rouge">true</code>, the acknowledgement label <code class="language-plaintext highlighter-rouge">live-response</code> will be added to <code class="language-plaintext highlighter-rouge">requested-acks</code> if not 
+present and <code class="language-plaintext highlighter-rouge">requested-acks</code> was not explicitly set to an empty JSON array.<br /></li>
+      <li>If it is <code class="language-plaintext highlighter-rouge">false</code>, the acknowledgement label <code class="language-plaintext highlighter-rouge">live-response</code> will be removed from <code class="language-plaintext highlighter-rouge">requested-acks</code> if present.</li>
     </ul>
   </li>
-  <li><code class="highlighter-rouge">requested-acks</code>: JSON array of acknowledgement requests.<br />
+  <li><code class="language-plaintext highlighter-rouge">requested-acks</code>: JSON array of acknowledgement requests.<br />
  It determines the content of the response and transport-layer message settlement.</li>
-  <li><code class="highlighter-rouge">timeout</code>: Duration.<br />
+  <li><code class="language-plaintext highlighter-rouge">timeout</code>: Duration.<br />
  It governs how long Ditto waits for responses and acknowledgements.</li>
 </ul>
 
-<p>It is considered a client error if <code class="highlighter-rouge">timeout</code> is set to <code class="highlighter-rouge">0s</code> while <code class="highlighter-rouge">response-required</code> is <code class="highlighter-rouge">true</code> or <code class="highlighter-rouge">requested-acks</code> is
+<p>It is considered a client error if <code class="language-plaintext highlighter-rouge">timeout</code> is set to <code class="language-plaintext highlighter-rouge">0s</code> while <code class="language-plaintext highlighter-rouge">response-required</code> is <code class="language-plaintext highlighter-rouge">true</code> or <code class="language-plaintext highlighter-rouge">requested-acks</code> is
 nonempty.</p>
 
 <h3 id="default-header-values">Default header values</h3>
-<p>Ditto set each of the three headers <code class="highlighter-rouge">response-required</code>, <code class="highlighter-rouge">requested-acks</code>, <code class="highlighter-rouge">timeout</code> to a default value according to any
+<p>Ditto set each of the three headers <code class="language-plaintext highlighter-rouge">response-required</code>, <code class="language-plaintext highlighter-rouge">requested-acks</code>, <code class="language-plaintext highlighter-rouge">timeout</code> to a default value according to any
 values of the other two headers set by the user.<br />
 The default values depend only on headers set by the user; they do not depend on each other.<br />
 Setting the default header values this way never produces any combination considered a client error unless the headers
@@ -2529,18 +2536,18 @@ set by the user already cause a client error.</p>
   <tbody>
     <tr>
       <td>response-required</td>
-      <td><code class="highlighter-rouge">false</code> if <code class="highlighter-rouge">timeout</code> is zero or <code class="highlighter-rouge">requested-acks</code> is empty, <code class="highlighter-rouge">true</code> otherwise</td>
-      <td><code class="highlighter-rouge">true</code></td>
+      <td><code class="language-plaintext highlighter-rouge">false</code> if <code class="language-plaintext highlighter-rouge">timeout</code> is zero or <code class="language-plaintext highlighter-rouge">requested-acks</code> is empty, <code class="language-plaintext highlighter-rouge">true</code> otherwise</td>
+      <td><code class="language-plaintext highlighter-rouge">true</code></td>
     </tr>
     <tr>
       <td>requested-acks</td>
-      <td><code class="highlighter-rouge">empty</code> if <code class="highlighter-rouge">timeout</code> is zero or <code class="highlighter-rouge">response-required</code> is <code class="highlighter-rouge">false</code>, the channel’s default acknowledgement request otherwise</td>
-      <td><code class="highlighter-rouge">["twin-persisted"]</code> for TWIN channel,<br /><code class="highlighter-rouge">["live-response"]</code> for LIVE channel</td>
+      <td><code class="language-plaintext highlighter-rouge">empty</code> if <code class="language-plaintext highlighter-rouge">timeout</code> is zero or <code class="language-plaintext highlighter-rouge">response-required</code> is <code class="language-plaintext highlighter-rouge">false</code>, the channel’s default acknowledgement request otherwise</td>
+      <td><code class="language-plaintext highlighter-rouge">["twin-persisted"]</code> for TWIN channel,<br /><code class="language-plaintext highlighter-rouge">["live-response"]</code> for LIVE channel</td>
     </tr>
     <tr>
       <td>timeout</td>
-      <td><code class="highlighter-rouge">60s</code></td>
-      <td><code class="highlighter-rouge">60s</code></td>
+      <td><code class="language-plaintext highlighter-rouge">60s</code></td>
+      <td><code class="language-plaintext highlighter-rouge">60s</code></td>
     </tr>
   </tbody>
 </table>
@@ -2548,9 +2555,9 @@ set by the user already cause a client error.</p>
 <p>The following sections show how each Ditto API interprets the three headers.</p>
 
 <h3 id="http">HTTP</h3>
-<p>Since an HTTP response always follows an HTTP request, the header <code class="highlighter-rouge">response-required</code> is interpreted as whether
+<p>Since an HTTP response always follows an HTTP request, the header <code class="language-plaintext highlighter-rouge">response-required</code> is interpreted as whether
 the user wants a <em>detailed</em> response.<br />
-If it is set to <code class="highlighter-rouge">false</code>, the HTTP response consists of status line and headers without body, or with a minimal body
+If it is set to <code class="language-plaintext highlighter-rouge">false</code>, the HTTP response consists of status line and headers without body, or with a minimal body
 containing other status codes.<br />
 If acknowledgements are requested, the HTTP response is delayed until all requested acknowledgements are received.
 Generally, if a request cannot be answered within the defined timeout, the HTTP response has status code 408.
@@ -2629,10 +2636,10 @@ In this case the status codes of all acknowledgements should be check to determi
 </table>
 
 <h3 id="websocket">WebSocket</h3>
-<p>In the absence of client errors, a response is sent for a command if and only if <code class="highlighter-rouge">response-required</code> is set to <code class="highlighter-rouge">true</code>.
+<p>In the absence of client errors, a response is sent for a command if and only if <code class="language-plaintext highlighter-rouge">response-required</code> is set to <code class="language-plaintext highlighter-rouge">true</code>.
 Ditto supports no transport-layer message settlement for WebSocket; acknowledgements are only received as text frames.
-Consequently, it is considered a client error to have non-empty <code class="highlighter-rouge">requested-acks</code> while <code class="highlighter-rouge">response-required</code> is set to
-<code class="highlighter-rouge">false</code>.</p>
+Consequently, it is considered a client error to have non-empty <code class="language-plaintext highlighter-rouge">requested-acks</code> while <code class="language-plaintext highlighter-rouge">response-required</code> is set to
+<code class="language-plaintext highlighter-rouge">false</code>.</p>
 
 <table>
   <thead>
@@ -2705,9 +2712,9 @@ Consequently, it is considered a client error to have non-empty <code class="hig
 </table>
 
 <h3 id="connectivity">Connectivity</h3>
-<p>For any incoming supported signal through a connection source, the header <code class="highlighter-rouge">response-required</code> determines whether a
+<p>For any incoming supported signal through a connection source, the header <code class="language-plaintext highlighter-rouge">response-required</code> determines whether a
 response message is published at the reply-target of the source.<br />
-The header <code class="highlighter-rouge">requested-acks</code> determines the transport-layer message settlement and the content of any response message
+The header <code class="language-plaintext highlighter-rouge">requested-acks</code> determines the transport-layer message settlement and the content of any response message
 published at the reply-target.<br />
 Examples of transport-layer message settlement mechanisms are AMQP 0.9.1 consumer acknowledgement mode, AMQP 1.0
 disposition frames, and MQTT PUBACK/PUBREC/PUBREL messages for incoming PUBLISH with QoS 1 or 2.</p>
@@ -2807,7 +2814,7 @@ disposition frames, and MQTT PUBACK/PUBREC/PUBREL messages for incoming PUBLISH 
                     </div>
                     <p class="notice">
                         &copy;2024 Eclipse Ditto™.
-                         Site last generated: Feb 27, 2024 <br />
+                         Site last generated: Apr 10, 2024 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

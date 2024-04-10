@@ -273,24 +273,24 @@ $('#toc').on('click', 'a', function() {
 
         
 
-        <p>After the added option to target the <a href="protocol-twinlive.html#live">live channel</a> by adding the <code class="highlighter-rouge">channel=live</code> to HTTP
+        <p>After the added option to target the <a href="protocol-twinlive.html#live">live channel</a> by adding the <code class="language-plaintext highlighter-rouge">channel=live</code> to HTTP
 requests (see also <a href="2021-12-20-http-live-channel.html">blog post about “HTTP live channel”</a>), Eclipse Ditto 
 <strong>version 2.3.0</strong> will in addition support to define a 
-<a href="basic-conditional-requests.html#live-channel-condition">live channel condition</a>, which, when evaluating to <code class="highlighter-rouge">true</code>, 
+<a href="basic-conditional-requests.html#live-channel-condition">live channel condition</a>, which, when evaluating to <code class="language-plaintext highlighter-rouge">true</code>, 
 will retrieve data from a device via the live channel, or fall back to the persisted <a href="protocol-twinlive.html#twin">twin</a> 
 otherwise.</p>
 
 <div class="alert alert-info" role="alert"><i class="fa fa-info-circle"></i> <b>Note:</b> In order to use the live channel, the device receiving live commands must be able to understand
     and answer in <a href="protocol-specification.html">Ditto Protocol messages</a> with the
-<a href="protocol-specification-topic.html#live-channel">topic’s channel being <code class="highlighter-rouge">live</code></a>.</div>
+<a href="protocol-specification-topic.html#live-channel">topic’s channel being <code class="language-plaintext highlighter-rouge">live</code></a>.</div>
 
 <h2 id="relying-on-conditions">Relying on conditions</h2>
 
-<p>Ditto 2.1.0 added support for <a href="basic-conditional-requests.html">conditional requests</a> by e.g. specifying a <code class="highlighter-rouge">condition</code>
+<p>Ditto 2.1.0 added support for <a href="basic-conditional-requests.html">conditional requests</a> by e.g. specifying a <code class="language-plaintext highlighter-rouge">condition</code>
 query parameter for HTTP API calls.</p>
 
-<p>This mechanism can now additionally be used to formulate a condition through the query parameter <code class="highlighter-rouge">live-channel-condition</code>
-whether data shall be retrieved via the <code class="highlighter-rouge">live</code> channel from the device.</p>
+<p>This mechanism can now additionally be used to formulate a condition through the query parameter <code class="language-plaintext highlighter-rouge">live-channel-condition</code>
+whether data shall be retrieved via the <code class="language-plaintext highlighter-rouge">live</code> channel from the device.</p>
 
 <h2 id="optionally-update-twin-automatically-based-on-retrieved-live-data">Optionally update twin automatically based on retrieved live data</h2>
 
@@ -301,23 +301,23 @@ It therefore is obvious to use that data in order to update the persisted twin m
 <a href="connectivity-mapping.html#updatetwinwithliveresponse-mapper">UpdateTwinWithLiveResponse mapper</a> in a Ditto 
 <a href="basic-connections.html">managed connection</a>.<br />
 This mapper will transform each “live response” retrieving and transporting data from a device to an additional 
-<a href="protocol-specification-things-merge.html">merge command</a> modifying the twin with that <code class="highlighter-rouge">live</code> data.</p>
+<a href="protocol-specification-things-merge.html">merge command</a> modifying the twin with that <code class="language-plaintext highlighter-rouge">live</code> data.</p>
 
 <h2 id="example-device-is-marked-to-be-polled">Example: Device is marked to be polled</h2>
 
 <p>This is for example helpful if the device does not push its newest sensor readings actively into its twin 
 representation managed by Ditto, but relies on being polled for the newest readings.<br />
-In that case, the twin could be marked e.g. as <code class="highlighter-rouge">attributes/polling-mode=true</code>:</p>
+In that case, the twin could be marked e.g. as <code class="language-plaintext highlighter-rouge">attributes/polling-mode=true</code>:</p>
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"thingId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"my.namespace:my-polling-device-1"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"policyId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"my.namespace:my-polling-device-1"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"polling-mode"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+  </span><span class="nl">"thingId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"my.namespace:my-polling-device-1"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"policyId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"my.namespace:my-polling-device-1"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"polling-mode"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
   </span><span class="p">},</span><span class="w">
-  </span><span class="s2">"features"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"temperature"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"value"</span><span class="p">:</span><span class="w"> </span><span class="mf">23.42</span><span class="w">
+  </span><span class="nl">"features"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"temperature"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"value"</span><span class="p">:</span><span class="w"> </span><span class="mf">23.42</span><span class="w">
       </span><span class="p">}</span><span class="w">
     </span><span class="p">}</span><span class="w">
   </span><span class="p">}</span><span class="w">
@@ -325,25 +325,25 @@ In that case, the twin could be marked e.g. as <code class="highlighter-rouge">a
 </span></code></pre></div></div>
 
 <p>When an IoT application now needs to retrieve the latest temperature value, it can formulate a query (e.g. in HTTP):</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET /api/2/things/my.namespace:my-polling-device-1/features/temperature/properties/value
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET /api/2/things/my.namespace:my-polling-device-1/features/temperature/properties/value
   ?live-channel-condition=eq(attributes/polling-mode,true)
   &amp;timeout=10s
   &amp;live-channel-timeout-strategy=use-twin
 </code></pre></div></div>
 
-<p>The specified <code class="highlighter-rouge">live-channel-condition</code> will evaluate to <code class="highlighter-rouge">true</code>, meaning that the retrieve is transformed to a 
+<p>The specified <code class="language-plaintext highlighter-rouge">live-channel-condition</code> will evaluate to <code class="language-plaintext highlighter-rouge">true</code>, meaning that the retrieve is transformed to a 
 <a href="protocol-twinlive.html#live">live command</a> and sent to the device, e.g. connected via a 
 <a href="basic-connections.html">managed connection</a>.<br />
 Upon receiving the “live retrieve” at the device, the device can create a command response correlated with the same
-<code class="highlighter-rouge">correlation-id</code> and send it back to Ditto with the current value.<br />
-This value is then returned as result of the <code class="highlighter-rouge">GET</code>, the HTTP response header <code class="highlighter-rouge">channel</code> will indicate that the data was
-sent by the device by having the value <code class="highlighter-rouge">live</code>.</p>
+<code class="language-plaintext highlighter-rouge">correlation-id</code> and send it back to Ditto with the current value.<br />
+This value is then returned as result of the <code class="language-plaintext highlighter-rouge">GET</code>, the HTTP response header <code class="language-plaintext highlighter-rouge">channel</code> will indicate that the data was
+sent by the device by having the value <code class="language-plaintext highlighter-rouge">live</code>.</p>
 
-<p>If the device does not answer with a correctly correlated response within the given <code class="highlighter-rouge">timeout</code>, the request will fall back
+<p>If the device does not answer with a correctly correlated response within the given <code class="language-plaintext highlighter-rouge">timeout</code>, the request will fall back
 to the <a href="protocol-twinlive.html#twin">twin</a> channel, retrieving the data from the last known persisted temperature value 
 in the twin managed by Ditto.<br />
-The HTTP response header <code class="highlighter-rouge">channel</code> will indicate that the data was received by the persisted twin by having the value 
-<code class="highlighter-rouge">twin</code>.</p>
+The HTTP response header <code class="language-plaintext highlighter-rouge">channel</code> will indicate that the data was received by the persisted twin by having the value 
+<code class="language-plaintext highlighter-rouge">twin</code>.</p>
 
 <h2 id="example-device-contains-a-connection-status">Example: Device contains a connection status</h2>
 
@@ -353,45 +353,45 @@ When e.g. using <a href="https://www.eclipse.org/hono/">Eclipse Hono</a> in comb
 <a href="connectivity-mapping.html#connectionstatus-mapper">ConnectionStatus</a> mapper can be configured in a Ditto 
 <a href="basic-connections.html">managed connection</a> which will automatically update a <a href="basic-thing.html#features">feature</a> in
 the twin based on Hono’s <a href="https://www.eclipse.org/hono/docs/concepts/device-notifications/">device notifications</a> 
-reflecting a <code class="highlighter-rouge">"readySince"</code> and <code class="highlighter-rouge">"readyUntil"</code> timestamp:</p>
+reflecting a <code class="language-plaintext highlighter-rouge">"readySince"</code> and <code class="language-plaintext highlighter-rouge">"readyUntil"</code> timestamp:</p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"thingId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"my.namespace:my-connection-aware-device-1"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"policyId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"my.namespace:my-connection-aware-device-1"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"features"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"ConnectionStatus"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"definition"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="s2">"org.eclipse.ditto:ConnectionStatus:1.0.0"</span><span class="w"> </span><span class="p">],</span><span class="w">
-      </span><span class="s2">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-          </span><span class="s2">"readySince"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2021-12-22T14:16:18Z"</span><span class="p">,</span><span class="w">
-          </span><span class="s2">"readyUntil"</span><span class="p">:</span><span class="w"> </span><span class="s2">"9999-12-31T23:59:59Z"</span><span class="w">
+  </span><span class="nl">"thingId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"my.namespace:my-connection-aware-device-1"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"policyId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"my.namespace:my-connection-aware-device-1"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"features"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"ConnectionStatus"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"definition"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="s2">"org.eclipse.ditto:ConnectionStatus:1.0.0"</span><span class="w"> </span><span class="p">],</span><span class="w">
+      </span><span class="nl">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"status"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"readySince"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2021-12-22T14:16:18Z"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"readyUntil"</span><span class="p">:</span><span class="w"> </span><span class="s2">"9999-12-31T23:59:59Z"</span><span class="w">
         </span><span class="p">}</span><span class="w">
       </span><span class="p">}</span><span class="w">
     </span><span class="p">},</span><span class="w">
-    </span><span class="s2">"temperature"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"value"</span><span class="p">:</span><span class="w"> </span><span class="mf">23.42</span><span class="w">
+    </span><span class="nl">"temperature"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"value"</span><span class="p">:</span><span class="w"> </span><span class="mf">23.42</span><span class="w">
       </span><span class="p">}</span><span class="w">
     </span><span class="p">}</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
-<p>In that case, the <code class="highlighter-rouge">"readyUntil"</code> will contain a timestamp how long the device will be ready to receive commands, the 
-timestamp <code class="highlighter-rouge">"9999-12-31T23:59:59Z"</code> being an alias for indefinitely (once the device disconnects, e.g. from the MQTT 
+<p>In that case, the <code class="language-plaintext highlighter-rouge">"readyUntil"</code> will contain a timestamp how long the device will be ready to receive commands, the 
+timestamp <code class="language-plaintext highlighter-rouge">"9999-12-31T23:59:59Z"</code> being an alias for indefinitely (once the device disconnects, e.g. from the MQTT 
 adapter of Eclipse Hono, this timestamp will be set to the disconnection time).</p>
 
 <p>Utilizing this “connection awareness”, we can now easily define a query to retrieve data from the real device when it 
-is connected and use the persisted <code class="highlighter-rouge">twin</code> when it is not connected or runs into a timeout.<br />
-For using the current time as ISO-8601 timestamp, a new placeholder <code class="highlighter-rouge">time:now</code> was also introduced, usable in RQL
+is connected and use the persisted <code class="language-plaintext highlighter-rouge">twin</code> when it is not connected or runs into a timeout.<br />
+For using the current time as ISO-8601 timestamp, a new placeholder <code class="language-plaintext highlighter-rouge">time:now</code> was also introduced, usable in RQL
 expressions everywhere in Ditto:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET /api/2/things/my.namespace:my-connection-aware-device-1/features/temperature/properties/value
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET /api/2/things/my.namespace:my-connection-aware-device-1/features/temperature/properties/value
   ?live-channel-condition=gt(features/ConnectionStatus/properties/status/readyUntil,time:now)
   &amp;timeout=10s
   &amp;live-channel-timeout-strategy=use-twin
 </code></pre></div></div>
 
-<p>Of course every other field in the persisted twin may also be used in the <code class="highlighter-rouge">live-channel-condition</code>, if your devices e.g.
+<p>Of course every other field in the persisted twin may also be used in the <code class="language-plaintext highlighter-rouge">live-channel-condition</code>, if your devices e.g.
 are aware if they are connected or not by other means (e.g. by setting an attribute), this can be utilized as well.</p>
 
 <h2 id="feedback">Feedback?</h2>
@@ -421,7 +421,7 @@ The Eclipse Ditto team</p>
                     </div>
                     <p class="notice">
                         &copy;2024 Eclipse Ditto™.
-                         Site last generated: Feb 27, 2024 <br />
+                         Site last generated: Apr 10, 2024 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

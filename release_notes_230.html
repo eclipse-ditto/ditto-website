@@ -278,6 +278,13 @@
               
               
               
+              <li><a href="release_notes_354.html">3.5.4</a></li>
+              
+              
+              
+              
+              
+              
               <li><a href="release_notes_353.html">3.5.3</a></li>
               
               
@@ -2112,7 +2119,7 @@ to prior Eclipse Ditto 2.x versions.</p>
   <li>HTTP API for “live” commands</li>
   <li>Smart channel strategy for live/twin read access</li>
   <li>Configurable allowing creation of entities (policies/things) based on namespace and authenticated subjects</li>
-  <li>Allow using <code class="highlighter-rouge">*</code> as a placeholder for the feature id in selected fields</li>
+  <li>Allow using <code class="language-plaintext highlighter-rouge">*</code> as a placeholder for the feature id in selected fields</li>
 </ul>
 
 <p>The following notable fixes are included:</p>
@@ -2121,7 +2128,7 @@ to prior Eclipse Ditto 2.x versions.</p>
   <li>Fix potential concurrent modification errors when using JavaScript payload mapping and global variables</li>
   <li>Fix reconnect backoff for Kafka connections with authentication failures</li>
   <li>Fix caching of JWTs in HTTP push connections</li>
-  <li>Fix potentially unreachable client actors in connections with <code class="highlighter-rouge">clientCount &gt; 1</code></li>
+  <li>Fix potentially unreachable client actors in connections with <code class="language-plaintext highlighter-rouge">clientCount &gt; 1</code></li>
   <li>Fix search inconsistencies for very active things during shard relocation (e.g. on rolling updates)</li>
   <li>Fix that a Kafka connection with only targets remains “open” even if Kafka broker is not available</li>
   <li>Allow usage of absolute domain paths ending with a “.” as Kafka bootstrap servers</li>
@@ -2133,18 +2140,18 @@ to prior Eclipse Ditto 2.x versions.</p>
 <ul>
   <li>Update of several used dependencies:
     <ul>
-      <li>Pekko: <code class="highlighter-rouge">2.6.18</code></li>
-      <li>Pekko Management: <code class="highlighter-rouge">1.1.2</code></li>
-      <li>Caffeine: <code class="highlighter-rouge">3.0.5</code></li>
-      <li>Classindex: <code class="highlighter-rouge">3.11</code></li>
-      <li>Cloudevents: <code class="highlighter-rouge">2.3.0</code></li>
-      <li>HiveMQ MQTT client: <code class="highlighter-rouge">1.3.0</code></li>
-      <li>Jackson: <code class="highlighter-rouge">2.12.6</code></li>
-      <li>Logback: <code class="highlighter-rouge">1.2.10</code></li>
-      <li>SLF4J: <code class="highlighter-rouge">1.7.32</code></li>
-      <li>SSL config core: <code class="highlighter-rouge">0.4.3</code></li>
-      <li>Typesafe config: <code class="highlighter-rouge">1.4.1</code></li>
-      <li>Rhino JS engine: <code class="highlighter-rouge">1.7.14</code></li>
+      <li>Pekko: <code class="language-plaintext highlighter-rouge">2.6.18</code></li>
+      <li>Pekko Management: <code class="language-plaintext highlighter-rouge">1.1.2</code></li>
+      <li>Caffeine: <code class="language-plaintext highlighter-rouge">3.0.5</code></li>
+      <li>Classindex: <code class="language-plaintext highlighter-rouge">3.11</code></li>
+      <li>Cloudevents: <code class="language-plaintext highlighter-rouge">2.3.0</code></li>
+      <li>HiveMQ MQTT client: <code class="language-plaintext highlighter-rouge">1.3.0</code></li>
+      <li>Jackson: <code class="language-plaintext highlighter-rouge">2.12.6</code></li>
+      <li>Logback: <code class="language-plaintext highlighter-rouge">1.2.10</code></li>
+      <li>SLF4J: <code class="language-plaintext highlighter-rouge">1.7.32</code></li>
+      <li>SSL config core: <code class="language-plaintext highlighter-rouge">0.4.3</code></li>
+      <li>Typesafe config: <code class="language-plaintext highlighter-rouge">1.4.1</code></li>
+      <li>Rhino JS engine: <code class="language-plaintext highlighter-rouge">1.7.14</code></li>
     </ul>
   </li>
 </ul>
@@ -2170,7 +2177,7 @@ bugfixes were added.</p>
 See also the <a href="2021-12-20-http-live-channel.html">blogpost covering that topic</a>.</p>
 
 <p>To qualify a command (e.g. “modify thing” or “retrieve feature property”) as a “live” command, the header or 
-query parameter <code class="highlighter-rouge">channel=live</code> has to be specified.</p>
+query parameter <code class="language-plaintext highlighter-rouge">channel=live</code> has to be specified.</p>
 
 <p>Live commands bypass the twin and go directly to the devices.<br />
 However, an existing twin is still required for policy enforcement.</p>
@@ -2190,11 +2197,11 @@ the twin based on received live data from devices was added.</p>
 <p>This added feature allows configuring restrictions, which <a href="basic-auth.html#authenticated-subjects">authenticated subjects</a>
 may create new entities (things / policies) in which namespaces.</p>
 
-<h4 id="allow-using--as-a-placeholder-for-the-feature-id-in-selected-fields"><a href="https://github.com/eclipse-ditto/ditto/pull/1277">Allow using <code class="highlighter-rouge">*</code> as a placeholder for the feature id in selected fields</a></h4>
+<h4 id="allow-using--as-a-placeholder-for-the-feature-id-in-selected-fields"><a href="https://github.com/eclipse-ditto/ditto/pull/1277">Allow using <code class="language-plaintext highlighter-rouge">*</code> as a placeholder for the feature id in selected fields</a></h4>
 
-<p>When selecting for certain <a href="httpapi-concepts.html#field-selector-with-wildcard"><code class="highlighter-rouge">fields</code> of a thing</a> or when using 
+<p>When selecting for certain <a href="httpapi-concepts.html#field-selector-with-wildcard"><code class="language-plaintext highlighter-rouge">fields</code> of a thing</a> or when using 
 <a href="basic-enrichment.html">signal enrichment (extraFields)</a> in order to add more (unchanged) data from a twin to e.g. events 
-the wildcard <code class="highlighter-rouge">*</code> can now be used in order to select all features of a thing without the need to know their feature names.</p>
+the wildcard <code class="language-plaintext highlighter-rouge">*</code> can now be used in order to select all features of a thing without the need to know their feature names.</p>
 
 <h3 id="bugfixes">Bugfixes</h3>
 
@@ -2255,7 +2262,7 @@ This is a complete list of the
                     </div>
                     <p class="notice">
                         &copy;2024 Eclipse Ditto™.
-                         Site last generated: Feb 27, 2024 <br />
+                         Site last generated: Apr 10, 2024 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

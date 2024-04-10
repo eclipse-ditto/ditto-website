@@ -278,6 +278,13 @@
               
               
               
+              <li><a href="release_notes_354.html">3.5.4</a></li>
+              
+              
+              
+              
+              
+              
               <li><a href="release_notes_353.html">3.5.3</a></li>
               
               
@@ -2106,29 +2113,29 @@ $('#toc').on('click', 'a', function() {
 <a href="https://tools.ietf.org/html/rfc4254#section-7">Secure Shell (SSH) Connection Protocol, RFC4254</a>) which 
 is then used to connect to the actual target endpoint. 
 This is useful when the target endpoint is not directly accessible but only via SSH. For this purpose the connection 
-configuration must specify the <code class="highlighter-rouge">sshTunnel</code> section, which contains the necessary 
+configuration must specify the <code class="language-plaintext highlighter-rouge">sshTunnel</code> section, which contains the necessary 
 information to establish a local SSH port forwarding. The tunneling supports password and public key authentication and 
 host validation using public key fingerprints. If the tunnel is enabled the connection will establish an SSH 
 tunnel and afterwards use this tunnel to connect to the actual endpoint.</p>
 
-<p>The example below establishes an SSH tunnel via <code class="highlighter-rouge">ssh-host:2222</code> to the remote endpoint 
-<code class="highlighter-rouge">tcp://mqtt.eclipseprojects.io:1883</code>, using plain authentication and enabled host validation:</p>
+<p>The example below establishes an SSH tunnel via <code class="language-plaintext highlighter-rouge">ssh-host:2222</code> to the remote endpoint 
+<code class="language-plaintext highlighter-rouge">tcp://mqtt.eclipseprojects.io:1883</code>, using plain authentication and enabled host validation:</p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-    </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"tunneled-connection"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"connectionType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"mqtt"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"uri"</span><span class="p">:</span><span class="w"> </span><span class="s2">"tcp://mqtt.eclipseprojects.io:1883"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"sources"</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="w"> </span><span class="err">...</span><span class="w"> </span><span class="p">}],</span><span class="w">
-    </span><span class="s2">"sshTunnel"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"uri"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ssh://ssh-host:2222"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"credentials"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-            </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"plain"</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"username"</span><span class="p">:</span><span class="w"> </span><span class="s2">"username"</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"password"</span><span class="p">:</span><span class="w"> </span><span class="s2">"password"</span><span class="w">
+    </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"tunneled-connection"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"connectionType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"mqtt"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"uri"</span><span class="p">:</span><span class="w"> </span><span class="s2">"tcp://mqtt.eclipseprojects.io:1883"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"sources"</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="w"> </span><span class="err">...</span><span class="w"> </span><span class="p">}],</span><span class="w">
+    </span><span class="nl">"sshTunnel"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"uri"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ssh://ssh-host:2222"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"credentials"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"plain"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"username"</span><span class="p">:</span><span class="w"> </span><span class="s2">"username"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"password"</span><span class="p">:</span><span class="w"> </span><span class="s2">"password"</span><span class="w">
         </span><span class="p">},</span><span class="w">
-        </span><span class="s2">"validateHost"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"knownHosts"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"MD5:e0:3a:34:1c:68:ed:c6:bc:7c:ca:a8:67:c7:45:2b:19"</span><span class="p">]</span><span class="w">
+        </span><span class="nl">"validateHost"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"knownHosts"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"MD5:e0:3a:34:1c:68:ed:c6:bc:7c:ca:a8:67:c7:45:2b:19"</span><span class="p">]</span><span class="w">
     </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
@@ -2139,24 +2146,24 @@ performance of your connection compared to transmission performance of a direct 
 <h3 id="public-key-authentication">Public key authentication</h3>
 
 <p>An SSH tunnel can also be authenticated using public key authentication. The credentials provided in the SSH tunnel 
-configuration must then be of the type <code class="highlighter-rouge">public-key</code>:</p>
+configuration must then be of the type <code class="language-plaintext highlighter-rouge">public-key</code>:</p>
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">...</span><span class="w">
-</span><span class="s2">"credentials"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"public-key"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"username"</span><span class="p">:</span><span class="w"> </span><span class="s2">"username"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"publicKey"</span><span class="p">:</span><span class="w"> </span><span class="s2">"-----BEGIN PUBLIC KEY-----</span><span class="se">\n</span><span class="s2">MIIBIjANBgkqhkiG9.....</span><span class="se">\n</span><span class="s2">-----END PUBLIC KEY-----"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"privateKey"</span><span class="p">:</span><span class="w"> </span><span class="s2">"-----BEGIN PRIVATE KEY-----</span><span class="se">\n</span><span class="s2">MIIEvAIBADANBgkqhki....</span><span class="se">\n</span><span class="s2">-----END PRIVATE KEY-----"</span><span class="w">
+</span><span class="nl">"credentials"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"public-key"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"username"</span><span class="p">:</span><span class="w"> </span><span class="s2">"username"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"publicKey"</span><span class="p">:</span><span class="w"> </span><span class="s2">"-----BEGIN PUBLIC KEY-----</span><span class="se">\n</span><span class="s2">MIIBIjANBgkqhkiG9.....</span><span class="se">\n</span><span class="s2">-----END PUBLIC KEY-----"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"privateKey"</span><span class="p">:</span><span class="w"> </span><span class="s2">"-----BEGIN PRIVATE KEY-----</span><span class="se">\n</span><span class="s2">MIIEvAIBADANBgkqhki....</span><span class="se">\n</span><span class="s2">-----END PRIVATE KEY-----"</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span><span class="err">...</span><span class="w">
 </span></code></pre></div></div>
 
-<p>The public key must be provided as PEM-encoded RSA key in <code class="highlighter-rouge">X.509</code> format.
-The private key must be provided as PEM-encoded RSA key in unencrypted <code class="highlighter-rouge">PKCS8</code> format as specified by 
+<p>The public key must be provided as PEM-encoded RSA key in <code class="language-plaintext highlighter-rouge">X.509</code> format.
+The private key must be provided as PEM-encoded RSA key in unencrypted <code class="language-plaintext highlighter-rouge">PKCS8</code> format as specified by 
 <a href="https://tools.ietf.org/html/rfc7468">RFC-7468</a>.</p>
 
 <p>The following command can be used to convert a standard OpenSSL key in PKCS1 format to the PKCS8 format accepted by 
 Ditto:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>openssl pkcs8 -topk8 -nocrypt -in client-private.pem.key -out client-private.pem.pk8
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>openssl pkcs8 -topk8 -nocrypt -in client-private.pem.key -out client-private.pem.pk8
 </code></pre></div></div>
 
 <div class="alert alert-info" role="alert"><i class="fa fa-info-circle"></i> <b>Note:</b> Ditto does not make any sanity check regarding the provided credentials or the 
@@ -2170,20 +2177,20 @@ shell access).</div>
 <div class="alert alert-info" role="alert"><i class="fa fa-info-circle"></i> <b>Note:</b> It is highly recommended enabling host validation for productive systems, it should 
 only be disabled for testing purposes.</div>
 
-<p>The accepted fingerprints can be provided in the format the standard command line tool <code class="highlighter-rouge">ssh-keygen</code> produces.</p>
+<p>The accepted fingerprints can be provided in the format the standard command line tool <code class="language-plaintext highlighter-rouge">ssh-keygen</code> produces.</p>
 
 <p>Example:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>MD5:e0:3a:34:1c:68:ed:c6:bc:7c:ca:a8:67:c7:45:2b:19
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>MD5:e0:3a:34:1c:68:ed:c6:bc:7c:ca:a8:67:c7:45:2b:19
 </code></pre></div></div>
 <p>The fingerprints are prefixed with an alias of the hash algorithm that was used to calculate the fingerprint. Ditto 
-supports the following hash algorithms for public key fingerprints:  <code class="highlighter-rouge">MD5</code>, <code class="highlighter-rouge">SHA1</code>, <code class="highlighter-rouge">SHA224</code>, <code class="highlighter-rouge">SHA256</code>, <code class="highlighter-rouge">SHA384</code> and <code class="highlighter-rouge">SHA512</code>.</p>
+supports the following hash algorithms for public key fingerprints:  <code class="language-plaintext highlighter-rouge">MD5</code>, <code class="language-plaintext highlighter-rouge">SHA1</code>, <code class="language-plaintext highlighter-rouge">SHA224</code>, <code class="language-plaintext highlighter-rouge">SHA256</code>, <code class="language-plaintext highlighter-rouge">SHA384</code> and <code class="language-plaintext highlighter-rouge">SHA512</code>.</p>
 
-<p>Assuming the file <code class="highlighter-rouge">id_rsa.pub</code> contains the public key the following command produces a valid fingerprint that 
+<p>Assuming the file <code class="language-plaintext highlighter-rouge">id_rsa.pub</code> contains the public key the following command produces a valid fingerprint that 
 can be used in the SSH tunnel configuration:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ssh-keygen -lf id_rsa.pub -E md5
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ssh-keygen -lf id_rsa.pub -E md5
 </code></pre></div></div>
 <p>Or in case the public key is given in PKCS8 format:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ssh-keygen -lf id_rsa.pub.pkcs8 -m PKCS8 -E md5
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ssh-keygen -lf id_rsa.pub.pkcs8 -m PKCS8 -E md5
 </code></pre></div></div>
 
 
@@ -2211,7 +2218,7 @@ can be used in the SSH tunnel configuration:</p>
                     </div>
                     <p class="notice">
                         &copy;2024 Eclipse Ditto™.
-                         Site last generated: Feb 27, 2024 <br />
+                         Site last generated: Apr 10, 2024 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

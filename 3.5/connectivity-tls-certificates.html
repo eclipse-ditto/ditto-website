@@ -278,6 +278,13 @@
               
               
               
+              <li><a href="release_notes_354.html">3.5.4</a></li>
+              
+              
+              
+              
+              
+              
               <li><a href="release_notes_353.html">3.5.3</a></li>
               
               
@@ -2114,20 +2121,20 @@ $('#toc').on('click', 'a', function() {
 
 <p>Verifying the server identity mitigates the risk of man-in-the-middle attacks.
 To have Ditto check the identity of external message brokers,
-choose a secure transport protocol and set the flag <code class="highlighter-rouge">validateCertificates</code> to <code class="highlighter-rouge">true</code> in your
+choose a secure transport protocol and set the flag <code class="language-plaintext highlighter-rouge">validateCertificates</code> to <code class="language-plaintext highlighter-rouge">true</code> in your
 <a href="basic-connections.html">connections</a>.</p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"uri"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;secure-transport-protocol&gt;://&lt;host&gt;:&lt;port&gt;/&lt;path&gt;"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"validateCertificates"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"ca"</span><span class="p">:</span><span class="w"> </span><span class="s2">"-----BEGIN CERTIFICATE-----</span><span class="se">\n</span><span class="s2">&lt;trusted certificate&gt;</span><span class="se">\n</span><span class="s2">-----END CERTIFICATE-----"</span><span class="w">
+  </span><span class="nl">"uri"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;secure-transport-protocol&gt;://&lt;host&gt;:&lt;port&gt;/&lt;path&gt;"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"validateCertificates"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"ca"</span><span class="p">:</span><span class="w"> </span><span class="s2">"-----BEGIN CERTIFICATE-----</span><span class="se">\n</span><span class="s2">&lt;trusted certificate&gt;</span><span class="se">\n</span><span class="s2">-----END CERTIFICATE-----"</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
 <ul>
-  <li><code class="highlighter-rouge">uri</code>: Choose a secure transport protocol such as <code class="highlighter-rouge">amqps</code> or <code class="highlighter-rouge">ssl</code>.</li>
-  <li><code class="highlighter-rouge">validateCertificates</code>: Must be <code class="highlighter-rouge">true</code>.</li>
-  <li><code class="highlighter-rouge">ca</code>: A string of trusted certificates as <a href="https://en.wikipedia.org/wiki/Privacy-Enhanced_Mail">PEM</a>-encoded <a href="https://en.wikipedia.org/wiki/X.690#DER_encoding">DER</a>. Concatenate multiple certificates as
+  <li><code class="language-plaintext highlighter-rouge">uri</code>: Choose a secure transport protocol such as <code class="language-plaintext highlighter-rouge">amqps</code> or <code class="language-plaintext highlighter-rouge">ssl</code>.</li>
+  <li><code class="language-plaintext highlighter-rouge">validateCertificates</code>: Must be <code class="language-plaintext highlighter-rouge">true</code>.</li>
+  <li><code class="language-plaintext highlighter-rouge">ca</code>: A string of trusted certificates as <a href="https://en.wikipedia.org/wiki/Privacy-Enhanced_Mail">PEM</a>-encoded <a href="https://en.wikipedia.org/wiki/X.690#DER_encoding">DER</a>. Concatenate multiple certificates as
       strings to trust all of them. Omit to trust popular certificate authorities.</li>
 </ul>
 
@@ -2139,13 +2146,13 @@ The server identity is verified directly or indirectly.</p>
 <ul>
   <li>
     <p><strong>Direct identity verification</strong>:
-The exact server certificate is listed as a trusted certificate in the connection configuration <code class="highlighter-rouge">ca</code>.
+The exact server certificate is listed as a trusted certificate in the connection configuration <code class="language-plaintext highlighter-rouge">ca</code>.
 Establishing a TLS session proves that the external message broker possesses the private key matching the server
 certificate.</p>
   </li>
   <li>
     <p><strong>Indirect identity verification via a trusted party</strong>:
-The server certificate is signed by a trusted party, whose certificate is in the connection configuration <code class="highlighter-rouge">ca</code>, and
+The server certificate is signed by a trusted party, whose certificate is in the connection configuration <code class="language-plaintext highlighter-rouge">ca</code>, and
 the host-component of the connection URI is listed in the server certificate.</p>
 
     <p>If the host-component is a DNS name, then it should be listed as the common name (CN)
@@ -2154,13 +2161,13 @@ or a subject alternative name (SAN) of type DNS.</p>
     <p>If the host-component is an IPv4 or IPv6 address, then it should be listed as a subject alternative name (SAN)
 of type IP. Any IP addresses in the common name (CN) are ignored per <a href="https://tools.ietf.org/html/rfc5280">RFC-5280</a>.</p>
 
-    <p>Revocation of individual certificates is <em>not supported</em>. For each certificate in the <code class="highlighter-rouge">ca</code> field, you extend trust to 
+    <p>Revocation of individual certificates is <em>not supported</em>. For each certificate in the <code class="language-plaintext highlighter-rouge">ca</code> field, you extend trust to 
 <em>all</em> certificates signed by it.</p>
   </li>
   <li>
     <p><strong>Indirect identity verification via public certificate authorities</strong>:
 The server certificate is signed by a generally accepted certificate authority, the host-component
-of the connection URI is listed in the server certificate, and the <code class="highlighter-rouge">ca</code> field is omitted in the connection 
+of the connection URI is listed in the server certificate, and the <code class="language-plaintext highlighter-rouge">ca</code> field is omitted in the connection 
 configuration.</p>
 
     <p>Ditto will try its best to exclude revoked certificates via <a href="https://tools.ietf.org/html/rfc6960">OCSP</a>.</p>
@@ -2180,40 +2187,40 @@ configuration.</p>
 
 <h3 id="connection-configuration-1">Connection configuration</h3>
 
-<p>Configure a client certificate for Ditto in the <code class="highlighter-rouge">credentials</code> field of the connection configuration to authenticate
+<p>Configure a client certificate for Ditto in the <code class="language-plaintext highlighter-rouge">credentials</code> field of the connection configuration to authenticate
 Ditto at your message broker.</p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"uri"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;secure-transport-protocol&gt;://&lt;host&gt;:&lt;port&gt;/&lt;path&gt;"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"credentials"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"client-cert"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"cert"</span><span class="p">:</span><span class="w"> </span><span class="s2">"-----BEGIN CERTIFICATE-----</span><span class="se">\n</span><span class="s2">&lt;client certificate&gt;</span><span class="se">\n</span><span class="s2">-----END CERTIFICATE-----"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"key"</span><span class="p">:</span><span class="w"> </span><span class="s2">"-----BEGIN PRIVATE KEY-----</span><span class="se">\n</span><span class="s2">&lt;client private key&gt;</span><span class="se">\n</span><span class="s2">-----END PRIVATE KEY-----"</span><span class="w">
+  </span><span class="nl">"uri"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;secure-transport-protocol&gt;://&lt;host&gt;:&lt;port&gt;/&lt;path&gt;"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"credentials"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"client-cert"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"cert"</span><span class="p">:</span><span class="w"> </span><span class="s2">"-----BEGIN CERTIFICATE-----</span><span class="se">\n</span><span class="s2">&lt;client certificate&gt;</span><span class="se">\n</span><span class="s2">-----END CERTIFICATE-----"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"key"</span><span class="p">:</span><span class="w"> </span><span class="s2">"-----BEGIN PRIVATE KEY-----</span><span class="se">\n</span><span class="s2">&lt;client private key&gt;</span><span class="se">\n</span><span class="s2">-----END PRIVATE KEY-----"</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
 <ul>
   <li>
-    <p><code class="highlighter-rouge">uri</code>: Choose a secure transport protocol such as <code class="highlighter-rouge">ssl</code>.</p>
+    <p><code class="language-plaintext highlighter-rouge">uri</code>: Choose a secure transport protocol such as <code class="language-plaintext highlighter-rouge">ssl</code>.</p>
   </li>
   <li>
-    <p><code class="highlighter-rouge">credentials/type</code>: Must be <code class="highlighter-rouge">client-cert</code>.</p>
+    <p><code class="language-plaintext highlighter-rouge">credentials/type</code>: Must be <code class="language-plaintext highlighter-rouge">client-cert</code>.</p>
   </li>
   <li>
-    <p><code class="highlighter-rouge">credentials/cert</code>: The client certificate as <a href="https://en.wikipedia.org/wiki/Privacy-Enhanced_Mail">PEM</a>-encoded <a href="https://en.wikipedia.org/wiki/X.690#DER_encoding">DER</a>.</p>
+    <p><code class="language-plaintext highlighter-rouge">credentials/cert</code>: The client certificate as <a href="https://en.wikipedia.org/wiki/Privacy-Enhanced_Mail">PEM</a>-encoded <a href="https://en.wikipedia.org/wiki/X.690#DER_encoding">DER</a>.</p>
   </li>
   <li>
-    <p><code class="highlighter-rouge">credentials/key</code>: The client private key for Ditto as PEM-encoded <a href="https://tools.ietf.org/html/rfc5208">PKCS8</a> specified by <a href="https://tools.ietf.org/html/rfc7468">RFC-7468</a>;
-the PEM preamble must be <code class="highlighter-rouge">-----BEGIN PRIVATE KEY-----</code>.</p>
+    <p><code class="language-plaintext highlighter-rouge">credentials/key</code>: The client private key for Ditto as PEM-encoded <a href="https://tools.ietf.org/html/rfc5208">PKCS8</a> specified by <a href="https://tools.ietf.org/html/rfc7468">RFC-7468</a>;
+the PEM preamble must be <code class="language-plaintext highlighter-rouge">-----BEGIN PRIVATE KEY-----</code>.</p>
   </li>
 </ul>
 
 <p>As of September 2018, <a href="https://www.openssl.org/">OpenSSL</a> and <a href="https://docs.aws.amazon.com/iot/">AWS IoT</a> generate PKCS1-coded private keys by default, which
-have the PEM preamble <code class="highlighter-rouge">-----BEGIN RSA PRIVATE KEY-----</code>. Ditto will reject these keys. The command below converts a
-PKCS1 key file <code class="highlighter-rouge">client-private.pem.key</code> into a PKCS8 key file <code class="highlighter-rouge">client-private.pem.pk8</code> accepted by Ditto.</p>
+have the PEM preamble <code class="language-plaintext highlighter-rouge">-----BEGIN RSA PRIVATE KEY-----</code>. Ditto will reject these keys. The command below converts a
+PKCS1 key file <code class="language-plaintext highlighter-rouge">client-private.pem.key</code> into a PKCS8 key file <code class="language-plaintext highlighter-rouge">client-private.pem.pk8</code> accepted by Ditto.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>openssl pkcs8 -topk8 -nocrypt -in client-private.pem.key -out client-private.pem.pk8
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>openssl pkcs8 -topk8 -nocrypt -in client-private.pem.key -out client-private.pem.pk8
 </code></pre></div></div>
 
 
@@ -2241,7 +2248,7 @@ PKCS1 key file <code class="highlighter-rouge">client-private.pem.key</code> int
                     </div>
                     <p class="notice">
                         &copy;2024 Eclipse Ditto™.
-                         Site last generated: Feb 27, 2024 <br />
+                         Site last generated: Apr 10, 2024 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

@@ -278,6 +278,13 @@
               
               
               
+              <li><a href="release_notes_354.html">3.5.4</a></li>
+              
+              
+              
+              
+              
+              
               <li><a href="release_notes_353.html">3.5.3</a></li>
               
               
@@ -2105,21 +2112,21 @@ $('#toc').on('click', 'a', function() {
 AMQP 1.0 connections. Three algorithms are available out of the box:</p>
 
 <ul>
-  <li><code class="highlighter-rouge">aws4-hmac-sha256</code> (HTTP Push only): <a href="https://docs.aws.amazon.com/general/latest/gr/signature-version-4.html">Version 4 request signing</a> for Amazon Web Services (AWS)</li>
-  <li><code class="highlighter-rouge">az-monitor-2016-04-01</code> (HTTP Push only): <a href="https://docs.microsoft.com/en-us/azure/azure-monitor/logs/data-collector-api#authorization">Version 2016-04-01 request signing</a> for Azure Monitor Data Collector</li>
-  <li><code class="highlighter-rouge">az-sasl</code> (HTTP Push and AMQP 1.0): <a href="https://docs.microsoft.com/en-us/azure/iot-hub/iot-hub-dev-guide-sas?tabs=node">Shared Access Signatures</a> for Azure IoT Hub</li>
-  <li><code class="highlighter-rouge">az-sasl</code> (HTTP Push only): <a href="https://docs.microsoft.com/en-us/azure/service-bus-messaging/service-bus-sas">Shared Access Signatures</a> for Azure Service Bus</li>
+  <li><code class="language-plaintext highlighter-rouge">aws4-hmac-sha256</code> (HTTP Push only): <a href="https://docs.aws.amazon.com/general/latest/gr/signature-version-4.html">Version 4 request signing</a> for Amazon Web Services (AWS)</li>
+  <li><code class="language-plaintext highlighter-rouge">az-monitor-2016-04-01</code> (HTTP Push only): <a href="https://docs.microsoft.com/en-us/azure/azure-monitor/logs/data-collector-api#authorization">Version 2016-04-01 request signing</a> for Azure Monitor Data Collector</li>
+  <li><code class="language-plaintext highlighter-rouge">az-sasl</code> (HTTP Push and AMQP 1.0): <a href="https://docs.microsoft.com/en-us/azure/iot-hub/iot-hub-dev-guide-sas?tabs=node">Shared Access Signatures</a> for Azure IoT Hub</li>
+  <li><code class="language-plaintext highlighter-rouge">az-sasl</code> (HTTP Push only): <a href="https://docs.microsoft.com/en-us/azure/service-bus-messaging/service-bus-sas">Shared Access Signatures</a> for Azure Service Bus</li>
 </ul>
 
-<p>To use a request signing algorithm for authentication, set the <code class="highlighter-rouge">credentials</code> field of the connection as follows.</p>
+<p>To use a request signing algorithm for authentication, set the <code class="language-plaintext highlighter-rouge">credentials</code> field of the connection as follows.</p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"connectionType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http-push"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"uri"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://...:443"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"credentials"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"hmac"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"algorithm"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;algorithm&gt;"</span><span class="p">,</span><span class="w"> </span><span class="err">//</span><span class="w"> </span><span class="err">e.g.</span><span class="p">:</span><span class="w"> </span><span class="s2">"az-monitor-2016-04-01"</span><span class="w">
-    </span><span class="s2">"parameters"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+  </span><span class="nl">"connectionType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http-push"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"uri"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://...:443"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"credentials"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"hmac"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"algorithm"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;algorithm&gt;"</span><span class="p">,</span><span class="w"> </span><span class="err">//</span><span class="w"> </span><span class="err">e.g.:</span><span class="w"> </span><span class="s2">"az-monitor-2016-04-01"</span><span class="w">
+    </span><span class="nl">"parameters"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
        </span><span class="err">//</span><span class="w"> </span><span class="err">parameters</span><span class="w"> </span><span class="err">of</span><span class="w"> </span><span class="err">the</span><span class="w"> </span><span class="err">algorithm</span><span class="w"> </span><span class="err">named</span><span class="w"> </span><span class="err">above.</span><span class="w">
        </span><span class="err">...</span><span class="w">
     </span><span class="p">}</span><span class="w">
@@ -2134,19 +2141,19 @@ AMQP 1.0 connections. Three algorithms are available out of the box:</p>
 
 <p>This algorithm works for AWS SNS and other services using <a href="https://docs.aws.amazon.com/general/latest/gr/signature-version-4.html">Version 4 request signing</a>.</p>
 
-<p>The parameters of the algorithm <code class="highlighter-rouge">aws4-hmac-sha256</code> are:</p>
+<p>The parameters of the algorithm <code class="language-plaintext highlighter-rouge">aws4-hmac-sha256</code> are:</p>
 <ul>
-  <li><code class="highlighter-rouge">region</code>: Region of the AWS endpoint.</li>
-  <li><code class="highlighter-rouge">service</code>: Service name of the AWS endpoint.</li>
-  <li><code class="highlighter-rouge">accessKey</code>: Access key of the signing user.</li>
-  <li><code class="highlighter-rouge">secretKey</code>: Secret key of the signing user.</li>
-  <li><code class="highlighter-rouge">doubleEncode</code>: Whether to double-encode and normalize path segments during request signing. Should be <code class="highlighter-rouge">false</code> for S3 and <code class="highlighter-rouge">true</code> for other services. Defaults to <code class="highlighter-rouge">true</code>.</li>
-  <li><code class="highlighter-rouge">canonicalHeaders</code>: Array of names of headers to include in the signature. Default to <code class="highlighter-rouge">["host"]</code>.</li>
-  <li><code class="highlighter-rouge">xAmzContentSha256</code>: Configuration for the header <code class="highlighter-rouge">x-amz-content-sha256</code>, which is mandatory for S3. Possible values are:
+  <li><code class="language-plaintext highlighter-rouge">region</code>: Region of the AWS endpoint.</li>
+  <li><code class="language-plaintext highlighter-rouge">service</code>: Service name of the AWS endpoint.</li>
+  <li><code class="language-plaintext highlighter-rouge">accessKey</code>: Access key of the signing user.</li>
+  <li><code class="language-plaintext highlighter-rouge">secretKey</code>: Secret key of the signing user.</li>
+  <li><code class="language-plaintext highlighter-rouge">doubleEncode</code>: Whether to double-encode and normalize path segments during request signing. Should be <code class="language-plaintext highlighter-rouge">false</code> for S3 and <code class="language-plaintext highlighter-rouge">true</code> for other services. Defaults to <code class="language-plaintext highlighter-rouge">true</code>.</li>
+  <li><code class="language-plaintext highlighter-rouge">canonicalHeaders</code>: Array of names of headers to include in the signature. Default to <code class="language-plaintext highlighter-rouge">["host"]</code>.</li>
+  <li><code class="language-plaintext highlighter-rouge">xAmzContentSha256</code>: Configuration for the header <code class="language-plaintext highlighter-rouge">x-amz-content-sha256</code>, which is mandatory for S3. Possible values are:
     <ul>
-      <li><code class="highlighter-rouge">EXCLUDED</code>: Do not send the header for non-S3 services. This is the default.</li>
-      <li><code class="highlighter-rouge">INCLUDED</code>: Sign the payload hash as the value of the header for S3.</li>
-      <li><code class="highlighter-rouge">UNSIGNED</code>: Omit the payload hash in the signature for S3.</li>
+      <li><code class="language-plaintext highlighter-rouge">EXCLUDED</code>: Do not send the header for non-S3 services. This is the default.</li>
+      <li><code class="language-plaintext highlighter-rouge">INCLUDED</code>: Sign the payload hash as the value of the header for S3.</li>
+      <li><code class="language-plaintext highlighter-rouge">UNSIGNED</code>: Omit the payload hash in the signature for S3.</li>
     </ul>
   </li>
 </ul>
@@ -2156,10 +2163,10 @@ AMQP 1.0 connections. Three algorithms are available out of the box:</p>
 <p>This algorithm works for <a href="https://docs.microsoft.com/en-us/azure/azure-monitor/logs/data-collector-api#authorization">Version 2016-04-01 request signing</a>
 for Azure Monitor Data Collector.</p>
 
-<p>The parameters of the algorithm <code class="highlighter-rouge">az-monitor-2016-04-01</code> are:</p>
+<p>The parameters of the algorithm <code class="language-plaintext highlighter-rouge">az-monitor-2016-04-01</code> are:</p>
 <ul>
-  <li><code class="highlighter-rouge">workspaceId</code>: ID of the Azure Monitor workspace.</li>
-  <li><code class="highlighter-rouge">sharedKey</code>: Primary or secondary key of the Azure Monitor workspace.</li>
+  <li><code class="language-plaintext highlighter-rouge">workspaceId</code>: ID of the Azure Monitor workspace.</li>
+  <li><code class="language-plaintext highlighter-rouge">sharedKey</code>: Primary or secondary key of the Azure Monitor workspace.</li>
 </ul>
 
 <h4 id="az-sasl">az-sasl</h4>
@@ -2167,19 +2174,19 @@ for Azure Monitor Data Collector.</p>
 <p>This algorithm works for Azure IoT Hub (HTTP and AMQP) <a href="https://docs.microsoft.com/en-us/azure/iot-hub/iot-hub-dev-guide-sas?tabs=node">Shared Access Signatures</a>
 and Azure Service Bus (HTTP) <a href="https://docs.microsoft.com/en-us/azure/service-bus-messaging/service-bus-sas">Shared Access Signatures</a>.</p>
 
-<p>The parameters of the algorithm <code class="highlighter-rouge">az-sasl</code> are:</p>
+<p>The parameters of the algorithm <code class="language-plaintext highlighter-rouge">az-sasl</code> are:</p>
 <ul>
-  <li><code class="highlighter-rouge">sharedKeyName</code>: Name of the used <code class="highlighter-rouge">sharedKey</code>.</li>
-  <li><code class="highlighter-rouge">sharedKey</code>: Primary or secondary key of <code class="highlighter-rouge">sharedKeyName</code>. The key for Azure Service Bus needs an additional
-<code class="highlighter-rouge">Base64</code> encoding to work (e.g. a primary key <code class="highlighter-rouge">theKey</code> should be encoded to <code class="highlighter-rouge">dGhlS2V5</code> and used in this format).</li>
-  <li><code class="highlighter-rouge">endpoint</code>: The endpoint which is used in the signature. For Azure IoT Hub this is expected
-to be the <code class="highlighter-rouge">resourceUri</code> without protocol (e.g. <code class="highlighter-rouge">myHub.azure-devices.net</code>, see the respective Azure documentation).
+  <li><code class="language-plaintext highlighter-rouge">sharedKeyName</code>: Name of the used <code class="language-plaintext highlighter-rouge">sharedKey</code>.</li>
+  <li><code class="language-plaintext highlighter-rouge">sharedKey</code>: Primary or secondary key of <code class="language-plaintext highlighter-rouge">sharedKeyName</code>. The key for Azure Service Bus needs an additional
+<code class="language-plaintext highlighter-rouge">Base64</code> encoding to work (e.g. a primary key <code class="language-plaintext highlighter-rouge">theKey</code> should be encoded to <code class="language-plaintext highlighter-rouge">dGhlS2V5</code> and used in this format).</li>
+  <li><code class="language-plaintext highlighter-rouge">endpoint</code>: The endpoint which is used in the signature. For Azure IoT Hub this is expected
+to be the <code class="language-plaintext highlighter-rouge">resourceUri</code> without protocol (e.g. <code class="language-plaintext highlighter-rouge">myHub.azure-devices.net</code>, see the respective Azure documentation).
 For Azure Service Bus, this is expected to be the full URI of the resource to which access
-is claimed (e.g. <code class="highlighter-rouge">https://myNamespaces.servicebus.windows.net/myQueue</code>, see the respective Azure documentation)</li>
-  <li><code class="highlighter-rouge">ttl</code> (optional): The time to live of a signature as a string in duration format. Allowed time units are “ms” (milliseconds),
+is claimed (e.g. <code class="language-plaintext highlighter-rouge">https://myNamespaces.servicebus.windows.net/myQueue</code>, see the respective Azure documentation)</li>
+  <li><code class="language-plaintext highlighter-rouge">ttl</code> (optional): The time to live of a signature as a string in duration format. Allowed time units are “ms” (milliseconds),
 “s” (seconds), “m” (minutes) and “h” (hours), e.g. “10m” for ten minutes.
-<code class="highlighter-rouge">ttl</code> should only be set for AMQP connections and defines how long the connection signing is valid.
-The broker (e.g. Azure IoT Hub) will close the connection after <code class="highlighter-rouge">ttl</code> and Ditto will reconnect with a new signature.
+<code class="language-plaintext highlighter-rouge">ttl</code> should only be set for AMQP connections and defines how long the connection signing is valid.
+The broker (e.g. Azure IoT Hub) will close the connection after <code class="language-plaintext highlighter-rouge">ttl</code> and Ditto will reconnect with a new signature.
 Defaults to 7 days.</li>
 </ul>
 
@@ -2195,17 +2202,17 @@ Defaults to 7 days.</li>
   </thead>
   <tbody>
     <tr>
-      <td><code class="highlighter-rouge">aws-hmac-sha256</code></td>
+      <td><code class="language-plaintext highlighter-rouge">aws-hmac-sha256</code></td>
       <td>✓</td>
       <td> </td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge">az-monitor-2016-04-01</code></td>
+      <td><code class="language-plaintext highlighter-rouge">az-monitor-2016-04-01</code></td>
       <td>✓</td>
       <td> </td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge">az-sasl</code></td>
+      <td><code class="language-plaintext highlighter-rouge">az-sasl</code></td>
       <td>✓</td>
       <td>✓ (for Azure IoT Hub)</td>
     </tr>
@@ -2214,34 +2221,34 @@ Defaults to 7 days.</li>
 
 <h3 id="configuration">Configuration</h3>
 
-<p>Algorithm names and implementations are configured in <a href="https://github.com/eclipse-ditto/ditto/blob/master/connectivity/service/src/main/resources/connectivity.conf"><code class="highlighter-rouge">connectivity.conf</code></a>.
+<p>Algorithm names and implementations are configured in <a href="https://github.com/eclipse-ditto/ditto/blob/master/connectivity/service/src/main/resources/connectivity.conf"><code class="language-plaintext highlighter-rouge">connectivity.conf</code></a>.
 The default configuration provides the names and implementations of the available pre-defined algorithms for the given
 connection types.</p>
-<pre><code class="language-hocon">ditto.connectivity.connection {
-  http-push.hmac-algorithms = {
+<div class="language-hocon highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nl">ditto.connectivity.connection</span><span class="w"> </span><span class="p">{</span><span class="w">
+  </span><span class="nl">http-push.hmac-algorithms</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="p">{</span><span class="w">
 
-    aws4-hmac-sha256 =
-      "org.eclipse.ditto.connectivity.service.messaging.httppush.AwsRequestSigningFactory"
+    </span><span class="nl">aws4-hmac-sha256</span><span class="w"> </span><span class="p">=</span><span class="w">
+      </span><span class="s2">"org.eclipse.ditto.connectivity.service.messaging.httppush.AwsRequestSigningFactory"</span><span class="w">
 
-    az-monitor-2016-04-01 =
-      "org.eclipse.ditto.connectivity.service.messaging.httppush.AzMonitorRequestSigningFactory"
+    </span><span class="nl">az-monitor-2016-04-01</span><span class="w"> </span><span class="p">=</span><span class="w">
+      </span><span class="s2">"org.eclipse.ditto.connectivity.service.messaging.httppush.AzMonitorRequestSigningFactory"</span><span class="w">
 
-    az-sasl =
-      "org.eclipse.ditto.connectivity.service.messaging.signing.AzSaslSigningFactory"
+    </span><span class="nl">az-sasl</span><span class="w"> </span><span class="p">=</span><span class="w">
+      </span><span class="s2">"org.eclipse.ditto.connectivity.service.messaging.signing.AzSaslSigningFactory"</span><span class="w">
 
-    // my-own-request-signing-algorithm =
-    //   "my.package.MyOwnImplementationOfHttpRequestSigningFactory"
-  }
-  amqp10.hmac-algorithms = {
+    </span><span class="c1">// my-own-request-signing-algorithm =</span><span class="w">
+    </span><span class="c1">//   "my.package.MyOwnImplementationOfHttpRequestSigningFactory"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+  </span><span class="nl">amqp10.hmac-algorithms</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="p">{</span><span class="w">
 
-    az-sasl =
-      "org.eclipse.ditto.connectivity.service.messaging.signing.AzSaslSigningFactory"
+    </span><span class="nl">az-sasl</span><span class="w"> </span><span class="p">=</span><span class="w">
+      </span><span class="s2">"org.eclipse.ditto.connectivity.service.messaging.signing.AzSaslSigningFactory"</span><span class="w">
 
-    // my-own-connection-signing-algorithm =
-    //   "my.package.MyOwnImplementationOfAmqpConnectionSigningFactory"
-  }
-}
-</code></pre>
+    </span><span class="c1">// my-own-connection-signing-algorithm =</span><span class="w">
+    </span><span class="c1">//   "my.package.MyOwnImplementationOfAmqpConnectionSigningFactory"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
 
 <p>Users may add own request signing algorithms by implementing a defined interface and providing the fully
 qualified class name of the implementation in the config. The following table provides information where to update the configuration
@@ -2258,8 +2265,8 @@ and which interface needs to be implemented.</p>
   <tbody>
     <tr>
       <td>Config path</td>
-      <td><code class="highlighter-rouge">ditto.connectivity.connection.http-push.hmac-algorithms</code></td>
-      <td><code class="highlighter-rouge">ditto.connectivity.connection.amqp10.hmac-algorithms</code></td>
+      <td><code class="language-plaintext highlighter-rouge">ditto.connectivity.connection.http-push.hmac-algorithms</code></td>
+      <td><code class="language-plaintext highlighter-rouge">ditto.connectivity.connection.amqp10.hmac-algorithms</code></td>
     </tr>
     <tr>
       <td>Class to implement</td>
@@ -2284,74 +2291,74 @@ twin events as messages to an SNS topic. Prerequisites are:</p>
 <p>The SNS connection is shown below.</p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"00000000-0000-0000-0000-000000000000"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"AWS SNS"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"connectionType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http-push"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"connectionStatus"</span><span class="p">:</span><span class="w"> </span><span class="s2">"open"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"uri"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://sns.&lt;aws-region&gt;.amazonaws.com:443"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"credentials"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"hmac"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"algorithm"</span><span class="p">:</span><span class="w"> </span><span class="s2">"aws4-hmac-sha256"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"parameters"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"region"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;aws-region&gt;"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"service"</span><span class="p">:</span><span class="w"> </span><span class="s2">"sns"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"accessKey"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;aws-access-key&gt;"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"secretKey"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;aws-secret-key&gt;"</span><span class="w">
+  </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"00000000-0000-0000-0000-000000000000"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"AWS SNS"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"connectionType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http-push"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"connectionStatus"</span><span class="p">:</span><span class="w"> </span><span class="s2">"open"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"uri"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://sns.&lt;aws-region&gt;.amazonaws.com:443"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"credentials"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"hmac"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"algorithm"</span><span class="p">:</span><span class="w"> </span><span class="s2">"aws4-hmac-sha256"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"parameters"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"region"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;aws-region&gt;"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"service"</span><span class="p">:</span><span class="w"> </span><span class="s2">"sns"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"accessKey"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;aws-access-key&gt;"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"secretKey"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;aws-secret-key&gt;"</span><span class="w">
     </span><span class="p">}</span><span class="w">
   </span><span class="p">},</span><span class="w">
-  </span><span class="s2">"sources"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
-  </span><span class="s2">"targets"</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="w">
-      </span><span class="s2">"address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"GET:/"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"topics"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="s2">"_/_/things/twin/events"</span><span class="w"> </span><span class="p">],</span><span class="w">
-      </span><span class="s2">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="s2">"integration:ditto"</span><span class="w"> </span><span class="p">],</span><span class="w">
-      </span><span class="s2">"headerMapping"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
-      </span><span class="s2">"payloadMapping"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="s2">"javascript"</span><span class="w"> </span><span class="p">]</span><span class="w">
+  </span><span class="nl">"sources"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+  </span><span class="nl">"targets"</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="w">
+      </span><span class="nl">"address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"GET:/"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"topics"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="s2">"_/_/things/twin/events"</span><span class="w"> </span><span class="p">],</span><span class="w">
+      </span><span class="nl">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="s2">"integration:ditto"</span><span class="w"> </span><span class="p">],</span><span class="w">
+      </span><span class="nl">"headerMapping"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
+      </span><span class="nl">"payloadMapping"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="s2">"javascript"</span><span class="w"> </span><span class="p">]</span><span class="w">
   </span><span class="p">}],</span><span class="w">
-  </span><span class="s2">"clientCount"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"failoverEnabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"validateCertificates"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"processorPoolSize"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"specificConfig"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"parallelism"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1"</span><span class="w">
+  </span><span class="nl">"clientCount"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"failoverEnabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"validateCertificates"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"processorPoolSize"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"specificConfig"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"parallelism"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1"</span><span class="w">
   </span><span class="p">},</span><span class="w">
-  </span><span class="s2">"mappingDefinitions"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"javascript"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"mappingEngine"</span><span class="p">:</span><span class="w"> </span><span class="s2">"JavaScript"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"options"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"incomingScript"</span><span class="p">:</span><span class="w"> </span><span class="s2">"function mapToDittoProtocolMsg() {</span><span class="se">\n</span><span class="s2">    return undefined;</span><span class="se">\n</span><span class="s2">}"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"outgoingScript"</span><span class="p">:</span><span class="w"> </span><span class="s2">"function mapFromDittoProtocolMsg(namespace,name,group,channel,criterion,action,path,dittoHeaders,value,status,extra) {</span><span class="se">\n</span><span class="s2">  let textPayload = JSON.stringify(Ditto.buildDittoProtocolMsg(namespace, name, group, channel, criterion, action, path, dittoHeaders, value, status, extra));</span><span class="se">\n</span><span class="s2">  let query = 'Action=Publish&amp;Message=' + encodeURIComponent(textPayload) + '&amp;Subject=ThingModified&amp;TopicArn=&lt;sns-topic-arn&gt;';</span><span class="se">\n</span><span class="s2">  let headers = {</span><span class="se">\"</span><span class="s2">http.query</span><span class="se">\"</span><span class="s2">:query};</span><span class="se">\n</span><span class="s2">  return Ditto.buildExternalMsg(headers,'',null,'text/plain');</span><span class="se">\n</span><span class="s2">}</span><span class="se">\n</span><span class="s2">"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"loadBytebufferJS"</span><span class="p">:</span><span class="w"> </span><span class="s2">"false"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"loadLongJS"</span><span class="p">:</span><span class="w"> </span><span class="s2">"false"</span><span class="w">
+  </span><span class="nl">"mappingDefinitions"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"javascript"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"mappingEngine"</span><span class="p">:</span><span class="w"> </span><span class="s2">"JavaScript"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"options"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"incomingScript"</span><span class="p">:</span><span class="w"> </span><span class="s2">"function mapToDittoProtocolMsg() {</span><span class="se">\n</span><span class="s2">    return undefined;</span><span class="se">\n</span><span class="s2">}"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"outgoingScript"</span><span class="p">:</span><span class="w"> </span><span class="s2">"function mapFromDittoProtocolMsg(namespace,name,group,channel,criterion,action,path,dittoHeaders,value,status,extra) {</span><span class="se">\n</span><span class="s2">  let textPayload = JSON.stringify(Ditto.buildDittoProtocolMsg(namespace, name, group, channel, criterion, action, path, dittoHeaders, value, status, extra));</span><span class="se">\n</span><span class="s2">  let query = 'Action=Publish&amp;Message=' + encodeURIComponent(textPayload) + '&amp;Subject=ThingModified&amp;TopicArn=&lt;sns-topic-arn&gt;';</span><span class="se">\n</span><span class="s2">  let headers = {</span><span class="se">\"</span><span class="s2">http.query</span><span class="se">\"</span><span class="s2">:query};</span><span class="se">\n</span><span class="s2">  return Ditto.buildExternalMsg(headers,'',null,'text/plain');</span><span class="se">\n</span><span class="s2">}</span><span class="se">\n</span><span class="s2">"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"loadBytebufferJS"</span><span class="p">:</span><span class="w"> </span><span class="s2">"false"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"loadLongJS"</span><span class="p">:</span><span class="w"> </span><span class="s2">"false"</span><span class="w">
       </span><span class="p">}</span><span class="w">
     </span><span class="p">}</span><span class="w">
   </span><span class="p">},</span><span class="w">
-  </span><span class="s2">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+  </span><span class="nl">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
 <p>Parameters:</p>
 <ul>
-  <li><code class="highlighter-rouge">&lt;aws-region&gt;</code>: The region of the SNS service.</li>
-  <li><code class="highlighter-rouge">&lt;aws-access-key&gt;</code> The access key of the user authorized for SNS.</li>
-  <li><code class="highlighter-rouge">&lt;aws-secret-key&gt;</code> The secret key of the user authorized for SNS.</li>
-  <li><code class="highlighter-rouge">&lt;sns-topic-arn&gt;</code> The ARN of the SNS topic. Note that it is a part of the URI and every <code class="highlighter-rouge">:</code> needs to be encoded as
-<code class="highlighter-rouge">%3A</code>.</li>
+  <li><code class="language-plaintext highlighter-rouge">&lt;aws-region&gt;</code>: The region of the SNS service.</li>
+  <li><code class="language-plaintext highlighter-rouge">&lt;aws-access-key&gt;</code> The access key of the user authorized for SNS.</li>
+  <li><code class="language-plaintext highlighter-rouge">&lt;aws-secret-key&gt;</code> The secret key of the user authorized for SNS.</li>
+  <li><code class="language-plaintext highlighter-rouge">&lt;sns-topic-arn&gt;</code> The ARN of the SNS topic. Note that it is a part of the URI and every <code class="language-plaintext highlighter-rouge">:</code> needs to be encoded as
+<code class="language-plaintext highlighter-rouge">%3A</code>.</li>
 </ul>
 
 <p>Here is the outgoing payload mapping in a readable format.
 Since the HTTP API of SNS requires GET requests with all necessary information in
 the query parameters, the payload mapper computes the query string and sets it via
-the <a href="connectivity-protocol-bindings-http.html#target-header-mapping">special header</a> <code class="highlighter-rouge">http.query</code>.
-It is important to set payload to <code class="highlighter-rouge">null</code> so that the HMAC
+the <a href="connectivity-protocol-bindings-http.html#target-header-mapping">special header</a> <code class="language-plaintext highlighter-rouge">http.query</code>.
+It is important to set payload to <code class="language-plaintext highlighter-rouge">null</code> so that the HMAC
 signature is computed from the SHA256 hash of the empty string, which SNS expects.</p>
-<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">mapFromDittoProtocolMsg</span><span class="p">(</span><span class="nx">namespace</span><span class="p">,</span><span class="nx">name</span><span class="p">,</span><span class="nx">group</span><span class="p">,</span><span class="nx">channel</span><span class="p">,</span><span class="nx">criterion</span><span class="p">,</span>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nf">mapFromDittoProtocolMsg</span><span class="p">(</span><span class="nx">namespace</span><span class="p">,</span><span class="nx">name</span><span class="p">,</span><span class="nx">group</span><span class="p">,</span><span class="nx">channel</span><span class="p">,</span><span class="nx">criterion</span><span class="p">,</span>
                                  <span class="nx">action</span><span class="p">,</span><span class="nx">path</span><span class="p">,</span><span class="nx">dittoHeaders</span><span class="p">,</span><span class="nx">value</span><span class="p">,</span><span class="nx">status</span><span class="p">,</span><span class="nx">extra</span><span class="p">)</span> <span class="p">{</span>
-  <span class="kd">let</span> <span class="nx">textPayload</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">Ditto</span><span class="p">.</span><span class="nx">buildDittoProtocolMsg</span><span class="p">(</span><span class="nx">namespace</span><span class="p">,</span> <span class="nx">name</span><span class="p">,</span>
+  <span class="kd">let</span> <span class="nx">textPayload</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nf">stringify</span><span class="p">(</span><span class="nx">Ditto</span><span class="p">.</span><span class="nf">buildDittoProtocolMsg</span><span class="p">(</span><span class="nx">namespace</span><span class="p">,</span> <span class="nx">name</span><span class="p">,</span>
       <span class="nx">group</span><span class="p">,</span> <span class="nx">channel</span><span class="p">,</span> <span class="nx">criterion</span><span class="p">,</span> <span class="nx">action</span><span class="p">,</span> <span class="nx">path</span><span class="p">,</span> <span class="nx">dittoHeaders</span><span class="p">,</span> <span class="nx">value</span><span class="p">,</span> <span class="nx">status</span><span class="p">,</span> <span class="nx">extra</span><span class="p">));</span>
-  <span class="kd">let</span> <span class="nx">query</span> <span class="o">=</span> <span class="s1">'Action=Publish&amp;Message='</span> <span class="o">+</span> <span class="nb">encodeURIComponent</span><span class="p">(</span><span class="nx">textPayload</span><span class="p">)</span> <span class="o">+</span>
-      <span class="s1">'&amp;Subject=ThingModified&amp;TopicArn=&lt;sns-topic-arn&gt;'</span><span class="p">;</span>
-  <span class="kd">let</span> <span class="nx">headers</span> <span class="o">=</span> <span class="p">{</span> <span class="s2">"http.query"</span><span class="p">:</span> <span class="nx">query</span> <span class="p">};</span>
-  <span class="k">return</span> <span class="nx">Ditto</span><span class="p">.</span><span class="nx">buildExternalMsg</span><span class="p">(</span><span class="nx">headers</span><span class="p">,</span> <span class="s1">''</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="s1">'text/plain'</span><span class="p">);</span>
+  <span class="kd">let</span> <span class="nx">query</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">Action=Publish&amp;Message=</span><span class="dl">'</span> <span class="o">+</span> <span class="nf">encodeURIComponent</span><span class="p">(</span><span class="nx">textPayload</span><span class="p">)</span> <span class="o">+</span>
+      <span class="dl">'</span><span class="s1">&amp;Subject=ThingModified&amp;TopicArn=&lt;sns-topic-arn&gt;</span><span class="dl">'</span><span class="p">;</span>
+  <span class="kd">let</span> <span class="nx">headers</span> <span class="o">=</span> <span class="p">{</span> <span class="dl">"</span><span class="s2">http.query</span><span class="dl">"</span><span class="p">:</span> <span class="nx">query</span> <span class="p">};</span>
+  <span class="k">return</span> <span class="nx">Ditto</span><span class="p">.</span><span class="nf">buildExternalMsg</span><span class="p">(</span><span class="nx">headers</span><span class="p">,</span> <span class="dl">''</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="dl">'</span><span class="s1">text/plain</span><span class="dl">'</span><span class="p">);</span>
 <span class="p">}</span>
 </code></pre></div></div>
 
@@ -2364,89 +2371,89 @@ twin events as objects in an S3 bucket. Prerequisites are:</p>
   <li>An S3 bucket.</li>
 </ul>
 
-<p>The S3 connection is shown below. The credentials parameter <code class="highlighter-rouge">"xAmzContentSha256": "INCLUDED"</code> is necessary in order
-to include the payload hash as the value of the header <code class="highlighter-rouge">x-amz-content-sha256</code>. In addition,
-the parameter <code class="highlighter-rouge">"doubleEncode"</code> must be set to <code class="highlighter-rouge">false</code> because S3 performs URI-encoding only once when computing
+<p>The S3 connection is shown below. The credentials parameter <code class="language-plaintext highlighter-rouge">"xAmzContentSha256": "INCLUDED"</code> is necessary in order
+to include the payload hash as the value of the header <code class="language-plaintext highlighter-rouge">x-amz-content-sha256</code>. In addition,
+the parameter <code class="language-plaintext highlighter-rouge">"doubleEncode"</code> must be set to <code class="language-plaintext highlighter-rouge">false</code> because S3 performs URI-encoding only once when computing
 the signature, in contrast to other AWS services where the path segments of HTTP requests are encoded twice.</p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"00000000-0000-0000-0000-000000000000"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"AWS S3"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"connectionType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http-push"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"connectionStatus"</span><span class="p">:</span><span class="w"> </span><span class="s2">"open"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"uri"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://&lt;s3-bucket&gt;.s3.&lt;aws-region&gt;.amazonaws.com:443"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"credentials"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"hmac"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"algorithm"</span><span class="p">:</span><span class="w"> </span><span class="s2">"aws4-hmac-sha256"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"parameters"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"region"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;aws-region&gt;"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"service"</span><span class="p">:</span><span class="w"> </span><span class="s2">"s3"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"accessKey"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;aws-access-key&gt;"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"secretKey"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;aws-secret-key&gt;"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"doubleEncode"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"canonicalHeaders"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="s2">"host"</span><span class="p">,</span><span class="w"> </span><span class="s2">"x-amz-date"</span><span class="w"> </span><span class="p">],</span><span class="w">
-      </span><span class="s2">"xAmzContentSha256"</span><span class="p">:</span><span class="w"> </span><span class="s2">"INCLUDED"</span><span class="w">
+  </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"00000000-0000-0000-0000-000000000000"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"AWS S3"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"connectionType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http-push"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"connectionStatus"</span><span class="p">:</span><span class="w"> </span><span class="s2">"open"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"uri"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://&lt;s3-bucket&gt;.s3.&lt;aws-region&gt;.amazonaws.com:443"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"credentials"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"hmac"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"algorithm"</span><span class="p">:</span><span class="w"> </span><span class="s2">"aws4-hmac-sha256"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"parameters"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"region"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;aws-region&gt;"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"service"</span><span class="p">:</span><span class="w"> </span><span class="s2">"s3"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"accessKey"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;aws-access-key&gt;"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"secretKey"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;aws-secret-key&gt;"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"doubleEncode"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"canonicalHeaders"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="s2">"host"</span><span class="p">,</span><span class="w"> </span><span class="s2">"x-amz-date"</span><span class="w"> </span><span class="p">],</span><span class="w">
+      </span><span class="nl">"xAmzContentSha256"</span><span class="p">:</span><span class="w"> </span><span class="s2">"INCLUDED"</span><span class="w">
     </span><span class="p">}</span><span class="w">
   </span><span class="p">},</span><span class="w">
-  </span><span class="s2">"sources"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
-  </span><span class="s2">"targets"</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="w">
-      </span><span class="s2">"address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"PUT:/"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"topics"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="s2">"_/_/things/twin/events"</span><span class="w"> </span><span class="p">],</span><span class="w">
-      </span><span class="s2">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="s2">"integration:ditto"</span><span class="w"> </span><span class="p">],</span><span class="w">
-      </span><span class="s2">"headerMapping"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
-      </span><span class="s2">"payloadMapping"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+  </span><span class="nl">"sources"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+  </span><span class="nl">"targets"</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="w">
+      </span><span class="nl">"address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"PUT:/"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"topics"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="s2">"_/_/things/twin/events"</span><span class="w"> </span><span class="p">],</span><span class="w">
+      </span><span class="nl">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="s2">"integration:ditto"</span><span class="w"> </span><span class="p">],</span><span class="w">
+      </span><span class="nl">"headerMapping"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
+      </span><span class="nl">"payloadMapping"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
         </span><span class="s2">"javascript"</span><span class="w">
       </span><span class="p">]</span><span class="w">
   </span><span class="p">}],</span><span class="w">
-  </span><span class="s2">"clientCount"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"failoverEnabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"validateCertificates"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"processorPoolSize"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"specificConfig"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"parallelism"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1"</span><span class="w">
+  </span><span class="nl">"clientCount"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"failoverEnabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"validateCertificates"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"processorPoolSize"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"specificConfig"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"parallelism"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1"</span><span class="w">
   </span><span class="p">},</span><span class="w">
-  </span><span class="s2">"mappingDefinitions"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"javascript"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"mappingEngine"</span><span class="p">:</span><span class="w"> </span><span class="s2">"JavaScript"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"options"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"incomingScript"</span><span class="p">:</span><span class="w"> </span><span class="s2">"function mapToDittoProtocolMsg() {</span><span class="se">\n</span><span class="s2">  return undefined;</span><span class="se">\n</span><span class="s2">}</span><span class="se">\n</span><span class="s2">"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"outgoingScript"</span><span class="p">:</span><span class="w"> </span><span class="s2">"function mapFromDittoProtocolMsgWrapper(msg) {</span><span class="se">\n</span><span class="s2">  let topic = msg['topic'].split('/').join(':');</span><span class="se">\n</span><span class="s2">  let headers = {</span><span class="se">\n</span><span class="s2">      'http.path': topic+':'+msg['revision']</span><span class="se">\n</span><span class="s2">  };</span><span class="se">\n</span><span class="s2">  let textPayload = JSON.stringify(msg);</span><span class="se">\n</span><span class="s2">  let bytePayload = null;</span><span class="se">\n</span><span class="s2">  let contentType = 'application/json';</span><span class="se">\n\n</span><span class="s2">  return Ditto.buildExternalMsg(</span><span class="se">\n</span><span class="s2">    headers,</span><span class="se">\n</span><span class="s2">    textPayload,</span><span class="se">\n</span><span class="s2">    bytePayload,</span><span class="se">\n</span><span class="s2">    contentType</span><span class="se">\n</span><span class="s2">  );</span><span class="se">\n</span><span class="s2">}</span><span class="se">\n</span><span class="s2">"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"loadBytebufferJS"</span><span class="p">:</span><span class="w"> </span><span class="s2">"false"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"loadLongJS"</span><span class="p">:</span><span class="w"> </span><span class="s2">"false"</span><span class="w">
+  </span><span class="nl">"mappingDefinitions"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"javascript"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"mappingEngine"</span><span class="p">:</span><span class="w"> </span><span class="s2">"JavaScript"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"options"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"incomingScript"</span><span class="p">:</span><span class="w"> </span><span class="s2">"function mapToDittoProtocolMsg() {</span><span class="se">\n</span><span class="s2">  return undefined;</span><span class="se">\n</span><span class="s2">}</span><span class="se">\n</span><span class="s2">"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"outgoingScript"</span><span class="p">:</span><span class="w"> </span><span class="s2">"function mapFromDittoProtocolMsgWrapper(msg) {</span><span class="se">\n</span><span class="s2">  let topic = msg['topic'].split('/').join(':');</span><span class="se">\n</span><span class="s2">  let headers = {</span><span class="se">\n</span><span class="s2">      'http.path': topic+':'+msg['revision']</span><span class="se">\n</span><span class="s2">  };</span><span class="se">\n</span><span class="s2">  let textPayload = JSON.stringify(msg);</span><span class="se">\n</span><span class="s2">  let bytePayload = null;</span><span class="se">\n</span><span class="s2">  let contentType = 'application/json';</span><span class="se">\n\n</span><span class="s2">  return Ditto.buildExternalMsg(</span><span class="se">\n</span><span class="s2">    headers,</span><span class="se">\n</span><span class="s2">    textPayload,</span><span class="se">\n</span><span class="s2">    bytePayload,</span><span class="se">\n</span><span class="s2">    contentType</span><span class="se">\n</span><span class="s2">  );</span><span class="se">\n</span><span class="s2">}</span><span class="se">\n</span><span class="s2">"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"loadBytebufferJS"</span><span class="p">:</span><span class="w"> </span><span class="s2">"false"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"loadLongJS"</span><span class="p">:</span><span class="w"> </span><span class="s2">"false"</span><span class="w">
       </span><span class="p">}</span><span class="w">
     </span><span class="p">}</span><span class="w">
   </span><span class="p">},</span><span class="w">
-  </span><span class="s2">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+  </span><span class="nl">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
 <p>Parameters:</p>
 <ul>
-  <li><code class="highlighter-rouge">&lt;s3-bucket&gt;</code>: Name of the S3 bucket.</li>
-  <li><code class="highlighter-rouge">&lt;aws-region&gt;</code>: The region of the S3 service.</li>
-  <li><code class="highlighter-rouge">&lt;aws-access-key&gt;</code> The access key of the user authorized for S3.</li>
-  <li><code class="highlighter-rouge">&lt;aws-secret-key&gt;</code> The secret key of the user authorized for S3.</li>
+  <li><code class="language-plaintext highlighter-rouge">&lt;s3-bucket&gt;</code>: Name of the S3 bucket.</li>
+  <li><code class="language-plaintext highlighter-rouge">&lt;aws-region&gt;</code>: The region of the S3 service.</li>
+  <li><code class="language-plaintext highlighter-rouge">&lt;aws-access-key&gt;</code> The access key of the user authorized for S3.</li>
+  <li><code class="language-plaintext highlighter-rouge">&lt;aws-secret-key&gt;</code> The secret key of the user authorized for S3.</li>
 </ul>
 
 <p>In order to create a distinct object for each event,
 the payload mapper that computes the path string and sets it via
-the <a href="connectivity-protocol-bindings-http.html#target-header-mapping">special header</a> <code class="highlighter-rouge">http.path</code>.
-The mapper overrides the function <code class="highlighter-rouge">mapFromDittoProtocolMsgWrapper</code> instead of the usual
-<code class="highlighter-rouge">mapFromDittoProtocolMsg</code> so that it has access to the revision number of twin events.
-The value of <code class="highlighter-rouge">http.path</code> is the name of the object, which consists of the topic of the event with <code class="highlighter-rouge">/</code> replaced by <code class="highlighter-rouge">:</code>
+the <a href="connectivity-protocol-bindings-http.html#target-header-mapping">special header</a> <code class="language-plaintext highlighter-rouge">http.path</code>.
+The mapper overrides the function <code class="language-plaintext highlighter-rouge">mapFromDittoProtocolMsgWrapper</code> instead of the usual
+<code class="language-plaintext highlighter-rouge">mapFromDittoProtocolMsg</code> so that it has access to the revision number of twin events.
+The value of <code class="language-plaintext highlighter-rouge">http.path</code> is the name of the object, which consists of the topic of the event with <code class="language-plaintext highlighter-rouge">/</code> replaced by <code class="language-plaintext highlighter-rouge">:</code>
 followed by its revision. For example, a thing-modified event of revision 42 generates the object
-<code class="highlighter-rouge">&lt;namespace&gt;:&lt;name&gt;:things:twin:events:modified:42</code>.</p>
+<code class="language-plaintext highlighter-rouge">&lt;namespace&gt;:&lt;name&gt;:things:twin:events:modified:42</code>.</p>
 
-<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">mapFromDittoProtocolMsgWrapper</span><span class="p">(</span><span class="nx">msg</span><span class="p">)</span> <span class="p">{</span>
-  <span class="kd">let</span> <span class="nx">topic</span> <span class="o">=</span> <span class="nx">msg</span><span class="p">[</span><span class="s1">'topic'</span><span class="p">].</span><span class="nx">split</span><span class="p">(</span><span class="s1">'/'</span><span class="p">).</span><span class="nx">join</span><span class="p">(</span><span class="s1">':'</span><span class="p">);</span>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nf">mapFromDittoProtocolMsgWrapper</span><span class="p">(</span><span class="nx">msg</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">let</span> <span class="nx">topic</span> <span class="o">=</span> <span class="nx">msg</span><span class="p">[</span><span class="dl">'</span><span class="s1">topic</span><span class="dl">'</span><span class="p">].</span><span class="nf">split</span><span class="p">(</span><span class="dl">'</span><span class="s1">/</span><span class="dl">'</span><span class="p">).</span><span class="nf">join</span><span class="p">(</span><span class="dl">'</span><span class="s1">:</span><span class="dl">'</span><span class="p">);</span>
   <span class="kd">let</span> <span class="nx">headers</span> <span class="o">=</span> <span class="p">{</span>
-      <span class="s1">'http.path'</span><span class="p">:</span> <span class="nx">topic</span> <span class="o">+</span> <span class="s1">':'</span> <span class="o">+</span> <span class="nx">msg</span><span class="p">[</span><span class="s1">'revision'</span><span class="p">]</span>
+      <span class="dl">'</span><span class="s1">http.path</span><span class="dl">'</span><span class="p">:</span> <span class="nx">topic</span> <span class="o">+</span> <span class="dl">'</span><span class="s1">:</span><span class="dl">'</span> <span class="o">+</span> <span class="nx">msg</span><span class="p">[</span><span class="dl">'</span><span class="s1">revision</span><span class="dl">'</span><span class="p">]</span>
   <span class="p">};</span>
-  <span class="kd">let</span> <span class="nx">textPayload</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">msg</span><span class="p">);</span>
+  <span class="kd">let</span> <span class="nx">textPayload</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nf">stringify</span><span class="p">(</span><span class="nx">msg</span><span class="p">);</span>
   <span class="kd">let</span> <span class="nx">bytePayload</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
-  <span class="kd">let</span> <span class="nx">contentType</span> <span class="o">=</span> <span class="s1">'application/json'</span><span class="p">;</span>
+  <span class="kd">let</span> <span class="nx">contentType</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">application/json</span><span class="dl">'</span><span class="p">;</span>
 
-  <span class="k">return</span> <span class="nx">Ditto</span><span class="p">.</span><span class="nx">buildExternalMsg</span><span class="p">(</span>
+  <span class="k">return</span> <span class="nx">Ditto</span><span class="p">.</span><span class="nf">buildExternalMsg</span><span class="p">(</span>
     <span class="nx">headers</span><span class="p">,</span>
     <span class="nx">textPayload</span><span class="p">,</span>
     <span class="nx">bytePayload</span><span class="p">,</span>
@@ -2462,48 +2469,48 @@ followed by its revision. For example, a thing-modified event of revision 42 gen
 It requires an Azure Log Analytics Workspace.</p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"00000000-0000-0000-0000-000000000000"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Azure Monitor"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"connectionType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http-push"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"connectionStatus"</span><span class="p">:</span><span class="w"> </span><span class="s2">"open"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"uri"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://&lt;workspace-id&gt;.ods.opinsights.azure.com:443"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"credentials"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"hmac"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"algorithm"</span><span class="p">:</span><span class="w"> </span><span class="s2">"az-monitor-2016-04-01"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"parameters"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"workspaceId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;workspace-id&gt;"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"sharedKey"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;shared-key&gt;"</span><span class="w">
+  </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"00000000-0000-0000-0000-000000000000"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Azure Monitor"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"connectionType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http-push"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"connectionStatus"</span><span class="p">:</span><span class="w"> </span><span class="s2">"open"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"uri"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://&lt;workspace-id&gt;.ods.opinsights.azure.com:443"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"credentials"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"hmac"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"algorithm"</span><span class="p">:</span><span class="w"> </span><span class="s2">"az-monitor-2016-04-01"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"parameters"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"workspaceId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;workspace-id&gt;"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"sharedKey"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;shared-key&gt;"</span><span class="w">
     </span><span class="p">}</span><span class="w">
   </span><span class="p">},</span><span class="w">
-  </span><span class="s2">"sources"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
-  </span><span class="s2">"targets"</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="w">
-      </span><span class="s2">"address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"POST:/api/logs?api-version=2016-04-01"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"topics"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="s2">"_/_/things/twin/events"</span><span class="w"> </span><span class="p">],</span><span class="w">
-      </span><span class="s2">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="s2">"integration:ditto"</span><span class="w"> </span><span class="p">],</span><span class="w">
-      </span><span class="s2">"headerMapping"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"Content-Type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"application/json"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"Log-Type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"TwinEvent"</span><span class="w">
+  </span><span class="nl">"sources"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+  </span><span class="nl">"targets"</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="w">
+      </span><span class="nl">"address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"POST:/api/logs?api-version=2016-04-01"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"topics"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="s2">"_/_/things/twin/events"</span><span class="w"> </span><span class="p">],</span><span class="w">
+      </span><span class="nl">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="s2">"integration:ditto"</span><span class="w"> </span><span class="p">],</span><span class="w">
+      </span><span class="nl">"headerMapping"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"Content-Type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"application/json"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"Log-Type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"TwinEvent"</span><span class="w">
       </span><span class="p">}</span><span class="w">
   </span><span class="p">}],</span><span class="w">
-  </span><span class="s2">"clientCount"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"failoverEnabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"validateCertificates"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"processorPoolSize"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"specificConfig"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"parallelism"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1"</span><span class="w">
+  </span><span class="nl">"clientCount"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"failoverEnabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"validateCertificates"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"processorPoolSize"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"specificConfig"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"parallelism"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1"</span><span class="w">
   </span><span class="p">},</span><span class="w">
-  </span><span class="s2">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+  </span><span class="nl">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
 <p>Parameters:</p>
 <ul>
-  <li><code class="highlighter-rouge">&lt;workspace-id&gt;</code>: The ID of the log analytics workspace.</li>
-  <li><code class="highlighter-rouge">&lt;shared-key&gt;</code>: The primary or secondary shared key of the log analytics workspace.</li>
+  <li><code class="language-plaintext highlighter-rouge">&lt;workspace-id&gt;</code>: The ID of the log analytics workspace.</li>
+  <li><code class="language-plaintext highlighter-rouge">&lt;shared-key&gt;</code>: The primary or secondary shared key of the log analytics workspace.</li>
 </ul>
 
-<p>The connection publishes all fields of all twin events under the log type <code class="highlighter-rouge">TwinEvent</code>. After a maximum of 30 minutes
-after the first event, Azure Monitor should have created a custom log type <code class="highlighter-rouge">TwinEvent_CL</code> containing a twin event
+<p>The connection publishes all fields of all twin events under the log type <code class="language-plaintext highlighter-rouge">TwinEvent</code>. After a maximum of 30 minutes
+after the first event, Azure Monitor should have created a custom log type <code class="language-plaintext highlighter-rouge">TwinEvent_CL</code> containing a twin event
 in each row.</p>
 
 <h4 id="azure-iot-hub-http-api">Azure IoT Hub HTTP API</h4>
@@ -2512,63 +2519,63 @@ in each row.</p>
 <a href="https://docs.microsoft.com/en-us/azure/iot-hub/about-iot-hub">Azure IoT Hub</a> via HTTP. You’ll receive the response of the direct method call.</p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"00000000-0000-0000-0000-000000000000"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Azure IoT Hub HTTP"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"connectionType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http-push"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"connectionStatus"</span><span class="p">:</span><span class="w"> </span><span class="s2">"open"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"uri"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://&lt;hostname&gt;:443"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"sources"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
-  </span><span class="s2">"targets"</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="w">
-    </span><span class="s2">"address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"POST:/twins/{{ thing:id }}/methods?api-version=2018-06-30"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"topics"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"_/_/things/live/messages"</span><span class="p">],</span><span class="w">
-    </span><span class="s2">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"integration:ditto"</span><span class="p">],</span><span class="w">
-    </span><span class="s2">"issuedAcknowledgementLabel"</span><span class="p">:</span><span class="w"> </span><span class="s2">"live-response"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"headerMapping"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
-    </span><span class="s2">"payloadMapping"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"javascript"</span><span class="p">]</span><span class="w">
+  </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"00000000-0000-0000-0000-000000000000"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Azure IoT Hub HTTP"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"connectionType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http-push"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"connectionStatus"</span><span class="p">:</span><span class="w"> </span><span class="s2">"open"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"uri"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://&lt;hostname&gt;:443"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"sources"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+  </span><span class="nl">"targets"</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="w">
+    </span><span class="nl">"address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"POST:/twins/{{ thing:id }}/methods?api-version=2018-06-30"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"topics"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"_/_/things/live/messages"</span><span class="p">],</span><span class="w">
+    </span><span class="nl">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"integration:ditto"</span><span class="p">],</span><span class="w">
+    </span><span class="nl">"issuedAcknowledgementLabel"</span><span class="p">:</span><span class="w"> </span><span class="s2">"live-response"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"headerMapping"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
+    </span><span class="nl">"payloadMapping"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"javascript"</span><span class="p">]</span><span class="w">
   </span><span class="p">}],</span><span class="w">
-  </span><span class="s2">"clientCount"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"failoverEnabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"validateCertificates"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"processorPoolSize"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"specificConfig"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"parallelism"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1"</span><span class="w">
+  </span><span class="nl">"clientCount"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"failoverEnabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"validateCertificates"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"processorPoolSize"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"specificConfig"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"parallelism"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1"</span><span class="w">
   </span><span class="p">},</span><span class="w">
-  </span><span class="s2">"mappingDefinitions"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"javascript"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"mappingEngine"</span><span class="p">:</span><span class="w"> </span><span class="s2">"JavaScript"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"options"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"incomingScript"</span><span class="p">:</span><span class="w"> </span><span class="s2">"function mapToDittoProtocolMsg() {</span><span class="se">\n</span><span class="s2">  return undefined;</span><span class="se">\n</span><span class="s2">}</span><span class="se">\n</span><span class="s2">"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"outgoingScript"</span><span class="p">:</span><span class="w"> </span><span class="s2">"function mapFromDittoProtocolMsg(</span><span class="se">\n</span><span class="s2">  namespace,</span><span class="se">\n</span><span class="s2">  name,</span><span class="se">\n</span><span class="s2">  group,</span><span class="se">\n</span><span class="s2">  channel,</span><span class="se">\n</span><span class="s2">  criterion,</span><span class="se">\n</span><span class="s2">  action,</span><span class="se">\n</span><span class="s2">  path,</span><span class="se">\n</span><span class="s2">  dittoHeaders,</span><span class="se">\n</span><span class="s2">  value,</span><span class="se">\n</span><span class="s2">  status,</span><span class="se">\n</span><span class="s2">  extra</span><span class="se">\n</span><span class="s2">) {</span><span class="se">\n\n</span><span class="s2">  let headers = dittoHeaders;</span><span class="se">\n</span><span class="s2">  let payload = {</span><span class="se">\n</span><span class="s2">      </span><span class="se">\"</span><span class="s2">methodName</span><span class="se">\"</span><span class="s2">: action,</span><span class="se">\n</span><span class="s2">      </span><span class="se">\"</span><span class="s2">responseTimeoutInSeconds</span><span class="se">\"</span><span class="s2">: parseInt(dittoHeaders.timeout),</span><span class="se">\n</span><span class="s2">      </span><span class="se">\"</span><span class="s2">payload</span><span class="se">\"</span><span class="s2">: value</span><span class="se">\n</span><span class="s2">  };</span><span class="se">\n</span><span class="s2">  let textPayload = JSON.stringify(payload);</span><span class="se">\n</span><span class="s2">  let bytePayload = null;</span><span class="se">\n</span><span class="s2">  let contentType = 'application/json';</span><span class="se">\n\n</span><span class="s2">  return Ditto.buildExternalMsg(</span><span class="se">\n</span><span class="s2">    headers, // The external headers Object containing header values</span><span class="se">\n</span><span class="s2">    textPayload, // The external mapped String</span><span class="se">\n</span><span class="s2">    bytePayload, // The external mapped byte[]</span><span class="se">\n</span><span class="s2">    contentType // The returned Content-Type</span><span class="se">\n</span><span class="s2">  );</span><span class="se">\n</span><span class="s2">}</span><span class="se">\n</span><span class="s2">"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"loadBytebufferJS"</span><span class="p">:</span><span class="w"> </span><span class="s2">"false"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"loadLongJS"</span><span class="p">:</span><span class="w"> </span><span class="s2">"false"</span><span class="w">
+  </span><span class="nl">"mappingDefinitions"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"javascript"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"mappingEngine"</span><span class="p">:</span><span class="w"> </span><span class="s2">"JavaScript"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"options"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"incomingScript"</span><span class="p">:</span><span class="w"> </span><span class="s2">"function mapToDittoProtocolMsg() {</span><span class="se">\n</span><span class="s2">  return undefined;</span><span class="se">\n</span><span class="s2">}</span><span class="se">\n</span><span class="s2">"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"outgoingScript"</span><span class="p">:</span><span class="w"> </span><span class="s2">"function mapFromDittoProtocolMsg(</span><span class="se">\n</span><span class="s2">  namespace,</span><span class="se">\n</span><span class="s2">  name,</span><span class="se">\n</span><span class="s2">  group,</span><span class="se">\n</span><span class="s2">  channel,</span><span class="se">\n</span><span class="s2">  criterion,</span><span class="se">\n</span><span class="s2">  action,</span><span class="se">\n</span><span class="s2">  path,</span><span class="se">\n</span><span class="s2">  dittoHeaders,</span><span class="se">\n</span><span class="s2">  value,</span><span class="se">\n</span><span class="s2">  status,</span><span class="se">\n</span><span class="s2">  extra</span><span class="se">\n</span><span class="s2">) {</span><span class="se">\n\n</span><span class="s2">  let headers = dittoHeaders;</span><span class="se">\n</span><span class="s2">  let payload = {</span><span class="se">\n</span><span class="s2">      </span><span class="se">\"</span><span class="s2">methodName</span><span class="se">\"</span><span class="s2">: action,</span><span class="se">\n</span><span class="s2">      </span><span class="se">\"</span><span class="s2">responseTimeoutInSeconds</span><span class="se">\"</span><span class="s2">: parseInt(dittoHeaders.timeout),</span><span class="se">\n</span><span class="s2">      </span><span class="se">\"</span><span class="s2">payload</span><span class="se">\"</span><span class="s2">: value</span><span class="se">\n</span><span class="s2">  };</span><span class="se">\n</span><span class="s2">  let textPayload = JSON.stringify(payload);</span><span class="se">\n</span><span class="s2">  let bytePayload = null;</span><span class="se">\n</span><span class="s2">  let contentType = 'application/json';</span><span class="se">\n\n</span><span class="s2">  return Ditto.buildExternalMsg(</span><span class="se">\n</span><span class="s2">    headers, // The external headers Object containing header values</span><span class="se">\n</span><span class="s2">    textPayload, // The external mapped String</span><span class="se">\n</span><span class="s2">    bytePayload, // The external mapped byte[]</span><span class="se">\n</span><span class="s2">    contentType // The returned Content-Type</span><span class="se">\n</span><span class="s2">  );</span><span class="se">\n</span><span class="s2">}</span><span class="se">\n</span><span class="s2">"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"loadBytebufferJS"</span><span class="p">:</span><span class="w"> </span><span class="s2">"false"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"loadLongJS"</span><span class="p">:</span><span class="w"> </span><span class="s2">"false"</span><span class="w">
       </span><span class="p">}</span><span class="w">
     </span><span class="p">}</span><span class="w">
   </span><span class="p">},</span><span class="w">
-  </span><span class="s2">"credentials"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"hmac"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"algorithm"</span><span class="p">:</span><span class="w"> </span><span class="s2">"az-sasl"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"parameters"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"sharedKeyName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;shared-access-policy-name&gt;"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"sharedKey"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;shared-access-key&gt;"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"endpoint"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;hostname&gt;"</span><span class="w">
+  </span><span class="nl">"credentials"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"hmac"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"algorithm"</span><span class="p">:</span><span class="w"> </span><span class="s2">"az-sasl"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"parameters"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"sharedKeyName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;shared-access-policy-name&gt;"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"sharedKey"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;shared-access-key&gt;"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"endpoint"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;hostname&gt;"</span><span class="w">
     </span><span class="p">}</span><span class="w">
   </span><span class="p">},</span><span class="w">
-  </span><span class="s2">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+  </span><span class="nl">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
 <p>Parameters:</p>
 <ul>
-  <li><code class="highlighter-rouge">&lt;hostname&gt;</code>: The hostname of your iot hub instance. E.g. <code class="highlighter-rouge">my-hub.azure-devices.net</code>.</li>
-  <li><code class="highlighter-rouge">&lt;shared-access-policy-name&gt;</code>: The name of the (Azure IoT Hub) shared access policy, which has the <code class="highlighter-rouge">Service connect</code> permission. E.g. <code class="highlighter-rouge">service</code>.</li>
-  <li><code class="highlighter-rouge">&lt;shared-access-key&gt;</code>: The primary or secondary key of above policy. E.g. <code class="highlighter-rouge">theKey</code>.</li>
+  <li><code class="language-plaintext highlighter-rouge">&lt;hostname&gt;</code>: The hostname of your iot hub instance. E.g. <code class="language-plaintext highlighter-rouge">my-hub.azure-devices.net</code>.</li>
+  <li><code class="language-plaintext highlighter-rouge">&lt;shared-access-policy-name&gt;</code>: The name of the (Azure IoT Hub) shared access policy, which has the <code class="language-plaintext highlighter-rouge">Service connect</code> permission. E.g. <code class="language-plaintext highlighter-rouge">service</code>.</li>
+  <li><code class="language-plaintext highlighter-rouge">&lt;shared-access-key&gt;</code>: The primary or secondary key of above policy. E.g. <code class="language-plaintext highlighter-rouge">theKey</code>.</li>
 </ul>
 
-<p>The <code class="highlighter-rouge">outgoingScript</code> provides JavaScript payload mapping which maps the outgoing ditto protocol message into
+<p>The <code class="language-plaintext highlighter-rouge">outgoingScript</code> provides JavaScript payload mapping which maps the outgoing ditto protocol message into
 the required <a href="https://docs.microsoft.com/en-us/azure/iot-hub/iot-hub-devguide-direct-methods#invoke-a-direct-method-from-a-back-end-app">direct method format</a>.
-I.e. it uses the live message subject as <code class="highlighter-rouge">methodName</code>, the timeout as <code class="highlighter-rouge">responseTimeoutInSeconds</code> and the value as <code class="highlighter-rouge">payload</code>:</p>
+I.e. it uses the live message subject as <code class="language-plaintext highlighter-rouge">methodName</code>, the timeout as <code class="language-plaintext highlighter-rouge">responseTimeoutInSeconds</code> and the value as <code class="language-plaintext highlighter-rouge">payload</code>:</p>
 
-<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">mapFromDittoProtocolMsg</span><span class="p">(</span>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nf">mapFromDittoProtocolMsg</span><span class="p">(</span>
         <span class="nx">namespace</span><span class="p">,</span>
         <span class="nx">name</span><span class="p">,</span>
         <span class="nx">group</span><span class="p">,</span>
@@ -2584,15 +2591,15 @@ I.e. it uses the live message subject as <code class="highlighter-rouge">methodN
 
   <span class="kd">let</span> <span class="nx">headers</span> <span class="o">=</span> <span class="nx">dittoHeaders</span><span class="p">;</span>
   <span class="kd">let</span> <span class="nx">payload</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">"methodName"</span><span class="p">:</span> <span class="nx">action</span><span class="p">,</span>
-    <span class="s2">"responseTimeoutInSeconds"</span><span class="p">:</span> <span class="nb">parseInt</span><span class="p">(</span><span class="nx">dittoHeaders</span><span class="p">.</span><span class="nx">timeout</span><span class="p">),</span>
-    <span class="s2">"payload"</span><span class="p">:</span> <span class="nx">value</span>
+    <span class="dl">"</span><span class="s2">methodName</span><span class="dl">"</span><span class="p">:</span> <span class="nx">action</span><span class="p">,</span>
+    <span class="dl">"</span><span class="s2">responseTimeoutInSeconds</span><span class="dl">"</span><span class="p">:</span> <span class="nf">parseInt</span><span class="p">(</span><span class="nx">dittoHeaders</span><span class="p">.</span><span class="nx">timeout</span><span class="p">),</span>
+    <span class="dl">"</span><span class="s2">payload</span><span class="dl">"</span><span class="p">:</span> <span class="nx">value</span>
   <span class="p">};</span>
-  <span class="kd">let</span> <span class="nx">textPayload</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">payload</span><span class="p">);</span>
+  <span class="kd">let</span> <span class="nx">textPayload</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nf">stringify</span><span class="p">(</span><span class="nx">payload</span><span class="p">);</span>
   <span class="kd">let</span> <span class="nx">bytePayload</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
-  <span class="kd">let</span> <span class="nx">contentType</span> <span class="o">=</span> <span class="s1">'application/json'</span><span class="p">;</span>
+  <span class="kd">let</span> <span class="nx">contentType</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">application/json</span><span class="dl">'</span><span class="p">;</span>
 
-  <span class="k">return</span> <span class="nx">Ditto</span><span class="p">.</span><span class="nx">buildExternalMsg</span><span class="p">(</span>
+  <span class="k">return</span> <span class="nx">Ditto</span><span class="p">.</span><span class="nf">buildExternalMsg</span><span class="p">(</span>
     <span class="nx">headers</span><span class="p">,</span>
     <span class="nx">textPayload</span><span class="p">,</span>
     <span class="nx">bytePayload</span><span class="p">,</span>
@@ -2603,24 +2610,24 @@ I.e. it uses the live message subject as <code class="highlighter-rouge">methodN
 
 <p>This is required since Azure IoT Hub direct methods require a specific format:</p>
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-    </span><span class="s2">"methodName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"reboot"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"responseTimeoutInSeconds"</span><span class="p">:</span><span class="w"> </span><span class="mi">200</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"payload"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"input1"</span><span class="p">:</span><span class="w"> </span><span class="s2">"someInput"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"input2"</span><span class="p">:</span><span class="w"> </span><span class="s2">"anotherInput"</span><span class="w">
+    </span><span class="nl">"methodName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"reboot"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"responseTimeoutInSeconds"</span><span class="p">:</span><span class="w"> </span><span class="mi">200</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"payload"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"input1"</span><span class="p">:</span><span class="w"> </span><span class="s2">"someInput"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"input2"</span><span class="p">:</span><span class="w"> </span><span class="s2">"anotherInput"</span><span class="w">
     </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
-<p>Send live messages to a Thing, which contain as value the expected <code class="highlighter-rouge">payload</code>, as live message subject the expected
-<code class="highlighter-rouge">methodName</code> and as timeout the expected <code class="highlighter-rouge">responseTimeoutInSeconds</code>. Then they can successfully invoke
+<p>Send live messages to a Thing, which contain as value the expected <code class="language-plaintext highlighter-rouge">payload</code>, as live message subject the expected
+<code class="language-plaintext highlighter-rouge">methodName</code> and as timeout the expected <code class="language-plaintext highlighter-rouge">responseTimeoutInSeconds</code>. Then they can successfully invoke
 the direct method on their respective devices.</p>
 
-<p>E.g. a live message for the above direct method would be a <code class="highlighter-rouge">POST</code> to
-<code class="highlighter-rouge">&lt;ditto&gt;/api/2/things/&lt;thing-id&gt;/inbox/messages/reboot?timeout=200s</code> with body:</p>
+<p>E.g. a live message for the above direct method would be a <code class="language-plaintext highlighter-rouge">POST</code> to
+<code class="language-plaintext highlighter-rouge">&lt;ditto&gt;/api/2/things/&lt;thing-id&gt;/inbox/messages/reboot?timeout=200s</code> with body:</p>
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-    </span><span class="s2">"input1"</span><span class="p">:</span><span class="w"> </span><span class="s2">"someInput"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"input2"</span><span class="p">:</span><span class="w"> </span><span class="s2">"anotherInput"</span><span class="w">
+    </span><span class="nl">"input1"</span><span class="p">:</span><span class="w"> </span><span class="s2">"someInput"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"input2"</span><span class="p">:</span><span class="w"> </span><span class="s2">"anotherInput"</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
@@ -2630,44 +2637,44 @@ the direct method on their respective devices.</p>
 messages to <a href="https://docs.microsoft.com/en-us/azure/iot-hub/about-iot-hub">Azure IoT Hub</a> via AMQP 1.0.</p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"00000000-0000-0000-0000-000000000000"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Azure IoT Hub AMQP"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"connectionType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"amqp-10"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"connectionStatus"</span><span class="p">:</span><span class="w"> </span><span class="s2">"open"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"uri"</span><span class="p">:</span><span class="w"> </span><span class="s2">"amqps://&lt;hostname&gt;:5671"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"sources"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
-  </span><span class="s2">"targets"</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="w">
-    </span><span class="s2">"address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/messages/devicebound"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"topics"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"_/_/things/live/messages"</span><span class="p">],</span><span class="w">
-    </span><span class="s2">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"integration:ditto"</span><span class="p">],</span><span class="w">
-    </span><span class="s2">"headerMapping"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"iothub-ack"</span><span class="p">:</span><span class="w"> </span><span class="s2">"full"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"to"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/devices/{{thing:id}}/messages/devicebound"</span><span class="w">
+  </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"00000000-0000-0000-0000-000000000000"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Azure IoT Hub AMQP"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"connectionType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"amqp-10"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"connectionStatus"</span><span class="p">:</span><span class="w"> </span><span class="s2">"open"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"uri"</span><span class="p">:</span><span class="w"> </span><span class="s2">"amqps://&lt;hostname&gt;:5671"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"sources"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+  </span><span class="nl">"targets"</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="w">
+    </span><span class="nl">"address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/messages/devicebound"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"topics"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"_/_/things/live/messages"</span><span class="p">],</span><span class="w">
+    </span><span class="nl">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"integration:ditto"</span><span class="p">],</span><span class="w">
+    </span><span class="nl">"headerMapping"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"iothub-ack"</span><span class="p">:</span><span class="w"> </span><span class="s2">"full"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"to"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/devices/{{thing:id}}/messages/devicebound"</span><span class="w">
     </span><span class="p">}</span><span class="w">
   </span><span class="p">}</span><span class="w">
   </span><span class="p">],</span><span class="w">
-  </span><span class="s2">"clientCount"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"failoverEnabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"validateCertificates"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"processorPoolSize"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"credentials"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"hmac"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"algorithm"</span><span class="p">:</span><span class="w"> </span><span class="s2">"az-sasl"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"parameters"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"sharedKeyName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;shared-access-policy-name&gt;"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"sharedKey"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;shared-access-key&gt;"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"endpoint"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;hostname&gt;"</span><span class="w">
+  </span><span class="nl">"clientCount"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"failoverEnabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"validateCertificates"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"processorPoolSize"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"credentials"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"hmac"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"algorithm"</span><span class="p">:</span><span class="w"> </span><span class="s2">"az-sasl"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"parameters"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"sharedKeyName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;shared-access-policy-name&gt;"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"sharedKey"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;shared-access-key&gt;"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"endpoint"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;hostname&gt;"</span><span class="w">
     </span><span class="p">}</span><span class="w">
   </span><span class="p">},</span><span class="w">
-  </span><span class="s2">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+  </span><span class="nl">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
 <p>Parameters:</p>
 <ul>
-  <li><code class="highlighter-rouge">&lt;hostname&gt;</code>: The hostname of your iot hub instance. E.g. <code class="highlighter-rouge">my-hub.azure-devices.net</code>.</li>
-  <li><code class="highlighter-rouge">&lt;shared-access-policy-name&gt;</code>: The name of the (Azure IoT Hub) shared access policy, which has the <code class="highlighter-rouge">Service connect</code> permission. E.g. <code class="highlighter-rouge">service</code>.</li>
-  <li><code class="highlighter-rouge">&lt;shared-access-key&gt;</code>: The primary or secondary key of above policy. E.g. <code class="highlighter-rouge">theKey</code>.</li>
+  <li><code class="language-plaintext highlighter-rouge">&lt;hostname&gt;</code>: The hostname of your iot hub instance. E.g. <code class="language-plaintext highlighter-rouge">my-hub.azure-devices.net</code>.</li>
+  <li><code class="language-plaintext highlighter-rouge">&lt;shared-access-policy-name&gt;</code>: The name of the (Azure IoT Hub) shared access policy, which has the <code class="language-plaintext highlighter-rouge">Service connect</code> permission. E.g. <code class="language-plaintext highlighter-rouge">service</code>.</li>
+  <li><code class="language-plaintext highlighter-rouge">&lt;shared-access-key&gt;</code>: The primary or secondary key of above policy. E.g. <code class="language-plaintext highlighter-rouge">theKey</code>.</li>
 </ul>
 
 <h4 id="azure-service-bus-http-api">Azure Service Bus HTTP API</h4>
@@ -2676,48 +2683,48 @@ messages to <a href="https://docs.microsoft.com/en-us/azure/iot-hub/about-iot-hu
 <a href="https://docs.microsoft.com/en-us/azure/service-bus-messaging/service-bus-messaging-overview">Azure Service Bus</a>.</p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"00000000-0000-0000-0000-000000000000"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Azure Service Bus HTTP"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"connectionType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http-push"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"connectionStatus"</span><span class="p">:</span><span class="w"> </span><span class="s2">"open"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"uri"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://&lt;hostname&gt;:443"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"sources"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
-  </span><span class="s2">"targets"</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="w">
-    </span><span class="s2">"address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"POST:/&lt;queue-name&gt;/messages"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"topics"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"_/_/things/live/messages"</span><span class="p">],</span><span class="w">
-    </span><span class="s2">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"integration:ditto"</span><span class="p">],</span><span class="w">
-    </span><span class="s2">"issuedAcknowledgementLabel"</span><span class="p">:</span><span class="w"> </span><span class="s2">"live-response"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"headerMapping"</span><span class="p">:</span><span class="w"> </span><span class="p">{}</span><span class="w">
+  </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"00000000-0000-0000-0000-000000000000"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Azure Service Bus HTTP"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"connectionType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http-push"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"connectionStatus"</span><span class="p">:</span><span class="w"> </span><span class="s2">"open"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"uri"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://&lt;hostname&gt;:443"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"sources"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+  </span><span class="nl">"targets"</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="w">
+    </span><span class="nl">"address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"POST:/&lt;queue-name&gt;/messages"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"topics"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"_/_/things/live/messages"</span><span class="p">],</span><span class="w">
+    </span><span class="nl">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"integration:ditto"</span><span class="p">],</span><span class="w">
+    </span><span class="nl">"issuedAcknowledgementLabel"</span><span class="p">:</span><span class="w"> </span><span class="s2">"live-response"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"headerMapping"</span><span class="p">:</span><span class="w"> </span><span class="p">{}</span><span class="w">
   </span><span class="p">}</span><span class="w">
   </span><span class="p">],</span><span class="w">
-  </span><span class="s2">"clientCount"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"failoverEnabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"validateCertificates"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"processorPoolSize"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"specificConfig"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"parallelism"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1"</span><span class="w">
+  </span><span class="nl">"clientCount"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"failoverEnabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"validateCertificates"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"processorPoolSize"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"specificConfig"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"parallelism"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1"</span><span class="w">
   </span><span class="p">},</span><span class="w">
-  </span><span class="s2">"credentials"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"hmac"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"algorithm"</span><span class="p">:</span><span class="w"> </span><span class="s2">"az-sasl"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"parameters"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"sharedKeyName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;shared-access-policy-name&gt;"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"sharedKey"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;base64-encoded-shared-key&gt;"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"endpoint"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://&lt;hostname&gt;/&lt;queue-name&gt;"</span><span class="w">
+  </span><span class="nl">"credentials"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"hmac"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"algorithm"</span><span class="p">:</span><span class="w"> </span><span class="s2">"az-sasl"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"parameters"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"sharedKeyName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;shared-access-policy-name&gt;"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"sharedKey"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;base64-encoded-shared-key&gt;"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"endpoint"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://&lt;hostname&gt;/&lt;queue-name&gt;"</span><span class="w">
     </span><span class="p">}</span><span class="w">
   </span><span class="p">},</span><span class="w">
-  </span><span class="s2">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+  </span><span class="nl">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
 <p>Parameters:</p>
 <ul>
-  <li><code class="highlighter-rouge">&lt;hostname&gt;</code>: The hostname of your service bus instance. E.g. <code class="highlighter-rouge">my-bus.servicebus.windows.net</code>.</li>
-  <li><code class="highlighter-rouge">&lt;queue-name&gt;</code>: The queue name to which you want to publish in your service bus instance. E.g. <code class="highlighter-rouge">my-queue</code>’.</li>
-  <li><code class="highlighter-rouge">&lt;shared-access-policy-name&gt;</code>: The name of the (Azure Service Bus) shared access policy, which has <code class="highlighter-rouge">Send</code> and <code class="highlighter-rouge">Listen</code> permissions. E.g. <code class="highlighter-rouge">RootManageSharedAccessKey</code>.</li>
-  <li><code class="highlighter-rouge">&lt;base64-encoded-shared-key&gt;</code>: The <code class="highlighter-rouge">Base64</code> encoded primary or secondary key of above policy. The signing work if you
-encode the key with <code class="highlighter-rouge">Base64</code> (although it already has <code class="highlighter-rouge">Base64</code> encoding). E.g. if the primary key is <code class="highlighter-rouge">theKey</code>, you need to use
-its encoded version <code class="highlighter-rouge">dGhlS2V5</code>.</li>
+  <li><code class="language-plaintext highlighter-rouge">&lt;hostname&gt;</code>: The hostname of your service bus instance. E.g. <code class="language-plaintext highlighter-rouge">my-bus.servicebus.windows.net</code>.</li>
+  <li><code class="language-plaintext highlighter-rouge">&lt;queue-name&gt;</code>: The queue name to which you want to publish in your service bus instance. E.g. <code class="language-plaintext highlighter-rouge">my-queue</code>’.</li>
+  <li><code class="language-plaintext highlighter-rouge">&lt;shared-access-policy-name&gt;</code>: The name of the (Azure Service Bus) shared access policy, which has <code class="language-plaintext highlighter-rouge">Send</code> and <code class="language-plaintext highlighter-rouge">Listen</code> permissions. E.g. <code class="language-plaintext highlighter-rouge">RootManageSharedAccessKey</code>.</li>
+  <li><code class="language-plaintext highlighter-rouge">&lt;base64-encoded-shared-key&gt;</code>: The <code class="language-plaintext highlighter-rouge">Base64</code> encoded primary or secondary key of above policy. The signing work if you
+encode the key with <code class="language-plaintext highlighter-rouge">Base64</code> (although it already has <code class="language-plaintext highlighter-rouge">Base64</code> encoding). E.g. if the primary key is <code class="language-plaintext highlighter-rouge">theKey</code>, you need to use
+its encoded version <code class="language-plaintext highlighter-rouge">dGhlS2V5</code>.</li>
 </ul>
 
 
@@ -2745,7 +2752,7 @@ its encoded version <code class="highlighter-rouge">dGhlS2V5</code>.</li>
                     </div>
                     <p class="notice">
                         &copy;2024 Eclipse Ditto™.
-                         Site last generated: Feb 27, 2024 <br />
+                         Site last generated: Apr 10, 2024 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

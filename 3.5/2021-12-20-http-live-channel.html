@@ -274,60 +274,60 @@ $('#toc').on('click', 'a', function() {
         
 
         <p>The upcoming release of Eclipse Ditto <strong>version 2.3.0</strong> will support sending commands via the HTTP API 
-directly to devices using the <a href="protocol-twinlive.html#live">live channel</a> by just adding the <code class="highlighter-rouge">channel=live</code> 
+directly to devices using the <a href="protocol-twinlive.html#live">live channel</a> by just adding the <code class="language-plaintext highlighter-rouge">channel=live</code> 
 query parameter to the same HTTP API request which would target the <a href="protocol-twinlive.html#twin">twin</a>.</p>
 
 <h2 id="http-live-channel">HTTP Live channel</h2>
 
 <p>Ditto supports sending all kind of <a href="protocol-specification-things.html#commands">Thing commands</a> via
-the <code class="highlighter-rouge">live</code> channel directly to devices.
-When sending a <code class="highlighter-rouge">live</code> command to  a device, the device is responsible for sending a correlated and correct response 
+the <code class="language-plaintext highlighter-rouge">live</code> channel directly to devices.
+When sending a <code class="language-plaintext highlighter-rouge">live</code> command to  a device, the device is responsible for sending a correlated and correct response 
 in <a href="protocol-overview.html">Ditto Protocol</a>.</p>
 
-<p>Ditto supports two types of <code class="highlighter-rouge">channel</code>s for communication.</p>
+<p>Ditto supports two types of <code class="language-plaintext highlighter-rouge">channel</code>s for communication.</p>
 
 <ul>
-  <li><a href="protocol-twinlive.html#twin">twin</a>: The default value of the channel parameter is <code class="highlighter-rouge">twin</code> 
+  <li><a href="protocol-twinlive.html#twin">twin</a>: The default value of the channel parameter is <code class="language-plaintext highlighter-rouge">twin</code> 
 to communicate with the persisted <strong>twin</strong> representation.</li>
-  <li><a href="protocol-twinlive.html#live">live</a>: The <code class="highlighter-rouge">channel</code> parameter can be changed to <code class="highlighter-rouge">live</code> 
+  <li><a href="protocol-twinlive.html#live">live</a>: The <code class="language-plaintext highlighter-rouge">channel</code> parameter can be changed to <code class="language-plaintext highlighter-rouge">live</code> 
 to communicate with the real device.</li>
 </ul>
 
 <div class="alert alert-info" role="alert"><i class="fa fa-info-circle"></i> <b>Note:</b> In order to use the live channel, the device receiving live commands must be able to understand
   and answer in <a href="protocol-specification.html">Ditto Protocol messages</a> with the
-<a href="protocol-specification-topic.html#live-channel">topic’s channel being <code class="highlighter-rouge">live</code></a>.</div>
+<a href="protocol-specification-topic.html#live-channel">topic’s channel being <code class="language-plaintext highlighter-rouge">live</code></a>.</div>
 
-<p>When using the <code class="highlighter-rouge">twin</code> channel, the command is routed to the Ditto backend and handled by the <strong>twin</strong> persistence.
-Before using the <code class="highlighter-rouge">live</code> channel, it is necessary to create the <strong>digital twin</strong> of the device in the 
+<p>When using the <code class="language-plaintext highlighter-rouge">twin</code> channel, the command is routed to the Ditto backend and handled by the <strong>twin</strong> persistence.
+Before using the <code class="language-plaintext highlighter-rouge">live</code> channel, it is necessary to create the <strong>digital twin</strong> of the device in the 
 Ditto backend.</p>
 
-<p>If the <code class="highlighter-rouge">live</code> channel is used, the command is directly routed to the device. In this case the device is 
+<p>If the <code class="language-plaintext highlighter-rouge">live</code> channel is used, the command is directly routed to the device. In this case the device is 
 responsible for answering the command and sending back a response. In case no response is sent back, the Ditto HTTP API 
-is responding with <code class="highlighter-rouge">408 Request Timeout</code>.<br />
-The default timeout for live commands is <code class="highlighter-rouge">10s</code> but it can be changed by setting the <code class="highlighter-rouge">timeout</code> parameter to the 
+is responding with <code class="language-plaintext highlighter-rouge">408 Request Timeout</code>.<br />
+The default timeout for live commands is <code class="language-plaintext highlighter-rouge">10s</code> but it can be changed by setting the <code class="language-plaintext highlighter-rouge">timeout</code> parameter to the 
 desired value.</p>
 
-<p>Ditto ensures that the <code class="highlighter-rouge">correlation ID</code>, <code class="highlighter-rouge">entity ID</code>, <code class="highlighter-rouge">path</code> and <code class="highlighter-rouge">command response type</code> of the command response 
+<p>Ditto ensures that the <code class="language-plaintext highlighter-rouge">correlation ID</code>, <code class="language-plaintext highlighter-rouge">entity ID</code>, <code class="language-plaintext highlighter-rouge">path</code> and <code class="language-plaintext highlighter-rouge">command response type</code> of the command response 
 is the same as in the sending command. If this is not the case, Ditto is dropping the response and the caller of the 
-HTTP request will get a <code class="highlighter-rouge">408 Request Timeout</code> with a message that the timeout was caused by an incompatible
+HTTP request will get a <code class="language-plaintext highlighter-rouge">408 Request Timeout</code> with a message that the timeout was caused by an incompatible
 command response from the device.</p>
 
 <h3 id="permissions-for-live-commands">Permissions for live commands</h3>
 
 <p>Sending live commands to devices is restricted by the policy of the thing.<br />
-Thus Ditto ensures that only authorized parties with <code class="highlighter-rouge">WRITE</code> permission are able to send commands or messages.<br />
+Thus Ditto ensures that only authorized parties with <code class="language-plaintext highlighter-rouge">WRITE</code> permission are able to send commands or messages.<br />
 Ditto also filters responses from the device based on the policy. This ensures that the requester only gets the data
-where he/she has <code class="highlighter-rouge">READ</code> permission on.</p>
+where he/she has <code class="language-plaintext highlighter-rouge">READ</code> permission on.</p>
 
 <p>For retrieve commands, the <a href="basic-auth.html#authenticated-subjects">authenticated subject</a> needs to have 
-(at least partial) <code class="highlighter-rouge">READ</code> permission at the resource which is requested.<br />
-In case a <code class="highlighter-rouge">RetrieveThing</code> (via HTTP a <code class="highlighter-rouge">GET /api/2/things/&lt;thing-id&gt;</code>) command is sent to a real device and the 
-requester only has partial <code class="highlighter-rouge">READ</code> permission on the thing, the response is filtered based on the policy 
-and only the fields where <code class="highlighter-rouge">READ</code> permission is granted are returned.</p>
+(at least partial) <code class="language-plaintext highlighter-rouge">READ</code> permission at the resource which is requested.<br />
+In case a <code class="language-plaintext highlighter-rouge">RetrieveThing</code> (via HTTP a <code class="language-plaintext highlighter-rouge">GET /api/2/things/&lt;thing-id&gt;</code>) command is sent to a real device and the 
+requester only has partial <code class="language-plaintext highlighter-rouge">READ</code> permission on the thing, the response is filtered based on the policy 
+and only the fields where <code class="language-plaintext highlighter-rouge">READ</code> permission is granted are returned.</p>
 
 <h3 id="live-commands-via-http-api">Live commands via HTTP API</h3>
 
-<p>When using the HTTP API the <code class="highlighter-rouge">channel</code> parameter can either be specified via HTTP Header or via HTTP query parameter.<br />
+<p>When using the HTTP API the <code class="language-plaintext highlighter-rouge">channel</code> parameter can either be specified via HTTP Header or via HTTP query parameter.<br />
 In the examples below both ways are possible to specify the channel parameter.</p>
 
 <h4 id="live-command-with-http-header">Live command with HTTP Header</h4>
@@ -342,47 +342,47 @@ In the examples below both ways are possible to specify the channel parameter.</
 
 <h2 id="example">Example</h2>
 
-<p>The following section provides an example how to use the HTTP <code class="highlighter-rouge">live</code> channel together with the Ditto Java client.</p>
+<p>The following section provides an example how to use the HTTP <code class="language-plaintext highlighter-rouge">live</code> channel together with the Ditto Java client.</p>
 
-<p>For demonstration purpose, we assume that the thing with ID <code class="highlighter-rouge">org.eclipse.ditto:outdoor-sensor</code> already exists.</p>
+<p>For demonstration purpose, we assume that the thing with ID <code class="language-plaintext highlighter-rouge">org.eclipse.ditto:outdoor-sensor</code> already exists.</p>
 
-<p>In this example we want to retrieve the live state of the device by sending a <code class="highlighter-rouge">RetrieveThing</code> command via
-the <code class="highlighter-rouge">live</code> channel directly to the device.</p>
+<p>In this example we want to retrieve the live state of the device by sending a <code class="language-plaintext highlighter-rouge">RetrieveThing</code> command via
+the <code class="language-plaintext highlighter-rouge">live</code> channel directly to the device.</p>
 
 <h3 id="permissions-to-execute-the-example">Permissions to execute the example</h3>
 
 <p>For this example, the <a href="basic-auth.html#authenticated-subjects">authenticated subject</a> has
-<code class="highlighter-rouge">READ</code> and <code class="highlighter-rouge">WRITE</code> permissions on the complete thing resource to send the command and retrieve the full response.</p>
+<code class="language-plaintext highlighter-rouge">READ</code> and <code class="language-plaintext highlighter-rouge">WRITE</code> permissions on the complete thing resource to send the command and retrieve the full response.</p>
 
 <h3 id="executing-the-example">Executing the example</h3>
 
-<p>When sending a command over the <code class="highlighter-rouge">live</code> channel to a device, the device needs to take action and send back a response.<br />
-The response from the device is routed back to the initial requester of the <code class="highlighter-rouge">live</code> command at the HTTP API.</p>
+<p>When sending a command over the <code class="language-plaintext highlighter-rouge">live</code> channel to a device, the device needs to take action and send back a response.<br />
+The response from the device is routed back to the initial requester of the <code class="language-plaintext highlighter-rouge">live</code> command at the HTTP API.</p>
 
 <p>In this example the <a href="client-sdk-java.html">Ditto Java Client</a> acts as device and sends back the response.<br />
-The following snippet shows how to register for retrieve thing live commands and send back a <code class="highlighter-rouge">RetrieveThingResponse</code>.</p>
+The following snippet shows how to register for retrieve thing live commands and send back a <code class="language-plaintext highlighter-rouge">RetrieveThingResponse</code>.</p>
 
-<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">String</span> <span class="n">thingId</span> <span class="o">=</span> <span class="s">"org.eclipse.ditto:outdoor-sensor"</span><span class="o">;</span>
-<span class="n">String</span> <span class="n">featureId</span> <span class="o">=</span> <span class="s">"environment-sensor"</span><span class="o">;</span>
-<span class="n">Attributes</span> <span class="n">attributes</span> <span class="o">=</span> <span class="n">Attributes</span><span class="o">.</span><span class="na">newBuilder</span><span class="o">()</span>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">String</span> <span class="n">thingId</span> <span class="o">=</span> <span class="s">"org.eclipse.ditto:outdoor-sensor"</span><span class="o">;</span>
+<span class="nc">String</span> <span class="n">featureId</span> <span class="o">=</span> <span class="s">"environment-sensor"</span><span class="o">;</span>
+<span class="nc">Attributes</span> <span class="n">attributes</span> <span class="o">=</span> <span class="nc">Attributes</span><span class="o">.</span><span class="na">newBuilder</span><span class="o">()</span>
   <span class="o">.</span><span class="na">set</span><span class="o">(</span><span class="s">"location"</span><span class="o">,</span> <span class="s">"outdoor in the woods"</span><span class="o">)</span>
   <span class="o">.</span><span class="na">build</span><span class="o">();</span>
-<span class="n">Feature</span> <span class="n">feature</span> <span class="o">=</span> <span class="n">ThingsModelFactory</span><span class="o">.</span><span class="na">newFeatureBuilder</span><span class="o">()</span>
-  <span class="o">.</span><span class="na">properties</span><span class="o">(</span><span class="n">ThingsModelFactory</span><span class="o">.</span><span class="na">newFeaturePropertiesBuilder</span><span class="o">()</span>
+<span class="nc">Feature</span> <span class="n">feature</span> <span class="o">=</span> <span class="nc">ThingsModelFactory</span><span class="o">.</span><span class="na">newFeatureBuilder</span><span class="o">()</span>
+  <span class="o">.</span><span class="na">properties</span><span class="o">(</span><span class="nc">ThingsModelFactory</span><span class="o">.</span><span class="na">newFeaturePropertiesBuilder</span><span class="o">()</span>
     <span class="o">.</span><span class="na">set</span><span class="o">(</span><span class="s">"temperature"</span><span class="o">,</span> <span class="mf">9.2</span><span class="o">)</span>
     <span class="o">.</span><span class="na">set</span><span class="o">(</span><span class="s">"humidity"</span><span class="o">,</span> <span class="mf">56.3</span><span class="o">)</span>
     <span class="o">.</span><span class="na">build</span><span class="o">())</span>
   <span class="o">.</span><span class="na">withId</span><span class="o">(</span><span class="n">featureId</span><span class="o">)</span>
   <span class="o">.</span><span class="na">build</span><span class="o">();</span>
 
-<span class="n">Thing</span> <span class="n">thing</span> <span class="o">=</span> <span class="n">ThingsModelFactory</span><span class="o">.</span><span class="na">newThingBuilder</span><span class="o">()</span>
+<span class="nc">Thing</span> <span class="n">thing</span> <span class="o">=</span> <span class="nc">ThingsModelFactory</span><span class="o">.</span><span class="na">newThingBuilder</span><span class="o">()</span>
   <span class="o">.</span><span class="na">setId</span><span class="o">(</span><span class="n">thingId</span><span class="o">)</span>
   <span class="o">.</span><span class="na">setFeature</span><span class="o">(</span><span class="n">feature</span><span class="o">)</span>
   <span class="o">.</span><span class="na">setAttributes</span><span class="o">(</span><span class="n">attributes</span><span class="o">)</span>
   <span class="o">.</span><span class="na">build</span><span class="o">();</span>
 
 <span class="c1">// initialize the ditto-client and startConsumption() of live commands</span>
-<span class="n">DittoClient</span> <span class="n">dittoClient</span> <span class="o">=</span> <span class="o">...</span> <span class="o">;</span>
+<span class="nc">DittoClient</span> <span class="n">dittoClient</span> <span class="o">=</span> <span class="o">...</span> <span class="o">;</span>
 
 <span class="n">dittoClient</span><span class="o">.</span><span class="na">live</span><span class="o">()</span>
   <span class="o">.</span><span class="na">forId</span><span class="o">(</span><span class="n">thingId</span><span class="o">)</span>
@@ -398,16 +398,16 @@ The following snippet shows how to register for retrieve thing live commands and
 
 <p>The received HTTP response payload should look like this:</p>
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"thingId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"org.eclipse.ditto:outdoor-sensor"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"_namespace"</span><span class="p">:</span><span class="w"> </span><span class="s2">"org.eclipse.ditto"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"location"</span><span class="p">:</span><span class="w"> </span><span class="s2">"outdoor in the woods"</span><span class="w">
+  </span><span class="nl">"thingId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"org.eclipse.ditto:outdoor-sensor"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"_namespace"</span><span class="p">:</span><span class="w"> </span><span class="s2">"org.eclipse.ditto"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"location"</span><span class="p">:</span><span class="w"> </span><span class="s2">"outdoor in the woods"</span><span class="w">
   </span><span class="p">},</span><span class="w">
-  </span><span class="s2">"features"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"environment-sensor"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"temperature"</span><span class="p">:</span><span class="w"> </span><span class="mf">9.2</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"humidity"</span><span class="p">:</span><span class="w"> </span><span class="mf">56.3</span><span class="w">
+  </span><span class="nl">"features"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"environment-sensor"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"temperature"</span><span class="p">:</span><span class="w"> </span><span class="mf">9.2</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"humidity"</span><span class="p">:</span><span class="w"> </span><span class="mf">56.3</span><span class="w">
       </span><span class="p">}</span><span class="w">
     </span><span class="p">}</span><span class="w">
   </span><span class="p">}</span><span class="w">
@@ -441,7 +441,7 @@ The Eclipse Ditto team</p>
                     </div>
                     <p class="notice">
                         &copy;2024 Eclipse Ditto™.
-                         Site last generated: Feb 27, 2024 <br />
+                         Site last generated: Apr 10, 2024 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

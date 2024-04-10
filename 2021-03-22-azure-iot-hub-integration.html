@@ -305,24 +305,24 @@ live-message feedback.</p>
 
 <p>This connection subscribes to telemetry messages, published by the Azure IoT Hub built-in “Event Hub like” endpoint.</p>
 
-<p>Adding an enforcement for the <code class="highlighter-rouge">{{ thing:id }}</code> based on the <code class="highlighter-rouge">{{ header:iothub-connection-device-id }}</code> prevents 
+<p>Adding an enforcement for the <code class="language-plaintext highlighter-rouge">{{ thing:id }}</code> based on the <code class="language-plaintext highlighter-rouge">{{ header:iothub-connection-device-id }}</code> prevents 
 applying a digital-twin update to the twin of another device (Device Spoofing).</p>
 
 <p>To establish this connection the placeholders below have to be substituted by:</p>
 
 <ul>
   <li>
-    <p><code class="highlighter-rouge">{{userName}}</code>: The <code class="highlighter-rouge">SharedAccessKeyName</code> in your Event Hub-compatible endpoint (i.e. service).</p>
+    <p><code class="language-plaintext highlighter-rouge">{{userName}}</code>: The <code class="language-plaintext highlighter-rouge">SharedAccessKeyName</code> in your Event Hub-compatible endpoint (i.e. service).</p>
   </li>
   <li>
-    <p><code class="highlighter-rouge">{{password}}</code>: The <code class="highlighter-rouge">SharedAccessKey</code> in your Event Hub-compatible endpoint.</p>
+    <p><code class="language-plaintext highlighter-rouge">{{password}}</code>: The <code class="language-plaintext highlighter-rouge">SharedAccessKey</code> in your Event Hub-compatible endpoint.</p>
   </li>
   <li>
-    <p><code class="highlighter-rouge">{{endpoint}}</code>: The <code class="highlighter-rouge">Endpoint</code> in your Event Hub-compatible endpoint (Cut leading “sb://” and trailing slash,
+    <p><code class="language-plaintext highlighter-rouge">{{endpoint}}</code>: The <code class="language-plaintext highlighter-rouge">Endpoint</code> in your Event Hub-compatible endpoint (Cut leading “sb://” and trailing slash,
 e.g.. ihsuprodblres055dednamespace.servicebus.windows.net).</p>
   </li>
   <li>
-    <p><code class="highlighter-rouge">{{entityPath}}</code>: The <code class="highlighter-rouge">EntitiyPath</code> in your Event Hub-compatible endpoint (e.g.. hubname-8584619-2e72252706).</p>
+    <p><code class="language-plaintext highlighter-rouge">{{entityPath}}</code>: The <code class="language-plaintext highlighter-rouge">EntitiyPath</code> in your Event Hub-compatible endpoint (e.g.. hubname-8584619-2e72252706).</p>
   </li>
 </ul>
 
@@ -330,21 +330,21 @@ e.g.. ihsuprodblres055dednamespace.servicebus.windows.net).</p>
 and represents the actual use of Ditto as a  northbound service.</em></p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"azure-example-connection-telemetry"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"connectionType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"amqp-10"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"connectionStatus"</span><span class="p">:</span><span class="w"> </span><span class="s2">"open"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"failoverEnabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"uri"</span><span class="p">:</span><span class="w"> </span><span class="s2">"amqps://{{userName}}:{{password}}@{{endpoint}}:5671"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"source"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+  </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"azure-example-connection-telemetry"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"connectionType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"amqp-10"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"connectionStatus"</span><span class="p">:</span><span class="w"> </span><span class="s2">"open"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"failoverEnabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"uri"</span><span class="p">:</span><span class="w"> </span><span class="s2">"amqps://{{userName}}:{{password}}@{{endpoint}}:5671"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"source"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
     </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"addresses"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+      </span><span class="nl">"addresses"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
         </span><span class="s2">"{{entityPath}}/ConsumerGroups/$Default/Partitions/0"</span><span class="p">,</span><span class="w">
         </span><span class="s2">"{{entityPath}}/ConsumerGroups/$Default/Partitions/1"</span><span class="w">
       </span><span class="p">],</span><span class="w">
-      </span><span class="s2">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"ditto"</span><span class="p">],</span><span class="w">
-      </span><span class="s2">"enforcement"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"input"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{{ header:iothub-connection-device-id }}"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"filters"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+      </span><span class="nl">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"ditto"</span><span class="p">],</span><span class="w">
+      </span><span class="nl">"enforcement"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"input"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{{ header:iothub-connection-device-id }}"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"filters"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
           </span><span class="s2">"{{ thing:id }}"</span><span class="w">
         </span><span class="p">]</span><span class="w">
       </span><span class="p">}</span><span class="w">
@@ -369,46 +369,46 @@ and represents the actual use of Ditto as a  northbound service.</em></p>
 <p>This connection enables forwarding live messages to the Azure IoT Hub (which forwards it to the device)
 and receiving feedback to these live-messages from the device.</p>
 
-<p>Adding the header-mapping <code class="highlighter-rouge">"message_id": "{{header:correlation-id}}"</code> enables Azure IoT Hub to correlate messages.
-Adding the header-mapping <code class="highlighter-rouge">"to": "/devices/{{ header:ditto-message-thing-id }}/messages/deviceInbound"</code> is 
-necessary for correct message routing by Azure IoT Hub. The header <code class="highlighter-rouge">ditto-message-thing-id</code> will be set as a 
+<p>Adding the header-mapping <code class="language-plaintext highlighter-rouge">"message_id": "{{header:correlation-id}}"</code> enables Azure IoT Hub to correlate messages.
+Adding the header-mapping <code class="language-plaintext highlighter-rouge">"to": "/devices/{{ header:ditto-message-thing-id }}/messages/deviceInbound"</code> is 
+necessary for correct message routing by Azure IoT Hub. The header <code class="language-plaintext highlighter-rouge">ditto-message-thing-id</code> will be set as a 
 default header by Ditto.</p>
 
 <p>To establish this connection the placeholders below have to be substituted:</p>
 
 <ul>
   <li>
-    <p><code class="highlighter-rouge">{{userName}}</code>: The name of the chosen IoT Hub policy + “@sas.root.” + the name of your IoT Hub 
+    <p><code class="language-plaintext highlighter-rouge">{{userName}}</code>: The name of the chosen IoT Hub policy + “@sas.root.” + the name of your IoT Hub 
 (i.e. service@sas.root.my-hub).</p>
   </li>
   <li>
-    <p><code class="highlighter-rouge">{{hostName}}</code>: The Hostname of your IoT Hub (i.e. my-hub.azure-devices.net).</p>
+    <p><code class="language-plaintext highlighter-rouge">{{hostName}}</code>: The Hostname of your IoT Hub (i.e. my-hub.azure-devices.net).</p>
   </li>
   <li>
-    <p><code class="highlighter-rouge">{{encodedSasToken}}</code>: An URL encoded SAS token. Information on how to generate a token can be found at 
+    <p><code class="language-plaintext highlighter-rouge">{{encodedSasToken}}</code>: An URL encoded SAS token. Information on how to generate a token can be found at 
 <a href="https://docs.microsoft.com/en-us/cli/azure/ext/azure-iot/iot/hub?view=azure-cli-latest#ext_azure_iot_az_iot_hub_generate_sas_token">az iot hub generate-sas-token.</a> 
-The generated token has to be additionally URL encoded (browser console -&gt; <code class="highlighter-rouge">encodeURI('{{generatedToken}}')</code>).</p>
+The generated token has to be additionally URL encoded (browser console -&gt; <code class="language-plaintext highlighter-rouge">encodeURI('{{generatedToken}}')</code>).</p>
   </li>
 </ul>
 
 <p><em>Note: The generated SAS token has a maximum TTL of 365 days, so the token has to be changed to a newly generated before expiry. 
-Otherwise, the connection tries to reconnect or closes automatically, when <code class="highlighter-rouge">failoverEnabled</code> is set to <code class="highlighter-rouge">false</code>.</em></p>
+Otherwise, the connection tries to reconnect or closes automatically, when <code class="language-plaintext highlighter-rouge">failoverEnabled</code> is set to <code class="language-plaintext highlighter-rouge">false</code>.</em></p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"azure-example-connection-messages"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"connectionType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"amqp-10"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"connectionStatus"</span><span class="p">:</span><span class="w"> </span><span class="s2">"open"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"failoverEnabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"uri"</span><span class="p">:</span><span class="w"> </span><span class="s2">"amqps://{{userName}}:{{encodedSasToken}}@{{hostName}}:5671"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"target"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-    </span><span class="p">{</span><span class="s2">"address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/messages/devicebound"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"topics"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+  </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"azure-example-connection-messages"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"connectionType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"amqp-10"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"connectionStatus"</span><span class="p">:</span><span class="w"> </span><span class="s2">"open"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"failoverEnabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"uri"</span><span class="p">:</span><span class="w"> </span><span class="s2">"amqps://{{userName}}:{{encodedSasToken}}@{{hostName}}:5671"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"target"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="nl">"address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/messages/devicebound"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"topics"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
         </span><span class="s2">"_/_/things/live/messages"</span><span class="w">
       </span><span class="p">],</span><span class="w">
-      </span><span class="s2">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"ditto"</span><span class="p">],</span><span class="w">
-      </span><span class="s2">"headerMapping"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"message_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{{header:correlation-id}}"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"to"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/devices/{{ header:ditto-message-thing-id }}/messages/deviceInbound"</span><span class="w">
+      </span><span class="nl">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"ditto"</span><span class="p">],</span><span class="w">
+      </span><span class="nl">"headerMapping"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"message_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{{header:correlation-id}}"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"to"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/devices/{{ header:ditto-message-thing-id }}/messages/deviceInbound"</span><span class="w">
       </span><span class="p">}</span><span class="w">
     </span><span class="p">}</span><span class="w">
   </span><span class="p">]</span><span class="w">
@@ -419,7 +419,7 @@ Otherwise, the connection tries to reconnect or closes automatically, when <code
 Thus, the messages’ payload has to be byte-encoded.</strong></p>
 
 <p>This can be achieved by configuring an outgoing JavaScript payload mapper in the message connection:</p>
-<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">mapFromDittoProtocolMsg</span><span class="p">(</span>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nf">mapFromDittoProtocolMsg</span><span class="p">(</span>
   <span class="nx">namespace</span><span class="p">,</span>
   <span class="nx">name</span><span class="p">,</span>
   <span class="nx">group</span><span class="p">,</span>
@@ -435,10 +435,10 @@ Thus, the messages’ payload has to be byte-encoded.</strong></p>
 
   <span class="kd">let</span> <span class="nx">headers</span> <span class="o">=</span> <span class="nx">dittoHeaders</span><span class="p">;</span>
   <span class="kd">let</span> <span class="nx">textPayload</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
-  <span class="kd">let</span> <span class="nx">bytePayload</span> <span class="o">=</span> <span class="nx">Ditto</span><span class="p">.</span><span class="nx">stringToArrayBuffer</span><span class="p">(</span><span class="nx">Ditto</span><span class="p">.</span><span class="nx">buildDittoProtocolMsg</span><span class="p">(</span><span class="nx">namespace</span><span class="p">,</span> <span class="nx">name</span><span class="p">,</span> <span class="nx">group</span><span class="p">,</span> <span class="nx">channel</span><span class="p">,</span> <span class="nx">criterion</span><span class="p">,</span> <span class="nx">action</span><span class="p">,</span> <span class="nx">path</span><span class="p">,</span> <span class="nx">dittoHeaders</span><span class="p">,</span> <span class="nx">value</span><span class="p">).</span><span class="nx">toString</span><span class="p">());</span>
-  <span class="kd">let</span> <span class="nx">contentType</span> <span class="o">=</span> <span class="s1">'application/octet-stream'</span><span class="p">;</span>
+  <span class="kd">let</span> <span class="nx">bytePayload</span> <span class="o">=</span> <span class="nx">Ditto</span><span class="p">.</span><span class="nf">stringToArrayBuffer</span><span class="p">(</span><span class="nx">Ditto</span><span class="p">.</span><span class="nf">buildDittoProtocolMsg</span><span class="p">(</span><span class="nx">namespace</span><span class="p">,</span> <span class="nx">name</span><span class="p">,</span> <span class="nx">group</span><span class="p">,</span> <span class="nx">channel</span><span class="p">,</span> <span class="nx">criterion</span><span class="p">,</span> <span class="nx">action</span><span class="p">,</span> <span class="nx">path</span><span class="p">,</span> <span class="nx">dittoHeaders</span><span class="p">,</span> <span class="nx">value</span><span class="p">).</span><span class="nf">toString</span><span class="p">());</span>
+  <span class="kd">let</span> <span class="nx">contentType</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">application/octet-stream</span><span class="dl">'</span><span class="p">;</span>
 
-  <span class="k">return</span> <span class="nx">Ditto</span><span class="p">.</span><span class="nx">buildExternalMsg</span><span class="p">(</span>
+  <span class="k">return</span> <span class="nx">Ditto</span><span class="p">.</span><span class="nf">buildExternalMsg</span><span class="p">(</span>
     <span class="nx">headers</span><span class="p">,</span>
     <span class="nx">textPayload</span><span class="p">,</span>
     <span class="nx">bytePayload</span><span class="p">,</span>
@@ -464,7 +464,7 @@ Thus, the messages’ payload has to be byte-encoded.</strong></p>
 <p>Some features of Ditto could be used in combination with Azure IoT Hub with some adjustments. These include:</p>
 
 <ul>
-  <li>Using the <code class="highlighter-rouge">ImplicitThingCreationMapper</code> to implicitly create a new thing when a new device is registered in Azure IoT Hub.</li>
+  <li>Using the <code class="language-plaintext highlighter-rouge">ImplicitThingCreationMapper</code> to implicitly create a new thing when a new device is registered in Azure IoT Hub.</li>
   <li>Using the ConnectionStatusMapper to update the ConnectionStatus of things, when their devices disconnect from Azure IoT Hub.</li>
   <li>[C2D] Directly invoke methods on the device (Direct Method Invocation).</li>
 </ul>
@@ -475,8 +475,8 @@ Thus, the messages’ payload has to be byte-encoded.</strong></p>
 These events are published via an Azure EventGrid to another chosen Azure application. 
 By publishing these events to an Azure Event Hub, a Ditto AMQP connection can subscribe for them.</p>
 
-<p>The payload-mappers for <code class="highlighter-rouge">ImplicitThingCreation</code> and <code class="highlighter-rouge">ConnectionStatus</code> could be adjusted to handle such event messages and 
-create new things or update the <code class="highlighter-rouge">ConnectionStatus</code> feature depending on the received messages.</p>
+<p>The payload-mappers for <code class="language-plaintext highlighter-rouge">ImplicitThingCreation</code> and <code class="language-plaintext highlighter-rouge">ConnectionStatus</code> could be adjusted to handle such event messages and 
+create new things or update the <code class="language-plaintext highlighter-rouge">ConnectionStatus</code> feature depending on the received messages.</p>
 
 <ul>
   <li><a href="https://docs.microsoft.com/de-de/azure/event-grid/event-schema-iot-hub?tabs=event-grid-event-schema">Further information on the events published by Azure IoT Hub</a></li>
@@ -495,8 +495,8 @@ connections.</p>
 
 <h3 id="implementing-an-automatic-refresh-mechanism-for-sasl-tokens">Implementing an automatic refresh mechanism for SASL tokens</h3>
 
-<p>The <code class="highlighter-rouge">connectionString</code> provided by an Azure IoT Hub device’s policy could be used to generate and refresh a SASL token. 
-This would require a new connection setting, which could store such a <code class="highlighter-rouge">connectionString</code>, and an algorithm, which can 
+<p>The <code class="language-plaintext highlighter-rouge">connectionString</code> provided by an Azure IoT Hub device’s policy could be used to generate and refresh a SASL token. 
+This would require a new connection setting, which could store such a <code class="language-plaintext highlighter-rouge">connectionString</code>, and an algorithm, which can 
 generate a SAS token out of that string.</p>
 
 <h2 id="getting-started">Getting started</h2>
@@ -521,7 +521,7 @@ is a good entry point.</p>
                     </div>
                     <p class="notice">
                         &copy;2024 Eclipse Ditto™.
-                         Site last generated: Feb 27, 2024 <br />
+                         Site last generated: Apr 10, 2024 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

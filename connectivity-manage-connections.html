@@ -278,6 +278,13 @@
               
               
               
+              <li><a href="release_notes_354.html">3.5.4</a></li>
+              
+              
+              
+              
+              
+              
               <li><a href="release_notes_353.html">3.5.3</a></li>
               
               
@@ -2106,10 +2113,10 @@ to external systems is authenticated using the <a href="installation-operating.h
 
 <h2 id="authorization">Authorization</h2>
 
-<p>When creating new connections, an <code class="highlighter-rouge">authorizationContext</code> is needed providing the <em>authorization subjects</em> (e.g. IDs of
+<p>When creating new connections, an <code class="language-plaintext highlighter-rouge">authorizationContext</code> is needed providing the <em>authorization subjects</em> (e.g. IDs of
 authorized users) to use in order to determine the permissions for when the connection executes commands (e.g. modifying
 a Thing). If you want to use a user for the basic auth (from the <a href="connectivity-protocol-bindings-http.html">HTTP API</a>)
-use the prefix <code class="highlighter-rouge">nginx:</code>, e.g. <code class="highlighter-rouge">nginx:ditto</code>.
+use the prefix <code class="language-plaintext highlighter-rouge">nginx:</code>, e.g. <code class="language-plaintext highlighter-rouge">nginx:ditto</code>.
 See <a href="basic-auth.html#authorization-context-in-devops-commands">Basic Authentication</a> for more information.</p>
 
 <h2 id="encryption-sensitive-configuration-data">Encryption sensitive configuration data</h2>
@@ -2130,17 +2137,17 @@ For more details refer to <a href="installation-operating.html#encrypt-sensitive
 
 <h3 id="create-connection">Create connection</h3>
 
-<p>Create a new connection by sending an HTTP <code class="highlighter-rouge">POST</code> request:</p>
+<p>Create a new connection by sending an HTTP <code class="language-plaintext highlighter-rouge">POST</code> request:</p>
 
-<p><code class="highlighter-rouge">POST /api/2/connections</code></p>
+<p><code class="language-plaintext highlighter-rouge">POST /api/2/connections</code></p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-   </span><span class="s2">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
-   </span><span class="s2">"connectionType"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
-   </span><span class="s2">"connectionStatus"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
-   </span><span class="s2">"uri"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
-   </span><span class="s2">"sources"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
-   </span><span class="s2">"targets"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+   </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+   </span><span class="nl">"connectionType"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+   </span><span class="nl">"connectionStatus"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+   </span><span class="nl">"uri"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+   </span><span class="nl">"sources"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+   </span><span class="nl">"targets"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
@@ -2157,20 +2164,20 @@ For protocol specific examples, consult the specific connection type binding res
 
 <p>Additionally, you can test a connection before creating it:</p>
 
-<p><code class="highlighter-rouge">POST /api/2/connections&amp;dry-run=true</code></p>
+<p><code class="language-plaintext highlighter-rouge">POST /api/2/connections&amp;dry-run=true</code></p>
 
-<p>Passing the <code class="highlighter-rouge">dry-run</code> query parameter checks the configuration and establishes a connection to the remote endpoint in order to validate the connection
+<p>Passing the <code class="language-plaintext highlighter-rouge">dry-run</code> query parameter checks the configuration and establishes a connection to the remote endpoint in order to validate the connection
 credentials. The connection is closed afterwards and will not be persisted.</p>
 
 <h3 id="modify-connection">Modify connection</h3>
 
-<p>Modify an existing connection by sending a HTTP <code class="highlighter-rouge">PUT</code> request to:</p>
+<p>Modify an existing connection by sending a HTTP <code class="language-plaintext highlighter-rouge">PUT</code> request to:</p>
 
-<p><code class="highlighter-rouge">PUT /api/2/connections/{connectionId}</code></p>
+<p><code class="language-plaintext highlighter-rouge">PUT /api/2/connections/{connectionId}</code></p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-   </span><span class="s2">"connectionStatus"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
-   </span><span class="s2">"..."</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="w">
+   </span><span class="nl">"connectionStatus"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+   </span><span class="nl">"..."</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
@@ -2178,51 +2185,51 @@ credentials. The connection is closed afterwards and will not be persisted.</p>
 
 <h3 id="retrieve-connection">Retrieve connection</h3>
 
-<p>The only parameter necessary for retrieving a connection is the <code class="highlighter-rouge">connectionId</code>:</p>
+<p>The only parameter necessary for retrieving a connection is the <code class="language-plaintext highlighter-rouge">connectionId</code>:</p>
 
-<p><code class="highlighter-rouge">GET /api/2/connections/{connectionId}</code></p>
+<p><code class="language-plaintext highlighter-rouge">GET /api/2/connections/{connectionId}</code></p>
 
 <h3 id="retrieve-all-connections">Retrieve all connections</h3>
 <p>Retrieves all created connections:</p>
 
-<p><code class="highlighter-rouge">GET /api/2/connections</code></p>
+<p><code class="language-plaintext highlighter-rouge">GET /api/2/connections</code></p>
 
-<p>Additionally, you can get the connections ids only by providing the <code class="highlighter-rouge">ids-only=true</code> query parameter.</p>
+<p>Additionally, you can get the connections ids only by providing the <code class="language-plaintext highlighter-rouge">ids-only=true</code> query parameter.</p>
 
-<p><code class="highlighter-rouge">GET /api/2/connections?ids-only=true</code></p>
+<p><code class="language-plaintext highlighter-rouge">GET /api/2/connections?ids-only=true</code></p>
 
 <h3 id="delete-connection">Delete connection</h3>
 
-<p>The only parameter necessary for deleting a connection is the <code class="highlighter-rouge">connectionId</code>.</p>
+<p>The only parameter necessary for deleting a connection is the <code class="language-plaintext highlighter-rouge">connectionId</code>.</p>
 
-<p><code class="highlighter-rouge">DELETE /api/2/connections/{connectionId}</code></p>
+<p><code class="language-plaintext highlighter-rouge">DELETE /api/2/connections/{connectionId}</code></p>
 
 <h2 id="helper-endpoints">Helper endpoints</h2>
 
 <h3 id="retrieve-connection-status">Retrieve connection status</h3>
 
 <p>Returns the connection status by showing if a connection is currently enabled/disabled and if it is
-successfully established. The only parameter necessary for retrieving the connection status is the <code class="highlighter-rouge">connectionId</code>.</p>
+successfully established. The only parameter necessary for retrieving the connection status is the <code class="language-plaintext highlighter-rouge">connectionId</code>.</p>
 
-<p><code class="highlighter-rouge">GET /api/2/connections/{connectionId}/status</code></p>
+<p><code class="language-plaintext highlighter-rouge">GET /api/2/connections/{connectionId}/status</code></p>
 
 <h3 id="retrieve-connection-metrics">Retrieve connection metrics</h3>
 
-<p>This command returns the connection metrics showing how many messages have been successfully or failingly <code class="highlighter-rouge">consumed</code>,
-<code class="highlighter-rouge">filtered</code>, <code class="highlighter-rouge">mapped</code>, <code class="highlighter-rouge">published</code>, <code class="highlighter-rouge">dropped</code>. The metrics are collected and returned in different time intervals:</p>
+<p>This command returns the connection metrics showing how many messages have been successfully or failingly <code class="language-plaintext highlighter-rouge">consumed</code>,
+<code class="language-plaintext highlighter-rouge">filtered</code>, <code class="language-plaintext highlighter-rouge">mapped</code>, <code class="language-plaintext highlighter-rouge">published</code>, <code class="language-plaintext highlighter-rouge">dropped</code>. The metrics are collected and returned in different time intervals:</p>
 <ul>
   <li>the last minute</li>
   <li>the last hour</li>
   <li>the last 24 hours</li>
 </ul>
 
-<p>The only parameter necessary for retrieving the connection metrics is the <code class="highlighter-rouge">connectionId</code>.</p>
+<p>The only parameter necessary for retrieving the connection metrics is the <code class="language-plaintext highlighter-rouge">connectionId</code>.</p>
 
-<p><code class="highlighter-rouge">GET /api/2/connections/{connectionId}/metrics</code></p>
+<p><code class="language-plaintext highlighter-rouge">GET /api/2/connections/{connectionId}/metrics</code></p>
 
 <h3 id="retrieve-connection-logs">Retrieve connection logs</h3>
 
-<p>Returns the connection logs. The only parameter necessary for retrieving the connection logs is the <code class="highlighter-rouge">connectionId</code>.</p>
+<p>Returns the connection logs. The only parameter necessary for retrieving the connection logs is the <code class="language-plaintext highlighter-rouge">connectionId</code>.</p>
 
 <p>This request will return a list of success and failure log entries containing information on messages processed by the
 connection. The logs have a maximum amount of entries that they can hold. If the connection produces more log entries,
@@ -2234,35 +2241,35 @@ always be reset when retrieving the logs, the timestamp will always be 24 hours 
 <p>The default duration and the maximum amount of logs stored for one connection can be configured in Ditto’s connectivity
 service configuration.</p>
 
-<p><code class="highlighter-rouge">GET /api/2/connections/{connectionId}/logs</code></p>
+<p><code class="language-plaintext highlighter-rouge">GET /api/2/connections/{connectionId}/logs</code></p>
 
 <h3 id="connection-commands">Connection commands</h3>
 
-<p>The only parameter necessary for sending a command to a connection is the <code class="highlighter-rouge">connectionId</code>.</p>
+<p>The only parameter necessary for sending a command to a connection is the <code class="language-plaintext highlighter-rouge">connectionId</code>.</p>
 
-<p><code class="highlighter-rouge">POST /api/2/connections/{connectionId}/command</code></p>
+<p><code class="language-plaintext highlighter-rouge">POST /api/2/connections/{connectionId}/command</code></p>
 
-<p>Supported commands sent as payload <code class="highlighter-rouge">text/plain</code>:</p>
+<p>Supported commands sent as payload <code class="language-plaintext highlighter-rouge">text/plain</code>:</p>
 
 <h4 id="open-connection">Open connection</h4>
 
 <p>When opening a connection a <a href="protocol-specification-connections-announcement.html">ConnectionOpenedAnnouncement</a> will be published.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>connectivity.commands:openConnection
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>connectivity.commands:openConnection
 </code></pre></div></div>
 
 <h4 id="close-connection">Close connection</h4>
 
 <p>When gracefully closing a connection a <a href="protocol-specification-connections-announcement.html">ConnectionClosedAnnouncement</a> will be published.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>connectivity.commands:closeConnection
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>connectivity.commands:closeConnection
 </code></pre></div></div>
 
 <h4 id="reset-connection-metrics">Reset connection metrics</h4>
 
-<p>This command resets the connection metrics - all metrics are set to <code class="highlighter-rouge">0</code> again.</p>
+<p>This command resets the connection metrics - all metrics are set to <code class="language-plaintext highlighter-rouge">0</code> again.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>connectivity.commands:resetConnectionMetrics
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>connectivity.commands:resetConnectionMetrics
 </code></pre></div></div>
 
 <h4 id="enable-connection-logs">Enable connection logs</h4>
@@ -2278,14 +2285,14 @@ service configuration.</p>
 <div class="alert alert-info" role="alert"><i class="fa fa-info-circle"></i> <b>Note:</b> When creating or opening a connection the logging is enabled per default. This allows 
 to log possible errors on connection establishing.</div>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>connectivity.commands:enableConnectionLogs
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>connectivity.commands:enableConnectionLogs
 </code></pre></div></div>
 
 <h4 id="reset-connection-logs">Reset connection logs</h4>
 
 <p>Clears all currently stored connection logs.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>connectivity.commands:resetConnectionLogs
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>connectivity.commands:resetConnectionLogs
 </code></pre></div></div>
 
 <h2 id="publishing-connection-logs">Publishing connection logs</h2>
@@ -2296,64 +2303,64 @@ forwarded into a logging backend of your choice.</p>
 
 <p>This publishing of connection logs is not configured dynamically via a <a href="#helper-endpoints">piggyback helper endpoint</a>, 
 instead this must be enabled via <a href="installation-operating.html#ditto-configuration">configuration</a> in the 
-<code class="highlighter-rouge">connectivity.conf</code> by setting environment variables or overwriting the configuration via system properties.</p>
+<code class="language-plaintext highlighter-rouge">connectivity.conf</code> by setting environment variables or overwriting the configuration via system properties.</p>
 
 <p>For example, set the following environment variables in the <a href="architecture-services-connectivity.html">connectivity</a> 
 service:</p>
 <ul>
-  <li><code class="highlighter-rouge">CONNECTIVITY_LOGGER_PUBLISHER_ENABLED</code> - set to <code class="highlighter-rouge">true</code> in order to enable connection log publishing, default: <code class="highlighter-rouge">false</code></li>
-  <li><code class="highlighter-rouge">CONNECTIVITY_LOGGER_PUBLISHER_LOG_TAG</code> - to specify a log tag to use for the published log entries - 
- if this is not set, the default <code class="highlighter-rouge">connection:&lt;connection-id&gt;</code> will be used and the specific connection-id will be injected</li>
-  <li><code class="highlighter-rouge">CONNECTIVITY_LOGGER_PUBLISHER_FLUENCY_HOST</code> - the hostname of the Fluentd or Fluent Bit endpoint, default: <code class="highlighter-rouge">"localhost"</code></li>
-  <li><code class="highlighter-rouge">CONNECTIVITY_LOGGER_PUBLISHER_FLUENCY_PORT</code> - the port of the Fluentd or Fluent Bit endpoint, default <code class="highlighter-rouge">24224</code></li>
+  <li><code class="language-plaintext highlighter-rouge">CONNECTIVITY_LOGGER_PUBLISHER_ENABLED</code> - set to <code class="language-plaintext highlighter-rouge">true</code> in order to enable connection log publishing, default: <code class="language-plaintext highlighter-rouge">false</code></li>
+  <li><code class="language-plaintext highlighter-rouge">CONNECTIVITY_LOGGER_PUBLISHER_LOG_TAG</code> - to specify a log tag to use for the published log entries - 
+ if this is not set, the default <code class="language-plaintext highlighter-rouge">connection:&lt;connection-id&gt;</code> will be used and the specific connection-id will be injected</li>
+  <li><code class="language-plaintext highlighter-rouge">CONNECTIVITY_LOGGER_PUBLISHER_FLUENCY_HOST</code> - the hostname of the Fluentd or Fluent Bit endpoint, default: <code class="language-plaintext highlighter-rouge">"localhost"</code></li>
+  <li><code class="language-plaintext highlighter-rouge">CONNECTIVITY_LOGGER_PUBLISHER_FLUENCY_PORT</code> - the port of the Fluentd or Fluent Bit endpoint, default <code class="language-plaintext highlighter-rouge">24224</code></li>
 </ul>
 
 <p>The contained fields in a single log entry are the following:</p>
 <ul>
-  <li><code class="highlighter-rouge">connectionId</code>:  ID of the connection which produced the log entry</li>
-  <li><code class="highlighter-rouge">level</code>:         one of: <code class="highlighter-rouge">"success"|"failure"</code></li>
-  <li><code class="highlighter-rouge">category</code>:      one of: <code class="highlighter-rouge">"connection"|"source"|"target"|"response"</code></li>
-  <li><code class="highlighter-rouge">type</code>:          one of: <code class="highlighter-rouge">"consumed"|"dispatched"|"filtered"|"mapped"|"dropped"|"enforced"|"published"|"acknowledged"</code></li>
-  <li><code class="highlighter-rouge">correlationId</code>: correlationId of the command/event, if available</li>
-  <li><code class="highlighter-rouge">address</code>:       address of the Source/Target (e.g. MQTT topic, HTTP path), if available</li>
-  <li><code class="highlighter-rouge">entityType</code> :   one of: <code class="highlighter-rouge">"thing"|"policy"</code></li>
-  <li><code class="highlighter-rouge">entityId</code>:      ID of the entity for which e.g. an event/message was processed (e.g. the Thing ID)</li>
-  <li><code class="highlighter-rouge">instanceId</code>:    ID of the connectivity instance which processed the command/event, helpful if clientCount &gt; 1 was configured</li>
-  <li><code class="highlighter-rouge">message</code>:       the actual log message</li>
+  <li><code class="language-plaintext highlighter-rouge">connectionId</code>:  ID of the connection which produced the log entry</li>
+  <li><code class="language-plaintext highlighter-rouge">level</code>:         one of: <code class="language-plaintext highlighter-rouge">"success"|"failure"</code></li>
+  <li><code class="language-plaintext highlighter-rouge">category</code>:      one of: <code class="language-plaintext highlighter-rouge">"connection"|"source"|"target"|"response"</code></li>
+  <li><code class="language-plaintext highlighter-rouge">type</code>:          one of: <code class="language-plaintext highlighter-rouge">"consumed"|"dispatched"|"filtered"|"mapped"|"dropped"|"enforced"|"published"|"acknowledged"</code></li>
+  <li><code class="language-plaintext highlighter-rouge">correlationId</code>: correlationId of the command/event, if available</li>
+  <li><code class="language-plaintext highlighter-rouge">address</code>:       address of the Source/Target (e.g. MQTT topic, HTTP path), if available</li>
+  <li><code class="language-plaintext highlighter-rouge">entityType</code> :   one of: <code class="language-plaintext highlighter-rouge">"thing"|"policy"</code></li>
+  <li><code class="language-plaintext highlighter-rouge">entityId</code>:      ID of the entity for which e.g. an event/message was processed (e.g. the Thing ID)</li>
+  <li><code class="language-plaintext highlighter-rouge">instanceId</code>:    ID of the connectivity instance which processed the command/event, helpful if clientCount &gt; 1 was configured</li>
+  <li><code class="language-plaintext highlighter-rouge">message</code>:       the actual log message</li>
 </ul>
 
 <p>Please inspect the other available configuration options in 
 <a href="https://github.com/eclipse-ditto/ditto/blob/master/connectivity/service/src/main/resources/connectivity.conf">connectivity.conf</a> 
-at path <code class="highlighter-rouge">ditto.connectivity.monitoring.logger.publisher</code> to learn about other configuration possibilities.</p>
+at path <code class="language-plaintext highlighter-rouge">ditto.connectivity.monitoring.logger.publisher</code> to learn about other configuration possibilities.</p>
 
 <h2 id="payload-mapping-configuration">Payload mapping configuration</h2>
 
 <p>To enable a custom <a href="connectivity-mapping.html">payload mapping</a> for a specific source or target of a connection, you
 have to configure a payload mapping definition in the connection configuration object. The following snippet shows an
-example <code class="highlighter-rouge">mappingDefinitions</code>. This configuration must be embedded in the connection configuration as shown in the
+example <code class="language-plaintext highlighter-rouge">mappingDefinitions</code>. This configuration must be embedded in the connection configuration as shown in the
 <a href="basic-connections.html">Connections</a> section. These payload mapping definitions are then referenced by its ID
-(the key of the JSON object) in the sources and targets of the connection using the field <code class="highlighter-rouge">payloadMapping</code>. If no
+(the key of the JSON object) in the sources and targets of the connection using the field <code class="language-plaintext highlighter-rouge">payloadMapping</code>. If no
 payload mapping or definition is provided, the <a href="connectivity-mapping.html#ditto-mapper">Ditto message mapping</a>
 is used as the default.</p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
   </span><span class="err">...</span><span class="w">
-  </span><span class="s2">"mappingDefinitions"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"customJs"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+  </span><span class="nl">"mappingDefinitions"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"customJs"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
       </span><span class="err">//</span><span class="w"> </span><span class="err">(</span><span class="mi">1</span><span class="err">)</span><span class="w">
-      </span><span class="s2">"mappingEngine"</span><span class="p">:</span><span class="w"> </span><span class="s2">"JavaScript"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"mappingEngine"</span><span class="p">:</span><span class="w"> </span><span class="s2">"JavaScript"</span><span class="p">,</span><span class="w">
       </span><span class="err">//</span><span class="w"> </span><span class="err">(</span><span class="mi">2</span><span class="err">)</span><span class="w">
-      </span><span class="s2">"options"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"options"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
         </span><span class="err">//</span><span class="w"> </span><span class="err">(</span><span class="mi">3</span><span class="err">)</span><span class="w">
-        </span><span class="s2">"incomingScript"</span><span class="p">:</span><span class="w"> </span><span class="s2">".."</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"outgoingScript"</span><span class="p">:</span><span class="w"> </span><span class="s2">".."</span><span class="w">
+        </span><span class="nl">"incomingScript"</span><span class="p">:</span><span class="w"> </span><span class="s2">".."</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"outgoingScript"</span><span class="p">:</span><span class="w"> </span><span class="s2">".."</span><span class="w">
       </span><span class="p">}</span><span class="w">
     </span><span class="p">}</span><span class="w">
   </span><span class="p">},</span><span class="w">
-  </span><span class="s2">"sources"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+  </span><span class="nl">"sources"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
     </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"addresses"</span><span class="p">:</span><span class="w"> </span><span class="s2">"source"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"payloadMapping"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+      </span><span class="nl">"addresses"</span><span class="p">:</span><span class="w"> </span><span class="s2">"source"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"payloadMapping"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
         </span><span class="s2">"customJs"</span><span class="w">
       </span><span class="p">]</span><span class="w">
     </span><span class="p">}</span><span class="w">
@@ -2364,8 +2371,8 @@ is used as the default.</p>
 
 <ul>
   <li>(1) This ID can be used in sources and targets of the connection to reference this payload mapping definition.</li>
-  <li>(2) The <code class="highlighter-rouge">mappingEngine</code> defines the underlying <code class="highlighter-rouge">MessageMapper</code> implementation.</li>
-  <li>(3) The <code class="highlighter-rouge">options</code> are used to configure the mapper instance to your needs.</li>
+  <li>(2) The <code class="language-plaintext highlighter-rouge">mappingEngine</code> defines the underlying <code class="language-plaintext highlighter-rouge">MessageMapper</code> implementation.</li>
+  <li>(3) The <code class="language-plaintext highlighter-rouge">options</code> are used to configure the mapper instance to your needs.</li>
 </ul>
 
 
@@ -2393,7 +2400,7 @@ is used as the default.</p>
                     </div>
                     <p class="notice">
                         &copy;2024 Eclipse Ditto™.
-                         Site last generated: Feb 27, 2024 <br />
+                         Site last generated: Apr 10, 2024 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

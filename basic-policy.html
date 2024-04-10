@@ -278,6 +278,13 @@
               
               
               
+              <li><a href="release_notes_354.html">3.5.4</a></li>
+              
+              
+              
+              
+              
+              
               <li><a href="release_notes_353.html">3.5.3</a></li>
               
               
@@ -2107,7 +2114,7 @@ $('#toc').on('click', 'a', function() {
 
 <p>A specific policy provides someone (called subject), permission to read and/or write a given resource.</p>
 
-<div class="alert alert-success" role="alert"><i class="fa fa-check-square-o"></i> <b>Tip:</b> Write permission at the policy root resource (i.e. <code class="highlighter-rouge">policy:/</code>) allows to manage the
+<div class="alert alert-success" role="alert"><i class="fa fa-check-square-o"></i> <b>Tip:</b> Write permission at the policy root resource (i.e. <code class="language-plaintext highlighter-rouge">policy:/</code>) allows to manage the
   policy itself.<br />Find an <a href="#example">example</a> at the end of the page.</div>
 
 <p>Please note, that in most cases it makes sense to grant read permission in addition to write permission, because
@@ -2123,19 +2130,19 @@ $('#toc').on('click', 'a', function() {
 of a policy entry.<br />
 Each subject ID contains a prefix defining the subject “issuer” (so which party issued the authentication) and an actual 
 subject, separated with a colon:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;subject-issuer&gt;:&lt;subject&gt;
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;subject-issuer&gt;:&lt;subject&gt;
 </code></pre></div></div>
 
 <p>The subject can be one of the following ones:</p>
 <ul>
-  <li><code class="highlighter-rouge">nginx:&lt;nginx-username&gt;</code> - when using nginx as 
+  <li><code class="language-plaintext highlighter-rouge">nginx:&lt;nginx-username&gt;</code> - when using nginx as 
 <a href="installation-operating.html#pre-authentication">pre-authentication provider</a> - by default enabled in the Ditto 
 installation’s nginx</li>
-  <li><code class="highlighter-rouge">&lt;other-pre-auth-provider&gt;:&lt;username&gt;</code> - when using another custom provider as 
+  <li><code class="language-plaintext highlighter-rouge">&lt;other-pre-auth-provider&gt;:&lt;username&gt;</code> - when using another custom provider as 
 <a href="installation-operating.html#pre-authentication">pre-authentication provider</a> which sets the 
-<code class="highlighter-rouge">x-ditto-pre-authenticated</code> HTTP header</li>
+<code class="language-plaintext highlighter-rouge">x-ditto-pre-authenticated</code> HTTP header</li>
   <li>
-    <p><code class="highlighter-rouge">google:&lt;google-user-id&gt;</code> - in general different 
+    <p><code class="language-plaintext highlighter-rouge">google:&lt;google-user-id&gt;</code> - in general different 
 <a href="#" data-toggle="tooltip" data-original-title="JSON Web Token (JWT)">JWT</a> - the currently supported 
 are listed in the table:</p>
 
@@ -2156,22 +2163,22 @@ are listed in the table:</p>
       </tbody>
     </table>
   </li>
-  <li><code class="highlighter-rouge">&lt;custom-openid-connect-provider&gt;:&lt;jwt-sub-claim&gt;</code> -
+  <li><code class="language-plaintext highlighter-rouge">&lt;custom-openid-connect-provider&gt;:&lt;jwt-sub-claim&gt;</code> -
 custom OpenID Connect compliant providers - supported providers are listed at
 <a href="https://openid.net/developers/certified/">OpenID Connect - Certified OpenID Provider Servers and Services</a> -
 <a href="installation-operating.html#openid-connect">can be configured</a> in Ditto defining the prefix in Ditto’s config file.<br />
-The <code class="highlighter-rouge">sub</code> claim from the JWT and the configured provider name are used in the form <code class="highlighter-rouge">&lt;provider&gt;:&lt;jwt-sub-claim&gt;</code>.</li>
+The <code class="language-plaintext highlighter-rouge">sub</code> claim from the JWT and the configured provider name are used in the form <code class="language-plaintext highlighter-rouge">&lt;provider&gt;:&lt;jwt-sub-claim&gt;</code>.</li>
 </ul>
 
 <h3 id="expiring-policy-subjects">Expiring Policy subjects</h3>
 
-<p>When a Policy subject contains an <code class="highlighter-rouge">"expiry"</code> timestamp (formatted as ISO-8601 string), this subject will be 
+<p>When a Policy subject contains an <code class="language-plaintext highlighter-rouge">"expiry"</code> timestamp (formatted as ISO-8601 string), this subject will be 
 automatically deleted once this timestamp was reached.</p>
 
-<p>When providing an <code class="highlighter-rouge">"expiry"</code> for a Policy subject, this timestamp is rounded up:</p>
+<p>When providing an <code class="language-plaintext highlighter-rouge">"expiry"</code> for a Policy subject, this timestamp is rounded up:</p>
 <ul>
   <li>by default to the next full hour</li>
-  <li>this is configurable via the environment variable <code class="highlighter-rouge">POLICY_SUBJECT_EXPIRY_GRANULARITY</code> of the 
+  <li>this is configurable via the environment variable <code class="language-plaintext highlighter-rouge">POLICY_SUBJECT_EXPIRY_GRANULARITY</code> of the 
 <a href="architecture-services-policies.html">policies</a> service which takes a 
 <a href="https://github.com/lightbend/config/blob/master/HOCON.md#duration-format">HOCON duration</a>, e.g.:
     <ul>
@@ -2190,45 +2197,45 @@ it was deleted from.</p>
 
 <h3 id="subject-deletion-announcements">Subject deletion announcements</h3>
 
-<p>To get notified when a subject is deleted, the <code class="highlighter-rouge">"announcement"</code> object can be configured in the respective subject section.</p>
+<p>To get notified when a subject is deleted, the <code class="language-plaintext highlighter-rouge">"announcement"</code> object can be configured in the respective subject section.</p>
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"my-subject"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"expiry"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2099-12-31T23:59:59Z"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"announcement"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"beforeExpiry"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1h"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"whenDeleted"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"requestedAcks"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"labels"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"my-connection:my-issued-acknowledgement"</span><span class="p">],</span><span class="w">
-      </span><span class="s2">"timeout"</span><span class="p">:</span><span class="w"> </span><span class="s2">"10s"</span><span class="w">
+  </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"my-subject"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"expiry"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2099-12-31T23:59:59Z"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"announcement"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"beforeExpiry"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1h"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"whenDeleted"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"requestedAcks"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"labels"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"my-connection:my-issued-acknowledgement"</span><span class="p">],</span><span class="w">
+      </span><span class="nl">"timeout"</span><span class="p">:</span><span class="w"> </span><span class="s2">"10s"</span><span class="w">
     </span><span class="p">}</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
-<p>Here are the meanings of the fields of <code class="highlighter-rouge">"announcement"</code>:</p>
+<p>Here are the meanings of the fields of <code class="language-plaintext highlighter-rouge">"announcement"</code>:</p>
 <ul>
-  <li><code class="highlighter-rouge">"beforeExpiry"</code>: The duration before expiration of the subject when a
+  <li><code class="language-plaintext highlighter-rouge">"beforeExpiry"</code>: The duration before expiration of the subject when a
 <a href="protocol-examples-policies-announcement-subjectDeletion.html">subject deletion announcement</a>
 should be published if no previous subject deletion announcement was acknowledged.<br />
 Supported unit suffixes:
     <ul>
-      <li><code class="highlighter-rouge">"ms"</code>: for milliseconds</li>
-      <li><code class="highlighter-rouge">"s"</code>: for seconds</li>
-      <li><code class="highlighter-rouge">"m"</code>: for minutes</li>
-      <li><code class="highlighter-rouge">"h"</code>: for hours</li>
+      <li><code class="language-plaintext highlighter-rouge">"ms"</code>: for milliseconds</li>
+      <li><code class="language-plaintext highlighter-rouge">"s"</code>: for seconds</li>
+      <li><code class="language-plaintext highlighter-rouge">"m"</code>: for minutes</li>
+      <li><code class="language-plaintext highlighter-rouge">"h"</code>: for hours</li>
     </ul>
   </li>
-  <li><code class="highlighter-rouge">"whenDeleted"</code>: Boolean value to describe whether a
+  <li><code class="language-plaintext highlighter-rouge">"whenDeleted"</code>: Boolean value to describe whether a
 <a href="protocol-examples-policies-announcement-subjectDeletion.html">subject deletion announcement</a>
 should be published whenever a subject is manually deleted (e.g. via overwrite of a policy entry) from a policy, 
 if no previous subject deletion announcement was acknowledged.</li>
-  <li><code class="highlighter-rouge">"requestedAcks"</code>: Settings for at-least-once delivery of announcements via
+  <li><code class="language-plaintext highlighter-rouge">"requestedAcks"</code>: Settings for at-least-once delivery of announcements via
 <a href="basic-acknowledgements.html">acknowledgements</a>:
     <ul>
-      <li><code class="highlighter-rouge">"labels"</code>: Array of <a href="basic-acknowledgements.html#requesting-acks">Requested acknowledgement labels</a> of the 
+      <li><code class="language-plaintext highlighter-rouge">"labels"</code>: Array of <a href="basic-acknowledgements.html#requesting-acks">Requested acknowledgement labels</a> of the 
 websocket or connectivity channel from which the 
 <a href="basic-acknowledgements.html#issuing-acknowledgements">issued acknowledgement</a> is expected.</li>
-      <li><code class="highlighter-rouge">"timeout"</code>: Time in minutes (1m), seconds (60s), or milliseconds (600ms) how long to wait for acknowledgements 
+      <li><code class="language-plaintext highlighter-rouge">"timeout"</code>: Time in minutes (1m), seconds (60s), or milliseconds (600ms) how long to wait for acknowledgements 
 before retrying to publish a timed out announcement.</li>
     </ul>
   </li>
@@ -2242,10 +2249,10 @@ announcements and was <a href="basic-auth.html#authenticated-subjects">authentic
 <p>Policy actions are available via Ditto’s <a href="httpapi-overview.html">HTTP API</a> and can be invoked for certain 
 <a href="#model-specification">policy entries</a> or for complete policies.</p>
 
-<p>They require neither <code class="highlighter-rouge">READ</code> nor <code class="highlighter-rouge">WRITE</code> permission, but instead a granted <code class="highlighter-rouge">EXECUTE</code> permission on the specific action
+<p>They require neither <code class="language-plaintext highlighter-rouge">READ</code> nor <code class="language-plaintext highlighter-rouge">WRITE</code> permission, but instead a granted <code class="language-plaintext highlighter-rouge">EXECUTE</code> permission on the specific action
 name, e.g. for a single policy entry:</p>
 <ul>
-  <li><code class="highlighter-rouge">policy:/entries/{label}/actions/{actionName}</code></li>
+  <li><code class="language-plaintext highlighter-rouge">policy:/entries/{label}/actions/{actionName}</code></li>
 </ul>
 
 <h3 id="action-activatetokenintegration">Action activateTokenIntegration</h3>
@@ -2260,8 +2267,8 @@ name, e.g. for a single policy entry:</p>
 the <a href="#" data-toggle="tooltip" data-original-title="JSON Web Token (JWT)">JWT</a> expires. 
 The form of the injected subject (the token integration subject) is configurable globally in the Ditto installation.</p>
 
-<p>A user is authorized to inject the token integration subject when granted the <code class="highlighter-rouge">EXECUTE</code> permission on a policy entry.<br />
-The <code class="highlighter-rouge">WRITE</code> permission is not necessary. To activate or deactivate a token integration subject, send a <code class="highlighter-rouge">POST</code> 
+<p>A user is authorized to inject the token integration subject when granted the <code class="language-plaintext highlighter-rouge">EXECUTE</code> permission on a policy entry.<br />
+The <code class="language-plaintext highlighter-rouge">WRITE</code> permission is not necessary. To activate or deactivate a token integration subject, send a <code class="language-plaintext highlighter-rouge">POST</code> 
 request to the following HTTP routes:</p>
 
 <ul>
@@ -2269,46 +2276,46 @@ request to the following HTTP routes:</p>
 Injects a new subject <strong>into all matched policy entries</strong> calculated with information extracted from the authenticated 
 JWT.
     <ul>
-      <li>the authenticated token must be granted the <code class="highlighter-rouge">EXECUTE</code> permission to perform the <code class="highlighter-rouge">activateTokenIntegration</code> action</li>
+      <li>the authenticated token must be granted the <code class="language-plaintext highlighter-rouge">EXECUTE</code> permission to perform the <code class="language-plaintext highlighter-rouge">activateTokenIntegration</code> action</li>
       <li>one of the subject IDs must be contained in the authenticated token</li>
-      <li>at least one <code class="highlighter-rouge">READ</code> permission to a <code class="highlighter-rouge">thing:/</code> resource path must be granted</li>
+      <li>at least one <code class="language-plaintext highlighter-rouge">READ</code> permission to a <code class="language-plaintext highlighter-rouge">thing:/</code> resource path must be granted</li>
     </ul>
   </li>
   <li><a href="http-api-doc.html#/Policies/post_policies__policyId__actions_deactivateTokenIntegration">POST /api/2/policies/{policyId}/actions/deactivateTokenIntegration</a><br />
 Removes the calculated subject with information extracted from the authenticated JWT <strong>from all matched policy entries</strong>.
     <ul>
-      <li>the authenticated token must be granted the <code class="highlighter-rouge">EXECUTE</code> permission to perform the <code class="highlighter-rouge">deactivateTokenIntegration</code> action</li>
+      <li>the authenticated token must be granted the <code class="language-plaintext highlighter-rouge">EXECUTE</code> permission to perform the <code class="language-plaintext highlighter-rouge">deactivateTokenIntegration</code> action</li>
       <li>one of the subject IDs must be contained in the authenticated token</li>
     </ul>
   </li>
   <li><a href="http-api-doc.html#/Policies/post_policies__policyId__entries__label__actions_activateTokenIntegration">POST /api/2/policies/{policyId}/entries/{label}/actions/activateTokenIntegration</a><br />
 Injects the calculated subject <strong>into the policy entry</strong> calculated with information extracted from the authenticated JWT.
     <ul>
-      <li>the authenticated token must be granted the <code class="highlighter-rouge">EXECUTE</code> permission to perform the <code class="highlighter-rouge">activateTokenIntegration</code> action</li>
+      <li>the authenticated token must be granted the <code class="language-plaintext highlighter-rouge">EXECUTE</code> permission to perform the <code class="language-plaintext highlighter-rouge">activateTokenIntegration</code> action</li>
       <li>one of the subject IDs must be contained in the authenticated token</li>
-      <li>at least one <code class="highlighter-rouge">READ</code> permission to a <code class="highlighter-rouge">thing:/</code> resource path must be granted</li>
+      <li>at least one <code class="language-plaintext highlighter-rouge">READ</code> permission to a <code class="language-plaintext highlighter-rouge">thing:/</code> resource path must be granted</li>
     </ul>
   </li>
   <li><a href="http-api-doc.html#/Policies/post_policies__policyId__entries__label__actions_deactivateTokenIntegration">POST /api/2/policies/{policyId}/entries/{label}/actions/deactivateTokenIntegration</a><br />
 Removes the calculated subject with information extracted from the authenticated JWT <strong>from the policy entry</strong>.
     <ul>
-      <li>the authenticated token must be granted the <code class="highlighter-rouge">EXECUTE</code> permission to perform the <code class="highlighter-rouge">deactivateTokenIntegration</code> action</li>
+      <li>the authenticated token must be granted the <code class="language-plaintext highlighter-rouge">EXECUTE</code> permission to perform the <code class="language-plaintext highlighter-rouge">deactivateTokenIntegration</code> action</li>
       <li>one of the subject IDs must be contained in the authenticated token</li>
     </ul>
   </li>
 </ul>
 
 <p>The injected subject pattern is configurable in Ditto and is by default:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
 integration:{{policy-entry:label}}:{{jwt:aud}}
 
 </code></pre></div></div>
 
 <p>To configure the token integration subject, set the path</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ditto.gateway.authentication.oauth.token-integration-subject
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ditto.gateway.authentication.oauth.token-integration-subject
 </code></pre></div></div>
-<p>in <code class="highlighter-rouge">gateway-extension.conf</code>, or set the environment variable <code class="highlighter-rouge">OAUTH_TOKEN_INTEGRATION_SUBJECT</code> for Gateway Service.</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<p>in <code class="language-plaintext highlighter-rouge">gateway-extension.conf</code>, or set the environment variable <code class="language-plaintext highlighter-rouge">OAUTH_TOKEN_INTEGRATION_SUBJECT</code> for Gateway Service.</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
 ditto.gateway.authentication.oauth.token-integration-subject =
   "my-token-integration-issuer:{{policy-entry:label}}:{{jwt:sub}}"
 
@@ -2317,7 +2324,7 @@ ditto.gateway.authentication.oauth.token-integration-subject =
 
 </code></pre></div></div>
 
-<p>The <a href="basic-placeholders.html">placeholders</a> below are usable as a part of the <code class="highlighter-rouge">activateTokenIntegration</code> configuration:</p>
+<p>The <a href="basic-placeholders.html">placeholders</a> below are usable as a part of the <code class="language-plaintext highlighter-rouge">activateTokenIntegration</code> configuration:</p>
 
 <table>
   <thead>
@@ -2328,15 +2335,15 @@ ditto.gateway.authentication.oauth.token-integration-subject =
   </thead>
   <tbody>
     <tr>
-      <td><code class="highlighter-rouge">{{ header:&lt;header-name&gt; }}</code></td>
+      <td><code class="language-plaintext highlighter-rouge">{{ header:&lt;header-name&gt; }}</code></td>
       <td>HTTP header values passed along the HTTP action request</td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge">{{ jwt:&lt;jwt-body-claim&gt; }}</code></td>
-      <td>any standard or custom claims in the body of the JWT - e.g., <code class="highlighter-rouge">jwt:sub</code> for the JWT “subject”</td>
+      <td><code class="language-plaintext highlighter-rouge">{{ jwt:&lt;jwt-body-claim&gt; }}</code></td>
+      <td>any standard or custom claims in the body of the JWT - e.g., <code class="language-plaintext highlighter-rouge">jwt:sub</code> for the JWT “subject”</td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge">{{ policy-entry:label }}</code></td>
+      <td><code class="language-plaintext highlighter-rouge">{{ policy-entry:label }}</code></td>
       <td>label of the policy entry in which the token integration subject is injected</td>
     </tr>
   </tbody>
@@ -2347,10 +2354,10 @@ ditto.gateway.authentication.oauth.token-integration-subject =
 <p>A Policy can contain access control definitions for several resources:</p>
 
 <ul>
-  <li><strong>Policy:</strong> Someone who was granted write permission at the policy root resource (i.e. <code class="highlighter-rouge">policy:/</code>) is allowed to
+  <li><strong>Policy:</strong> Someone who was granted write permission at the policy root resource (i.e. <code class="language-plaintext highlighter-rouge">policy:/</code>) is allowed to
 manage the policy itself.</li>
-  <li><strong>Thing:</strong> The resource can be defined as fine-grained as necessary for the respective use case: e.g. <code class="highlighter-rouge">thing:/</code> as
-top-level resource or on sub-resources such as <code class="highlighter-rouge">thing:/features</code>.
+  <li><strong>Thing:</strong> The resource can be defined as fine-grained as necessary for the respective use case: e.g. <code class="language-plaintext highlighter-rouge">thing:/</code> as
+top-level resource or on sub-resources such as <code class="language-plaintext highlighter-rouge">thing:/features</code>.
 At runtime, the permissions are propagated down to all Thing sub-entities.
     <ul>
       <li>In case you grant read permission on top-level and revoke it at a sub-entity, the subject can read the upper 
@@ -2363,7 +2370,7 @@ part only (and the Thing ID).</li>
 
 <h3 id="policy">Policy</h3>
 
-<p>The Policy resource (addressable as <code class="highlighter-rouge">policy:/</code>) defines the access control for the Policy itself.</p>
+<p>The Policy resource (addressable as <code class="language-plaintext highlighter-rouge">policy:/</code>) defines the access control for the Policy itself.</p>
 
 <div class="alert alert-success" role="alert"><i class="fa fa-check-square-o"></i> <b>Tip:</b> Please make sure to define at least one user (for which you have the credentials) with
   top-level <em>read</em> and <em>write</em> permissions on the Policy, otherwise you won’t be able to access/change it.</div>
@@ -2416,7 +2423,7 @@ resource.</p>
 
 <h3 id="thing">Thing</h3>
 
-<p>The Thing resource (addressable as <code class="highlighter-rouge">thing:/</code>) defines the access control for Things.</p>
+<p>The Thing resource (addressable as <code class="language-plaintext highlighter-rouge">thing:/</code>) defines the access control for Things.</p>
 
 <p>The access control definitions defined in a Policy’s Thing resource will be applied to all Things referencing this
 Policy.</p>
@@ -2498,7 +2505,7 @@ Policy.</p>
 
 <h3 id="message">Message</h3>
 
-<p>The Message resource (addressable as <code class="highlighter-rouge">message:/</code>) defines the access control for Messages.</p>
+<p>The Message resource (addressable as <code class="language-plaintext highlighter-rouge">message:/</code>) defines the access control for Messages.</p>
 
 <p>The access control definitions defined in a Policy’s Message resource will be applied to all Messages sent to or from 
 Things referencing this Policy.</p>
@@ -2565,8 +2572,8 @@ Things referencing this Policy.</p>
   </tbody>
 </table>
 
-<div class="alert alert-success" role="alert"><i class="fa fa-check-square-o"></i> <b>Tip:</b> The resources <code class="highlighter-rouge">message:/inbox</code> and <code class="highlighter-rouge">message:/outbox</code> do not address feature-related messages. 
-For providing access to feature-related messages, you have to either grant top-level permission (<code class="highlighter-rouge">message:/</code>) or grant permission to the resource <code class="highlighter-rouge">message:/features</code> (or the required sub-resources).</div>
+<div class="alert alert-success" role="alert"><i class="fa fa-check-square-o"></i> <b>Tip:</b> The resources <code class="language-plaintext highlighter-rouge">message:/inbox</code> and <code class="language-plaintext highlighter-rouge">message:/outbox</code> do not address feature-related messages. 
+For providing access to feature-related messages, you have to either grant top-level permission (<code class="language-plaintext highlighter-rouge">message:/</code>) or grant permission to the resource <code class="language-plaintext highlighter-rouge">message:/features</code> (or the required sub-resources).</div>
 
 <p>The <a href="basic-policy.html#example">Things example at the end of the page</a> also defines access control on messages.</p>
 
@@ -2619,37 +2626,37 @@ For providing access to feature-related messages, you have to either grant top-l
 <p>With policy imports it is possible to import entries from other referenced policies. 
 Which parts of the referenced policy are imported is controlled by two properties of a policy.</p>
 
-<p>Firstly, the imported policy can define for each entry whether and how a policy entry is importable by others using JSON field <code class="highlighter-rouge">importable</code>. 
+<p>Firstly, the imported policy can define for each entry whether and how a policy entry is importable by others using JSON field <code class="language-plaintext highlighter-rouge">importable</code>. 
 The field can have one of the following three values:</p>
 <ol>
-  <li><code class="highlighter-rouge">implicit</code> (default): the policy entry is imported without being listed in the importing policy individually</li>
-  <li><code class="highlighter-rouge">explicit</code>: the policy entry is only imported if it is listed in the importing policy</li>
-  <li><code class="highlighter-rouge">never</code>: the policy entry is not imported, regardless of being listed in the importing policy</li>
+  <li><code class="language-plaintext highlighter-rouge">implicit</code> (default): the policy entry is imported without being listed in the importing policy individually</li>
+  <li><code class="language-plaintext highlighter-rouge">explicit</code>: the policy entry is only imported if it is listed in the importing policy</li>
+  <li><code class="language-plaintext highlighter-rouge">never</code>: the policy entry is not imported, regardless of being listed in the importing policy</li>
 </ol>
 
-<p>If the field is not specified, the default value is <code class="highlighter-rouge">implicit</code>.</p>
+<p>If the field is not specified, the default value is <code class="language-plaintext highlighter-rouge">implicit</code>.</p>
 
-<p>Example of a policy specifying different types of <code class="highlighter-rouge">importable</code> entries:</p>
+<p>Example of a policy specifying different types of <code class="language-plaintext highlighter-rouge">importable</code> entries:</p>
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"entries"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"DEFAULT"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"subjects"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="err">...</span><span class="w"> </span><span class="p">},</span><span class="w">
-      </span><span class="s2">"resources"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="err">...</span><span class="w"> </span><span class="p">}</span><span class="w">
+  </span><span class="nl">"entries"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"DEFAULT"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"subjects"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="err">...</span><span class="w"> </span><span class="p">},</span><span class="w">
+      </span><span class="nl">"resources"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="err">...</span><span class="w"> </span><span class="p">}</span><span class="w">
     </span><span class="p">},</span><span class="w">
-    </span><span class="s2">"IMPLICIT"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"subjects"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="err">...</span><span class="w"> </span><span class="p">},</span><span class="w">
-      </span><span class="s2">"resources"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="err">...</span><span class="w"> </span><span class="p">},</span><span class="w">
-      </span><span class="s2">"importable"</span><span class="p">:</span><span class="w"> </span><span class="s2">"implicit"</span><span class="w">
+    </span><span class="nl">"IMPLICIT"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"subjects"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="err">...</span><span class="w"> </span><span class="p">},</span><span class="w">
+      </span><span class="nl">"resources"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="err">...</span><span class="w"> </span><span class="p">},</span><span class="w">
+      </span><span class="nl">"importable"</span><span class="p">:</span><span class="w"> </span><span class="s2">"implicit"</span><span class="w">
     </span><span class="p">},</span><span class="w">
-    </span><span class="s2">"EXPLICIT"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"subjects"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="err">...</span><span class="w"> </span><span class="p">},</span><span class="w">
-      </span><span class="s2">"resources"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="err">...</span><span class="w"> </span><span class="p">},</span><span class="w">
-      </span><span class="s2">"importable"</span><span class="p">:</span><span class="w"> </span><span class="s2">"explicit"</span><span class="w">
+    </span><span class="nl">"EXPLICIT"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"subjects"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="err">...</span><span class="w"> </span><span class="p">},</span><span class="w">
+      </span><span class="nl">"resources"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="err">...</span><span class="w"> </span><span class="p">},</span><span class="w">
+      </span><span class="nl">"importable"</span><span class="p">:</span><span class="w"> </span><span class="s2">"explicit"</span><span class="w">
     </span><span class="p">},</span><span class="w">
-    </span><span class="s2">"NEVER"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"subjects"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="err">...</span><span class="w"> </span><span class="p">},</span><span class="w">
-      </span><span class="s2">"resources"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="err">...</span><span class="w"> </span><span class="p">},</span><span class="w">
-      </span><span class="s2">"importable"</span><span class="p">:</span><span class="w"> </span><span class="s2">"never"</span><span class="w">
+    </span><span class="nl">"NEVER"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"subjects"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="err">...</span><span class="w"> </span><span class="p">},</span><span class="w">
+      </span><span class="nl">"resources"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="err">...</span><span class="w"> </span><span class="p">},</span><span class="w">
+      </span><span class="nl">"importable"</span><span class="p">:</span><span class="w"> </span><span class="s2">"never"</span><span class="w">
     </span><span class="p">}</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
@@ -2659,22 +2666,22 @@ The field can have one of the following three values:</p>
 
 <p>Example of a policy importing two other policies:</p>
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"policyId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ditto:importing-policy"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"entries"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">  </span><span class="err">...</span><span class="w">  </span><span class="p">},</span><span class="w">
-  </span><span class="s2">"imports"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"ditto:imported-policy"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+  </span><span class="nl">"policyId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ditto:importing-policy"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"entries"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">  </span><span class="err">...</span><span class="w">  </span><span class="p">},</span><span class="w">
+  </span><span class="nl">"imports"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"ditto:imported-policy"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
       </span><span class="err">//</span><span class="w"> </span><span class="err">import</span><span class="w"> </span><span class="err">the</span><span class="w"> </span><span class="s2">"EXPLICIT"</span><span class="w"> </span><span class="err">entry</span><span class="w"> </span><span class="err">and</span><span class="w"> </span><span class="err">entries</span><span class="w"> </span><span class="err">that</span><span class="w"> </span><span class="err">are</span><span class="w"> </span><span class="err">of</span><span class="w"> </span><span class="err">importable</span><span class="w"> </span><span class="err">type</span><span class="w"> </span><span class="err">implicit</span><span class="w">      
-      </span><span class="s2">"entries"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="s2">"EXPLICIT"</span><span class="w"> </span><span class="p">]</span><span class="w"> 
+      </span><span class="nl">"entries"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="s2">"EXPLICIT"</span><span class="w"> </span><span class="p">]</span><span class="w"> 
     </span><span class="p">},</span><span class="w">
-    </span><span class="s2">"ditto:another-imported-policy"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="err">//</span><span class="w"> </span><span class="err">import</span><span class="w"> </span><span class="err">only</span><span class="w"> </span><span class="err">entries</span><span class="w"> </span><span class="err">that</span><span class="w"> </span><span class="err">are</span><span class="w"> </span><span class="err">of</span><span class="w"> </span><span class="err">importable</span><span class="w"> </span><span class="err">type</span><span class="w"> </span><span class="err">implicit</span><span class="w">
+    </span><span class="nl">"ditto:another-imported-policy"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="err">//</span><span class="w"> </span><span class="err">import</span><span class="w"> </span><span class="err">only</span><span class="w"> </span><span class="err">entries</span><span class="w"> </span><span class="err">that</span><span class="w"> </span><span class="err">are</span><span class="w"> </span><span class="err">of</span><span class="w"> </span><span class="err">importable</span><span class="w"> </span><span class="err">type</span><span class="w"> </span><span class="err">implicit</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
 <p>A subject creating or modifying a policy with policy imports must have the following permissions:</p>
 <ul>
-  <li>permission on the <em>importing policy</em> to <code class="highlighter-rouge">WRITE</code> the modified policy import or policy imports</li>
-  <li>permission on the <em>imported policy</em> to <code class="highlighter-rouge">READ</code> entries that are implicitly or explicitly referenced in the policy imports</li>
+  <li>permission on the <em>importing policy</em> to <code class="language-plaintext highlighter-rouge">WRITE</code> the modified policy import or policy imports</li>
+  <li>permission on the <em>imported policy</em> to <code class="language-plaintext highlighter-rouge">READ</code> entries that are implicitly or explicitly referenced in the policy imports</li>
 </ul>
 
 <p>The entries of the importing policy and the entries of the imported policy are merged at runtime and evaluated as if the entries were defined in one single policy. The same rules for the evaluation of grant/revoke permissions apply to imported entries in the same way as for entries defined in the importing policy itself. This also means that changes to an imported policy are reflected in all policies that import it. For direct access to the entities protected by a policy (things, policies, …) via e.g. HTTP this happens instantaneously. When searching things it may take some time to sync the changes as the search index is <a href="basic-search.html#consistency">eventually consistent</a>. This is particularly the case if the changed policy is imported by a large number of other policies.</p>
@@ -2687,7 +2694,7 @@ The field can have one of the following three values:</p>
 
 <ul>
   <li>The maximum number of policy imports allowed per policy is 10.</li>
-  <li>To avoid conflicts with imported entries, it is not allowed to use the prefix <code class="highlighter-rouge">imported</code> for the name of a policy entry label. Trying to do so will result in an error.</li>
+  <li>To avoid conflicts with imported entries, it is not allowed to use the prefix <code class="language-plaintext highlighter-rouge">imported</code> for the name of a policy entry label. Trying to do so will result in an error.</li>
 </ul>
 
 <h2 id="tools-for-editing-a-policy">Tools for editing a Policy</h2>
@@ -2731,58 +2738,58 @@ users.</li>
 <p>The correct Policy JSON object notation would be as shown in the following code block.</p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"policyId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"my.namespace:policy-a"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"entries"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"owner"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"subjects"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"nginx:ditto"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-          </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"nginx basic auth user"</span><span class="w">
+  </span><span class="nl">"policyId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"my.namespace:policy-a"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"entries"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"owner"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"subjects"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"nginx:ditto"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"nginx basic auth user"</span><span class="w">
         </span><span class="p">}</span><span class="w">
       </span><span class="p">},</span><span class="w">
-      </span><span class="s2">"resources"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"thing:/"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-          </span><span class="s2">"grant"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"READ"</span><span class="p">,</span><span class="w"> </span><span class="s2">"WRITE"</span><span class="p">],</span><span class="w">
-          </span><span class="s2">"revoke"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+      </span><span class="nl">"resources"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"thing:/"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"grant"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"READ"</span><span class="p">,</span><span class="w"> </span><span class="s2">"WRITE"</span><span class="p">],</span><span class="w">
+          </span><span class="nl">"revoke"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
         </span><span class="p">},</span><span class="w">
-        </span><span class="s2">"policy:/"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-          </span><span class="s2">"grant"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"READ"</span><span class="p">,</span><span class="w"> </span><span class="s2">"WRITE"</span><span class="p">],</span><span class="w">
-          </span><span class="s2">"revoke"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+        </span><span class="nl">"policy:/"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"grant"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"READ"</span><span class="p">,</span><span class="w"> </span><span class="s2">"WRITE"</span><span class="p">],</span><span class="w">
+          </span><span class="nl">"revoke"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
         </span><span class="p">},</span><span class="w">
-        </span><span class="s2">"message:/"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-          </span><span class="s2">"grant"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"READ"</span><span class="p">,</span><span class="w"> </span><span class="s2">"WRITE"</span><span class="p">],</span><span class="w">
-          </span><span class="s2">"revoke"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+        </span><span class="nl">"message:/"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"grant"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"READ"</span><span class="p">,</span><span class="w"> </span><span class="s2">"WRITE"</span><span class="p">],</span><span class="w">
+          </span><span class="nl">"revoke"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
         </span><span class="p">}</span><span class="w">
       </span><span class="p">}</span><span class="w">
     </span><span class="p">},</span><span class="w">
-    </span><span class="s2">"observer"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"subjects"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"nginx:observer-client"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-          </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"technical client"</span><span class="w">
+    </span><span class="nl">"observer"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"subjects"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"nginx:observer-client"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"technical client"</span><span class="w">
         </span><span class="p">},</span><span class="w">
-        </span><span class="s2">"nginx:some-users"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-          </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"a group of users"</span><span class="w">
+        </span><span class="nl">"nginx:some-users"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"a group of users"</span><span class="w">
         </span><span class="p">}</span><span class="w">
       </span><span class="p">},</span><span class="w">
-      </span><span class="s2">"resources"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"thing:/features/featureX"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-          </span><span class="s2">"grant"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"READ"</span><span class="p">],</span><span class="w">
-          </span><span class="s2">"revoke"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+      </span><span class="nl">"resources"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"thing:/features/featureX"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"grant"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"READ"</span><span class="p">],</span><span class="w">
+          </span><span class="nl">"revoke"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
         </span><span class="p">},</span><span class="w">
-        </span><span class="s2">"thing:/features/featureY"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-          </span><span class="s2">"grant"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"READ"</span><span class="p">],</span><span class="w">
-          </span><span class="s2">"revoke"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+        </span><span class="nl">"thing:/features/featureY"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"grant"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"READ"</span><span class="p">],</span><span class="w">
+          </span><span class="nl">"revoke"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
         </span><span class="p">}</span><span class="w">
       </span><span class="p">}</span><span class="w">
     </span><span class="p">},</span><span class="w">
-    </span><span class="s2">"private"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"subjects"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"nginx:some-users"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-          </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"a group of users"</span><span class="w">
+    </span><span class="nl">"private"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"subjects"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"nginx:some-users"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"a group of users"</span><span class="w">
         </span><span class="p">},</span><span class="w">
-        </span><span class="s2">"resources"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-          </span><span class="s2">"thing:/features/featureX/properties/location/city"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-            </span><span class="s2">"grant"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
-            </span><span class="s2">"revoke"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"READ"</span><span class="p">]</span><span class="w">
+        </span><span class="nl">"resources"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"thing:/features/featureX/properties/location/city"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"grant"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+            </span><span class="nl">"revoke"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"READ"</span><span class="p">]</span><span class="w">
           </span><span class="p">}</span><span class="w">
         </span><span class="p">}</span><span class="w">
       </span><span class="p">}</span><span class="w">
@@ -2794,10 +2801,10 @@ users.</li>
 <p>The Policy can be found:</p>
 
 <ul>
-  <li>Via GET request at <code class="highlighter-rouge">/api/2/policies/&lt;policyId&gt;</code>, and</li>
-  <li>Via GET request at <code class="highlighter-rouge">/api/2/things/{thingId}/policyId</code></li>
+  <li>Via GET request at <code class="language-plaintext highlighter-rouge">/api/2/policies/&lt;policyId&gt;</code>, and</li>
+  <li>Via GET request at <code class="language-plaintext highlighter-rouge">/api/2/things/{thingId}/policyId</code></li>
   <li>At any Thing itself in its JSON representation. 
-It is however not included by default, but can be retrieved by specifying the <code class="highlighter-rouge">/api/2/things/&lt;thingId&gt;?fields=_policy</code> 
+It is however not included by default, but can be retrieved by specifying the <code class="language-plaintext highlighter-rouge">/api/2/things/&lt;thingId&gt;?fields=_policy</code> 
 query parameter.</li>
 </ul>
 
@@ -2828,7 +2835,7 @@ query parameter.</li>
                     </div>
                     <p class="notice">
                         &copy;2024 Eclipse Ditto™.
-                         Site last generated: Feb 27, 2024 <br />
+                         Site last generated: Apr 10, 2024 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

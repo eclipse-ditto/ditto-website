@@ -298,7 +298,7 @@ but only if the thing has a specific attribute set.</p>
 update the <em>temperature</em> status of the feature water-tank to 45.5, if the location is “Wonderland”.
 To achieve this the following HTTP request can be used:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>PUT /api/2/things/org.eclipse.ditto:coffeebrewer/features/water-tank/properties/status/temperature?condition=eq(attributes/location,"Wonderland")
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>PUT /api/2/things/org.eclipse.ditto:coffeebrewer/features/water-tank/properties/status/temperature?condition=eq(attributes/location,"Wonderland")
 45.5
 </code></pre></div></div>
 
@@ -318,7 +318,7 @@ HTTP status code <strong>412 - Precondition Failed</strong>. There will also be 
 that should be changed by the request.</p>
 
 <p>Additionally, the authorized subject needs to have READ permission at the resource used in the specified condition.
-Given the condition from the introduction <code class="highlighter-rouge">condition=eq(attributes/location,"Wonderland")</code>, 
+Given the condition from the introduction <code class="language-plaintext highlighter-rouge">condition=eq(attributes/location,"Wonderland")</code>, 
 read access on the single attribute would be sufficient. 
 However, the condition can also be more complex, or include other sub-structures of the thing. 
 Then of course, the authorized subject needs READ permission on all parameters of the specified condition.</p>
@@ -330,34 +330,34 @@ and the Ditto Java Client.</p>
 <p>To demonstrate the new conditional request, we assume that the following thing already exists:</p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"thingId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"org.eclipse.ditto:coffeebrewer"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"policyId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"org.eclipse.ditto:coffeebrewer-policy"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"definition"</span><span class="p">:</span><span class="w"> </span><span class="s2">"org.eclipse.ditto:coffeebrewer:0.1.0"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"manufacturer"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ACME demo corp."</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"location"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Wonderland"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"serialno"</span><span class="p">:</span><span class="w"> </span><span class="s2">"42"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"model"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Speaking coffee machine"</span><span class="w">
+  </span><span class="nl">"thingId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"org.eclipse.ditto:coffeebrewer"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"policyId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"org.eclipse.ditto:coffeebrewer-policy"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"definition"</span><span class="p">:</span><span class="w"> </span><span class="s2">"org.eclipse.ditto:coffeebrewer:0.1.0"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"manufacturer"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ACME demo corp."</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"location"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Wonderland"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"serialno"</span><span class="p">:</span><span class="w"> </span><span class="s2">"42"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"model"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Speaking coffee machine"</span><span class="w">
   </span><span class="p">},</span><span class="w">
-  </span><span class="s2">"features"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"coffee-brewer"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"definition"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"org.eclipse.ditto:coffeebrewer:0.1.0"</span><span class="p">],</span><span class="w">
-      </span><span class="s2">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"brewed-coffees"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w">
+  </span><span class="nl">"features"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"coffee-brewer"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"definition"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"org.eclipse.ditto:coffeebrewer:0.1.0"</span><span class="p">],</span><span class="w">
+      </span><span class="nl">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"brewed-coffees"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w">
       </span><span class="p">}</span><span class="w">
     </span><span class="p">},</span><span class="w">
-    </span><span class="s2">"water-tank"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"configuration"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-          </span><span class="s2">"smartMode"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-          </span><span class="s2">"brewingTemp"</span><span class="p">:</span><span class="w"> </span><span class="mi">87</span><span class="p">,</span><span class="w">
-          </span><span class="s2">"tempToHold"</span><span class="p">:</span><span class="w"> </span><span class="mf">44.5</span><span class="p">,</span><span class="w">
-          </span><span class="s2">"timeoutSeconds"</span><span class="p">:</span><span class="w"> </span><span class="mi">6000</span><span class="w">
+    </span><span class="nl">"water-tank"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"configuration"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"smartMode"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"brewingTemp"</span><span class="p">:</span><span class="w"> </span><span class="mi">87</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"tempToHold"</span><span class="p">:</span><span class="w"> </span><span class="mf">44.5</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"timeoutSeconds"</span><span class="p">:</span><span class="w"> </span><span class="mi">6000</span><span class="w">
         </span><span class="p">},</span><span class="w">
-        </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-          </span><span class="s2">"waterAmount"</span><span class="p">:</span><span class="w"> </span><span class="mi">731</span><span class="p">,</span><span class="w">
-          </span><span class="s2">"temperature"</span><span class="p">:</span><span class="w"> </span><span class="mf">44.2</span><span class="p">,</span><span class="w">
-          </span><span class="s2">"lastModified"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2021-09-23T07:01:56Z"</span><span class="w">
+        </span><span class="nl">"status"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"waterAmount"</span><span class="p">:</span><span class="w"> </span><span class="mi">731</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"temperature"</span><span class="p">:</span><span class="w"> </span><span class="mf">44.2</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"lastModified"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2021-09-23T07:01:56Z"</span><span class="w">
         </span><span class="p">}</span><span class="w">
       </span><span class="p">}</span><span class="w">
     </span><span class="p">}</span><span class="w">
@@ -379,44 +379,44 @@ as well as the conditional part <strong>lastModified</strong> are located there.
 In this section, we will show how to use both options.</p>
 
 <h3 id="conditional-request-with-http-header">Conditional request with HTTP Header</h3>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl -X PATCH -H 'Content-Type: application/json' -H 'condition: gt(features/water-tank/properties/status/lastModified,"2021-09-23T07:00:00Z")' /api/2/things/org.eclipse.ditto:coffeebrewer/features/water-tank/properties/properties/temperature -d '{ temperature: 45.26, "lastModified": "'"$(date --utc +%FT%TZ)"'" }'
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl -X PATCH -H 'Content-Type: application/json' -H 'condition: gt(features/water-tank/properties/status/lastModified,"2021-09-23T07:00:00Z")' /api/2/things/org.eclipse.ditto:coffeebrewer/features/water-tank/properties/properties/temperature -d '{ temperature: 45.26, "lastModified": "'"$(date --utc +%FT%TZ)"'" }'
 </code></pre></div></div>
 
 <h3 id="conditional-request-with-http-query-parameter">Conditional request with HTTP query parameter</h3>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl -X PATCH -H 'Content-Type: application/json' /api/2/things/org.eclipse.ditto:coffeebrewer/features/water-tank/properties/status/temperature?condition=gt(features/water-tank/properties/status/lastModified,"2021-09-23T07:00:00Z") -d '{ temperature: 45.26, "lastModified": "'"$(date --utc +%FT%TZ)"'" }'
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl -X PATCH -H 'Content-Type: application/json' /api/2/things/org.eclipse.ditto:coffeebrewer/features/water-tank/properties/status/temperature?condition=gt(features/water-tank/properties/status/lastModified,"2021-09-23T07:00:00Z") -d '{ temperature: 45.26, "lastModified": "'"$(date --utc +%FT%TZ)"'" }'
 </code></pre></div></div>
 
 <h3 id="result">Result</h3>
 <p>After the request was successfully performed, the thing will look like this:</p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"thingId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"org.eclipse.ditto:coffeebrewer"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"policyId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"org.eclipse.ditto:coffeebrewer-policy"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"definition"</span><span class="p">:</span><span class="w"> </span><span class="s2">"org.eclipse.ditto:coffeebrewer:0.1.0"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"manufacturer"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ACME demo corp."</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"location"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Wonderland"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"serialno"</span><span class="p">:</span><span class="w"> </span><span class="s2">"42"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"model"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Speaking coffee machine"</span><span class="w">
+  </span><span class="nl">"thingId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"org.eclipse.ditto:coffeebrewer"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"policyId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"org.eclipse.ditto:coffeebrewer-policy"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"definition"</span><span class="p">:</span><span class="w"> </span><span class="s2">"org.eclipse.ditto:coffeebrewer:0.1.0"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"manufacturer"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ACME demo corp."</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"location"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Wonderland"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"serialno"</span><span class="p">:</span><span class="w"> </span><span class="s2">"42"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"model"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Speaking coffee machine"</span><span class="w">
   </span><span class="p">},</span><span class="w">
-  </span><span class="s2">"features"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"coffee-brewer"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"definition"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"org.eclipse.ditto:coffeebrewer:0.1.0"</span><span class="p">],</span><span class="w">
-      </span><span class="s2">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"brewed-coffees"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w">
+  </span><span class="nl">"features"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"coffee-brewer"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"definition"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"org.eclipse.ditto:coffeebrewer:0.1.0"</span><span class="p">],</span><span class="w">
+      </span><span class="nl">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"brewed-coffees"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w">
       </span><span class="p">}</span><span class="w">
     </span><span class="p">},</span><span class="w">
-    </span><span class="s2">"water-tank"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"configuration"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-          </span><span class="s2">"brewingTemp"</span><span class="p">:</span><span class="w"> </span><span class="mi">87</span><span class="p">,</span><span class="w">
-          </span><span class="s2">"tempToHold"</span><span class="p">:</span><span class="w"> </span><span class="mf">44.5</span><span class="p">,</span><span class="w">
-          </span><span class="s2">"timeoutSeconds"</span><span class="p">:</span><span class="w"> </span><span class="mi">6000</span><span class="w">
+    </span><span class="nl">"water-tank"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"configuration"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"brewingTemp"</span><span class="p">:</span><span class="w"> </span><span class="mi">87</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"tempToHold"</span><span class="p">:</span><span class="w"> </span><span class="mf">44.5</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"timeoutSeconds"</span><span class="p">:</span><span class="w"> </span><span class="mi">6000</span><span class="w">
         </span><span class="p">},</span><span class="w">
-        </span><span class="s2">"status"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-          </span><span class="s2">"waterAmount"</span><span class="p">:</span><span class="w"> </span><span class="mi">731</span><span class="p">,</span><span class="w">
-          </span><span class="s2">"temperature"</span><span class="p">:</span><span class="w"> </span><span class="mf">45.26</span><span class="p">,</span><span class="w">
-          </span><span class="s2">"lastModified"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2021-09-23T07:05:36Z"</span><span class="w">
+        </span><span class="nl">"status"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"waterAmount"</span><span class="p">:</span><span class="w"> </span><span class="mi">731</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"temperature"</span><span class="p">:</span><span class="w"> </span><span class="mf">45.26</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"lastModified"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2021-09-23T07:05:36Z"</span><span class="w">
         </span><span class="p">}</span><span class="w">
       </span><span class="p">}</span><span class="w">
     </span><span class="p">}</span><span class="w">
@@ -429,13 +429,13 @@ In this section, we will show how to use both options.</p>
 Applying the following Ditto command to the existing thing will lead to the same result as in the above HTTP example.</p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"topic"</span><span class="p">:</span><span class="w"> </span><span class="s2">"org.eclipse.ditto/coffeebrewer/things/twin/commands/modify"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"content-type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"application/json"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"condition"</span><span class="p">:</span><span class="w"> </span><span class="s2">"gt(features/water-tank/properties/status/lastModified,</span><span class="se">\"</span><span class="s2">2021-09-23T07:00:00Z</span><span class="se">\"</span><span class="s2">)"</span><span class="w">
+  </span><span class="nl">"topic"</span><span class="p">:</span><span class="w"> </span><span class="s2">"org.eclipse.ditto/coffeebrewer/things/twin/commands/modify"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"content-type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"application/json"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"condition"</span><span class="p">:</span><span class="w"> </span><span class="s2">"gt(features/water-tank/properties/status/lastModified,</span><span class="se">\"</span><span class="s2">2021-09-23T07:00:00Z</span><span class="se">\"</span><span class="s2">)"</span><span class="w">
   </span><span class="p">},</span><span class="w">
-  </span><span class="s2">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/features/water-tank/properties/status/temperature"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"value"</span><span class="p">:</span><span class="w"> </span><span class="mf">45.26</span><span class="w">
+  </span><span class="nl">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/features/water-tank/properties/status/temperature"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"value"</span><span class="p">:</span><span class="w"> </span><span class="mf">45.26</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
@@ -445,32 +445,32 @@ with the upcoming (<strong>Ditto Java Client version 2.1.0</strong>).</p>
 
 <p>Example for a conditional update of a thing with the Ditto Java client:</p>
 
-<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">String</span> <span class="n">thingId</span> <span class="o">=</span> <span class="s">"org.eclipse.ditto:coffeebrewer"</span><span class="o">;</span>
-<span class="n">String</span> <span class="n">featureId</span> <span class="o">=</span> <span class="s">"water-tank"</span><span class="o">;</span>
-<span class="n">Feature</span> <span class="n">feature</span> <span class="o">=</span> <span class="n">ThingsModelFactory</span><span class="o">.</span><span class="na">newFeatureBuilder</span><span class="o">()</span>
-        <span class="o">.</span><span class="na">properties</span><span class="o">(</span><span class="n">ThingsModelFactory</span><span class="o">.</span><span class="na">newFeaturePropertiesBuilder</span><span class="o">()</span>
-            <span class="o">.</span><span class="na">set</span><span class="o">(</span><span class="s">"status"</span><span class="o">,</span> <span class="n">JsonFactory</span><span class="o">.</span><span class="na">newObjectBuilder</span><span class="o">()</span>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">String</span> <span class="n">thingId</span> <span class="o">=</span> <span class="s">"org.eclipse.ditto:coffeebrewer"</span><span class="o">;</span>
+<span class="nc">String</span> <span class="n">featureId</span> <span class="o">=</span> <span class="s">"water-tank"</span><span class="o">;</span>
+<span class="nc">Feature</span> <span class="n">feature</span> <span class="o">=</span> <span class="nc">ThingsModelFactory</span><span class="o">.</span><span class="na">newFeatureBuilder</span><span class="o">()</span>
+        <span class="o">.</span><span class="na">properties</span><span class="o">(</span><span class="nc">ThingsModelFactory</span><span class="o">.</span><span class="na">newFeaturePropertiesBuilder</span><span class="o">()</span>
+            <span class="o">.</span><span class="na">set</span><span class="o">(</span><span class="s">"status"</span><span class="o">,</span> <span class="nc">JsonFactory</span><span class="o">.</span><span class="na">newObjectBuilder</span><span class="o">()</span>
                 <span class="o">.</span><span class="na">set</span><span class="o">(</span><span class="s">"temperature"</span><span class="o">,</span> <span class="mf">45.2</span><span class="o">)</span>
-                <span class="o">.</span><span class="na">set</span><span class="o">(</span><span class="s">"lastModified"</span><span class="o">,</span> <span class="n">Instant</span><span class="o">.</span><span class="na">now</span><span class="o">())</span>
+                <span class="o">.</span><span class="na">set</span><span class="o">(</span><span class="s">"lastModified"</span><span class="o">,</span> <span class="nc">Instant</span><span class="o">.</span><span class="na">now</span><span class="o">())</span>
                 <span class="o">.</span><span class="na">build</span><span class="o">())</span>
             <span class="o">.</span><span class="na">build</span><span class="o">())</span>
         <span class="o">.</span><span class="na">withId</span><span class="o">(</span><span class="n">featureId</span><span class="o">)</span>
         <span class="o">.</span><span class="na">build</span><span class="o">();</span>
 
-<span class="n">Thing</span> <span class="n">thing</span> <span class="o">=</span> <span class="n">ThingsModelFactory</span><span class="o">.</span><span class="na">newThingBuilder</span><span class="o">()</span>
+<span class="nc">Thing</span> <span class="n">thing</span> <span class="o">=</span> <span class="nc">ThingsModelFactory</span><span class="o">.</span><span class="na">newThingBuilder</span><span class="o">()</span>
         <span class="o">.</span><span class="na">setId</span><span class="o">(</span><span class="n">thingId</span><span class="o">)</span>
         <span class="o">.</span><span class="na">setFeature</span><span class="o">(</span><span class="n">feature</span><span class="o">)</span>
         <span class="o">.</span><span class="na">build</span><span class="o">();</span>
 
 <span class="c1">// initialize the ditto-client</span>
-<span class="n">DittoClient</span> <span class="n">dittoClient</span> <span class="o">=</span> <span class="o">...</span> <span class="o">;</span>
+<span class="nc">DittoClient</span> <span class="n">dittoClient</span> <span class="o">=</span> <span class="o">...</span> <span class="o">;</span>
 
-<span class="n">dittoClient</span><span class="o">.</span><span class="na">twin</span><span class="o">().</span><span class="na">update</span><span class="o">(</span><span class="n">thing</span><span class="o">,</span> <span class="n">Options</span><span class="o">.</span><span class="na">condition</span><span class="o">(</span><span class="s">"gt(features/water-tank/properties/status/lastModified,'2021-09-23T07:00:00Z')"</span><span class="o">))</span>
+<span class="n">dittoClient</span><span class="o">.</span><span class="na">twin</span><span class="o">().</span><span class="na">update</span><span class="o">(</span><span class="n">thing</span><span class="o">,</span> <span class="nc">Options</span><span class="o">.</span><span class="na">condition</span><span class="o">(</span><span class="s">"gt(features/water-tank/properties/status/lastModified,'2021-09-23T07:00:00Z')"</span><span class="o">))</span>
         <span class="o">.</span><span class="na">whenComplete</span><span class="o">((</span><span class="n">adaptable</span><span class="o">,</span> <span class="n">throwable</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="o">{</span>
             <span class="k">if</span> <span class="o">(</span><span class="n">throwable</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
-                <span class="n">LOGGER</span><span class="o">.</span><span class="na">error</span><span class="o">(</span><span class="s">"Received error while sending conditional update: '{}' "</span><span class="o">,</span> <span class="n">throwable</span><span class="o">.</span><span class="na">toString</span><span class="o">());</span>
+                <span class="no">LOGGER</span><span class="o">.</span><span class="na">error</span><span class="o">(</span><span class="s">"Received error while sending conditional update: '{}' "</span><span class="o">,</span> <span class="n">throwable</span><span class="o">.</span><span class="na">toString</span><span class="o">());</span>
             <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
-                <span class="n">LOGGER</span><span class="o">.</span><span class="na">info</span><span class="o">(</span><span class="s">"Received response for conditional update: '{}'"</span><span class="o">,</span> <span class="n">adaptable</span><span class="o">);</span>
+                <span class="no">LOGGER</span><span class="o">.</span><span class="na">info</span><span class="o">(</span><span class="s">"Received response for conditional update: '{}'"</span><span class="o">,</span> <span class="n">adaptable</span><span class="o">);</span>
             <span class="o">}</span>
         <span class="o">});</span>
 </code></pre></div></div>
@@ -504,7 +504,7 @@ The Eclipse Ditto team</p>
                     </div>
                     <p class="notice">
                         &copy;2024 Eclipse Ditto™.
-                         Site last generated: Feb 27, 2024 <br />
+                         Site last generated: Apr 10, 2024 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

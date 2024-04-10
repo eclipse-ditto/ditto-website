@@ -278,6 +278,13 @@
               
               
               
+              <li><a href="release_notes_354.html">3.5.4</a></li>
+              
+              
+              
+              
+              
+              
               <li><a href="release_notes_353.html">3.5.3</a></li>
               
               
@@ -2113,12 +2120,12 @@ the <a href="https://html.spec.whatwg.org/multipage/server-sent-events.html">HTM
 
 <h3 id="sses-in-javascript">SSEs in JavaScript</h3>
 
-<p>Using the <code class="highlighter-rouge">EventSource</code> object in JavaScript is also covered in the <a href="https://html.spec.whatwg.org/multipage/server-sent-events.html#server-sent-events-intro">HTML5 specification</a>.</p>
+<p>Using the <code class="language-plaintext highlighter-rouge">EventSource</code> object in JavaScript is also covered in the <a href="https://html.spec.whatwg.org/multipage/server-sent-events.html#server-sent-events-intro">HTML5 specification</a>.</p>
 
-<h2 id="sse-api-things">SSE API <code class="highlighter-rouge">/things</code></h2>
+<h2 id="sse-api-things">SSE API <code class="language-plaintext highlighter-rouge">/things</code></h2>
 
-<p>The SSE API for receiving <a href="basic-changenotifications.html">change notifications</a> is the <code class="highlighter-rouge">/things</code> endpoint:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http://localhost:8080/api/2/things
+<p>The SSE API for receiving <a href="basic-changenotifications.html">change notifications</a> is the <code class="language-plaintext highlighter-rouge">/things</code> endpoint:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http://localhost:8080/api/2/things
 </code></pre></div></div>
 
 <p>This is a mechanism to get <a href="basic-changenotifications.html">change notifications</a>.
@@ -2127,13 +2134,13 @@ that it is even easier to open a SSE connection from the client than a WebSocket
 and that in Ditto’s interpretation of SSEs the events sent back from the backend have the same JSON structure as 
 the HTTP API on which they are invoked.</p>
 
-<p>When the endpoint is invoked with an HTTP header <code class="highlighter-rouge">Accept</code> with value <code class="highlighter-rouge">text/event-stream</code>, a Server-Sent Event stream of
+<p>When the endpoint is invoked with an HTTP header <code class="language-plaintext highlighter-rouge">Accept</code> with value <code class="language-plaintext highlighter-rouge">text/event-stream</code>, a Server-Sent Event stream of
 <a href="basic-changenotifications.html">change notifications</a> is created by Ditto and for each notification for which the 
 caller has READ permissions (see <a href="basic-auth.html#authorization">authorization</a>), an event is sent to the client.</p>
 
-<p>The format of the event at the <code class="highlighter-rouge">/things</code> endpoint is always in the form of a <a href="basic-thing.html#model-specification">Thing JSON</a>.</p>
+<p>The format of the event at the <code class="language-plaintext highlighter-rouge">/things</code> endpoint is always in the form of a <a href="basic-thing.html#model-specification">Thing JSON</a>.</p>
 
-<p>For partial updates to a <code class="highlighter-rouge">Thing</code> however, only the changed part is sent back via the SSE, not the complete <code class="highlighter-rouge">Thing</code>.</p>
+<p>For partial updates to a <code class="language-plaintext highlighter-rouge">Thing</code> however, only the changed part is sent back via the SSE, not the complete <code class="language-plaintext highlighter-rouge">Thing</code>.</p>
 
 <h3 id="only-get-notified-about-specific-changes">Only get notified about specific changes</h3>
 
@@ -2142,208 +2149,208 @@ several possibilities listed in the sections below.</p>
 
 <p>All of the query parameters below can be combined, so that you can for example express that only events from
 a certain namespace with a specific RQL expression should be emitted, which could look like:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http://localhost:8080/api/2/things?namespaces=org.eclipse.ditto.one,org.eclipse.test&amp;filter=gt
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http://localhost:8080/api/2/things?namespaces=org.eclipse.ditto.one,org.eclipse.test&amp;filter=gt
 (attributes/counter,42)
 </code></pre></div></div>
 
 <h4 id="specify-the-ids-of-the-things">Specify the IDs of the Things</h4>
 
-<p>When the <code class="highlighter-rouge">/things</code> endpoint is used for connecting to the SSE stream, all
+<p>When the <code class="language-plaintext highlighter-rouge">/things</code> endpoint is used for connecting to the SSE stream, all
 things visible for the authenticated user are
-included in the stream. If only specific things should be watched, the query parameter <code class="highlighter-rouge">ids</code> can be added:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http://localhost:8080/api/2/things?ids=&lt;thingId1&gt;,&lt;thingId2&gt;
+included in the stream. If only specific things should be watched, the query parameter <code class="language-plaintext highlighter-rouge">ids</code> can be added:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http://localhost:8080/api/2/things?ids=&lt;thingId1&gt;,&lt;thingId2&gt;
 </code></pre></div></div>
 
 <h4 id="fields-projection">Fields projection</h4>
 
-<p>Additionally, using the <code class="highlighter-rouge">fields</code> parameter of the <a href="httpapi-concepts.html#partial-requests">partial request</a> feature, 
+<p>Additionally, using the <code class="language-plaintext highlighter-rouge">fields</code> parameter of the <a href="httpapi-concepts.html#partial-requests">partial request</a> feature, 
 only specific parts can be watched for changes, e.g.:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http://localhost:8080/api/2/things?fields=thingId,attributes
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http://localhost:8080/api/2/things?fields=thingId,attributes
 </code></pre></div></div>
 
-<div class="alert alert-success" role="alert"><i class="fa fa-check-square-o"></i> <b>Tip:</b> The <code class="highlighter-rouge">thingId</code> should always be included in the <code class="highlighter-rouge">fields</code> query, otherwise it is no longer visible for which thing the change was made.</div>
+<div class="alert alert-success" role="alert"><i class="fa fa-check-square-o"></i> <b>Tip:</b> The <code class="language-plaintext highlighter-rouge">thingId</code> should always be included in the <code class="language-plaintext highlighter-rouge">fields</code> query, otherwise it is no longer visible for which thing the change was made.</div>
 
 <h4 id="field-enrichment">Field enrichment</h4>
 
 <p>In addition to the fields projection, one can also choose to select <a href="basic-enrichment.html">extra fields</a> 
 to return in addition to the actually changed fields, e.g.:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http://localhost:8080/api/2/things?extraFields=attributes
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http://localhost:8080/api/2/things?extraFields=attributes
 </code></pre></div></div>
 
 <p>The result is, that the server-sent events are merged, i.e. the SSE contains the actually changed data + the extra fields.</p>
 
 <p>This can be used in combination with the below mentioned <a href="#filtering-by-rql-expression">RQL filter</a>, e.g.:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http://localhost:8080/api/2/things?extraFields=attributes/location&amp;filter=eq(attributes/location,"kitchen")
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http://localhost:8080/api/2/things?extraFields=attributes/location&amp;filter=eq(attributes/location,"kitchen")
 </code></pre></div></div>
 
-<p>For combined usage of <code class="highlighter-rouge">fields</code> and <code class="highlighter-rouge">extraFields</code> one needs to specify all fields, selected as extra fields, for the 
+<p>For combined usage of <code class="language-plaintext highlighter-rouge">fields</code> and <code class="language-plaintext highlighter-rouge">extraFields</code> one needs to specify all fields, selected as extra fields, for the 
 field projection, too. This is required to allow filtering based on extra fields but still omit them in the payload.
 An example without filtering would look like this:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http://localhost:8080/api/2/things?fields=thingId,attributes&amp;extraFields=attributes
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http://localhost:8080/api/2/things?fields=thingId,attributes&amp;extraFields=attributes
 </code></pre></div></div>
 
-<h5 id="enriching-_context">Enriching <code class="highlighter-rouge">_context</code></h5>
+<h5 id="enriching-_context">Enriching <code class="language-plaintext highlighter-rouge">_context</code></h5>
 
-<p>One special field which can be enriched for the SSE is the <code class="highlighter-rouge">_context</code> field.<br />
+<p>One special field which can be enriched for the SSE is the <code class="language-plaintext highlighter-rouge">_context</code> field.<br />
 As the SSE format returns a “normalized” view in form of the <a href="basic-thing.html#model-specification">thing JSON</a> 
-of change events, some “context” of the event gets lost, e.g. on which <code class="highlighter-rouge">path</code> the event was issued or whether is was 
+of change events, some “context” of the event gets lost, e.g. on which <code class="language-plaintext highlighter-rouge">path</code> the event was issued or whether is was 
 a “merged” or “modified” event.</p>
 
-<p>To obtain this kind of context information, select the <code class="highlighter-rouge">_context</code> field as <code class="highlighter-rouge">extraFields</code>, e.g.:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http://localhost:8080/api/2/things?fields=thingId,attributes&amp;extraFields=attributes,_context
+<p>To obtain this kind of context information, select the <code class="language-plaintext highlighter-rouge">_context</code> field as <code class="language-plaintext highlighter-rouge">extraFields</code>, e.g.:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http://localhost:8080/api/2/things?fields=thingId,attributes&amp;extraFields=attributes,_context
 </code></pre></div></div>
 
-<p>The <code class="highlighter-rouge">_context</code> will contain:</p>
+<p>The <code class="language-plaintext highlighter-rouge">_context</code> will contain:</p>
 <ul>
-  <li><code class="highlighter-rouge">topic</code>: the <a href="protocol-specification.html#topic">Ditto Protocol topic</a></li>
-  <li><code class="highlighter-rouge">path</code>: the <a href="protocol-specification.html#path">Ditto Protocol path</a></li>
-  <li><code class="highlighter-rouge">value</code>: the <a href="protocol-specification.html#value">Ditto Protocol value</a></li>
-  <li><code class="highlighter-rouge">headers</code>: the <a href="protocol-specification.html#headers">Ditto Protocol headers</a></li>
+  <li><code class="language-plaintext highlighter-rouge">topic</code>: the <a href="protocol-specification.html#topic">Ditto Protocol topic</a></li>
+  <li><code class="language-plaintext highlighter-rouge">path</code>: the <a href="protocol-specification.html#path">Ditto Protocol path</a></li>
+  <li><code class="language-plaintext highlighter-rouge">value</code>: the <a href="protocol-specification.html#value">Ditto Protocol value</a></li>
+  <li><code class="language-plaintext highlighter-rouge">headers</code>: the <a href="protocol-specification.html#headers">Ditto Protocol headers</a></li>
 </ul>
 
-<p>It is also possible to select only specific context information, e.g.: <code class="highlighter-rouge">extraFields=_context/topic,_context/path,_context/value</code>
-in order to exclude the <code class="highlighter-rouge">headers</code>.</p>
+<p>It is also possible to select only specific context information, e.g.: <code class="language-plaintext highlighter-rouge">extraFields=_context/topic,_context/path,_context/value</code>
+in order to exclude the <code class="language-plaintext highlighter-rouge">headers</code>.</p>
 
 <h4 id="filtering-by-namespaces">Filtering by namespaces</h4>
 
 <p>As described in <a href="basic-changenotifications.html#by-namespaces">change notifications</a>, it is possible to subscribe only
-for changes done in specific namespaces. At the SSE API, simply specify the <code class="highlighter-rouge">namespaces</code> parameter and provide a comma
+for changes done in specific namespaces. At the SSE API, simply specify the <code class="language-plaintext highlighter-rouge">namespaces</code> parameter and provide a comma
 separated list of which namespaces to select, e.g.:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http://localhost:8080/api/2/things?namespaces=org.eclipse.ditto.one,org.eclipse.test
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http://localhost:8080/api/2/things?namespaces=org.eclipse.ditto.one,org.eclipse.test
 </code></pre></div></div>
 
 <h4 id="filtering-by-rql-expression">Filtering by RQL expression</h4>
 
 <p>As also described in <a href="basic-changenotifications.html#by-rql-expression">change notifications</a>, it is additionally 
 possible to specify an RQL expression expressing on which occasions to emit an event via the SSE API. 
-Simply specify the <code class="highlighter-rouge">filter</code> parameter with an <a href="basic-rql.html">RQL expression</a>, e.g.:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http://localhost:8080/api/2/things?filter=gt(attributes/counter,42)
+Simply specify the <code class="language-plaintext highlighter-rouge">filter</code> parameter with an <a href="basic-rql.html">RQL expression</a>, e.g.:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http://localhost:8080/api/2/things?filter=gt(attributes/counter,42)
 </code></pre></div></div>
 
 <h3 id="example-for-sse-on-things">Example for SSE on Things</h3>
 
 <p>Assuming we have a thing with the following JSON content:</p>
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"thingId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"org.eclipse.ditto:fancy-thing"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"policyId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"org.eclipse.ditto:fancy-thing"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"manufacturer"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ACME corp"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"complex"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"some"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"serialNo"</span><span class="p">:</span><span class="w"> </span><span class="mi">4711</span><span class="w">
+  </span><span class="nl">"thingId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"org.eclipse.ditto:fancy-thing"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"policyId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"org.eclipse.ditto:fancy-thing"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"manufacturer"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ACME corp"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"complex"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"some"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"serialNo"</span><span class="p">:</span><span class="w"> </span><span class="mi">4711</span><span class="w">
     </span><span class="p">}</span><span class="w">
   </span><span class="p">},</span><span class="w">
-  </span><span class="s2">"features"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"lamp"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"on"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"color"</span><span class="p">:</span><span class="w"> </span><span class="s2">"blue"</span><span class="w">
+  </span><span class="nl">"features"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"lamp"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"on"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"color"</span><span class="p">:</span><span class="w"> </span><span class="s2">"blue"</span><span class="w">
       </span><span class="p">}</span><span class="w">
     </span><span class="p">}</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
-<p>From within JavaScript we can now create an <code class="highlighter-rouge">EventSource</code> in order to open up a SSE stream in Ditto and simply print 
-each event to the console. This one tracks only changes to the thing with ID <code class="highlighter-rouge">org.eclipse.ditto:fancy-thing</code> and 
-only watches for changes on the feature <code class="highlighter-rouge">lamp</code>:</p>
+<p>From within JavaScript we can now create an <code class="language-plaintext highlighter-rouge">EventSource</code> in order to open up a SSE stream in Ditto and simply print 
+each event to the console. This one tracks only changes to the thing with ID <code class="language-plaintext highlighter-rouge">org.eclipse.ditto:fancy-thing</code> and 
+only watches for changes on the feature <code class="language-plaintext highlighter-rouge">lamp</code>:</p>
 <div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// the javascript must be served from the same domain as Ditto is running in order to avoid CORS problems</span>
-<span class="kd">let</span> <span class="nx">source</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">EventSource</span><span class="p">(</span><span class="s1">'/api/2/things?ids=org.eclipse.ditto:fancy-thing&amp;fields=thingId,features/lamp'</span><span class="p">,</span> <span class="p">{</span> <span class="na">withCredentials</span><span class="p">:</span> <span class="kc">true</span> <span class="p">});</span>
-<span class="nx">source</span><span class="p">.</span><span class="nx">onmessage</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
-    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">event</span><span class="p">.</span><span class="nx">data</span><span class="p">);</span>
+<span class="kd">let</span> <span class="nx">source</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">EventSource</span><span class="p">(</span><span class="dl">'</span><span class="s1">/api/2/things?ids=org.eclipse.ditto:fancy-thing&amp;fields=thingId,features/lamp</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span> <span class="na">withCredentials</span><span class="p">:</span> <span class="kc">true</span> <span class="p">});</span>
+<span class="nx">source</span><span class="p">.</span><span class="nx">onmessage</span> <span class="o">=</span> <span class="nf">function </span><span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nf">log</span><span class="p">(</span><span class="nx">event</span><span class="p">.</span><span class="nx">data</span><span class="p">);</span>
 <span class="p">};</span>
 </code></pre></div></div>
 
-<p>By defining <code class="highlighter-rouge">{ withCredentials: true }</code> at the <code class="highlighter-rouge">new EventSource()</code>, the browser credentials (<code class="highlighter-rouge">Authorization</code> header) of 
+<p>By defining <code class="language-plaintext highlighter-rouge">{ withCredentials: true }</code> at the <code class="language-plaintext highlighter-rouge">new EventSource()</code>, the browser credentials (<code class="language-plaintext highlighter-rouge">Authorization</code> header) of 
 the already authenticated browser against that domain are sent along, this works for Basic Auth as well as for 
-JWT based authentication using a <code class="highlighter-rouge">Bearer</code> token.</p>
+JWT based authentication using a <code class="language-plaintext highlighter-rouge">Bearer</code> token.</p>
 
-<p>This would log the changed content of each thing the authenticated subject is allowed to <code class="highlighter-rouge">READ</code>.</p>
+<p>This would log the changed content of each thing the authenticated subject is allowed to <code class="language-plaintext highlighter-rouge">READ</code>.</p>
 
-<p>So when the <code class="highlighter-rouge">on</code> property of the <code class="highlighter-rouge">lamp</code> feature is changed to <code class="highlighter-rouge">true</code> via such an HTTP API call:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>PUT /api/2/things/org.eclipse.ditto:fancy-thing/features/lamp/properties/on
+<p>So when the <code class="language-plaintext highlighter-rouge">on</code> property of the <code class="language-plaintext highlighter-rouge">lamp</code> feature is changed to <code class="language-plaintext highlighter-rouge">true</code> via such an HTTP API call:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>PUT /api/2/things/org.eclipse.ditto:fancy-thing/features/lamp/properties/on
 payload: true
 </code></pre></div></div>
 
 <p>the JavaScript snippet would log to console:</p>
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"thingId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"org.eclipse.ditto:fancy-thing"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"features"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"lamp"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"on"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+  </span><span class="nl">"thingId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"org.eclipse.ditto:fancy-thing"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"features"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"lamp"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"on"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
       </span><span class="p">}</span><span class="w">
     </span><span class="p">}</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
-<h2 id="sse-api-thingsthingid">SSE API <code class="highlighter-rouge">/things/&lt;thingId&gt;</code></h2>
+<h2 id="sse-api-thingsthingid">SSE API <code class="language-plaintext highlighter-rouge">/things/&lt;thingId&gt;</code></h2>
 
 <h3 id="subscribe-for-changes-of-a-single-thing">Subscribe for changes of a single Thing</h3>
 
-<p>Opening the SSE on the <code class="highlighter-rouge">/things/&lt;thingId&gt;</code> endpoint is used for connecting to the SSE stream in order to watch changes
+<p>Opening the SSE on the <code class="language-plaintext highlighter-rouge">/things/&lt;thingId&gt;</code> endpoint is used for connecting to the SSE stream in order to watch changes
 for only one specific thing:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http://localhost:8080/api/2/things/&lt;thingId&gt;
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http://localhost:8080/api/2/things/&lt;thingId&gt;
 </code></pre></div></div>
 
-<p>Example - only get the changes of the thing <code class="highlighter-rouge">org.eclipse.ditto:thing-1</code>:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http://localhost:8080/api/2/things/org.eclipse.ditto:thing-1
+<p>Example - only get the changes of the thing <code class="language-plaintext highlighter-rouge">org.eclipse.ditto:thing-1</code>:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http://localhost:8080/api/2/things/org.eclipse.ditto:thing-1
 </code></pre></div></div>
 
 <h3 id="subscribe-for-changes-of-a-specific-path-inside-a-thing">Subscribe for changes of a specific path inside a Thing</h3>
 
-<p>Opening the SSE on the <code class="highlighter-rouge">/things/&lt;thingId&gt;/&lt;jsonPointer&gt;</code> endpoint is used for connecting to the SSE stream in
+<p>Opening the SSE on the <code class="language-plaintext highlighter-rouge">/things/&lt;thingId&gt;/&lt;jsonPointer&gt;</code> endpoint is used for connecting to the SSE stream in
 order to watch changes for only one specific thing on only a specific path in that thing:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http://localhost:8080/api/2/things/&lt;thingId&gt;/&lt;jsonPointer&gt;
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http://localhost:8080/api/2/things/&lt;thingId&gt;/&lt;jsonPointer&gt;
 </code></pre></div></div>
-<p>The data contained in the event will be the same as when the endpoint would be queried via a normal HTTP <code class="highlighter-rouge">GET</code>.</p>
+<p>The data contained in the event will be the same as when the endpoint would be queried via a normal HTTP <code class="language-plaintext highlighter-rouge">GET</code>.</p>
 
-<p>Example - only get the value of the attribute <code class="highlighter-rouge">location</code> whenever that changes:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http://localhost:8080/api/2/things/org.eclipse.ditto:thing-1/attributes/location
+<p>Example - only get the value of the attribute <code class="language-plaintext highlighter-rouge">location</code> whenever that changes:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http://localhost:8080/api/2/things/org.eclipse.ditto:thing-1/attributes/location
 </code></pre></div></div>
 
 <h3 id="subscribe-for-messages-for-a-specific-thing">Subscribe for messages for a specific Thing</h3>
 
-<p>Opening the SSE on the <code class="highlighter-rouge">/things/&lt;thingId&gt;/inbox/messages</code> or <code class="highlighter-rouge">/things/&lt;thingId&gt;/outbox/messages</code> endpoint is used for
+<p>Opening the SSE on the <code class="language-plaintext highlighter-rouge">/things/&lt;thingId&gt;/inbox/messages</code> or <code class="language-plaintext highlighter-rouge">/things/&lt;thingId&gt;/outbox/messages</code> endpoint is used for
 connecting to the SSE stream in order to receive <a href="basic-messages.html">messages</a> sent to or sent by the thing:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http://localhost:8080/api/2/things/&lt;thingId&gt;/inbox/messages
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http://localhost:8080/api/2/things/&lt;thingId&gt;/inbox/messages
 http://localhost:8080/api/2/things/&lt;thingId&gt;/outbox/messages
 </code></pre></div></div>
 
 <p>In order to subscribe just for a specific <a href="basic-messages.html#elements">message subject</a>, just use the same path as
-you would for e.g. sending the message via HTTP <code class="highlighter-rouge">POST</code>:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http://localhost:8080/api/2/things/&lt;thingId&gt;/inbox/messages/&lt;subject&gt;
+you would for e.g. sending the message via HTTP <code class="language-plaintext highlighter-rouge">POST</code>:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http://localhost:8080/api/2/things/&lt;thingId&gt;/inbox/messages/&lt;subject&gt;
 http://localhost:8080/api/2/things/&lt;thingId&gt;/outbox/messages/&lt;subject&gt;
 </code></pre></div></div>
 
 <p>Example - receive whenever a device sends a “smoke-alarm” message to its outbox:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http://localhost:8080/api/2/things/org.eclipse.ditto:thing-1/outbox/messages/smoke-alarm
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http://localhost:8080/api/2/things/org.eclipse.ditto:thing-1/outbox/messages/smoke-alarm
 </code></pre></div></div>
 
 <h3 id="subscribe-for-messages-of-a-specific-feature-of-a-specific-thing">Subscribe for messages of a specific Feature of a specific Thing</h3>
 
-<p>Opening the SSE on the <code class="highlighter-rouge">/things/&lt;thingId&gt;/features/&lt;featureId&gt;/inbox/messages</code> or
-<code class="highlighter-rouge">/things/&lt;thingId&gt;/features/&lt;featureId&gt;//outbox/messages</code> endpoint is used for
+<p>Opening the SSE on the <code class="language-plaintext highlighter-rouge">/things/&lt;thingId&gt;/features/&lt;featureId&gt;/inbox/messages</code> or
+<code class="language-plaintext highlighter-rouge">/things/&lt;thingId&gt;/features/&lt;featureId&gt;//outbox/messages</code> endpoint is used for
 connecting to the SSE stream in order to receive <a href="basic-messages.html">messages</a> sent to or sent by the thing feature:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http://localhost:8080/api/2/things/&lt;thingId&gt;/features/&lt;featureId&gt;/inbox/messages
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http://localhost:8080/api/2/things/&lt;thingId&gt;/features/&lt;featureId&gt;/inbox/messages
 http://localhost:8080/api/2/things/&lt;thingId&gt;/features/&lt;featureId&gt;/outbox/messages
 </code></pre></div></div>
 
 <p>In order to subscribe just for a specific <a href="basic-messages.html#elements">message subject</a>, just use the same path as
-you would for e.g. sending the message via HTTP <code class="highlighter-rouge">POST</code>:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http://localhost:8080/api/2/things/&lt;thingId&gt;/features/&lt;featureId&gt;/inbox/messages/&lt;subject&gt;
+you would for e.g. sending the message via HTTP <code class="language-plaintext highlighter-rouge">POST</code>:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http://localhost:8080/api/2/things/&lt;thingId&gt;/features/&lt;featureId&gt;/inbox/messages/&lt;subject&gt;
 http://localhost:8080/api/2/things/&lt;thingId&gt;/features/&lt;featureId&gt;/outbox/messages/&lt;subject&gt;
 </code></pre></div></div>
 
 <p>Example - receive whenever a device sends a “ping” message to the outbox of its “Pinger” feature:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http://localhost:8080/api/2/things/org.eclipse.ditto:thing-1/features/Pinger/outbox/messages/ping
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http://localhost:8080/api/2/things/org.eclipse.ditto:thing-1/features/Pinger/outbox/messages/ping
 </code></pre></div></div>
 
-<h2 id="sse-api-searchthings">SSE API <code class="highlighter-rouge">/search/things</code></h2>
+<h2 id="sse-api-searchthings">SSE API <code class="language-plaintext highlighter-rouge">/search/things</code></h2>
 
-<p>The SSE API to stream search results is the <code class="highlighter-rouge">/search/things</code> endpoint:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http://localhost:8080/api/2/search/things
+<p>The SSE API to stream search results is the <code class="language-plaintext highlighter-rouge">/search/things</code> endpoint:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http://localhost:8080/api/2/search/things
 </code></pre></div></div>
 
 <p>This is the second mechanism of Ditto in order to get <a href="basic-search.html">search results</a>.
@@ -2357,49 +2364,49 @@ The benefits of this mechanism over the <a href="protocol-specification-things-s
 back-pressure. In contrast, the <a href="protocol-specification-things-search.html">search protocol</a> supports back-pressure
 and cancellation over any transport layer by reactive-streams means.</p>
 
-<p>When the endpoint is invoked with an HTTP header <code class="highlighter-rouge">Accept</code> with value <code class="highlighter-rouge">text/event-stream</code>, a Server-Sent Event stream of
+<p>When the endpoint is invoked with an HTTP header <code class="language-plaintext highlighter-rouge">Accept</code> with value <code class="language-plaintext highlighter-rouge">text/event-stream</code>, a Server-Sent Event stream of
 things is created by Ditto and for each thing matching the search filter for which the caller has READ permissions
 (see <a href="basic-auth.html#authorization">authorization</a>), an event is sent to the client.</p>
 
-<p>The format of the event at the <code class="highlighter-rouge">/search/things</code> endpoint is always in the form of a <a href="basic-thing.html#model-specification">Thing JSON</a>
+<p>The format of the event at the <code class="language-plaintext highlighter-rouge">/search/things</code> endpoint is always in the form of a <a href="basic-thing.html#model-specification">Thing JSON</a>
 (in API 1 format or API 2 format depending on which endpoint the SSE was created).</p>
 
 <h3 id="filtering-by-rql-expression-1">Filtering by RQL expression</h3>
 
-<p>Specify the <code class="highlighter-rouge">filter</code> parameter with an <a href="basic-rql.html">RQL expression</a> to restrict the search results to things
-matching the RQL expression. For example, the SSE stream below emits only things which have a <code class="highlighter-rouge">counter</code> attribute
-with value <code class="highlighter-rouge">42</code>:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http://localhost:8080/api/2/search/things?filter=eq(attributes/counter,42)
+<p>Specify the <code class="language-plaintext highlighter-rouge">filter</code> parameter with an <a href="basic-rql.html">RQL expression</a> to restrict the search results to things
+matching the RQL expression. For example, the SSE stream below emits only things which have a <code class="language-plaintext highlighter-rouge">counter</code> attribute
+with value <code class="language-plaintext highlighter-rouge">42</code>:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http://localhost:8080/api/2/search/things?filter=eq(attributes/counter,42)
 </code></pre></div></div>
 
 <h3 id="filtering-by-namespaces-1">Filtering by namespaces</h3>
 
-<p>Specify the <code class="highlighter-rouge">namespaces</code> parameter to restrict search to the namespaces given as a comma separated list. For example:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http://localhost:8080/api/2/search/things?namespaces=org.eclipse.ditto.one,org.eclipse.test
+<p>Specify the <code class="language-plaintext highlighter-rouge">namespaces</code> parameter to restrict search to the namespaces given as a comma separated list. For example:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http://localhost:8080/api/2/search/things?namespaces=org.eclipse.ditto.one,org.eclipse.test
 </code></pre></div></div>
 
 <h3 id="sorting-by-rql-sort-option">Sorting by RQL sort option</h3>
 
-<p>Specify the <code class="highlighter-rouge">option</code> parameter with an <a href="basic-rql.html#rql-sorting">RQL sort option</a> to stream things in a certain
+<p>Specify the <code class="language-plaintext highlighter-rouge">option</code> parameter with an <a href="basic-rql.html#rql-sorting">RQL sort option</a> to stream things in a certain
 order. For example, the SSE stream below emits things according to the timestamp. The timestamp of their last updates
-is stored in the <code class="highlighter-rouge">_modified</code> field, and <code class="highlighter-rouge">-</code> describes the descending order, thus the thing with the newest
+is stored in the <code class="language-plaintext highlighter-rouge">_modified</code> field, and <code class="language-plaintext highlighter-rouge">-</code> describes the descending order, thus the thing with the newest
 changes appears first:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http://localhost:8080/api/2/search/things?option=sort(-_modified)
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http://localhost:8080/api/2/search/things?option=sort(-_modified)
 </code></pre></div></div>
 
 <p><strong>Fields projection</strong></p>
 
-<p>Use the <code class="highlighter-rouge">fields</code> parameter to retrieve only specific parts of things in search results, e.g.:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http://localhost:8080/api/2/search/things?fields=thingId,attributes
+<p>Use the <code class="language-plaintext highlighter-rouge">fields</code> parameter to retrieve only specific parts of things in search results, e.g.:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http://localhost:8080/api/2/search/things?fields=thingId,attributes
 </code></pre></div></div>
 
-<h3 id="resuming-by-last-event-id">Resuming by <code class="highlighter-rouge">Last-Event-ID</code></h3>
+<h3 id="resuming-by-last-event-id">Resuming by <code class="language-plaintext highlighter-rouge">Last-Event-ID</code></h3>
 
 <p>The <a href="https://html.spec.whatwg.org/multipage/server-sent-events.html">HTML5 SSE specification</a>
-permits clients to resume from interrupted streams by sending a header <code class="highlighter-rouge">Last-Event-ID</code>.
+permits clients to resume from interrupted streams by sending a header <code class="language-plaintext highlighter-rouge">Last-Event-ID</code>.
 Each thing in the search result has its thing ID set as the event ID.
 To resume the stream from the point of its interruption,
-start another SSE stream with <em>identical</em> query parameters and the <code class="highlighter-rouge">Last-Event-ID</code> header set to the last received
+start another SSE stream with <em>identical</em> query parameters and the <code class="language-plaintext highlighter-rouge">Last-Event-ID</code> header set to the last received
 event ID.
 Specification-conform SSE clients perform resumption automatically, making SSE a simple way to export large numbers
 of things over a slow connection for long periods of time.</p>
@@ -2407,13 +2414,13 @@ of things over a slow connection for long periods of time.</p>
 <p><strong>Example:</strong></p>
 
 <p>Request</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET http://localhost:8080/api/2/search/things?fields=thingId&amp;option=sort(+thingId) HTTP/1.1
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET http://localhost:8080/api/2/search/things?fields=thingId&amp;option=sort(+thingId) HTTP/1.1
 Accept:        text/event-stream
 Last-Event-ID: ditto:device7152
 </code></pre></div></div>
 
 <p>Response</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>HTTTP/1.1 200 OK
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>HTTTP/1.1 200 OK
 Content-Type: text/event-stream
 
 data:{"thingId":"ditto:device7153"}
@@ -2455,7 +2462,7 @@ id:ditto:device7155
                     </div>
                     <p class="notice">
                         &copy;2024 Eclipse Ditto™.
-                         Site last generated: Feb 27, 2024 <br />
+                         Site last generated: Apr 10, 2024 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

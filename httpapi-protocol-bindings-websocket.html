@@ -278,6 +278,13 @@
               
               
               
+              <li><a href="release_notes_354.html">3.5.4</a></li>
+              
+              
+              
+              
+              
+              
               <li><a href="release_notes_353.html">3.5.3</a></li>
               
               
@@ -2100,7 +2107,7 @@ $('#toc').on('click', 'a', function() {
     
 
   <p><a href="protocol-overview.html">Ditto Protocol</a> messages can be sent <em>as is</em> as <a href="https://tools.ietf.org/html/rfc6455">WebSocket</a> 
-message. The Ditto Protocol JSON must be sent as <code class="highlighter-rouge">UTF-8</code> encoded String payload.</p>
+message. The Ditto Protocol JSON must be sent as <code class="language-plaintext highlighter-rouge">UTF-8</code> encoded String payload.</p>
 
 <h2 id="websocket-features">WebSocket features</h2>
 
@@ -2129,7 +2136,7 @@ There is no round-robin dispatching for WebSockets using the same authentication
 <h3 id="send-commands-and-get-responses">Send commands and get responses</h3>
 
 <p>When sending a command via WebSocket you will receive a corresponding response (the response can be related to the 
-request by the <code class="highlighter-rouge">correlation-id</code> header). <br />
+request by the <code class="language-plaintext highlighter-rouge">correlation-id</code> header). <br />
 The response indicates the success or the failure of the command and, depending on the command type, contains the 
 result payload.</p>
 
@@ -2163,7 +2170,7 @@ subscribing/unsubscribing for receiving live commands and events.</p>
 
 <p>The WebSocket endpoint is accessible at the following URL:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ws://localhost:8080/ws/2
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ws://localhost:8080/ws/2
 </code></pre></div></div>
 
 <h3 id="authentication">Authentication</h3>
@@ -2183,23 +2190,23 @@ subscribing/unsubscribing for receiving live commands and events.</p>
 information. This information is combined into a single JSON message for the WebSocket endpoint:</p>
 
 <ul>
-  <li><a href="protocol-specification.html#topic">topic</a>: JSON string with key <code class="highlighter-rouge">topic</code></li>
-  <li><a href="protocol-specification.html#headers">headers</a>: JSON object with key <code class="highlighter-rouge">headers</code></li>
-  <li><a href="protocol-specification.html#path">path</a>: JSON string with key <code class="highlighter-rouge">path</code></li>
-  <li><a href="protocol-specification.html#value">value</a>: JSON value (e.g. JSON object, string, array, …) with key <code class="highlighter-rouge">value</code></li>
-  <li><a href="protocol-specification.html#status">status</a> (for responses): JSON number with key <code class="highlighter-rouge">status</code></li>
+  <li><a href="protocol-specification.html#topic">topic</a>: JSON string with key <code class="language-plaintext highlighter-rouge">topic</code></li>
+  <li><a href="protocol-specification.html#headers">headers</a>: JSON object with key <code class="language-plaintext highlighter-rouge">headers</code></li>
+  <li><a href="protocol-specification.html#path">path</a>: JSON string with key <code class="language-plaintext highlighter-rouge">path</code></li>
+  <li><a href="protocol-specification.html#value">value</a>: JSON value (e.g. JSON object, string, array, …) with key <code class="language-plaintext highlighter-rouge">value</code></li>
+  <li><a href="protocol-specification.html#status">status</a> (for responses): JSON number with key <code class="language-plaintext highlighter-rouge">status</code></li>
 </ul>
 
 <p>The schema for Ditto Protocol message via WebSocket:</p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"topic"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;the topic&gt;"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"correlation-id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;a correlation-id&gt;"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"a-header"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;header value&gt;"</span><span class="w">
+  </span><span class="nl">"topic"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;the topic&gt;"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"correlation-id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;a correlation-id&gt;"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"a-header"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;header value&gt;"</span><span class="w">
   </span><span class="p">},</span><span class="w">
-  </span><span class="s2">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;the path&gt;"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"value"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+  </span><span class="nl">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;the path&gt;"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"value"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
     
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
@@ -2215,7 +2222,7 @@ of information from the backend to be pushed into the WebSocket session.</p>
 <h3 id="request-events">Request events</h3>
 
 <p>In order to subscribe for <a href="basic-changenotifications.html">events/change notifications</a> for entities (e.g. Things), 
-following text message has to be sent to the backend: <code class="highlighter-rouge">START-SEND-EVENTS</code></p>
+following text message has to be sent to the backend: <code class="language-plaintext highlighter-rouge">START-SEND-EVENTS</code></p>
 
 <p>From then on the WebSocket session will receive all change notifications it is entitled to see.</p>
 
@@ -2223,21 +2230,21 @@ following text message has to be sent to the backend: <code class="highlighter-r
 
 <p>In order to subscribe for <a href="basic-messages.html">messages</a> which can be sent from a WebSocket session to another 
 WebSocket session or from the <a href="httpapi-overview.html">HTTP API</a> to a WebSocket session, the following text message has 
-to be sent to the backend: <code class="highlighter-rouge">START-SEND-MESSAGES</code></p>
+to be sent to the backend: <code class="language-plaintext highlighter-rouge">START-SEND-MESSAGES</code></p>
 
 <p>From then on the WebSocket session will receive all messages it is entitled to see.</p>
 
 <h3 id="request-live-commands">Request live commands</h3>
 
 <p>In order to subscribe for <a href="protocol-twinlive.html">live commands</a> which can be sent from a WebSocket session to another 
-WebSocket session, the following text message has to be sent to the backend: <code class="highlighter-rouge">START-SEND-LIVE-COMMANDS</code></p>
+WebSocket session, the following text message has to be sent to the backend: <code class="language-plaintext highlighter-rouge">START-SEND-LIVE-COMMANDS</code></p>
 
 <p>From then on the WebSocket session will receive all live commands it is entitled to see.</p>
 
 <h3 id="request-live-events">Request live events</h3>
 
 <p>In order to subscribe for <a href="protocol-twinlive.html">live events</a> which can be sent from a WebSocket session to another 
-WebSocket session, the following text message has to be sent to the backend: <code class="highlighter-rouge">START-SEND-LIVE-EVENTS</code></p>
+WebSocket session, the following text message has to be sent to the backend: <code class="language-plaintext highlighter-rouge">START-SEND-LIVE-EVENTS</code></p>
 
 <p>From then on the WebSocket session will receive all live events it is entitled to see.</p>
 
@@ -2245,7 +2252,7 @@ WebSocket session, the following text message has to be sent to the backend: <co
 
 <p>In order to subscribe for <a href="protocol-specification-policies-announcement.html">Policy announcements</a> which can be 
 published to a WebSocket session, the following text message has to be sent to the backend: 
-<code class="highlighter-rouge">START-SEND-POLICY-ANNOUNCEMENTS</code></p>
+<code class="language-plaintext highlighter-rouge">START-SEND-POLICY-ANNOUNCEMENTS</code></p>
 
 <p>From then on the WebSocket session will receive all announcements related to policies related to the authenticated 
 subjects of the websocket session.</p>
@@ -2265,58 +2272,58 @@ subjects of the websocket session.</p>
   <tbody>
     <tr>
       <td>Refresh JWT based authentication</td>
-      <td><code class="highlighter-rouge">JWT-TOKEN</code></td>
-      <td><code class="highlighter-rouge">-</code></td>
+      <td><code class="language-plaintext highlighter-rouge">JWT-TOKEN</code></td>
+      <td><code class="language-plaintext highlighter-rouge">-</code></td>
     </tr>
     <tr>
       <td>Subscribe for <a href="basic-changenotifications.html">Thing events/change notifications</a></td>
-      <td><code class="highlighter-rouge">START-SEND-EVENTS</code></td>
-      <td><code class="highlighter-rouge">START-SEND-EVENTS:ACK</code></td>
+      <td><code class="language-plaintext highlighter-rouge">START-SEND-EVENTS</code></td>
+      <td><code class="language-plaintext highlighter-rouge">START-SEND-EVENTS:ACK</code></td>
     </tr>
     <tr>
       <td>Stop receiving Thing change notifications</td>
-      <td><code class="highlighter-rouge">STOP-SEND-EVENTS</code></td>
-      <td><code class="highlighter-rouge">STOP-SEND-EVENTS:ACK</code></td>
+      <td><code class="language-plaintext highlighter-rouge">STOP-SEND-EVENTS</code></td>
+      <td><code class="language-plaintext highlighter-rouge">STOP-SEND-EVENTS:ACK</code></td>
     </tr>
     <tr>
       <td>Subscribe for <a href="basic-messages.html">Thing messages</a></td>
-      <td><code class="highlighter-rouge">START-SEND-MESSAGES</code></td>
-      <td><code class="highlighter-rouge">START-SEND-MESSAGES:ACK</code></td>
+      <td><code class="language-plaintext highlighter-rouge">START-SEND-MESSAGES</code></td>
+      <td><code class="language-plaintext highlighter-rouge">START-SEND-MESSAGES:ACK</code></td>
     </tr>
     <tr>
       <td>Stop receiving Thing messages</td>
-      <td><code class="highlighter-rouge">STOP-SEND-MESSAGES</code></td>
-      <td><code class="highlighter-rouge">STOP-SEND-MESSAGES:ACK</code></td>
+      <td><code class="language-plaintext highlighter-rouge">STOP-SEND-MESSAGES</code></td>
+      <td><code class="language-plaintext highlighter-rouge">STOP-SEND-MESSAGES:ACK</code></td>
     </tr>
     <tr>
       <td>Subscribe for <a href="protocol-twinlive.html">Thing live commands</a></td>
-      <td><code class="highlighter-rouge">START-SEND-LIVE-COMMANDS</code></td>
-      <td><code class="highlighter-rouge">START-SEND-LIVE-COMMANDS:ACK</code></td>
+      <td><code class="language-plaintext highlighter-rouge">START-SEND-LIVE-COMMANDS</code></td>
+      <td><code class="language-plaintext highlighter-rouge">START-SEND-LIVE-COMMANDS:ACK</code></td>
     </tr>
     <tr>
       <td>Stop receiving Thing live commands</td>
-      <td><code class="highlighter-rouge">STOP-SEND-LIVE-COMMANDS</code></td>
-      <td><code class="highlighter-rouge">STOP-SEND-LIVE-COMMANDS:ACK</code></td>
+      <td><code class="language-plaintext highlighter-rouge">STOP-SEND-LIVE-COMMANDS</code></td>
+      <td><code class="language-plaintext highlighter-rouge">STOP-SEND-LIVE-COMMANDS:ACK</code></td>
     </tr>
     <tr>
       <td>Subscribe for <a href="protocol-twinlive.html">Thing live events</a></td>
-      <td><code class="highlighter-rouge">START-SEND-LIVE-EVENTS</code></td>
-      <td><code class="highlighter-rouge">START-SEND-LIVE-EVENTS:ACK</code></td>
+      <td><code class="language-plaintext highlighter-rouge">START-SEND-LIVE-EVENTS</code></td>
+      <td><code class="language-plaintext highlighter-rouge">START-SEND-LIVE-EVENTS:ACK</code></td>
     </tr>
     <tr>
       <td>Stop receiving Thing live commands</td>
-      <td><code class="highlighter-rouge">STOP-SEND-LIVE-EVENTS</code></td>
-      <td><code class="highlighter-rouge">STOP-SEND-LIVE-EVENTS:ACK</code></td>
+      <td><code class="language-plaintext highlighter-rouge">STOP-SEND-LIVE-EVENTS</code></td>
+      <td><code class="language-plaintext highlighter-rouge">STOP-SEND-LIVE-EVENTS:ACK</code></td>
     </tr>
     <tr>
       <td>Subscribe for <a href="protocol-specification-policies-announcement.html">Policy announcements</a></td>
-      <td><code class="highlighter-rouge">START-SEND-POLICY-ANNOUNCEMENTS</code></td>
-      <td><code class="highlighter-rouge">START-SEND-POLICY-ANNOUNCEMENTS:ACK</code></td>
+      <td><code class="language-plaintext highlighter-rouge">START-SEND-POLICY-ANNOUNCEMENTS</code></td>
+      <td><code class="language-plaintext highlighter-rouge">START-SEND-POLICY-ANNOUNCEMENTS:ACK</code></td>
     </tr>
     <tr>
       <td>Stop receiving Policy announcements</td>
-      <td><code class="highlighter-rouge">STOP-SEND-POLICY-ANNOUNCEMENTS</code></td>
-      <td><code class="highlighter-rouge">STOP-SEND-POLICY-ANNOUNCEMENTS:ACK</code></td>
+      <td><code class="language-plaintext highlighter-rouge">STOP-SEND-POLICY-ANNOUNCEMENTS</code></td>
+      <td><code class="language-plaintext highlighter-rouge">STOP-SEND-POLICY-ANNOUNCEMENTS:ACK</code></td>
     </tr>
   </tbody>
 </table>
@@ -2324,16 +2331,16 @@ subjects of the websocket session.</p>
 <h3 id="authentication-1">Authentication</h3>
 
 <p>Ditto closes Websocket connections when the JWT provided with the initial connect expires. To keep the connection 
-open,  one can send a valid JWT via <code class="highlighter-rouge">JWT-TOKEN</code> protocol message. The <code class="highlighter-rouge">sub</code> of the new token must match the one from 
+open,  one can send a valid JWT via <code class="language-plaintext highlighter-rouge">JWT-TOKEN</code> protocol message. The <code class="language-plaintext highlighter-rouge">sub</code> of the new token must match the one from 
 the initial connect, otherwise Ditto will close the connection.</p>
 
-<p>Ditto expects the message with the JWT as a base64 encoded string provided with the paramter <code class="highlighter-rouge">?jwtToken=&lt;token&gt;</code>, e.g.:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>JWT-TOKEN?jwtToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+<p>Ditto expects the message with the JWT as a base64 encoded string provided with the paramter <code class="language-plaintext highlighter-rouge">?jwtToken=&lt;token&gt;</code>, e.g.:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>JWT-TOKEN?jwtToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
 </code></pre></div></div>
 
 <h3 id="enrichment">Enrichment</h3>
 
-<p>When extra fields should be added to outgoing messages on the WebSocket channel, an <code class="highlighter-rouge">extraFields</code> parameter can be 
+<p>When extra fields should be added to outgoing messages on the WebSocket channel, an <code class="language-plaintext highlighter-rouge">extraFields</code> parameter can be 
 added to the request message. This is supported for all request messages:</p>
 
 <table>
@@ -2347,34 +2354,34 @@ added to the request message. This is supported for all request messages:</p>
   <tbody>
     <tr>
       <td>Subscribe for <a href="basic-changenotifications.html">Thing events/change notifications</a></td>
-      <td><code class="highlighter-rouge">START-SEND-EVENTS</code></td>
+      <td><code class="language-plaintext highlighter-rouge">START-SEND-EVENTS</code></td>
       <td>✔</td>
     </tr>
     <tr>
       <td>Subscribe for <a href="basic-messages.html">Thing messages</a></td>
-      <td><code class="highlighter-rouge">START-SEND-MESSAGES</code></td>
+      <td><code class="language-plaintext highlighter-rouge">START-SEND-MESSAGES</code></td>
       <td>✔</td>
     </tr>
     <tr>
       <td>Subscribe for <a href="protocol-twinlive.html">Thing live commands</a></td>
-      <td><code class="highlighter-rouge">START-SEND-LIVE-COMMANDS</code></td>
+      <td><code class="language-plaintext highlighter-rouge">START-SEND-LIVE-COMMANDS</code></td>
       <td>✔</td>
     </tr>
     <tr>
       <td>Subscribe for <a href="protocol-twinlive.html">Thing live events</a></td>
-      <td><code class="highlighter-rouge">START-SEND-LIVE-EVENTS</code></td>
+      <td><code class="language-plaintext highlighter-rouge">START-SEND-LIVE-EVENTS</code></td>
       <td>✔</td>
     </tr>
     <tr>
       <td>Subscribe for <a href="protocol-specification-policies-announcement.html">Policy announcements</a></td>
-      <td><code class="highlighter-rouge">START-SEND-POLICY-ANNOUNCEMENTS</code></td>
+      <td><code class="language-plaintext highlighter-rouge">START-SEND-POLICY-ANNOUNCEMENTS</code></td>
       <td>❌</td>
     </tr>
   </tbody>
 </table>
 
 <p>Analog to the <a href="#filtering">filtering</a> the parameter is defined like an HTTP query parameter, e.g.:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>START-SEND-EVENTS?extraFields=attributes/counter,features/ConnectionStatus
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>START-SEND-EVENTS?extraFields=attributes/counter,features/ConnectionStatus
 START-SEND-MESSAGES?extraFields=attributes
 </code></pre></div></div>
 
@@ -2395,47 +2402,47 @@ following parameters can additionally be provided when sending the WebSocket pro
   <tbody>
     <tr>
       <td>Subscribe for <a href="basic-changenotifications.html">Thing events/change notifications</a></td>
-      <td><code class="highlighter-rouge">START-SEND-EVENTS</code></td>
+      <td><code class="language-plaintext highlighter-rouge">START-SEND-EVENTS</code></td>
       <td>✔</td>
       <td>✔</td>
     </tr>
     <tr>
       <td>Subscribe for <a href="basic-messages.html">Thing messages</a></td>
-      <td><code class="highlighter-rouge">START-SEND-MESSAGES</code></td>
+      <td><code class="language-plaintext highlighter-rouge">START-SEND-MESSAGES</code></td>
       <td>✔</td>
       <td>❌</td>
     </tr>
     <tr>
       <td>Subscribe for <a href="protocol-twinlive.html">Thing live commands</a></td>
-      <td><code class="highlighter-rouge">START-SEND-LIVE-COMMANDS</code></td>
+      <td><code class="language-plaintext highlighter-rouge">START-SEND-LIVE-COMMANDS</code></td>
       <td>✔</td>
       <td>❌</td>
     </tr>
     <tr>
       <td>Subscribe for <a href="protocol-twinlive.html">Thing live events</a></td>
-      <td><code class="highlighter-rouge">START-SEND-LIVE-EVENTS</code></td>
+      <td><code class="language-plaintext highlighter-rouge">START-SEND-LIVE-EVENTS</code></td>
       <td>✔</td>
       <td>✔</td>
     </tr>
     <tr>
       <td>Subscribe for <a href="protocol-specification-policies-announcement.html">Policy announcements</a></td>
-      <td><code class="highlighter-rouge">START-SEND-POLICY-ANNOUNCEMENTS</code></td>
+      <td><code class="language-plaintext highlighter-rouge">START-SEND-POLICY-ANNOUNCEMENTS</code></td>
       <td>✔</td>
       <td>❌</td>
     </tr>
   </tbody>
 </table>
 
-<p>The parameters are specified similar to HTTP query parameters, the first one separated with a <code class="highlighter-rouge">?</code> and all following ones
-with <code class="highlighter-rouge">&amp;</code>.  You have to URL encode the filter values before using them in a configuration.</p>
+<p>The parameters are specified similar to HTTP query parameters, the first one separated with a <code class="language-plaintext highlighter-rouge">?</code> and all following ones
+with <code class="language-plaintext highlighter-rouge">&amp;</code>.  You have to URL encode the filter values before using them in a configuration.</p>
 
-<p>For example this way the WebSocket session would register for all events in the namespace <code class="highlighter-rouge">org.eclipse.ditto</code> and which
+<p>For example this way the WebSocket session would register for all events in the namespace <code class="language-plaintext highlighter-rouge">org.eclipse.ditto</code> and which
 would match an attribute “counter” to be greater than 42:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>START-SEND-EVENTS?namespaces=org.eclipse.ditto&amp;filter=gt(attributes/counter,42)
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>START-SEND-EVENTS?namespaces=org.eclipse.ditto&amp;filter=gt(attributes/counter,42)
 </code></pre></div></div>
 
 <p>The filtering may be also used in combination with an <a href="#enrichment">enrichment</a>, e.g.:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>START-SEND-EVENTS?extraFields=attributes&amp;filter=gt(attributes/counter,42)
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>START-SEND-EVENTS?extraFields=attributes&amp;filter=gt(attributes/counter,42)
 </code></pre></div></div>
 
 
@@ -2471,7 +2478,7 @@ would match an attribute “counter” to be greater than 42:</p>
                     </div>
                     <p class="notice">
                         &copy;2024 Eclipse Ditto™.
-                         Site last generated: Feb 27, 2024 <br />
+                         Site last generated: Apr 10, 2024 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

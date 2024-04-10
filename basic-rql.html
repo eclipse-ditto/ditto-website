@@ -278,6 +278,13 @@
               
               
               
+              <li><a href="release_notes_354.html">3.5.4</a></li>
+              
+              
+              
+              
+              
+              
               <li><a href="release_notes_353.html">3.5.3</a></li>
               
               
@@ -2111,8 +2118,8 @@ RQL is designed to have an extremely simple, but extensible grammar that can be 
 </blockquote>
 
 <p>An example helps more than a thousand words, so that would be the example of a simple RQL query querying 
-for <code class="highlighter-rouge">foo="ditto"</code> and <code class="highlighter-rouge">bar&lt;10</code>:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>and(eq(foo,"ditto"),lt(bar,10))
+for <code class="language-plaintext highlighter-rouge">foo="ditto"</code> and <code class="language-plaintext highlighter-rouge">bar&lt;10</code>:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>and(eq(foo,"ditto"),lt(bar,10))
 </code></pre></div></div>
 
 <p>That query consists of one <a href="#logical-operators">logical operator </a> <a href="#and">“and”</a>,
@@ -2123,33 +2130,33 @@ and a <a href="#query-value">value</a>.</p>
 Eclipse Ditto.</p>
 
 <div class="alert alert-info" role="alert"><i class="fa fa-info-circle"></i> <b>Note:</b> Please note that only the “normalized” RQL form, e.g. 
-    <code class="highlighter-rouge">eq(foo,3)</code>, is supported by Eclipse Ditto and that Ditto added more non-specified operators, e.g. 
-    <code class="highlighter-rouge">like</code> and <code class="highlighter-rouge">exists</code>.</div>
+    <code class="language-plaintext highlighter-rouge">eq(foo,3)</code>, is supported by Eclipse Ditto and that Ditto added more non-specified operators, e.g. 
+    <code class="language-plaintext highlighter-rouge">like</code> and <code class="language-plaintext highlighter-rouge">exists</code>.</div>
 
 <h2 id="rql-filter">RQL filter</h2>
 
 <p>The RQL filter specifies “what” to filter.</p>
 
 <h3 id="query-property">Query property</h3>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;property&gt; = url-encoded-string
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;property&gt; = url-encoded-string
 </code></pre></div></div>
 
-<p>When not starting with a prefix <code class="highlighter-rouge">&lt;some-prefix&gt;:</code>, the RQL query property specifies a field in the JSON representation 
+<p>When not starting with a prefix <code class="language-plaintext highlighter-rouge">&lt;some-prefix&gt;:</code>, the RQL query property specifies a field in the JSON representation 
 of a <a href="basic-thing.html#api-version-2">Thing</a>.<br />
-For example a query property <code class="highlighter-rouge">thingId</code> selects the Thing ID as property, a query property <code class="highlighter-rouge">attributes/location</code> selects
-an attribute with the name <code class="highlighter-rouge">location</code> as query property.</p>
+For example a query property <code class="language-plaintext highlighter-rouge">thingId</code> selects the Thing ID as property, a query property <code class="language-plaintext highlighter-rouge">attributes/location</code> selects
+an attribute with the name <code class="language-plaintext highlighter-rouge">location</code> as query property.</p>
 
 <p>To filter nested properties, Ditto uses the JSON Pointer notation (<a href="https://tools.ietf.org/html/rfc6901">RFC-6901</a>), 
-where the property can also start with a slash <code class="highlighter-rouge">/</code> or omit it, so those 2 query properties are semantically the same:</p>
+where the property can also start with a slash <code class="language-plaintext highlighter-rouge">/</code> or omit it, so those 2 query properties are semantically the same:</p>
 
 <ul>
-  <li><code class="highlighter-rouge">/attributes/location</code></li>
-  <li><code class="highlighter-rouge">attributes/location</code></li>
+  <li><code class="language-plaintext highlighter-rouge">/attributes/location</code></li>
+  <li><code class="language-plaintext highlighter-rouge">attributes/location</code></li>
 </ul>
 
-<p>The following example shows how to apply a filter for the sub property <code class="highlighter-rouge">location</code> of the parent property <code class="highlighter-rouge">attributes</code> 
+<p>The following example shows how to apply a filter for the sub property <code class="language-plaintext highlighter-rouge">location</code> of the parent property <code class="language-plaintext highlighter-rouge">attributes</code> 
 with a forward slash as separator:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>eq(attributes/location,"kitchen")
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>eq(attributes/location,"kitchen")
 </code></pre></div></div>
 
 <h4 id="placeholders-as-query-properties">Placeholders as query properties</h4>
@@ -2161,16 +2168,16 @@ field in JSON representation inside the Thing.</p>
 
 <p>Currently supported placeholders for RQL expressions are:</p>
 <ul>
-  <li><code class="highlighter-rouge">topic:&lt;placeholder-name&gt;</code></li>
-  <li><code class="highlighter-rouge">resource:&lt;placeholder-name&gt;</code></li>
-  <li><code class="highlighter-rouge">time:&lt;placeholder-name&gt;</code></li>
+  <li><code class="language-plaintext highlighter-rouge">topic:&lt;placeholder-name&gt;</code></li>
+  <li><code class="language-plaintext highlighter-rouge">resource:&lt;placeholder-name&gt;</code></li>
+  <li><code class="language-plaintext highlighter-rouge">time:&lt;placeholder-name&gt;</code></li>
 </ul>
 
 <p>The <a href="basic-placeholders.html#scope-rql-expressions-when-filtering-for-ditto-protocol-messages">placeholder</a> 
 documentation describes which placeholder names are supported.</p>
 
 <h3 id="query-value">Query value</h3>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;value&gt; = &lt;number&gt;, &lt;string&gt;, &lt;placeholder&gt;, true, false, null
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;value&gt; = &lt;number&gt;, &lt;string&gt;, &lt;placeholder&gt;, true, false, null
 &lt;number&gt; = &lt;double&gt;, &lt;integer&gt;
 &lt;string&gt; = "url-encoded-string", 'url-encoded-string'
 &lt;placeholder&gt; = time:now, time:now_epoch_millis
@@ -2180,7 +2187,7 @@ documentation describes which placeholder names are supported.</p>
 
 <p><strong>Comparison of string values</strong></p>
 
-<div class="alert alert-info" role="alert"><i class="fa fa-info-circle"></i> <b>Note:</b> Comparison operators such as <code class="highlighter-rouge">gt</code>, <code class="highlighter-rouge">ge</code>, <code class="highlighter-rouge">lt</code> and <code class="highlighter-rouge">le</code>, do not support a special 
+<div class="alert alert-info" role="alert"><i class="fa fa-info-circle"></i> <b>Note:</b> Comparison operators such as <code class="language-plaintext highlighter-rouge">gt</code>, <code class="language-plaintext highlighter-rouge">ge</code>, <code class="language-plaintext highlighter-rouge">lt</code> and <code class="language-plaintext highlighter-rouge">le</code>, do not support a special 
     “semantics” of string comparison (e.g. regarding alphabetical or lexicographical ordering).<br />
     However, you can rely on the alphabetical sorting of strings with the same length (e.g. “aaa” &lt; “zzz”) and that the 
     order stays the same over multiple/different filter requests.</div>
@@ -2195,89 +2202,89 @@ documentation describes which placeholder names are supported.</p>
 <p>The following relational operators are supported.</p>
 
 <h4 id="eq">eq</h4>
-<p>Filter property values equal to <code class="highlighter-rouge">&lt;value&gt;</code>.</p>
+<p>Filter property values equal to <code class="language-plaintext highlighter-rouge">&lt;value&gt;</code>.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>eq(&lt;property&gt;,&lt;value&gt;)
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>eq(&lt;property&gt;,&lt;value&gt;)
 </code></pre></div></div>
 
 <p><strong>Example - filter things owned by “SID123”</strong></p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>eq(attributes/owner,"SID123")
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>eq(attributes/owner,"SID123")
 </code></pre></div></div>
 
 <h4 id="ne">ne</h4>
-<p>Filter property values not equal to <code class="highlighter-rouge">&lt;value&gt;</code>.</p>
+<p>Filter property values not equal to <code class="language-plaintext highlighter-rouge">&lt;value&gt;</code>.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ne(&lt;property&gt;,&lt;value&gt;)
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ne(&lt;property&gt;,&lt;value&gt;)
 </code></pre></div></div>
 
 <p><strong>Example - filter things with owner different than “SID123”</strong></p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ne(attributes/owner,"SID123")
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ne(attributes/owner,"SID123")
 </code></pre></div></div>
 
 <p>The response will contain only things which <strong>do</strong> provide an owner attribute (in this case with value 0 or not SID123).</p>
 
 <h4 id="gt">gt</h4>
-<p>Filter property values greater than a <code class="highlighter-rouge">&lt;value&gt;</code>.</p>
+<p>Filter property values greater than a <code class="language-plaintext highlighter-rouge">&lt;value&gt;</code>.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gt(&lt;property&gt;,&lt;value&gt;) 
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gt(&lt;property&gt;,&lt;value&gt;) 
 </code></pre></div></div>
 
 <p><strong>Example - filter things with thing ID greater than “A000”</strong></p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gt(thingId,"A000")
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gt(thingId,"A000")
 </code></pre></div></div>
 
 <h4 id="ge">ge</h4>
-<p>Filter property values greater than or equal to a <code class="highlighter-rouge">&lt;value&gt;</code>.</p>
+<p>Filter property values greater than or equal to a <code class="language-plaintext highlighter-rouge">&lt;value&gt;</code>.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ge(&lt;property&gt;,&lt;value&gt;) 
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ge(&lt;property&gt;,&lt;value&gt;) 
 </code></pre></div></div>
 
 <p><strong>Example - filter things with thing ID “A000” or greater</strong></p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ge(thingId,"A000")
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ge(thingId,"A000")
 </code></pre></div></div>
 
 <h4 id="lt">lt</h4>
-<p>Filter property values less than a <code class="highlighter-rouge">&lt;value&gt;</code>.</p>
+<p>Filter property values less than a <code class="language-plaintext highlighter-rouge">&lt;value&gt;</code>.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>lt(&lt;property&gt;,&lt;value&gt;) 
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>lt(&lt;property&gt;,&lt;value&gt;) 
 </code></pre></div></div>
 
 <p><strong>Example - filter things with thing ID lower than “A000”</strong></p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>lt(thingId,"A000")
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>lt(thingId,"A000")
 </code></pre></div></div>
 
 <h4 id="le">le</h4>
-<p>Filter property values less than or equal to a <code class="highlighter-rouge">&lt;value&gt;</code>.</p>
+<p>Filter property values less than or equal to a <code class="language-plaintext highlighter-rouge">&lt;value&gt;</code>.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>le(&lt;property&gt;,&lt;value&gt;) 
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>le(&lt;property&gt;,&lt;value&gt;) 
 </code></pre></div></div>
 
 <p><strong>Example - filter things with thing ID “A000” or lower</strong></p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>le(thingId,"A000")
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>le(thingId,"A000")
 </code></pre></div></div>
 
 <h4 id="in">in</h4>
-<p>Filter property values which contains at least one of the listed <code class="highlighter-rouge">&lt;value&gt;</code>s.</p>
+<p>Filter property values which contains at least one of the listed <code class="language-plaintext highlighter-rouge">&lt;value&gt;</code>s.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>in(&lt;property&gt;,&lt;value&gt;,&lt;value&gt;, ...) 
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>in(&lt;property&gt;,&lt;value&gt;,&lt;value&gt;, ...) 
 </code></pre></div></div>
 
 <p><strong>Example - filter things with thing ID “A000” or “AB00” or “AZ99”</strong></p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>in(thingId,"A000","AB00","AZ99")
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>in(thingId,"A000","AB00","AZ99")
 </code></pre></div></div>
 
 <h4 id="like">like</h4>
-<p>Filter property values which are like (similar) a <code class="highlighter-rouge">&lt;value&gt;</code>.</p>
+<p>Filter property values which are like (similar) a <code class="language-plaintext highlighter-rouge">&lt;value&gt;</code>.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>like(&lt;property&gt;,&lt;value&gt;) 
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>like(&lt;property&gt;,&lt;value&gt;) 
 </code></pre></div></div>
 
-<div class="alert alert-info" role="alert"><i class="fa fa-info-circle"></i> <b>Note:</b> The <code class="highlighter-rouge">like</code> operator is not defined in the linked RQL grammar, it is a Ditto
+<div class="alert alert-info" role="alert"><i class="fa fa-info-circle"></i> <b>Note:</b> The <code class="language-plaintext highlighter-rouge">like</code> operator is not defined in the linked RQL grammar, it is a Ditto
     specific operator.</div>
 
 <p><strong>Details concerning the like-operator</strong></p>
 
-<p>The <code class="highlighter-rouge">like</code> operator provides some regular expression capabilities for pattern matching Strings.<br />
+<p>The <code class="language-plaintext highlighter-rouge">like</code> operator provides some regular expression capabilities for pattern matching Strings.<br />
 The following expressions are supported:</p>
 
 <ul>
@@ -2288,7 +2295,7 @@ The following expressions are supported:</p>
 </ul>
 
 <p><strong>Examples</strong></p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>like(attributes/key1,"*known-chars-at-end")
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>like(attributes/key1,"*known-chars-at-end")
 
 like(attributes/key1,"known-chars-at-start*") 
 
@@ -2298,17 +2305,17 @@ like(attributes/key1,"just-som?-char?-unkn?wn")
 </code></pre></div></div>
 
 <h4 id="ilike">ilike</h4>
-<p>Filter property values which are like (similar) and case insensitive <code class="highlighter-rouge">&lt;value&gt;</code>.</p>
+<p>Filter property values which are like (similar) and case insensitive <code class="language-plaintext highlighter-rouge">&lt;value&gt;</code>.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ilike(&lt;property&gt;,&lt;value&gt;) 
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ilike(&lt;property&gt;,&lt;value&gt;) 
 </code></pre></div></div>
 
-<div class="alert alert-info" role="alert"><i class="fa fa-info-circle"></i> <b>Note:</b> The <code class="highlighter-rouge">ilike</code> operator is not defined in the linked RQL grammar, it is a Ditto
+<div class="alert alert-info" role="alert"><i class="fa fa-info-circle"></i> <b>Note:</b> The <code class="language-plaintext highlighter-rouge">ilike</code> operator is not defined in the linked RQL grammar, it is a Ditto
     specific operator.</div>
 
 <p><strong>Details concerning the ilike-operator</strong></p>
 
-<p>The <code class="highlighter-rouge">ilike</code> operator provides some regular expression capabilities for pattern matching Strings with case insensitivity.</p>
+<p>The <code class="language-plaintext highlighter-rouge">ilike</code> operator provides some regular expression capabilities for pattern matching Strings with case insensitivity.</p>
 
 <p>The following expressions are supported:</p>
 
@@ -2320,7 +2327,7 @@ like(attributes/key1,"just-som?-char?-unkn?wn")
 </ul>
 
 <p><strong>Examples</strong></p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ilike(attributes/key1,"*known-CHARS-at-end")
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ilike(attributes/key1,"*known-CHARS-at-end")
 
 ilike(attributes/key1,"known-chars-AT-start*") 
 
@@ -2333,18 +2340,18 @@ ilike(attributes/key1,"just-som?-char?-unkn?wn")
 
 <p>Filter property values which exist.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>exists(&lt;property&gt;)
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>exists(&lt;property&gt;)
 </code></pre></div></div>
 
-<div class="alert alert-info" role="alert"><i class="fa fa-info-circle"></i> <b>Note:</b> The <code class="highlighter-rouge">exists</code> operator is not defined in the linked RQL grammar, it is a Ditto
+<div class="alert alert-info" role="alert"><i class="fa fa-info-circle"></i> <b>Note:</b> The <code class="language-plaintext highlighter-rouge">exists</code> operator is not defined in the linked RQL grammar, it is a Ditto
     specific operator.</div>
 
 <p><strong>Example - filter things which have a feature with ID “feature_1”</strong></p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>exists(features/feature_1)
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>exists(features/feature_1)
 </code></pre></div></div>
 
 <p><strong>Example - filter lamps which are located in the “living-room”</strong></p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>and(exists(features/lamp),eq(attributes/location,"living-room"))
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>and(exists(features/lamp),eq(attributes/location,"living-room"))
 </code></pre></div></div>
 
 <h3 id="logical-operators">Logical operators</h3>
@@ -2352,38 +2359,38 @@ ilike(attributes/key1,"just-som?-char?-unkn?wn")
 <h4 id="and">and</h4>
 <p>Ensure that all given queries match.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>and(&lt;query&gt;,&lt;query&gt;, ...)
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>and(&lt;query&gt;,&lt;query&gt;, ...)
 </code></pre></div></div>
 
 <p><strong>Example - filter things which are located on the “upper floor” in the “living-room”</strong></p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>and(eq(attributes/floor,"upper floor"),eq(attributes/location,"living-room"))
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>and(eq(attributes/floor,"upper floor"),eq(attributes/location,"living-room"))
 </code></pre></div></div>
 
 <h4 id="or">or</h4>
 <p>At least one of the given queries match.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>or(&lt;query&gt;,&lt;query&gt;, ...)
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>or(&lt;query&gt;,&lt;query&gt;, ...)
 </code></pre></div></div>
 
 <p><strong>Example - filter all things located on the “upper floor”, and all things with location “living-room”</strong></p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>or(eq(attributes/floor,"upper floor"),eq(attributes/location,"living-room"))
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>or(eq(attributes/floor,"upper floor"),eq(attributes/location,"living-room"))
 </code></pre></div></div>
 
 <h4 id="not">not</h4>
 <p>Negates the given query.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>not(&lt;query&gt;)
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>not(&lt;query&gt;)
 </code></pre></div></div>
 
 <p><strong>Example - filter things whose ID do not start with a common prefix</strong></p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>not(like(thingId,"org.eclipse.ditto:blocked*"))
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>not(like(thingId,"org.eclipse.ditto:blocked*"))
 </code></pre></div></div>
 
 <h2 id="rql-sorting">RQL sorting</h2>
 
 <p>The RQL sorting part specifies in which order the result should be returned.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sort(&lt;+|-&gt;&lt;property&gt;,&lt;+|-&gt;&lt;property&gt;,...)
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sort(&lt;+|-&gt;&lt;property&gt;,&lt;+|-&gt;&lt;property&gt;,...)
 </code></pre></div></div>
 
 <ul>
@@ -2392,15 +2399,15 @@ ilike(attributes/key1,"just-som?-char?-unkn?wn")
 </ul>
 
 <p><strong>Example - sort the list ascending by the thing ID</strong></p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sort(+thingId)
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sort(+thingId)
 </code></pre></div></div>
 
 <p><strong>Example - sort the list ascending by an attribute</strong></p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sort(+attributes/location)
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sort(+attributes/location)
 </code></pre></div></div>
 
 <p><strong>Example - multiple sort options</strong></p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sort(-attributes/location,+thingId)
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sort(-attributes/location,+thingId)
 </code></pre></div></div>
 
 <p>This expression will sort the list descending by location attribute.<br />
@@ -2448,7 +2455,7 @@ In case there are multiple things with the same location attribute, these are so
                     </div>
                     <p class="notice">
                         &copy;2024 Eclipse Ditto™.
-                         Site last generated: Feb 27, 2024 <br />
+                         Site last generated: Apr 10, 2024 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

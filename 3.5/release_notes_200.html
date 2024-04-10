@@ -278,6 +278,13 @@
               
               
               
+              <li><a href="release_notes_354.html">3.5.4</a></li>
+              
+              
+              
+              
+              
+              
               <li><a href="release_notes_353.html">3.5.3</a></li>
               
               
@@ -2130,7 +2137,7 @@ investigated.”</p>
 <ul>
   <li>Removal of “API version 1” (deprecated in <a href="release_notes_110.html#deprecations">Ditto 1.1.0</a>) 
 from Ditto’s Java APIs + HTTP API</li>
-  <li>Removal of code in Java APIs marked as <code class="highlighter-rouge">@Deprecated</code></li>
+  <li>Removal of code in Java APIs marked as <code class="language-plaintext highlighter-rouge">@Deprecated</code></li>
   <li>Binary incompatible changes to Java APIs</li>
   <li>Restructuring of Ditto’s Maven modules in order to simplify/ease further development</li>
 </ul>
@@ -2153,29 +2160,29 @@ from Ditto’s Java APIs + HTTP API</li>
 authorization is more flexible and more powerful than the <a href="release_notes_110.html#deprecations">deprecated</a> ACL based
 authorization.<br />
 Having this well established replacement, the ACL based authorization and with that API version 1 
-(in which a <a href="basic-thing.html">thing</a> contained an <code class="highlighter-rouge">acl</code> entry), is removed from Ditto 2.0.0.</p>
+(in which a <a href="basic-thing.html">thing</a> contained an <code class="language-plaintext highlighter-rouge">acl</code> entry), is removed from Ditto 2.0.0.</p>
 
 <p>All documentation of the ACL based approach was deleted, but is still available by accessing version picker in Ditto’s 
 documentation, selecting a 1.x Ditto version.</p>
 
-<p>The HTTP API <code class="highlighter-rouge">/api/1</code> and <code class="highlighter-rouge">/ws/1</code> (for the WebSocket) was also removed, using these endpoints will fail with Ditto 2.0.0.</p>
+<p>The HTTP API <code class="language-plaintext highlighter-rouge">/api/1</code> and <code class="language-plaintext highlighter-rouge">/ws/1</code> (for the WebSocket) was also removed, using these endpoints will fail with Ditto 2.0.0.</p>
 
-<p><a href="basic-thing.html">Things</a> which still contain an <code class="highlighter-rouge">acl</code> entry (instead of a <code class="highlighter-rouge">policyId</code>) can no longer be used in 
+<p><a href="basic-thing.html">Things</a> which still contain an <code class="language-plaintext highlighter-rouge">acl</code> entry (instead of a <code class="language-plaintext highlighter-rouge">policyId</code>) can no longer be used in 
 Ditto 2.0.0. If you need to migrate “things” from API 1 to API version 2, please have a look at the<br />
 <a href="#migrate-api-1-things-to-api-2">migration notes</a>.</p>
 
 <h4 id="removal-of-deprecated-code--binary-incompatible-changes-to-java-apis">Removal of deprecated code + binary incompatible changes to Java APIs</h4>
 
-<p>In order to not break binary compatibility in Ditto 1.x, existing APIs were marked as <code class="highlighter-rouge">@Deprecated</code> with a comment 
+<p>In order to not break binary compatibility in Ditto 1.x, existing APIs were marked as <code class="language-plaintext highlighter-rouge">@Deprecated</code> with a comment 
 pointing to an alternative implementation to use instead. Now, these deprecated APIs are removed from Ditto’s codebase.</p>
 
 <p>Some changes to the codebase which could not be done in Ditto 1.x without breaking binary compatibility were also done.</p>
 
 <h4 id="removed-content-type-header-mapping-for-connection-targets"><a href="https://github.com/eclipse-ditto/ditto/pull/934">Removed content-type header mapping for connection targets</a></h4>
 
-<p>Removed the default header mapping of <code class="highlighter-rouge">content-type</code> for new connection targets. The header mapping led to irritating
-results, when payload mapping and header mapping disagreed on the actual <code class="highlighter-rouge">content-type</code>. Existing connections will still
-keep the “old” default and map the <code class="highlighter-rouge">content-type</code> header.</p>
+<p>Removed the default header mapping of <code class="language-plaintext highlighter-rouge">content-type</code> for new connection targets. The header mapping led to irritating
+results, when payload mapping and header mapping disagreed on the actual <code class="language-plaintext highlighter-rouge">content-type</code>. Existing connections will still
+keep the “old” default and map the <code class="language-plaintext highlighter-rouge">content-type</code> header.</p>
 
 <p>If you need to keep the old behavior, please have a look at the
 <a href="#content-type-header-mapping-in-connection-targets">migration notes</a>.</p>
@@ -2186,17 +2193,17 @@ keep the “old” default and map the <code class="highlighter-rouge">content-t
 the configuration format was changed, please have a look at the<br />
 <a href="#openid-connect-configuration-for-gateway">migration notes</a>.</p>
 
-<h4 id="removal-of-header-x-ditto-dummy-auth">Removal of header <code class="highlighter-rouge">x-ditto-dummy-auth</code></h4>
+<h4 id="removal-of-header-x-ditto-dummy-auth">Removal of header <code class="language-plaintext highlighter-rouge">x-ditto-dummy-auth</code></h4>
 
-<p>The HTTP header / query param <code class="highlighter-rouge">x-ditto-dummy-auth</code> which was already an alias for the 
-<a href="installation-operating.html#pre-authentication">pre-authentication provider</a> header <code class="highlighter-rouge">x-ditto-pre-authenticated</code> has
+<p>The HTTP header / query param <code class="language-plaintext highlighter-rouge">x-ditto-dummy-auth</code> which was already an alias for the 
+<a href="installation-operating.html#pre-authentication">pre-authentication provider</a> header <code class="language-plaintext highlighter-rouge">x-ditto-pre-authenticated</code> has
 been removed from Ditto 2.0.<br />
-Please use the header <code class="highlighter-rouge">x-ditto-pre-authenticated</code> instead.</p>
+Please use the header <code class="language-plaintext highlighter-rouge">x-ditto-pre-authenticated</code> instead.</p>
 
 <h4 id="removed-default-source-header-mapping-for-mqtt-connections">Removed default source header mapping for MQTT connections</h4>
 
-<p>The default source header mapping of MQTT connections was removed. The headers <code class="highlighter-rouge">mqtt.topic</code>, <code class="highlighter-rouge">mqtt.qos</code>
-and <code class="highlighter-rouge">mqtt.retain</code> now must explicitly be added to the source header mapping if they are required for further processing.</p>
+<p>The default source header mapping of MQTT connections was removed. The headers <code class="language-plaintext highlighter-rouge">mqtt.topic</code>, <code class="language-plaintext highlighter-rouge">mqtt.qos</code>
+and <code class="language-plaintext highlighter-rouge">mqtt.retain</code> now must explicitly be added to the source header mapping if they are required for further processing.</p>
 
 <h4 id="restructuring-of-dittos-maven-modules">Restructuring of Ditto’s Maven modules</h4>
 
@@ -2214,172 +2221,172 @@ in a more technical way.</p>
   </thead>
   <tbody>
     <tr>
-      <td><code class="highlighter-rouge">ditto-model</code></td>
-      <td><code class="highlighter-rouge">-</code> (was pom only)</td>
+      <td><code class="language-plaintext highlighter-rouge">ditto-model</code></td>
+      <td><code class="language-plaintext highlighter-rouge">-</code> (was pom only)</td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge">- ditto-model-base</code></td>
-      <td><code class="highlighter-rouge">ditto-base/ditto-base-model</code></td>
+      <td><code class="language-plaintext highlighter-rouge">- ditto-model-base</code></td>
+      <td><code class="language-plaintext highlighter-rouge">ditto-base/ditto-base-model</code></td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge">- ditto-model-cleanup</code></td>
-      <td><code class="highlighter-rouge">-</code> (was internal API)</td>
+      <td><code class="language-plaintext highlighter-rouge">- ditto-model-cleanup</code></td>
+      <td><code class="language-plaintext highlighter-rouge">-</code> (was internal API)</td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge">- ditto-model-connectivity</code></td>
-      <td><code class="highlighter-rouge">ditto-connectivity/ditto-connectivity-model</code></td>
+      <td><code class="language-plaintext highlighter-rouge">- ditto-model-connectivity</code></td>
+      <td><code class="language-plaintext highlighter-rouge">ditto-connectivity/ditto-connectivity-model</code></td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge">- ditto-model-devops</code></td>
-      <td><code class="highlighter-rouge">ditto-devops/ditto-devops-model</code></td>
+      <td><code class="language-plaintext highlighter-rouge">- ditto-model-devops</code></td>
+      <td><code class="language-plaintext highlighter-rouge">ditto-devops/ditto-devops-model</code></td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge">- ditto-model-enforcers</code></td>
-      <td><code class="highlighter-rouge">ditto-policies/ditto-policies-model</code></td>
+      <td><code class="language-plaintext highlighter-rouge">- ditto-model-enforcers</code></td>
+      <td><code class="language-plaintext highlighter-rouge">ditto-policies/ditto-policies-model</code></td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge">- ditto-model-jwt</code></td>
-      <td><code class="highlighter-rouge">ditto-jwt/ditto-jwt-model</code></td>
+      <td><code class="language-plaintext highlighter-rouge">- ditto-model-jwt</code></td>
+      <td><code class="language-plaintext highlighter-rouge">ditto-jwt/ditto-jwt-model</code></td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge">- ditto-model-messages</code></td>
-      <td><code class="highlighter-rouge">ditto-messages/ditto-messages-model</code></td>
+      <td><code class="language-plaintext highlighter-rouge">- ditto-model-messages</code></td>
+      <td><code class="language-plaintext highlighter-rouge">ditto-messages/ditto-messages-model</code></td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge">- ditto-model-namespaces</code></td>
-      <td><code class="highlighter-rouge">ditto-base/ditto-base-model</code></td>
+      <td><code class="language-plaintext highlighter-rouge">- ditto-model-namespaces</code></td>
+      <td><code class="language-plaintext highlighter-rouge">ditto-base/ditto-base-model</code></td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge">- ditto-model-policies</code></td>
-      <td><code class="highlighter-rouge">ditto-policies/ditto-policies-model</code></td>
+      <td><code class="language-plaintext highlighter-rouge">- ditto-model-policies</code></td>
+      <td><code class="language-plaintext highlighter-rouge">ditto-policies/ditto-policies-model</code></td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge">- ditto-model-query</code></td>
-      <td><code class="highlighter-rouge">ditto-rql/ditto-rql-query</code></td>
+      <td><code class="language-plaintext highlighter-rouge">- ditto-model-query</code></td>
+      <td><code class="language-plaintext highlighter-rouge">ditto-rql/ditto-rql-query</code></td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge">- ditto-model-rql</code></td>
-      <td><code class="highlighter-rouge">ditto-rql/ditto-rql-model</code></td>
+      <td><code class="language-plaintext highlighter-rouge">- ditto-model-rql</code></td>
+      <td><code class="language-plaintext highlighter-rouge">ditto-rql/ditto-rql-model</code></td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge">- ditto-model-rql-parser</code></td>
-      <td><code class="highlighter-rouge">ditto-rql/ditto-rql-parser</code></td>
+      <td><code class="language-plaintext highlighter-rouge">- ditto-model-rql-parser</code></td>
+      <td><code class="language-plaintext highlighter-rouge">ditto-rql/ditto-rql-parser</code></td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge">- ditto-model-things</code></td>
-      <td><code class="highlighter-rouge">ditto-things/ditto-things-model</code></td>
+      <td><code class="language-plaintext highlighter-rouge">- ditto-model-things</code></td>
+      <td><code class="language-plaintext highlighter-rouge">ditto-things/ditto-things-model</code></td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge">- ditto-model-thingsearch</code></td>
-      <td><code class="highlighter-rouge">ditto-thingsearch/ditto-thingsearch-model</code></td>
+      <td><code class="language-plaintext highlighter-rouge">- ditto-model-thingsearch</code></td>
+      <td><code class="language-plaintext highlighter-rouge">ditto-thingsearch/ditto-thingsearch-model</code></td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge">- ditto-model-thingsearch-parser</code></td>
-      <td><code class="highlighter-rouge">ditto-rql/ditto-rql-parser</code></td>
+      <td><code class="language-plaintext highlighter-rouge">- ditto-model-thingsearch-parser</code></td>
+      <td><code class="language-plaintext highlighter-rouge">ditto-rql/ditto-rql-parser</code></td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge">ditto-protocol-adapter</code></td>
-      <td><code class="highlighter-rouge">ditto-protocol</code></td>
+      <td><code class="language-plaintext highlighter-rouge">ditto-protocol-adapter</code></td>
+      <td><code class="language-plaintext highlighter-rouge">ditto-protocol</code></td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge">ditto-signals</code></td>
-      <td><code class="highlighter-rouge">-</code> (was pom only)</td>
+      <td><code class="language-plaintext highlighter-rouge">ditto-signals</code></td>
+      <td><code class="language-plaintext highlighter-rouge">-</code> (was pom only)</td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge">- ditto-signals-base</code></td>
-      <td><code class="highlighter-rouge">ditto-base/ditto-base-model</code></td>
+      <td><code class="language-plaintext highlighter-rouge">- ditto-signals-base</code></td>
+      <td><code class="language-plaintext highlighter-rouge">ditto-base/ditto-base-model</code></td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge">- ditto-signals-acks</code></td>
-      <td><code class="highlighter-rouge">-</code> (was pom only)</td>
+      <td><code class="language-plaintext highlighter-rouge">- ditto-signals-acks</code></td>
+      <td><code class="language-plaintext highlighter-rouge">-</code> (was pom only)</td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge">-- ditto-signals-acks-base</code></td>
-      <td><code class="highlighter-rouge">ditto-base/ditto-base-model</code></td>
+      <td><code class="language-plaintext highlighter-rouge">-- ditto-signals-acks-base</code></td>
+      <td><code class="language-plaintext highlighter-rouge">ditto-base/ditto-base-model</code></td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge">-- ditto-signals-acks-things</code></td>
-      <td><code class="highlighter-rouge">ditto-things/ditto-things-model</code></td>
+      <td><code class="language-plaintext highlighter-rouge">-- ditto-signals-acks-things</code></td>
+      <td><code class="language-plaintext highlighter-rouge">ditto-things/ditto-things-model</code></td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge">- ditto-signals-announcements</code></td>
-      <td><code class="highlighter-rouge">-</code> (was pom only)</td>
+      <td><code class="language-plaintext highlighter-rouge">- ditto-signals-announcements</code></td>
+      <td><code class="language-plaintext highlighter-rouge">-</code> (was pom only)</td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge">-- ditto-signals-announcements-base</code></td>
-      <td><code class="highlighter-rouge">ditto-base/ditto-base-model</code></td>
+      <td><code class="language-plaintext highlighter-rouge">-- ditto-signals-announcements-base</code></td>
+      <td><code class="language-plaintext highlighter-rouge">ditto-base/ditto-base-model</code></td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge">-- ditto-signals-announcements-policies</code></td>
-      <td><code class="highlighter-rouge">ditto-policies/ditto-policies-model</code></td>
+      <td><code class="language-plaintext highlighter-rouge">-- ditto-signals-announcements-policies</code></td>
+      <td><code class="language-plaintext highlighter-rouge">ditto-policies/ditto-policies-model</code></td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge">- ditto-signals-commands</code></td>
-      <td><code class="highlighter-rouge">-</code> (was pom only)</td>
+      <td><code class="language-plaintext highlighter-rouge">- ditto-signals-commands</code></td>
+      <td><code class="language-plaintext highlighter-rouge">-</code> (was pom only)</td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge">-- ditto-signals-commands-base</code></td>
-      <td><code class="highlighter-rouge">ditto-base/ditto-base-model</code></td>
+      <td><code class="language-plaintext highlighter-rouge">-- ditto-signals-commands-base</code></td>
+      <td><code class="language-plaintext highlighter-rouge">ditto-base/ditto-base-model</code></td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge">-- ditto-signals-commands-cleanup</code></td>
-      <td><code class="highlighter-rouge">-</code> (was internal API)</td>
+      <td><code class="language-plaintext highlighter-rouge">-- ditto-signals-commands-cleanup</code></td>
+      <td><code class="language-plaintext highlighter-rouge">-</code> (was internal API)</td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge">-- ditto-signals-commands-common</code></td>
-      <td><code class="highlighter-rouge">-</code> (was internal API)</td>
+      <td><code class="language-plaintext highlighter-rouge">-- ditto-signals-commands-common</code></td>
+      <td><code class="language-plaintext highlighter-rouge">-</code> (was internal API)</td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge">-- ditto-signals-commands-connectivity</code></td>
-      <td><code class="highlighter-rouge">ditto-connectivity/ditto-connectivity-model</code></td>
+      <td><code class="language-plaintext highlighter-rouge">-- ditto-signals-commands-connectivity</code></td>
+      <td><code class="language-plaintext highlighter-rouge">ditto-connectivity/ditto-connectivity-model</code></td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge">-- ditto-signals-commands-devops</code></td>
-      <td><code class="highlighter-rouge">-</code> (was internal API and is merged into ditto-base/ditto-base-api)</td>
+      <td><code class="language-plaintext highlighter-rouge">-- ditto-signals-commands-devops</code></td>
+      <td><code class="language-plaintext highlighter-rouge">-</code> (was internal API and is merged into ditto-base/ditto-base-api)</td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge">-- ditto-signals-commands-messages</code></td>
-      <td><code class="highlighter-rouge">ditto-messages/ditto-messages-model</code></td>
+      <td><code class="language-plaintext highlighter-rouge">-- ditto-signals-commands-messages</code></td>
+      <td><code class="language-plaintext highlighter-rouge">ditto-messages/ditto-messages-model</code></td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge">-- ditto-signals-commands-namespaces</code></td>
-      <td><code class="highlighter-rouge">ditto-base/ditto-base-model</code></td>
+      <td><code class="language-plaintext highlighter-rouge">-- ditto-signals-commands-namespaces</code></td>
+      <td><code class="language-plaintext highlighter-rouge">ditto-base/ditto-base-model</code></td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge">-- ditto-signals-commands-policies</code></td>
-      <td><code class="highlighter-rouge">ditto-policies/ditto-policies-model</code></td>
+      <td><code class="language-plaintext highlighter-rouge">-- ditto-signals-commands-policies</code></td>
+      <td><code class="language-plaintext highlighter-rouge">ditto-policies/ditto-policies-model</code></td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge">-- ditto-signals-commands-things</code></td>
-      <td><code class="highlighter-rouge">ditto-things/ditto-things-model</code></td>
+      <td><code class="language-plaintext highlighter-rouge">-- ditto-signals-commands-things</code></td>
+      <td><code class="language-plaintext highlighter-rouge">ditto-things/ditto-things-model</code></td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge">-- ditto-signals-commands-thingsearch</code></td>
-      <td><code class="highlighter-rouge">ditto-thingsearch/ditto-thingsearch-model</code></td>
+      <td><code class="language-plaintext highlighter-rouge">-- ditto-signals-commands-thingsearch</code></td>
+      <td><code class="language-plaintext highlighter-rouge">ditto-thingsearch/ditto-thingsearch-model</code></td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge">- ditto-signals-events</code></td>
-      <td><code class="highlighter-rouge">-</code> (was pom only)</td>
+      <td><code class="language-plaintext highlighter-rouge">- ditto-signals-events</code></td>
+      <td><code class="language-plaintext highlighter-rouge">-</code> (was pom only)</td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge">-- ditto-signals-events-base</code></td>
-      <td><code class="highlighter-rouge">ditto-base/ditto-base-model</code></td>
+      <td><code class="language-plaintext highlighter-rouge">-- ditto-signals-events-base</code></td>
+      <td><code class="language-plaintext highlighter-rouge">ditto-base/ditto-base-model</code></td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge">-- ditto-signals-events-connectivity</code></td>
-      <td><code class="highlighter-rouge">ditto-connectivity/ditto-connectivity-model</code></td>
+      <td><code class="language-plaintext highlighter-rouge">-- ditto-signals-events-connectivity</code></td>
+      <td><code class="language-plaintext highlighter-rouge">ditto-connectivity/ditto-connectivity-model</code></td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge">-- ditto-signals-events-policies</code></td>
-      <td><code class="highlighter-rouge">ditto-policies/ditto-policies-model</code></td>
+      <td><code class="language-plaintext highlighter-rouge">-- ditto-signals-events-policies</code></td>
+      <td><code class="language-plaintext highlighter-rouge">ditto-policies/ditto-policies-model</code></td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge">-- ditto-signals-events-things</code></td>
-      <td><code class="highlighter-rouge">ditto-things/ditto-things-model</code></td>
+      <td><code class="language-plaintext highlighter-rouge">-- ditto-signals-events-things</code></td>
+      <td><code class="language-plaintext highlighter-rouge">ditto-things/ditto-things-model</code></td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge">-- ditto-signals-events-thingsearch</code></td>
-      <td><code class="highlighter-rouge">ditto-thingsearch/ditto-thingsearch-model</code></td>
+      <td><code class="language-plaintext highlighter-rouge">-- ditto-signals-events-thingsearch</code></td>
+      <td><code class="language-plaintext highlighter-rouge">ditto-thingsearch/ditto-thingsearch-model</code></td>
     </tr>
   </tbody>
 </table>
@@ -2398,148 +2405,148 @@ packages were renamed:</p>
   </thead>
   <tbody>
     <tr>
-      <td><code class="highlighter-rouge">org.eclipse.ditto.model.base</code></td>
-      <td><code class="highlighter-rouge">org.eclipse.ditto.base.model</code></td>
+      <td><code class="language-plaintext highlighter-rouge">org.eclipse.ditto.model.base</code></td>
+      <td><code class="language-plaintext highlighter-rouge">org.eclipse.ditto.base.model</code></td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge">org.eclipse.ditto.model.cleanup</code></td>
-      <td><code class="highlighter-rouge">-</code> (was internal API)</td>
+      <td><code class="language-plaintext highlighter-rouge">org.eclipse.ditto.model.cleanup</code></td>
+      <td><code class="language-plaintext highlighter-rouge">-</code> (was internal API)</td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge">org.eclipse.ditto.model.connectivity</code></td>
-      <td><code class="highlighter-rouge">org.eclipse.ditto.connectivity.model</code></td>
+      <td><code class="language-plaintext highlighter-rouge">org.eclipse.ditto.model.connectivity</code></td>
+      <td><code class="language-plaintext highlighter-rouge">org.eclipse.ditto.connectivity.model</code></td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge">org.eclipse.ditto.model.devops</code></td>
-      <td><code class="highlighter-rouge">-</code> (was internal API and is merged into ditto-base/ditto-base-api)</td>
+      <td><code class="language-plaintext highlighter-rouge">org.eclipse.ditto.model.devops</code></td>
+      <td><code class="language-plaintext highlighter-rouge">-</code> (was internal API and is merged into ditto-base/ditto-base-api)</td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge">org.eclipse.ditto.model.enforcers</code></td>
-      <td><code class="highlighter-rouge">org.eclipse.ditto.policies.model</code></td>
+      <td><code class="language-plaintext highlighter-rouge">org.eclipse.ditto.model.enforcers</code></td>
+      <td><code class="language-plaintext highlighter-rouge">org.eclipse.ditto.policies.model</code></td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge">org.eclipse.ditto.model.jwt</code></td>
-      <td><code class="highlighter-rouge">org.eclipse.ditto.jwt.model</code></td>
+      <td><code class="language-plaintext highlighter-rouge">org.eclipse.ditto.model.jwt</code></td>
+      <td><code class="language-plaintext highlighter-rouge">org.eclipse.ditto.jwt.model</code></td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge">org.eclipse.ditto.model.messages</code></td>
-      <td><code class="highlighter-rouge">org.eclipse.ditto.messages.model</code></td>
+      <td><code class="language-plaintext highlighter-rouge">org.eclipse.ditto.model.messages</code></td>
+      <td><code class="language-plaintext highlighter-rouge">org.eclipse.ditto.messages.model</code></td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge">org.eclipse.ditto.model.namespaces</code></td>
-      <td><code class="highlighter-rouge">org.eclipse.ditto.base.model</code></td>
+      <td><code class="language-plaintext highlighter-rouge">org.eclipse.ditto.model.namespaces</code></td>
+      <td><code class="language-plaintext highlighter-rouge">org.eclipse.ditto.base.model</code></td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge">org.eclipse.ditto.model.policies</code></td>
-      <td><code class="highlighter-rouge">org.eclipse.ditto.policies.model</code></td>
+      <td><code class="language-plaintext highlighter-rouge">org.eclipse.ditto.model.policies</code></td>
+      <td><code class="language-plaintext highlighter-rouge">org.eclipse.ditto.policies.model</code></td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge">org.eclipse.ditto.model.query</code></td>
-      <td><code class="highlighter-rouge">org.eclipse.ditto.rql.query</code></td>
+      <td><code class="language-plaintext highlighter-rouge">org.eclipse.ditto.model.query</code></td>
+      <td><code class="language-plaintext highlighter-rouge">org.eclipse.ditto.rql.query</code></td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge">org.eclipse.ditto.model.rql</code></td>
-      <td><code class="highlighter-rouge">org.eclipse.ditto.rql.model</code></td>
+      <td><code class="language-plaintext highlighter-rouge">org.eclipse.ditto.model.rql</code></td>
+      <td><code class="language-plaintext highlighter-rouge">org.eclipse.ditto.rql.model</code></td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge">org.eclipse.ditto.model.rqlparser</code></td>
-      <td><code class="highlighter-rouge">org.eclipse.ditto.rql.parser</code></td>
+      <td><code class="language-plaintext highlighter-rouge">org.eclipse.ditto.model.rqlparser</code></td>
+      <td><code class="language-plaintext highlighter-rouge">org.eclipse.ditto.rql.parser</code></td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge">org.eclipse.ditto.model.things</code></td>
-      <td><code class="highlighter-rouge">org.eclipse.ditto.things.model</code></td>
+      <td><code class="language-plaintext highlighter-rouge">org.eclipse.ditto.model.things</code></td>
+      <td><code class="language-plaintext highlighter-rouge">org.eclipse.ditto.things.model</code></td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge">org.eclipse.ditto.model.thingsearch</code></td>
-      <td><code class="highlighter-rouge">org.eclipse.ditto.thingsearch.model</code></td>
+      <td><code class="language-plaintext highlighter-rouge">org.eclipse.ditto.model.thingsearch</code></td>
+      <td><code class="language-plaintext highlighter-rouge">org.eclipse.ditto.thingsearch.model</code></td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge">org.eclipse.ditto.model.thingsearchparser</code></td>
-      <td><code class="highlighter-rouge">org.eclipse.ditto.rql.parser.thingsearch</code></td>
+      <td><code class="language-plaintext highlighter-rouge">org.eclipse.ditto.model.thingsearchparser</code></td>
+      <td><code class="language-plaintext highlighter-rouge">org.eclipse.ditto.rql.parser.thingsearch</code></td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge">org.eclipse.ditto.model.protocoladapter</code></td>
-      <td><code class="highlighter-rouge">org.eclipse.ditto.protocol</code></td>
+      <td><code class="language-plaintext highlighter-rouge">org.eclipse.ditto.model.protocoladapter</code></td>
+      <td><code class="language-plaintext highlighter-rouge">org.eclipse.ditto.protocol</code></td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge">org.eclipse.ditto.signals.base</code></td>
-      <td><code class="highlighter-rouge">org.eclipse.ditto.base.model.signals</code></td>
+      <td><code class="language-plaintext highlighter-rouge">org.eclipse.ditto.signals.base</code></td>
+      <td><code class="language-plaintext highlighter-rouge">org.eclipse.ditto.base.model.signals</code></td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge">org.eclipse.ditto.signals.acks.base</code></td>
-      <td><code class="highlighter-rouge">org.eclipse.ditto.base.model.signals.acks</code></td>
+      <td><code class="language-plaintext highlighter-rouge">org.eclipse.ditto.signals.acks.base</code></td>
+      <td><code class="language-plaintext highlighter-rouge">org.eclipse.ditto.base.model.signals.acks</code></td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge">org.eclipse.ditto.signals.acks.things</code></td>
-      <td><code class="highlighter-rouge">org.eclipse.ditto.things.model.signals.acks</code></td>
+      <td><code class="language-plaintext highlighter-rouge">org.eclipse.ditto.signals.acks.things</code></td>
+      <td><code class="language-plaintext highlighter-rouge">org.eclipse.ditto.things.model.signals.acks</code></td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge">org.eclipse.ditto.signals.announcements.base</code></td>
-      <td><code class="highlighter-rouge">org.eclipse.ditto.base.model.signals.announcements</code></td>
+      <td><code class="language-plaintext highlighter-rouge">org.eclipse.ditto.signals.announcements.base</code></td>
+      <td><code class="language-plaintext highlighter-rouge">org.eclipse.ditto.base.model.signals.announcements</code></td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge">org.eclipse.ditto.signals.announcements.policies</code></td>
-      <td><code class="highlighter-rouge">org.eclipse.ditto.policies.model.signals.announcements</code></td>
+      <td><code class="language-plaintext highlighter-rouge">org.eclipse.ditto.signals.announcements.policies</code></td>
+      <td><code class="language-plaintext highlighter-rouge">org.eclipse.ditto.policies.model.signals.announcements</code></td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge">org.eclipse.ditto.signals.commands.base</code></td>
-      <td><code class="highlighter-rouge">org.eclipse.ditto.base.model.signals.commands</code></td>
+      <td><code class="language-plaintext highlighter-rouge">org.eclipse.ditto.signals.commands.base</code></td>
+      <td><code class="language-plaintext highlighter-rouge">org.eclipse.ditto.base.model.signals.commands</code></td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge">org.eclipse.ditto.signals.commands.cleanup</code></td>
-      <td><code class="highlighter-rouge">-</code> (was internal API)</td>
+      <td><code class="language-plaintext highlighter-rouge">org.eclipse.ditto.signals.commands.cleanup</code></td>
+      <td><code class="language-plaintext highlighter-rouge">-</code> (was internal API)</td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge">org.eclipse.ditto.signals.commands.common</code></td>
-      <td><code class="highlighter-rouge">-</code> (was internal API)</td>
+      <td><code class="language-plaintext highlighter-rouge">org.eclipse.ditto.signals.commands.common</code></td>
+      <td><code class="language-plaintext highlighter-rouge">-</code> (was internal API)</td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge">org.eclipse.ditto.signals.commands.connectivity</code></td>
-      <td><code class="highlighter-rouge">org.eclipse.ditto.connectivity.model.signals.commands</code></td>
+      <td><code class="language-plaintext highlighter-rouge">org.eclipse.ditto.signals.commands.connectivity</code></td>
+      <td><code class="language-plaintext highlighter-rouge">org.eclipse.ditto.connectivity.model.signals.commands</code></td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge">org.eclipse.ditto.signals.commands.devops</code></td>
-      <td><code class="highlighter-rouge">org.eclipse.ditto.devops.model.signals.commands</code></td>
+      <td><code class="language-plaintext highlighter-rouge">org.eclipse.ditto.signals.commands.devops</code></td>
+      <td><code class="language-plaintext highlighter-rouge">org.eclipse.ditto.devops.model.signals.commands</code></td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge">org.eclipse.ditto.signals.commands.messages</code></td>
-      <td><code class="highlighter-rouge">org.eclipse.ditto.messages.model.signals.commands</code></td>
+      <td><code class="language-plaintext highlighter-rouge">org.eclipse.ditto.signals.commands.messages</code></td>
+      <td><code class="language-plaintext highlighter-rouge">org.eclipse.ditto.messages.model.signals.commands</code></td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge">org.eclipse.ditto.signals.commands.namespaces</code></td>
-      <td><code class="highlighter-rouge">org.eclipse.ditto.base.model.signals.commands</code></td>
+      <td><code class="language-plaintext highlighter-rouge">org.eclipse.ditto.signals.commands.namespaces</code></td>
+      <td><code class="language-plaintext highlighter-rouge">org.eclipse.ditto.base.model.signals.commands</code></td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge">org.eclipse.ditto.signals.commands.policies</code></td>
-      <td><code class="highlighter-rouge">org.eclipse.ditto.policies.model.signals.commands</code></td>
+      <td><code class="language-plaintext highlighter-rouge">org.eclipse.ditto.signals.commands.policies</code></td>
+      <td><code class="language-plaintext highlighter-rouge">org.eclipse.ditto.policies.model.signals.commands</code></td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge">org.eclipse.ditto.signals.commands.things</code></td>
-      <td><code class="highlighter-rouge">org.eclipse.ditto.things.model.signals.commands</code></td>
+      <td><code class="language-plaintext highlighter-rouge">org.eclipse.ditto.signals.commands.things</code></td>
+      <td><code class="language-plaintext highlighter-rouge">org.eclipse.ditto.things.model.signals.commands</code></td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge">org.eclipse.ditto.signals.commands.thingsearch</code></td>
-      <td><code class="highlighter-rouge">org.eclipse.ditto.thingsearch.model.signals.commands</code></td>
+      <td><code class="language-plaintext highlighter-rouge">org.eclipse.ditto.signals.commands.thingsearch</code></td>
+      <td><code class="language-plaintext highlighter-rouge">org.eclipse.ditto.thingsearch.model.signals.commands</code></td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge">org.eclipse.ditto.signals.events.base</code></td>
-      <td><code class="highlighter-rouge">org.eclipse.ditto.base.model.signals.events</code></td>
+      <td><code class="language-plaintext highlighter-rouge">org.eclipse.ditto.signals.events.base</code></td>
+      <td><code class="language-plaintext highlighter-rouge">org.eclipse.ditto.base.model.signals.events</code></td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge">org.eclipse.ditto.signals.events.connectivity</code></td>
-      <td><code class="highlighter-rouge">org.eclipse.ditto.connectivity.model.signals.events</code></td>
+      <td><code class="language-plaintext highlighter-rouge">org.eclipse.ditto.signals.events.connectivity</code></td>
+      <td><code class="language-plaintext highlighter-rouge">org.eclipse.ditto.connectivity.model.signals.events</code></td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge">org.eclipse.ditto.signals.events.policies</code></td>
-      <td><code class="highlighter-rouge">org.eclipse.ditto.policies.model.signals.events</code></td>
+      <td><code class="language-plaintext highlighter-rouge">org.eclipse.ditto.signals.events.policies</code></td>
+      <td><code class="language-plaintext highlighter-rouge">org.eclipse.ditto.policies.model.signals.events</code></td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge">org.eclipse.ditto.signals.events.things</code></td>
-      <td><code class="highlighter-rouge">org.eclipse.ditto.things.model.signals.events</code></td>
+      <td><code class="language-plaintext highlighter-rouge">org.eclipse.ditto.signals.events.things</code></td>
+      <td><code class="language-plaintext highlighter-rouge">org.eclipse.ditto.things.model.signals.events</code></td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge">org.eclipse.ditto.signals.events.thingsearch</code></td>
-      <td><code class="highlighter-rouge">org.eclipse.ditto.thingsearch.model.signals.events</code></td>
+      <td><code class="language-plaintext highlighter-rouge">org.eclipse.ditto.signals.events.thingsearch</code></td>
+      <td><code class="language-plaintext highlighter-rouge">org.eclipse.ditto.thingsearch.model.signals.events</code></td>
     </tr>
   </tbody>
 </table>
@@ -2549,7 +2556,7 @@ packages were renamed:</p>
 <p>New Java client instances are instantiated differently, please have a look at the<br />
 <a href="#ditto-java-client-instantiation">migration notes</a>.</p>
 
-<p>In addition, all APIs which returned a <code class="highlighter-rouge">CompletableFuture</code> were adjusted to return a <code class="highlighter-rouge">CompletionStage</code> instead.</p>
+<p>In addition, all APIs which returned a <code class="language-plaintext highlighter-rouge">CompletableFuture</code> were adjusted to return a <code class="language-plaintext highlighter-rouge">CompletionStage</code> instead.</p>
 
 <h4 id="ditto-javascript-client">Ditto JavaScript client</h4>
 
@@ -2574,7 +2581,7 @@ or the <a href="protocol-specification-things-merge.html">Merge protocol specifi
 
 <h4 id="configurable-openid-connect--oauth20-claim-extraction"><a href="https://github.com/eclipse-ditto/ditto/issues/512">Configurable OpenID Connect / OAuth2.0 claim extraction</a></h4>
 
-<p>OpenID Connect support has been extended; Previously, only the <code class="highlighter-rouge">sub</code> field from a JWT was injected as an authorization subject.
+<p>OpenID Connect support has been extended; Previously, only the <code class="language-plaintext highlighter-rouge">sub</code> field from a JWT was injected as an authorization subject.
 This is now configurable: The Ditto Gateway config takes a list of placeholder strings that are used to construct authorization subjects.<br />
 See <a href="installation-operating.html#openid-connect">OpenID Connect</a></p>
 
@@ -2607,7 +2614,7 @@ the <a href="#" data-toggle="tooltip" data-original-title="JSON Web Token (JWT)"
 
 <p>Ditto’s search index is only eventually consistent. Applications that rely on search to for twin interactions which 
 need to know when a change is reflected in the search index, may request the new built-in 
-<a href="basic-acknowledgements.html#built-in-acknowledgement-labels"><code class="highlighter-rouge">"search-persisted"</code></a> acknowledgement label.</p>
+<a href="basic-acknowledgements.html#built-in-acknowledgement-labels"><code class="language-plaintext highlighter-rouge">"search-persisted"</code></a> acknowledgement label.</p>
 
 <h4 id="restoring-active-connection-faster-after-a-hard-restart-of-the-ditto-cluster"><a href="https://github.com/eclipse-ditto/ditto/pull/1018">Restoring active connection faster after a hard restart of the Ditto cluster</a></h4>
 
@@ -2620,15 +2627,15 @@ The higher the priority, the earlier it will be reconnected on startup.</p>
 
 <h4 id="allow-setting-retain-flag-for-mqtt-connections"><a href="https://github.com/eclipse-ditto/ditto/issues/1029">Allow setting retain flag for MQTT connections</a></h4>
 
-<p>The <code class="highlighter-rouge">retain</code> flag of MQTT messages published via a managed connection is set according to a message header.</p>
+<p>The <code class="language-plaintext highlighter-rouge">retain</code> flag of MQTT messages published via a managed connection is set according to a message header.</p>
 
 <h4 id="provide-jwt-tokens-to-websocket-endpoint-with-browser-apis"><a href="https://github.com/eclipse-ditto/ditto/issues/667">Provide JWT tokens to Websocket endpoint with browser APIs</a></h4>
 
-<p>Prior to Ditto 2.0 it was only possible to pass a JWT to the <code class="highlighter-rouge">/ws</code> endpoint with the <code class="highlighter-rouge">Authorization</code> header.<br />
-As this however is not possible to influence in the browser based JavaScript API of <code class="highlighter-rouge">WebSocket</code>, it was not possible
+<p>Prior to Ditto 2.0 it was only possible to pass a JWT to the <code class="language-plaintext highlighter-rouge">/ws</code> endpoint with the <code class="language-plaintext highlighter-rouge">Authorization</code> header.<br />
+As this however is not possible to influence in the browser based JavaScript API of <code class="language-plaintext highlighter-rouge">WebSocket</code>, it was not possible
 to authenticate easily running a web application connecting against Ditto.</p>
 
-<p>This is now possible by supplying the JWT via a <a href="basic-auth.html#single-sign-on-sso">query-parameter <code class="highlighter-rouge">access_token</code></a>.</p>
+<p>This is now possible by supplying the JWT via a <a href="basic-auth.html#single-sign-on-sso">query-parameter <code class="language-plaintext highlighter-rouge">access_token</code></a>.</p>
 
 <h3 id="bugfixes">Bugfixes</h3>
 
@@ -2644,12 +2651,12 @@ This is a complete list of the</p>
 
 <h4 id="content-type-of-a-ditto-protocol-json-message-did-not-describe-its-value"><a href="https://github.com/eclipse-ditto/ditto/pull/987">“content-type” of a Ditto Protocol JSON message did not describe its “value”</a></h4>
 
-<p>The <code class="highlighter-rouge">"content-type"</code> field in <a href="protocol-specification.html#headers">Ditto Protocol headers</a> was intended to identify the 
-type of the <a href="protocol-specification.html#value"><code class="highlighter-rouge">"value"</code></a>. This was not consequently ensured which has now been fixed.</p>
+<p>The <code class="language-plaintext highlighter-rouge">"content-type"</code> field in <a href="protocol-specification.html#headers">Ditto Protocol headers</a> was intended to identify the 
+type of the <a href="protocol-specification.html#value"><code class="language-plaintext highlighter-rouge">"value"</code></a>. This was not consequently ensured which has now been fixed.</p>
 
 <h4 id="password-encodingdecoding-for-amqp-10-connections-with-special-characters"><a href="https://github.com/eclipse-ditto/ditto/pull/996">Password encoding/decoding for AMQP 1.0 connections with special characters</a></h4>
 
-<p>When passwords contained a <code class="highlighter-rouge">+</code> sign, they were wrongly decoded for 
+<p>When passwords contained a <code class="language-plaintext highlighter-rouge">+</code> sign, they were wrongly decoded for 
 <a href="connectivity-protocol-bindings-amqp10.html">AMQP 1.0 connections</a>.</p>
 
 <h4 id="merging-extrafields-into-thing-payload-when-using-normalization-mapper"><a href="https://github.com/eclipse-ditto/ditto/issues/947">Merging “extraFields” into thing payload when using “normalization” mapper</a></h4>
@@ -2662,20 +2669,20 @@ event could be overwritten by the “extra” data. The event data now always ha
 <h3 id="migrate-api-1-things-to-api-2">Migrate API 1 things to API 2</h3>
 
 <p>In order to migrate existing <a href="basic-thing.html">things</a> from API version 1 to API version 2 
-(from having a <code class="highlighter-rouge">acl</code> to having a <code class="highlighter-rouge">policyId</code>) simply perform the following steps <strong>prior to updating to Ditto 2.0.0</strong>:</p>
+(from having a <code class="language-plaintext highlighter-rouge">acl</code> to having a <code class="language-plaintext highlighter-rouge">policyId</code>) simply perform the following steps <strong>prior to updating to Ditto 2.0.0</strong>:</p>
 <ul>
-  <li>Retrieve the to-be-migrated thing <strong>via API 1</strong> <code class="highlighter-rouge">GET /api/1/things/&lt;the-namespace&gt;:&lt;the-name&gt;</code></li>
-  <li>Save the content of the <code class="highlighter-rouge">"acl"</code> field in the returned Thing JSON</li>
+  <li>Retrieve the to-be-migrated thing <strong>via API 1</strong> <code class="language-plaintext highlighter-rouge">GET /api/1/things/&lt;the-namespace&gt;:&lt;the-name&gt;</code></li>
+  <li>Save the content of the <code class="language-plaintext highlighter-rouge">"acl"</code> field in the returned Thing JSON</li>
   <li>Create a new <a href="basic-policy.html">policy</a> based on the retrieved ACL content
     <ul>
       <li>tip: when creating the policy, use the same ID as for the thing</li>
       <li>for the policy <a href="basic-policy.html#subjects">subject</a>, use the map “keys” of the ACL JSON object, prepending the
-required <code class="highlighter-rouge">&lt;subject-issuer&gt;</code> prefix</li>
+required <code class="language-plaintext highlighter-rouge">&lt;subject-issuer&gt;</code> prefix</li>
       <li>choose the permissions in the <a href="basic-policy.html#which-resources-can-be-controlled">resources</a> according to your 
 needs</li>
     </ul>
   </li>
-  <li>Update the thing <strong>via API 2</strong> <code class="highlighter-rouge">PUT /api/2/things/&lt;the-namespace&gt;:&lt;the-name&gt;</code> and set the <code class="highlighter-rouge">"policyId"</code> to the just 
+  <li>Update the thing <strong>via API 2</strong> <code class="language-plaintext highlighter-rouge">PUT /api/2/things/&lt;the-namespace&gt;:&lt;the-name&gt;</code> and set the <code class="language-plaintext highlighter-rouge">"policyId"</code> to the just 
 created policy id</li>
   <li>You can now only access the thing via API 2</li>
   <li>After all API 1 things were migrated, you can safely update to Ditto 2.0.0</li>
@@ -2686,21 +2693,21 @@ created policy id</li>
 <p>Due to the 
 <a href="https://github.com/eclipse-ditto/ditto/pull/934">removed default content-type header mapping for connection targets</a>, 
 it might be necessary to update the way connection targets are created in case you create connection targets without
-explicit <code class="highlighter-rouge">headerMapping</code> and rely on a specific content-type on the receiving side. The request to create connection 
+explicit <code class="language-plaintext highlighter-rouge">headerMapping</code> and rely on a specific content-type on the receiving side. The request to create connection 
 targets can be updated to contain the “old” default in this case:</p>
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-    </span><span class="s2">"targetActorSelection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/system/sharding/connection"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"aggregate"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+    </span><span class="nl">"targetActorSelection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/system/sharding/connection"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"aggregate"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
     </span><span class="p">},</span><span class="w">
-    </span><span class="s2">"piggybackCommand"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"connectivity.commands:createConnection"</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"connection"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-              </span><span class="s2">"targets"</span><span class="p">:[{</span><span class="w">
-                </span><span class="s2">"headerMapping"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                  </span><span class="s2">"content-type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{{header:content-type}}"</span><span class="p">,</span><span class="w">
-                  </span><span class="s2">"correlation-id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{{header:correlation-id}}"</span><span class="p">,</span><span class="w">
-                  </span><span class="s2">"reply-to"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{{header:reply-to}}"</span><span class="w">
+    </span><span class="nl">"piggybackCommand"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"connectivity.commands:createConnection"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"connection"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+              </span><span class="nl">"targets"</span><span class="p">:[{</span><span class="w">
+                </span><span class="nl">"headerMapping"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                  </span><span class="nl">"content-type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{{header:content-type}}"</span><span class="p">,</span><span class="w">
+                  </span><span class="nl">"correlation-id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{{header:correlation-id}}"</span><span class="p">,</span><span class="w">
+                  </span><span class="nl">"reply-to"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{{header:reply-to}}"</span><span class="w">
                 </span><span class="p">},</span><span class="w">
                 </span><span class="err">//</span><span class="w"> </span><span class="err">...</span><span class="w">
               </span><span class="p">}]</span><span class="w">
@@ -2714,11 +2721,11 @@ targets can be updated to contain the “old” default in this case:</p>
 
 <p>The oauth configuration section of the Gateway service has been altered to support
 <a href="https://github.com/eclipse-ditto/ditto/issues/512">arbitrary claims for authorization subjects</a>. 
-The <code class="highlighter-rouge">openid-connect-issuers</code> map now takes key-object pairs rather than key-string pairs:</p>
+The <code class="language-plaintext highlighter-rouge">openid-connect-issuers</code> map now takes key-object pairs rather than key-string pairs:</p>
 
 <p>old:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>oauth = {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>oauth = {
   openid-connect-issuers = {
     someissuer = "https://example.com"
   }
@@ -2727,7 +2734,7 @@ The <code class="highlighter-rouge">openid-connect-issuers</code> map now takes 
 
 <p>new:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>oauth = {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>oauth = {
   openid-connect-issuers = {
     someissuer = {
       issuer = "https://example.com"
@@ -2736,7 +2743,7 @@ The <code class="highlighter-rouge">openid-connect-issuers</code> map now takes 
 }
 </code></pre></div></div>
 
-<p>The <code class="highlighter-rouge">auth-subjects</code> field is optional. When not supplied, the ‘old’ behaviour (using the JWT <code class="highlighter-rouge">sub</code> field) remains.</p>
+<p>The <code class="language-plaintext highlighter-rouge">auth-subjects</code> field is optional. When not supplied, the ‘old’ behaviour (using the JWT <code class="language-plaintext highlighter-rouge">sub</code> field) remains.</p>
 
 <h3 id="header-mapping-for-mqtt-connections">Header mapping for MQTT connections</h3>
 
@@ -2744,9 +2751,9 @@ The <code class="highlighter-rouge">openid-connect-issuers</code> map now takes 
 <a href="connectivity-protocol-bindings-mqtt5.html">MQTT 5</a> always contained 3 headers for consumed messages via 
 <a href="basic-connections.html#sources">connection sources</a> (subscribed MQTT topics):</p>
 <ul>
-  <li><code class="highlighter-rouge">mqtt.topic</code></li>
-  <li><code class="highlighter-rouge">mqtt.qos</code></li>
-  <li><code class="highlighter-rouge">mqtt.retain</code></li>
+  <li><code class="language-plaintext highlighter-rouge">mqtt.topic</code></li>
+  <li><code class="language-plaintext highlighter-rouge">mqtt.qos</code></li>
+  <li><code class="language-plaintext highlighter-rouge">mqtt.retain</code></li>
 </ul>
 
 <p>Those headers could be e.g. used in the 
@@ -2761,10 +2768,10 @@ in the documentation.</p>
 
 <h3 id="ditto-java-client-instantiation">Ditto Java Client instantiation</h3>
 
-<p>The synchronous instantiation of the Ditto Java Client has been removed from its Factory class <code class="highlighter-rouge">DittoClients</code>.
-To get a <code class="highlighter-rouge">DittoClient</code> instantiate a <code class="highlighter-rouge">DisconnectedDittoClient</code> via <code class="highlighter-rouge">DittoClients.newInstance(messagingProvider)</code> first 
-and call <code class="highlighter-rouge">connect()</code> on it.<br />
-This call returns a <code class="highlighter-rouge">CompletionStage</code> which finally resolves to a connected <code class="highlighter-rouge">DittoClient</code>.</p>
+<p>The synchronous instantiation of the Ditto Java Client has been removed from its Factory class <code class="language-plaintext highlighter-rouge">DittoClients</code>.
+To get a <code class="language-plaintext highlighter-rouge">DittoClient</code> instantiate a <code class="language-plaintext highlighter-rouge">DisconnectedDittoClient</code> via <code class="language-plaintext highlighter-rouge">DittoClients.newInstance(messagingProvider)</code> first 
+and call <code class="language-plaintext highlighter-rouge">connect()</code> on it.<br />
+This call returns a <code class="language-plaintext highlighter-rouge">CompletionStage</code> which finally resolves to a connected <code class="language-plaintext highlighter-rouge">DittoClient</code>.</p>
 
 <h2 id="roadmap">Roadmap</h2>
 
@@ -2800,7 +2807,7 @@ This call returns a <code class="highlighter-rouge">CompletionStage</code> which
                     </div>
                     <p class="notice">
                         &copy;2024 Eclipse Ditto™.
-                         Site last generated: Feb 27, 2024 <br />
+                         Site last generated: Apr 10, 2024 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">
