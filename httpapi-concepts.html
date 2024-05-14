@@ -278,6 +278,13 @@
               
               
               
+              <li><a href="release_notes_355.html">3.5.5</a></li>
+              
+              
+              
+              
+              
+              
               <li><a href="release_notes_354.html">3.5.4</a></li>
               
               
@@ -2501,13 +2508,25 @@ JSON objects using a regular expression <strong>before</strong> applying all oth
 
 <p>The syntax for this function is rather specific (so that no “normally” occurring JSON keys match the same syntax):</p>
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"{{ ~.*~ }}"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>The recommended regex delimiter to use is the <code class="language-plaintext highlighter-rouge">~</code> character, additionally supported delimiters at this point are:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">~</code></li>
+  <li><code class="language-plaintext highlighter-rouge">/</code> (discouraged due to the special meaning of <code class="language-plaintext highlighter-rouge">/</code> for HTTP paths)</li>
+</ul>
+
+<p>A discouraged and thus deprecated way to define the regex (using <code class="language-plaintext highlighter-rouge">/</code> as delimiter) is:</p>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
   </span><span class="nl">"{{ /.*/ }}"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
-<p>When such a <code class="language-plaintext highlighter-rouge">{{ /&lt;regex&gt;/ }}</code> with the value <code class="language-plaintext highlighter-rouge">null</code> is detected in the merge patch, the content between the 2 <code class="language-plaintext highlighter-rouge">/</code> is 
+<p>When such a <code class="language-plaintext highlighter-rouge">{{ ~&lt;regex&gt;~ }}</code> with the value <code class="language-plaintext highlighter-rouge">null</code> is detected in the merge patch, the content between the 2 delimiters is 
 interpreted as regular expression to apply for finding keys to delete from the target object.<br />
-As a result, using <code class="language-plaintext highlighter-rouge">"{{ /.*/ }}": null</code> would delete all the values inside a JSON object before applying the new 
+As a result, using <code class="language-plaintext highlighter-rouge">"{{ ~.*~ }}": null</code> would delete all the values inside a JSON object before applying the new 
 values provided in the patch.</p>
 
 <p>Example:<br />
@@ -2534,7 +2553,7 @@ of this year:</p>
   </span><span class="nl">"features"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
     </span><span class="nl">"aggregated-history"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
       </span><span class="nl">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="nl">"{{ /2022-.*/ }}"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"{{ ~2022-.*~ }}"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
         </span><span class="nl">"2023-03"</span><span class="p">:</span><span class="w"> </span><span class="mf">105.21</span><span class="w">
       </span><span class="p">}</span><span class="w">
     </span><span class="p">}</span><span class="w">
@@ -2916,7 +2935,7 @@ the meantime.</li>
                     </div>
                     <p class="notice">
                         &copy;2024 Eclipse Ditto™.
-                         Site last generated: Apr 10, 2024 <br />
+                         Site last generated: May 14, 2024 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">
