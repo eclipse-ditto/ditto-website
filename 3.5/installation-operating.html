@@ -278,6 +278,13 @@
               
               
               
+              <li><a href="release_notes_359.html">3.5.9</a></li>
+              
+              
+              
+              
+              
+              
               <li><a href="release_notes_358.html">3.5.8</a></li>
               
               
@@ -2166,6 +2173,52 @@ the following environment variables in order to configure the connection to the 
   <li><code class="language-plaintext highlighter-rouge">PEKKO_PERSISTENCE_MONGO_SNAPS_WRITE_CONCERN</code>: Configure Pekko Persistence MongoDB snapshot write concern</li>
 </ul>
 
+<h4 id="mongodb-tuning">MongoDB tuning</h4>
+
+<p>This section contains known aspects when/how to tune Ditto working with MongoDB.</p>
+
+<h5 id="background-aggregation-queries">Background aggregation queries</h5>
+
+<p>Ditto runs several “background” queries against MongoDB (e.g. in order to clean up data in the background, 
+depending on the current load to the DB) using <code class="language-plaintext highlighter-rouge">aggregate</code>.<br />
+This mainly is done on the “snapshot” collections, e.g. <code class="language-plaintext highlighter-rouge">things_snaps</code>, <code class="language-plaintext highlighter-rouge">policies_snaps</code>, <code class="language-plaintext highlighter-rouge">connections_snaps</code>.</p>
+
+<h6 id="mongodb-5">MongoDB 5</h6>
+
+<p>In MongoDB 5, the default settings of Ditto work just fine - the MongoDB <code class="language-plaintext highlighter-rouge">aggregate</code> queries run quick enough and do
+not cause much disk read operations.</p>
+
+<h6 id="mongodb-6">MongoDB 6</h6>
+
+<p>In MongoDB 6 however, the <code class="language-plaintext highlighter-rouge">aggregate</code> queries Ditto does to the snapshot collections drastically slowed down with much
+data in the snapshot stores.<br />
+If you encounter poor query performance and e.g. a lot of additional “disk read IOPS”, you are also affected by this
+issue. In that case, there are options in Ditto to enable creation of additional indexes which speed up the aggregation 
+queries to a comparable level than with MongoDB 5.</p>
+
+<p>The following environment variables can be enabled to create those indexes:</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">MONGODB_READ_JOURNAL_SHOULD_CREATE_ADDITIONAL_SNAPSHOT_AGGREGATION_INDEX_PID_ID</code>: <code class="language-plaintext highlighter-rouge">true</code></li>
+  <li><code class="language-plaintext highlighter-rouge">MONGODB_READ_JOURNAL_SHOULD_CREATE_ADDITIONAL_SNAPSHOT_AGGREGATION_INDEX_PID_SN</code>: <code class="language-plaintext highlighter-rouge">true</code></li>
+  <li><code class="language-plaintext highlighter-rouge">MONGODB_READ_JOURNAL_SHOULD_CREATE_ADDITIONAL_SNAPSHOT_AGGREGATION_INDEX_PID_SN_ID</code>: <code class="language-plaintext highlighter-rouge">true</code></li>
+</ul>
+
+<p>They are also configurable via Helm values, e.g. for the <code class="language-plaintext highlighter-rouge">things</code> service:</p>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">things</span><span class="pi">:</span>
+  <span class="na">config</span><span class="pi">:</span>
+    <span class="c1"># holds configuration regarding the MongoReadJournal and e.g. the aggregation queries which are performed in it</span>
+    <span class="na">readJournal</span><span class="pi">:</span>
+      <span class="c1"># indexes contains configuration about additional indexes to create</span>
+      <span class="na">indexes</span><span class="pi">:</span>
+        <span class="c1"># whether to create the "pid"+"_id" compound index on the snapshot collection</span>
+        <span class="na">createSnapshotAggregationIndexPidId</span><span class="pi">:</span> <span class="kc">true</span>
+        <span class="c1"># whether to create the "pid"+"sn" compound index on the snapshot collection</span>
+        <span class="na">createSnapshotAggregationIndexPidSn</span><span class="pi">:</span> <span class="kc">true</span>
+        <span class="c1"># whether to create the "pid"+"sn"+"_id" compound index on the snapshot collection</span>
+        <span class="na">createSnapshotAggregationIndexPidSnId</span><span class="pi">:</span> <span class="kc">true</span>
+</code></pre></div></div>
+
 <h3 id="ditto-configuration">Ditto configuration</h3>
 
 <p>Each of Ditto’s microservice has many options for configuration, e.g. timeouts, cache sizes, etc.</p>
@@ -3606,7 +3659,7 @@ to stop blocking messages to a namespace.</p>
                     </div>
                     <p class="notice">
                         &copy;2024 Eclipse Ditto™.
-                         Site last generated: Jun 12, 2024 <br />
+                         Site last generated: Jun 14, 2024 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">
