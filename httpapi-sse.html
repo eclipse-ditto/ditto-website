@@ -11,15 +11,15 @@
 <link rel="stylesheet" href="css/syntax.css">
 <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" crossorigin="anonymous">
 <link rel="stylesheet" href="css/modern-business.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" crossorigin="anonymous">
 <link rel="stylesheet" href="css/customstyles.css">
 <link rel="stylesheet" href="css/boxshadowproperties.css">
 <link rel="stylesheet" href="css/theme-ditto.css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,700|Source+Code+Pro:300,600|Titillium+Web:400,600,700">
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/2.0.0/anchor.min.js" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/2.1.0/anchor.min.js" crossorigin="anonymous"></script>
 <script src="js/toc.js"></script>
 <script src="js/customscripts.js"></script>
 
@@ -2219,6 +2219,28 @@ only specific parts can be watched for changes, e.g.:</p>
 
 <div class="alert alert-success" role="alert"><i class="fa fa-check-square-o"></i> <b>Tip:</b> The <code class="language-plaintext highlighter-rouge">thingId</code> should always be included in the <code class="language-plaintext highlighter-rouge">fields</code> query, otherwise it is no longer visible for which thing the change was made.</div>
 
+<h5 id="projecting-_context">Projecting <code class="language-plaintext highlighter-rouge">_context</code></h5>
+
+<p>One special field which can be projected for the SSE is the <code class="language-plaintext highlighter-rouge">_context</code> field.<br />
+As the SSE format returns a “normalized” view in form of the <a href="basic-thing.html#model-specification">thing JSON</a>
+of change events, some “context” of the event gets lost, e.g. on which <code class="language-plaintext highlighter-rouge">path</code> the event was issued or whether it was
+a “merged” or “modified” event.</p>
+
+<p>To obtain this kind of context information, select the <code class="language-plaintext highlighter-rouge">_context</code> field as part of <code class="language-plaintext highlighter-rouge">fields</code>, e.g.:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http://localhost:8080/api/2/things?fields=thingId,attributes,_context
+</code></pre></div></div>
+
+<p>The <code class="language-plaintext highlighter-rouge">_context</code> will contain:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">topic</code>: the <a href="protocol-specification.html#topic">Ditto Protocol topic</a></li>
+  <li><code class="language-plaintext highlighter-rouge">path</code>: the <a href="protocol-specification.html#path">Ditto Protocol path</a></li>
+  <li><code class="language-plaintext highlighter-rouge">value</code>: the <a href="protocol-specification.html#value">Ditto Protocol value</a></li>
+  <li><code class="language-plaintext highlighter-rouge">headers</code>: the <a href="protocol-specification.html#headers">Ditto Protocol headers</a> (even all headers) of the command which caused the event</li>
+</ul>
+
+<p>It is also possible to select only specific context information, e.g.: <code class="language-plaintext highlighter-rouge">fields=_context/topic,_context/path,_context/value</code>
+in order to exclude the <code class="language-plaintext highlighter-rouge">headers</code>.</p>
+
 <h4 id="field-enrichment">Field enrichment</h4>
 
 <p>In addition to the fields projection, one can also choose to select <a href="basic-enrichment.html">extra fields</a> 
@@ -2237,28 +2259,6 @@ field projection, too. This is required to allow filtering based on extra fields
 An example without filtering would look like this:</p>
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http://localhost:8080/api/2/things?fields=thingId,attributes&amp;extraFields=attributes
 </code></pre></div></div>
-
-<h5 id="enriching-_context">Enriching <code class="language-plaintext highlighter-rouge">_context</code></h5>
-
-<p>One special field which can be enriched for the SSE is the <code class="language-plaintext highlighter-rouge">_context</code> field.<br />
-As the SSE format returns a “normalized” view in form of the <a href="basic-thing.html#model-specification">thing JSON</a> 
-of change events, some “context” of the event gets lost, e.g. on which <code class="language-plaintext highlighter-rouge">path</code> the event was issued or whether is was 
-a “merged” or “modified” event.</p>
-
-<p>To obtain this kind of context information, select the <code class="language-plaintext highlighter-rouge">_context</code> field as <code class="language-plaintext highlighter-rouge">extraFields</code>, e.g.:</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http://localhost:8080/api/2/things?fields=thingId,attributes&amp;extraFields=attributes,_context
-</code></pre></div></div>
-
-<p>The <code class="language-plaintext highlighter-rouge">_context</code> will contain:</p>
-<ul>
-  <li><code class="language-plaintext highlighter-rouge">topic</code>: the <a href="protocol-specification.html#topic">Ditto Protocol topic</a></li>
-  <li><code class="language-plaintext highlighter-rouge">path</code>: the <a href="protocol-specification.html#path">Ditto Protocol path</a></li>
-  <li><code class="language-plaintext highlighter-rouge">value</code>: the <a href="protocol-specification.html#value">Ditto Protocol value</a></li>
-  <li><code class="language-plaintext highlighter-rouge">headers</code>: the <a href="protocol-specification.html#headers">Ditto Protocol headers</a></li>
-</ul>
-
-<p>It is also possible to select only specific context information, e.g.: <code class="language-plaintext highlighter-rouge">extraFields=_context/topic,_context/path,_context/value</code>
-in order to exclude the <code class="language-plaintext highlighter-rouge">headers</code>.</p>
 
 <h4 id="filtering-by-namespaces">Filtering by namespaces</h4>
 
@@ -2511,7 +2511,7 @@ id:ditto:device7155
                     </div>
                     <p class="notice">
                         &copy;2024 Eclipse Ditto™.
-                         Site last generated: Jun 18, 2024 <br />
+                         Site last generated: Sep 6, 2024 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

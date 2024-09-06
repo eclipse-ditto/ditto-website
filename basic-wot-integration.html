@@ -11,15 +11,15 @@
 <link rel="stylesheet" href="css/syntax.css">
 <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" crossorigin="anonymous">
 <link rel="stylesheet" href="css/modern-business.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" crossorigin="anonymous">
 <link rel="stylesheet" href="css/customstyles.css">
 <link rel="stylesheet" href="css/boxshadowproperties.css">
 <link rel="stylesheet" href="css/theme-ditto.css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,700|Source+Code+Pro:300,600|Titillium+Web:400,600,700">
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/2.0.0/anchor.min.js" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/2.1.0/anchor.min.js" crossorigin="anonymous"></script>
 <script src="js/toc.js"></script>
 <script src="js/customscripts.js"></script>
 
@@ -2680,6 +2680,280 @@ the datatype is used as initial value of the property</li>
 the Thing is created without the skeleton model, just containing the specified <code class="language-plaintext highlighter-rouge">"definition"</code></li>
 </ul>
 
+<h3 id="thing-model-based-validation-of-changes-to-properties-action-and-event-payloads">Thing Model based validation of changes to properties, action and event payloads</h3>
+
+<p>Since Ditto <code class="language-plaintext highlighter-rouge">3.6.0</code> it is possible to configure Ditto in a way so that all modification to the persisted things are validated
+according to a linked to WoT Thing Model (TM).<br />
+That way, Ditto can ensure that Ditto managed things <strong>always</strong> comply with a previously defined (WoT Thing) model.</p>
+
+<p>This takes the WoT integration on a new level, as WoT TMs are not only used to 
+<a href="#thing-skeleton-generation-upon-thing-creation">create a Thing skeleton when creating a thing</a>, 
+ensuring the payload and structure of a thing once on creation.<br />
+But over the lifetime of a digital twin it is always enforced that the payload follows the model 
+(e.g. in regard to data types, ranges, patterns, etc.).</p>
+
+<p>The implementation supports validation or enforcing the following Ditto concepts:</p>
+<ul>
+  <li>On Thing level:
+    <ul>
+      <li>Modification of a Thing’s <a href="basic-thing.html#definition">definition</a> causes validation of the existing thing against the new TM</li>
+      <li>Deletion of a Thing’s <a href="basic-thing.html#definition">definition</a> is forbidden (to not be able to bypass validation)</li>
+      <li>Thing <a href="basic-thing.html#attributes">attributes</a>:
+        <ul>
+          <li>based on the linked TM of a Thing’s <a href="basic-thing.html#definition">definition</a>,  the Thing <code class="language-plaintext highlighter-rouge">attributes</code> have to 
+follow the contract defined by the TM <code class="language-plaintext highlighter-rouge">properties</code></li>
+          <li>by default, non-modeled <code class="language-plaintext highlighter-rouge">attributes</code> are forbidden to be created/updated</li>
+          <li><code class="language-plaintext highlighter-rouge">attributes</code> which are not marked as optional (via <code class="language-plaintext highlighter-rouge">"tm:optional"</code>) are ensured not to be deleted</li>
+        </ul>
+      </li>
+      <li>Thing <a href="basic-messages.html#sending-messages">messages</a>:
+        <ul>
+          <li>based on the linked TM of a Thing’s <a href="basic-thing.html#definition">definition</a>, the Thing <code class="language-plaintext highlighter-rouge">messages</code>
+            <ul>
+              <li>sent to its <code class="language-plaintext highlighter-rouge">inbox</code> have to follow the contract defined by the TM <code class="language-plaintext highlighter-rouge">actions</code>
+                <ul>
+                  <li>both, the defined <code class="language-plaintext highlighter-rouge">input</code> payload and the <code class="language-plaintext highlighter-rouge">output</code> payload is validated</li>
+                  <li>by default, non-modeled <code class="language-plaintext highlighter-rouge">inbox</code> <code class="language-plaintext highlighter-rouge">messages</code> are forbidden to be sent</li>
+                </ul>
+              </li>
+              <li>sent from its <code class="language-plaintext highlighter-rouge">outbox</code> have to follow the contract defined by the TM <code class="language-plaintext highlighter-rouge">events</code>
+                <ul>
+                  <li>the defined <code class="language-plaintext highlighter-rouge">data</code> payload is validated</li>
+                  <li>by default, non-modeled <code class="language-plaintext highlighter-rouge">outbox</code> <code class="language-plaintext highlighter-rouge">messages</code> are forbidden to be sent</li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+      <li>When modifying (or merging) the complete Thing or all of the features at once:
+        <ul>
+          <li>it is ensured that no defined features get effectively “removed”</li>
+          <li>it is ensured that only defined and known features are accepted</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li>On Feature level:
+    <ul>
+      <li>Modification of a Feature’s <a href="basic-feature.html#feature-definition">definition</a> causes validation of the existing feature against the new TM</li>
+      <li>Deletion of a Feature’s <a href="basic-feature.html#feature-definition">definition</a> is forbidden (to not be able to bypass validation)</li>
+      <li>Feature <a href="basic-feature.html#feature-properties">properties</a>:
+        <ul>
+          <li>based on the linked TM of a Feature’s <a href="basic-feature.html#feature-definition">definition</a>, the Feature <code class="language-plaintext highlighter-rouge">properties</code> 
+have to follow the contract defined by the TM <code class="language-plaintext highlighter-rouge">properties</code></li>
+        </ul>
+      </li>
+      <li>Feature <a href="basic-messages.html#sending-messages">messages</a>:
+        <ul>
+          <li>based on the linked TM of a Feature’s <a href="basic-feature.html#feature-definition">definition</a>, the Feature <code class="language-plaintext highlighter-rouge">messages</code>
+            <ul>
+              <li>sent to its <code class="language-plaintext highlighter-rouge">inbox</code> have to follow the contract defined by the TM <code class="language-plaintext highlighter-rouge">actions</code>
+                <ul>
+                  <li>both, the defined <code class="language-plaintext highlighter-rouge">input</code> payload and the <code class="language-plaintext highlighter-rouge">output</code> payload is validated</li>
+                  <li>by default, non-modeled <code class="language-plaintext highlighter-rouge">inbox</code> <code class="language-plaintext highlighter-rouge">messages</code> are forbidden to be sent</li>
+                </ul>
+              </li>
+              <li>sent from its <code class="language-plaintext highlighter-rouge">outbox</code> have to follow the contract defined by the TM <code class="language-plaintext highlighter-rouge">events</code>
+                <ul>
+                  <li>the defined <code class="language-plaintext highlighter-rouge">data</code> payload is validated</li>
+                  <li>by default, non-modeled <code class="language-plaintext highlighter-rouge">outbox</code> <code class="language-plaintext highlighter-rouge">messages</code> are forbidden to be sent</li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="thing-model-based-validation-error">Thing Model based validation error</h3>
+
+<p>When Ditto detects an API call which was not valid according to the model, an HTTP status code <code class="language-plaintext highlighter-rouge">400</code> (Bad Request) will
+be returned to the caller, containing a description of the encountered validation violation.</p>
+
+<p>The basic structure of the WoT validation errors is defined by <a href="basic-errors.html">the error model</a>.<br />
+The <code class="language-plaintext highlighter-rouge">error</code> field will always be <code class="language-plaintext highlighter-rouge">"wot:payload.validation.error"</code> - and the <code class="language-plaintext highlighter-rouge">message</code> will also always be the same.<br />
+The <code class="language-plaintext highlighter-rouge">description</code> however will contain a specific text and the <code class="language-plaintext highlighter-rouge">"validationDetails"</code> field contains a map of 
+erroneous Json pointer paths.</p>
+
+<p>The list of collected errors might however not be complete (e.g. for the whole thing), as Ditto will for a 
+complete <a href="basic-thing.html">Thing</a> update first its <code class="language-plaintext highlighter-rouge">attributes</code> and then its <code class="language-plaintext highlighter-rouge">featuers</code> (one after another) 
+and will fail fast (instead of validating the complete thing) if validation errors are detected.</p>
+
+<p>An example payload when e.g. sending the wrong datatype for a Thing “attribute” could look like:</p>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"status"</span><span class="p">:</span><span class="w"> </span><span class="mi">400</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"error"</span><span class="p">:</span><span class="w"> </span><span class="s2">"wot:payload.validation.error"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"The provided payload did not conform to the specified WoT (Web of Things) model."</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"The Thing's attribute &lt;/serial&gt; contained validation errors, check the validation details."</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"validationDetails"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"/attributes/serial"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+      </span><span class="s2">": {type=boolean found, string expected}"</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>An example where e.g. a <code class="language-plaintext highlighter-rouge">"required"</code> field of a <code class="language-plaintext highlighter-rouge">"type": "object"</code> WoT property was missing would be, for example:</p>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"status"</span><span class="p">:</span><span class="w"> </span><span class="mi">400</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"error"</span><span class="p">:</span><span class="w"> </span><span class="s2">"wot:payload.validation.error"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"The provided payload did not conform to the specified WoT (Web of Things) model."</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"The Feature &lt;connectivity&gt;'s property &lt;/status&gt; contained validation errors, check the validation details."</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"validationDetails"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"/features/connectivity/properties/status"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+      </span><span class="s2">": {required=[required property 'updatedAt' not found, required property 'message' not found]}"</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>If all feature properties should be updated at once, but no payload was provided, this would list the non-optional 
+WoT properties in the error response:</p>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"status"</span><span class="p">:</span><span class="w"> </span><span class="mi">400</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"error"</span><span class="p">:</span><span class="w"> </span><span class="s2">"wot:payload.validation.error"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"The provided payload did not conform to the specified WoT (Web of Things) model."</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Required JSON fields were missing from the Feature &lt;sensor&gt;'s properties"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"validationDetails"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"/features/sensor/properties/value"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+      </span><span class="s2">"Feature &lt;sensor&gt;'s property &lt;value&gt; is non optional and must be provided"</span><span class="w">
+    </span><span class="p">],</span><span class="w">
+    </span><span class="nl">"/features/sensor/properties/updatedAt"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+      </span><span class="s2">"Feature &lt;sensor&gt;'s property &lt;updatedAt&gt; is non optional and must be provided"</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h4 id="model-evolution-with-the-help-of-thing-model-based-validation">Model evolution with the help of Thing Model based validation</h4>
+
+<p>This new validation will also make it possible to evolute things conforming to a (WoT) model to e.g. a new minor version
+with added functionality and also provide means for “migrating” things to breaking (major) model versions.</p>
+
+<p>When updating the Thing’s <a href="basic-thing.html#definition">definition</a> to another version, the Ditto WoT validation will
+check if the payload of the Thing is valid according to the new definition.<br />
+If it is not valid (e.g. because a new feature was added to the Thing’s model which is not yet in the Thing’s payload),
+validation will fail with an error:</p>
+
+<p>Example assuming to update a Thing’s <code class="language-plaintext highlighter-rouge">definition</code> from version <code class="language-plaintext highlighter-rouge">1.0.0</code> to version <code class="language-plaintext highlighter-rouge">1.1.0</code>
+(assuming where a new submodel <code class="language-plaintext highlighter-rouge">coffeeMaker</code> was added):</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>PUT /api/2/things/org.eclipse.ditto:my-thing-1/definition
+
+payload:
+"https://some.domain/some-model-1.1.0.tm.jsonld"
+</code></pre></div></div>
+
+<p>The response would e.g. be:</p>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"status"</span><span class="p">:</span><span class="w"> </span><span class="mi">400</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"error"</span><span class="p">:</span><span class="w"> </span><span class="s2">"wot:payload.validation.error"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"The provided payload did not conform to the specified WoT (Web of Things) model."</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Attempting to update the Thing with missing in the model defined features: [coffeeMaker]"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>This could be solved by doing a <code class="language-plaintext highlighter-rouge">PATCH</code> update instead, updating both the Thing’s <code class="language-plaintext highlighter-rouge">definition</code> together with the
+missing payload (assuming the <code class="language-plaintext highlighter-rouge">coffee-1.0.0</code> model contains just a required property <code class="language-plaintext highlighter-rouge">counter</code>):</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>PATCH /api/2/things/org.eclipse.ditto:my-thing-1
+
+headers:
+Content-Type: application/merge-patch+json
+
+payload:
+{
+  "definition": "https://some.domain/some-model-1.1.0.tm.jsonld",
+  "features": {
+    "coffeeMaker": {
+      "definition": [
+        "https://some.domain/submodels/coffee-1.0.0.tm.jsonld"
+      ],
+      "properties": {
+        "counter": 0
+      }
+    }
+  }
+}
+</code></pre></div></div>
+
+<h4 id="configuration-of-thing-model-based-validation">Configuration of Thing Model based validation</h4>
+
+<p>Starting with Ditto <code class="language-plaintext highlighter-rouge">3.6.0</code>, the WoT based validation against Thing Models is enabled by default.<br />
+It however can be completely disabled by configuring the environment variable <code class="language-plaintext highlighter-rouge">THINGS_WOT_TM_MODEL_VALIDATION_ENABLED</code> to <code class="language-plaintext highlighter-rouge">false</code>.</p>
+
+<p>Every single validation aspect is configurable separately in Ditto (by default all aspects are enabled).<br />
+Please have a look at e.g. the Helm chart configuration, level <code class="language-plaintext highlighter-rouge">things.config.wot.tmValidation</code>, in order to find all 
+available configuration options.<br />
+Or check the <a href="https://github.com/eclipse-ditto/ditto/blob/master/things/service/src/main/resources/things.conf">things.conf</a>
+(key <code class="language-plaintext highlighter-rouge">ditto.things.wot.tm-model-validation</code>) to also find out the options and with which environment variables they 
+can be overridden.</p>
+
+<p>The configuration can also be applied dynamically based on:</p>
+<ul>
+  <li>the presence of certain Ditto headers (e.g. a <code class="language-plaintext highlighter-rouge">ditto-originator</code> - the connection or user which “caused” an API call)</li>
+  <li>the name/URL of the Thing’s WoT Thing Model (TM)</li>
+  <li>the name/URL of the Feature’s WoT Thing Model (TM)</li>
+</ul>
+
+<p>And example for the dynamic configuration, which would override the static configuration for</p>
+<ul>
+  <li>a specific user doing the API call</li>
+  <li>AND doing the API call to a Thing with a specific model</li>
+</ul>
+
+<p>would be the following HOCON configuration:</p>
+<div class="language-hocon highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nl">things</span><span class="w"> </span><span class="p">{</span><span class="w">
+  </span><span class="nl">wot</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">tm-model-validation</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">enabled</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="kc">true</span><span class="w">
+
+      </span><span class="nl">dynamic-configuration</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+          </span><span class="nl">validation-context</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="c1">// all 3 "patterns" conditions have to match (AND)</span><span class="w">
+            </span><span class="nl">ditto-headers-patterns</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="p">[</span><span class="w">      </span><span class="c1">// if any (OR) of the contained headers block match</span><span class="w">
+              </span><span class="p">{</span><span class="w">
+                </span><span class="c1">// inside the object, all patterns have to match (AND)</span><span class="w">
+                </span><span class="nl">ditto-originator</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s2">"^pre:ditto$"</span><span class="w">
+              </span><span class="p">}</span><span class="w">
+            </span><span class="p">]</span><span class="w">
+            </span><span class="nl">thing-definition-patterns</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="p">[</span><span class="w">   </span><span class="c1">// if any (OR) of the contained patterns match</span><span class="w">
+              </span><span class="s2">"^https://eclipse-ditto.github.io/ditto-examples/wot/models/floor-lamp-1.0.0.tm.jsonld$"</span><span class="w">
+            </span><span class="p">]</span><span class="w">
+            </span><span class="nl">feature-definition-patterns</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="c1">// if any (OR) of the contained patterns match</span><span class="w">
+            </span><span class="p">]</span><span class="w">
+          </span><span class="p">}</span><span class="w">
+          </span><span class="c1">// if the validation-context "matches" a processed API call, apply the following overrides:</span><span class="w">
+          </span><span class="nl">config-overrides</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="c1">// enabled = false // we could deactivate the complete WoT Thing Model validation with this config</span><span class="w">
+            </span><span class="nl">thing</span><span class="w"> </span><span class="p">{</span><span class="w">
+              </span><span class="c1">// disable some aspects of Thing validation</span><span class="w">
+              </span><span class="nl">enforce</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="nl">attributes</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="kc">false</span><span class="w">
+              </span><span class="p">}</span><span class="w">
+              </span><span class="nl">forbid</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="nl">thing-description-deletion</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="kc">false</span><span class="w">
+              </span><span class="p">}</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+            </span><span class="nl">feature</span><span class="w"> </span><span class="p">{</span><span class="w">
+              </span><span class="c1">// disable some aspects of Feature validation</span><span class="w">
+              </span><span class="nl">enforce</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="nl">properties</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="kc">false</span><span class="w">
+              </span><span class="p">}</span><span class="w">
+              </span><span class="nl">forbid</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="nl">feature-description-deletion</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="kc">false</span><span class="w">
+              </span><span class="p">}</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+          </span><span class="p">}</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">]</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
 <h2 id="ditto-wot-extension-ontology">Ditto WoT Extension Ontology</h2>
 
 <p>As WoT is built on JSON-LD, extension of Thing Models (TMs) or Thing Descriptions (TDs) via a custom ontology is possible.<br />
@@ -2786,7 +3060,7 @@ example are quite long.</p>
                     </div>
                     <p class="notice">
                         &copy;2024 Eclipse Ditto™.
-                         Site last generated: Jun 18, 2024 <br />
+                         Site last generated: Sep 6, 2024 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">
