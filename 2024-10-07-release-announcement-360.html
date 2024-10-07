@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="">
 <meta name="keywords" content="blog,  ">
-<title>  Example demonstrating REST and WebSocket API • Eclipse Ditto™</title>
+<title>  Announcing Eclipse Ditto Release 3.6.0 • Eclipse Ditto™</title>
 
 <link rel="stylesheet" href="css/syntax.css">
 <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" crossorigin="anonymous">
@@ -183,7 +183,7 @@
                                 searchInput: document.getElementById('search-input'),
                                 resultsContainer: document.getElementById('results-container'),
                                 dataSource: 'search.json',
-                                searchResultTemplate: '<li><a href="{url}" title="Example demonstrating REST and WebSocket API">{title}</a></li>',
+                                searchResultTemplate: '<li><a href="{url}" title="Announcing Eclipse Ditto Release 3.6.0">{title}</a></li>',
                                 noResultsText: 'No results found.',
                                 limit: 10,
                                 fuzzy: true,
@@ -215,18 +215,18 @@
 <!---->
 <!--<span>-->
     <!--&lt;!&ndash; Mugshot. &ndash;&gt;-->
-    <!--<img src="https://www.gravatar.com/avatar/9ca96e4eae3d3cf7df52ece39dc0b2fb?s=135" alt="A photo of Florian Fendt" />-->
+    <!--<img src="https://www.gravatar.com/avatar/1993375e06bf8a2b236b5862792a0532?s=135" alt="A photo of Thomas Jäckle" />-->
 
 <!--&lt;!&ndash; Personal Info. &ndash;&gt;-->
-    <!--Written by <a href="https://github.com/ffendt" target="_blank">Florian Fendt</a>-->
+    <!--Written by <a href="https://github.com/thjaeckle" target="_blank">Thomas Jäckle</a>-->
 <!--</span>-->
 <!---->
 
 <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
 
     <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">Example demonstrating REST and WebSocket API</h1>
-        <p class="post-meta">Published by <img src="https://www.gravatar.com/avatar/9ca96e4eae3d3cf7df52ece39dc0b2fb?s=135" alt="A photo of Florian Fendt" style="width:50px;border-radius:50%;display:inline-block;margin-right:5px;" /><span itemprop="author" itemscope itemtype="http://schema.org/Person"><span itemprop="name"><a href="https://github.com/ffendt" target="_blank">Florian Fendt</a> </span></span> on <time datetime="2018-01-15T00:00:00+00:00" itemprop="datePublished">Jan 15, 2018</time> - Tags:
+        <h1 class="post-title" itemprop="name headline">Announcing Eclipse Ditto Release 3.6.0</h1>
+        <p class="post-meta">Published by <img src="https://www.gravatar.com/avatar/1993375e06bf8a2b236b5862792a0532?s=135" alt="A photo of Thomas Jäckle" style="width:50px;border-radius:50%;display:inline-block;margin-right:5px;" /><span itemprop="author" itemscope itemtype="http://schema.org/Person"><span itemprop="name"><a href="https://github.com/thjaeckle" target="_blank">Thomas Jäckle</a> </span></span> on <time datetime="2024-10-07T00:00:00+00:00" itemprop="datePublished">Oct 7, 2024</time> - Tags:
             
             
             
@@ -246,31 +246,77 @@
 
         
 
-        <p>There’s a new example showing how to combine the REST and WebSocket API
-over at the <a href="https://github.com/eclipse-ditto/ditto-examples/tree/master/rest-to-websocket">Eclipse Ditto examples repository</a>.
-Right from the project’s description:</p>
+        <p>After a longer time of “bugfix releases” only, the Eclipse Ditto team is once again happy to announce the availability
+of a new minor release, including new features: Ditto <a href="https://projects.eclipse.org/projects/iot.ditto/releases/3.6.0">3.6.0</a>.</p>
 
-<blockquote>
-  <p>This example shows how to leverage the powers of combining the REST and
- WebSocket Messages API of <a href="https://www.eclipse.dev/ditto/">Eclipse Ditto</a>.
- It demonstrates how to send direct Messages to a <em>live</em> Thing, as well as
- updating the <em>twin</em> representation of a Thing inside Ditto.
-<br /> 
-<br /> 
- The Thing in this case is a smart coffee machine (“SmartCoffee”) that has
- some basic functionality. It accepts Messages that allow to start or stop
- the heating of the water tank. Moreover you can request the coffee
- machine to brew coffee, so you don’t have to wait for your dose of caffeine.<br />
- But before starting to brew a coffee, SmartCoffee will send a captcha
- that has to be solved.</p>
-</blockquote>
+<p>The most work in this release went into the enforcement/validation of a linked WoT (Web of Thing) “Thing Model” to make
+sure that a Ditto managed digital twin can only be modified in ways which are valid based on the defined WoT model.</p>
 
-<figure><img class="docimage" src="https://raw.githubusercontent.com/eclipse/ditto-examples/master/rest-to-websocket/docs/images/make-coffee.gif" alt="Eclipse Ditto REST to WebSocket example gif" style="max-width: 800px" /><figcaption>Source: https://github.com/eclipse-ditto/ditto-examples</figcaption></figure>
+<p>But also other features like SSO in the Ditto-UI were added, so inform yourself in this blogpost about the changes in 
+the new release.</p>
 
-<p>If you have any wishes, improvements, are missing something
-or just want to get in touch with us, you can use one of
-our <a href="https://www.eclipse.dev/ditto/feedback.html">feedback channels</a>.</p>
+<h2 id="adoption">Adoption</h2>
 
+<p>Companies are willing to show their adoption of Eclipse Ditto publicly: 
+<a href="https://iot.eclipse.org/adopters/?#iot.ditto">https://iot.eclipse.org/adopters/?#iot.ditto</a></p>
+
+<p>When you use Eclipse Ditto it would be great to support the project by putting your logo there.</p>
+
+<h2 id="changelog">Changelog</h2>
+
+<p>The main improvements and additions of Ditto 3.6.0 are:</p>
+
+<ul>
+  <li><strong>WoT (Web of Things)</strong> Thing Model based validation of modifications to things and action/event payloads</li>
+  <li><strong>AWS IAM based authentication</strong> against <strong>MongoDB</strong></li>
+  <li>Configure <strong>defined aggregation queries</strong> to be <strong>exposed as Prometheus metrics</strong> by Ditto periodically</li>
+  <li><strong>SSO (Single-Sign-On)</strong> support in the Ditto UI via OpenID connect provider configuration</li>
+</ul>
+
+<p>The following non-functional work is also included:</p>
+
+<ul>
+  <li>Update Java runtime to <strong>run Eclipse Ditto with</strong> to <strong>Java 21</strong></li>
+  <li>Run <strong>Ditto system tests</strong> in <strong>GitHub actions</strong></li>
+</ul>
+
+<p>The following notable fixes are included:</p>
+
+<ul>
+  <li>Fix <strong>JWT placeholder</strong> not resolving correctly in <strong>JSON arrays nested</strong> in JSON objects</li>
+  <li>Fix <strong>retrieving a Thing</strong> at a <strong>given historical timestamp</strong></li>
+  <li>Generating UNIX “Epoch” as neutral element when creating new things based on WoT TM models for types declared as “date-time” format</li>
+</ul>
+
+<p>Please have a look at the <a href="release_notes_360.html">3.6.0 release notes</a> for a more detailed information on the release.</p>
+
+<h2 id="artifacts">Artifacts</h2>
+
+<p>The new Java artifacts have been published at the <a href="https://repo.eclipse.org/content/repositories/ditto/">Eclipse Maven repository</a>
+as well as <a href="https://repo1.maven.org/maven2/org/eclipse/ditto/">Maven central</a>.</p>
+
+<p>The Ditto JavaScript client release was published on <a href="https://www.npmjs.com/~eclipse_ditto">npmjs.com</a>:</p>
+<ul>
+  <li><a href="https://www.npmjs.com/package/@eclipse-ditto/ditto-javascript-client-dom">@eclipse-ditto/ditto-javascript-client-dom</a></li>
+  <li><a href="https://www.npmjs.com/package/@eclipse-ditto/ditto-javascript-client-node">@eclipse-ditto/ditto-javascript-client-node</a></li>
+</ul>
+
+<p>The Docker images have been pushed to Docker Hub:</p>
+<ul>
+  <li><a href="https://hub.docker.com/r/eclipse/ditto-policies/">eclipse/ditto-policies</a></li>
+  <li><a href="https://hub.docker.com/r/eclipse/ditto-things/">eclipse/ditto-things</a></li>
+  <li><a href="https://hub.docker.com/r/eclipse/ditto-things-search/">eclipse/ditto-things-search</a></li>
+  <li><a href="https://hub.docker.com/r/eclipse/ditto-gateway/">eclipse/ditto-gateway</a></li>
+  <li><a href="https://hub.docker.com/r/eclipse/ditto-connectivity/">eclipse/ditto-connectivity</a></li>
+</ul>
+
+<p>The Ditto Helm chart has been published to Docker Hub:</p>
+<ul>
+  <li><a href="https://hub.docker.com/r/eclipse/ditto/">eclipse/ditto</a></li>
+</ul>
+
+<p><br />
+<br /></p>
 <figure><img class="docimage" src="images/ditto.svg" alt="Ditto" style="max-width: 500px" /></figure>
 
 <p>–<br />
