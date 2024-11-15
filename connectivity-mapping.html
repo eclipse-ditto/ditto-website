@@ -867,6 +867,15 @@
               
               
               
+              <li class="subfolders">
+                  <a href="#"><span></span>Checking Permissions for Resources</a>
+                  <ul>
+                      
+                  </ul>
+              </li>
+              
+              
+              
               
               
               
@@ -2988,7 +2997,7 @@ into that folder.</p>
 
   <span class="kd">let</span> <span class="nx">buf</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">ArrayBuffer</span><span class="p">(</span><span class="nx">string</span><span class="p">.</span><span class="nx">length</span><span class="p">);</span>
   <span class="kd">let</span> <span class="nx">bufView</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Uint8Array</span><span class="p">(</span><span class="nx">buf</span><span class="p">);</span>
-  <span class="nf">for </span><span class="p">(</span><span class="kd">let</span> <span class="nx">i</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="nx">strLen</span><span class="o">=</span><span class="nx">string</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">&lt;</span><span class="nx">strLen</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">for </span><span class="p">(</span><span class="kd">let</span> <span class="nx">i</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="nx">strLen</span><span class="o">=</span><span class="nx">string</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">&lt;</span><span class="nx">strLen</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
     <span class="nx">bufView</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">=</span> <span class="nx">string</span><span class="p">.</span><span class="nf">charCodeAt</span><span class="p">(</span><span class="nx">i</span><span class="p">);</span>
   <span class="p">}</span>
   <span class="k">return</span> <span class="nx">buf</span><span class="p">;</span>
@@ -3035,18 +3044,18 @@ into that folder.</p>
   <span class="c1">// based on incoming payload.</span>
   <span class="c1">// See https://websites.eclipseprojects.io/ditto/connectivity-mapping.html#helper-functions for details.</span>
   <span class="c1">// ### example code assuming the Ditto protocol content type for incoming messages.</span>
-  <span class="nf">if </span><span class="p">(</span><span class="nx">contentType</span> <span class="o">===</span> <span class="dl">'</span><span class="s1">application/vnd.eclipse.ditto+json</span><span class="dl">'</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if </span><span class="p">(</span><span class="nx">contentType</span> <span class="o">===</span> <span class="dl">'</span><span class="s1">application/vnd.eclipse.ditto+json</span><span class="dl">'</span><span class="p">)</span> <span class="p">{</span>
     <span class="c1">// Message is sent as Ditto protocol text payload and can be used directly</span>
     <span class="k">return</span> <span class="nx">JSON</span><span class="p">.</span><span class="nf">parse</span><span class="p">(</span><span class="nx">textPayload</span><span class="p">);</span>
-  <span class="p">}</span> <span class="k">else</span> <span class="nf">if </span><span class="p">(</span><span class="nx">contentType</span> <span class="o">===</span> <span class="dl">'</span><span class="s1">application/octet-stream</span><span class="dl">'</span><span class="p">)</span> <span class="p">{</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="k">if </span><span class="p">(</span><span class="nx">contentType</span> <span class="o">===</span> <span class="dl">'</span><span class="s1">application/octet-stream</span><span class="dl">'</span><span class="p">)</span> <span class="p">{</span>
     <span class="c1">// Message is sent as binary payload; assume Ditto protocol message (JSON).</span>
     <span class="k">try</span> <span class="p">{</span>
       <span class="k">return</span> <span class="nx">JSON</span><span class="p">.</span><span class="nf">parse</span><span class="p">(</span><span class="nx">Ditto</span><span class="p">.</span><span class="nf">arrayBufferToString</span><span class="p">(</span><span class="nx">bytePayload</span><span class="p">));</span>
-    <span class="p">}</span> <span class="nf">catch </span><span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
+    <span class="p">}</span> <span class="k">catch </span><span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
       <span class="c1">// parsing failed (no JSON document); return null to drop the message</span>
       <span class="k">return</span> <span class="kc">null</span><span class="p">;</span>
     <span class="p">}</span>
-  <span class="p">}</span> <span class="k">else</span> <span class="nf">if </span><span class="p">(</span><span class="nx">contentType</span> <span class="o">===</span> <span class="dl">'</span><span class="s1">application/json</span><span class="dl">'</span><span class="p">)</span> <span class="p">{</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="k">if </span><span class="p">(</span><span class="nx">contentType</span> <span class="o">===</span> <span class="dl">'</span><span class="s1">application/json</span><span class="dl">'</span><span class="p">)</span> <span class="p">{</span>
     <span class="kd">let</span> <span class="nx">parsedJson</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nf">parse</span><span class="p">(</span><span class="nx">textPayload</span><span class="p">);</span>
     <span class="c1">// the following variables would be determined from the "parsedJson" and from the "headers":</span>
     <span class="kd">let</span> <span class="nx">namespace</span> <span class="o">=</span> <span class="dl">""</span><span class="p">;</span>
@@ -3192,7 +3201,7 @@ to inspect which JSON fields are available when.</p>
   <span class="kd">let</span> <span class="nx">channel</span><span class="p">;</span>
   <span class="kd">let</span> <span class="nx">criterion</span><span class="p">;</span>
   <span class="kd">let</span> <span class="nx">action</span><span class="p">;</span>
-  <span class="nf">if </span><span class="p">(</span><span class="nf">hasChannel</span><span class="p">(</span><span class="nx">group</span><span class="p">))</span> <span class="p">{</span>
+  <span class="k">if </span><span class="p">(</span><span class="nf">hasChannel</span><span class="p">(</span><span class="nx">group</span><span class="p">))</span> <span class="p">{</span>
     <span class="nx">channel</span> <span class="o">=</span> <span class="nx">splitTopic</span><span class="p">[</span><span class="mi">3</span><span class="p">];</span>
     <span class="nx">criterion</span> <span class="o">=</span> <span class="nx">splitTopic</span><span class="p">[</span><span class="mi">4</span><span class="p">];</span>
     <span class="nx">action</span> <span class="o">=</span> <span class="nx">splitTopic</span><span class="p">[</span><span class="mi">5</span><span class="p">];</span>
@@ -3222,7 +3231,7 @@ to inspect which JSON fields are available when.</p>
 structured data may be processed like this:</p>
 
 <div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">let</span> <span class="nx">value</span><span class="p">;</span>
-<span class="nf">if </span><span class="p">(</span><span class="nx">contentType</span> <span class="o">===</span> <span class="dl">'</span><span class="s1">application/json</span><span class="dl">'</span><span class="p">)</span> <span class="p">{</span>
+<span class="k">if </span><span class="p">(</span><span class="nx">contentType</span> <span class="o">===</span> <span class="dl">'</span><span class="s1">application/json</span><span class="dl">'</span><span class="p">)</span> <span class="p">{</span>
   <span class="kd">let</span> <span class="nx">parsedJson</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nf">parse</span><span class="p">(</span><span class="nx">textPayload</span><span class="p">);</span>
   <span class="nx">value</span> <span class="o">=</span> <span class="nx">parsedJson</span><span class="p">.</span><span class="nx">number1</span> <span class="o">+</span> <span class="nx">parsedJson</span><span class="p">[</span><span class="dl">'</span><span class="s1">sub-field</span><span class="dl">'</span><span class="p">];</span> <span class="c1">// remember to access JSON keys with dashes in a JS special way</span>
 <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
@@ -3340,7 +3349,7 @@ into the cloud. And, that an example payload of your device is:</p>
     <span class="nx">contentType</span>
 <span class="p">)</span> <span class="p">{</span>
     
-    <span class="nf">if </span><span class="p">(</span><span class="nx">contentType</span> <span class="o">!==</span> <span class="dl">'</span><span class="s1">application/json</span><span class="dl">'</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if </span><span class="p">(</span><span class="nx">contentType</span> <span class="o">!==</span> <span class="dl">'</span><span class="s1">application/json</span><span class="dl">'</span><span class="p">)</span> <span class="p">{</span>
         <span class="k">return</span> <span class="kc">null</span><span class="p">;</span> <span class="c1">// only handle messages with content-type application/json</span>
     <span class="p">}</span>
     
@@ -3440,7 +3449,7 @@ HTTP adapter into the cloud. An example payload of your device - displayed as he
     <span class="nx">contentType</span>
 <span class="p">)</span> <span class="p">{</span>
     
-    <span class="nf">if </span><span class="p">(</span><span class="nx">contentType</span> <span class="o">!==</span> <span class="dl">'</span><span class="s1">application/octet-stream</span><span class="dl">'</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if </span><span class="p">(</span><span class="nx">contentType</span> <span class="o">!==</span> <span class="dl">'</span><span class="s1">application/octet-stream</span><span class="dl">'</span><span class="p">)</span> <span class="p">{</span>
         <span class="k">return</span> <span class="kc">null</span><span class="p">;</span> <span class="c1">// only handle messages with content-type application/octet-stream</span>
     <span class="p">}</span>
     
@@ -3628,7 +3637,7 @@ connectivity service for mapping a custom domain specific Protbuf encoded payloa
                     </div>
                     <p class="notice">
                         &copy;2024 Eclipse Ditto™.
-                         Site last generated: Nov 6, 2024 <br />
+                         Site last generated: Nov 15, 2024 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">
