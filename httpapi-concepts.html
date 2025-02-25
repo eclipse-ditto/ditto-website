@@ -2353,6 +2353,40 @@ thing</li>
 specific thing</li>
 </ul>
 
+<h4 id="things-in-api-2---migrate-thing-definitions"><code class="language-plaintext highlighter-rouge">/things</code> in API 2 - Migrate Thing Definitions</h4>
+
+<p>The endpoint <code class="language-plaintext highlighter-rouge">/things/{thingId}/migrateDefinition</code> allows migrating the thing definition with a new model, as well as optionally migrating attributes and features.</p>
+
+<p>HTTP Method: <code class="language-plaintext highlighter-rouge">POST /things/{thingId}/migrateDefinition</code></p>
+
+<p>Request Example:</p>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"thingDefinitionUrl"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://models.example.com/thing-definition-1.0.0.tm.jsonld"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"migrationPayload"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"manufacturer"</span><span class="p">:</span><span class="w"> </span><span class="s2">"New Corp"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"location"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Berlin, main floor"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"features"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"thermostat"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"status"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"temperature"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+              </span><span class="nl">"value"</span><span class="p">:</span><span class="w"> </span><span class="mf">23.5</span><span class="p">,</span><span class="w"> 
+              </span><span class="nl">"unit"</span><span class="p">:</span><span class="w"> </span><span class="s2">"DEGREE_CELSIUS"</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+          </span><span class="p">}</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nl">"patchConditions"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"thing:/features/thermostat"</span><span class="p">:</span><span class="w"> </span><span class="s2">"not(exists(/features/thermostat))"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nl">"initializeMissingPropertiesFromDefaults"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
 <h4 id="policies-in-api-2"><code class="language-plaintext highlighter-rouge">/policies</code> in API 2</h4>
 
 <p>The base endpoint for accessing and working with <code class="language-plaintext highlighter-rouge">Policies</code>.<br />
@@ -3074,7 +3108,7 @@ the meantime.</li>
                     </div>
                     <p class="notice">
                         &copy;2025 Eclipse Ditto™.
-                         Site last generated: Feb 14, 2025 <br />
+                         Site last generated: Feb 25, 2025 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">
