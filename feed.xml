@@ -5,9 +5,93 @@
         <description>Announcements, tutorials and examples around Eclipse Ditto and Digital Twins</description>
         <link>https://www.eclipse.dev/ditto/</link>
         <atom:link href="https://www.eclipse.dev/ditto/feed.xml" rel="self" type="application/rss+xml"/>
-        <pubDate>Tue, 25 Feb 2025 12:27:33 +0000</pubDate>
-        <lastBuildDate>Tue, 25 Feb 2025 12:27:33 +0000</lastBuildDate>
+        <pubDate>Wed, 26 Feb 2025 12:24:36 +0000</pubDate>
+        <lastBuildDate>Wed, 26 Feb 2025 12:24:36 +0000</lastBuildDate>
         <generator>Jekyll v4.3.4</generator>
+        
+        <item>
+            <title>Announcing Eclipse Ditto Release 3.7.0</title>
+            <description>&lt;p&gt;Eclipse Ditto team is excited to announce the availability of a new minor release, including new features: 
+Ditto &lt;a href=&quot;https://projects.eclipse.org/projects/iot.ditto/releases/3.7.0&quot;&gt;3.7.0&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;The focus of this release was to ease the migration of Things “definitions” (following WoT Things Models) and to provide 
+a new Policy decision API to check permissions for a logged-in user.&lt;br /&gt;
+On the operating side, it is now possible to configure extra fields to be proactively added to Things in order to optimize
+cluster roundtrips and to throttle the amount of updates to the search index after a re-used policy was updated.&lt;/p&gt;
+
+&lt;h2 id=&quot;adoption&quot;&gt;Adoption&lt;/h2&gt;
+
+&lt;p&gt;Companies are willing to show their adoption of Eclipse Ditto publicly: 
+&lt;a href=&quot;https://iot.eclipse.org/adopters/?#iot.ditto&quot;&gt;https://iot.eclipse.org/adopters/?#iot.ditto&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;When you use Eclipse Ditto it would be great to support the project by putting your logo there.&lt;/p&gt;
+
+&lt;h2 id=&quot;changelog&quot;&gt;Changelog&lt;/h2&gt;
+
+&lt;p&gt;The main improvements and additions of Ditto 3.7.0 are:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Introduce new &lt;strong&gt;Policy decision API&lt;/strong&gt; to check with a single request what a logged-in user is allowed to do with a specific resource&lt;/li&gt;
+  &lt;li&gt;Include current &lt;strong&gt;entity revision&lt;/strong&gt; of a resource (thing and policy) in the response of requests (commands) and in all emitted events&lt;/li&gt;
+  &lt;li&gt;Support updating referenced WoT ThingModel based &lt;strong&gt;thing definition&lt;/strong&gt; for a Thing by defining a migration payload and when to apply it&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The following non-functional work is also included:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Add option to &lt;strong&gt;configure pre-defined extra fields&lt;/strong&gt; (enrichments) to be proactively added internally in Ditto in order to save cluster roundtrips&lt;/li&gt;
+  &lt;li&gt;Include &lt;strong&gt;throttling configuration option&lt;/strong&gt; for updating the search index as a result of a policy update targeting many things&lt;/li&gt;
+  &lt;li&gt;Add namespace to Ditto Helm chart managed Kubernetes resources&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The following notable fixes are included:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Fix flattening of JSON objects in arrays when an exists() RQL condition was used e.g. as a Ditto evaluated condition&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Please have a look at the &lt;a href=&quot;release_notes_370.html&quot;&gt;3.7.0 release notes&lt;/a&gt; for a more detailed information on the release.&lt;/p&gt;
+
+&lt;h2 id=&quot;artifacts&quot;&gt;Artifacts&lt;/h2&gt;
+
+&lt;p&gt;The new Java artifacts have been published at the &lt;a href=&quot;https://repo.eclipse.org/content/repositories/ditto/&quot;&gt;Eclipse Maven repository&lt;/a&gt;
+as well as &lt;a href=&quot;https://repo1.maven.org/maven2/org/eclipse/ditto/&quot;&gt;Maven central&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;The Ditto JavaScript client release was published on &lt;a href=&quot;https://www.npmjs.com/~eclipse_ditto&quot;&gt;npmjs.com&lt;/a&gt;:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.npmjs.com/package/@eclipse-ditto/ditto-javascript-client-dom&quot;&gt;@eclipse-ditto/ditto-javascript-client-dom&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.npmjs.com/package/@eclipse-ditto/ditto-javascript-client-node&quot;&gt;@eclipse-ditto/ditto-javascript-client-node&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The Docker images have been pushed to Docker Hub:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://hub.docker.com/r/eclipse/ditto-policies/&quot;&gt;eclipse/ditto-policies&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://hub.docker.com/r/eclipse/ditto-things/&quot;&gt;eclipse/ditto-things&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://hub.docker.com/r/eclipse/ditto-things-search/&quot;&gt;eclipse/ditto-things-search&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://hub.docker.com/r/eclipse/ditto-gateway/&quot;&gt;eclipse/ditto-gateway&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://hub.docker.com/r/eclipse/ditto-connectivity/&quot;&gt;eclipse/ditto-connectivity&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The Ditto Helm chart has been published to Docker Hub:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://hub.docker.com/r/eclipse/ditto/&quot;&gt;eclipse/ditto&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;br /&gt;
+&lt;br /&gt;&lt;/p&gt;
+&lt;figure&gt;&lt;img class=&quot;docimage&quot; src=&quot;images/ditto.svg&quot; alt=&quot;Ditto&quot; style=&quot;max-width: 500px&quot; /&gt;&lt;/figure&gt;
+
+&lt;p&gt;–&lt;br /&gt;
+The Eclipse Ditto team&lt;/p&gt;
+</description>
+            <pubDate>Wed, 26 Feb 2025 00:00:00 +0000</pubDate>
+            <link>https://www.eclipse.dev/ditto/2025-02-26-release-announcement-370.html</link>
+            <guid isPermaLink="true">https://www.eclipse.dev/ditto/2025-02-26-release-announcement-370.html</guid>
+            
+            <category>blog</category>
+            
+            
+        </item>
         
         <item>
             <title>Announcing Eclipse Ditto Release 3.6.0</title>
@@ -2156,109 +2240,6 @@ The Eclipse Ditto team&lt;/p&gt;
             <category>protocol</category>
             
             <category>rql</category>
-            
-            
-        </item>
-        
-        <item>
-            <title>Announcing Eclipse Ditto Release 3.0.0</title>
-            <description>&lt;p&gt;The Eclipse Ditto teams is proud to announce the availability of Eclipse Ditto 
-&lt;a href=&quot;https://projects.eclipse.org/projects/iot.ditto/releases/3.0.0&quot;&gt;3.0.0&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;With 3.0.0, the required amount of different service roles was reduced from 6 to only 5 as the “ditto-concierge” 
-service’s responsibilities (performing authorization) was moved to other services.&lt;br /&gt;
-That reduces the overall resource consumption and network traffic of a Ditto installation.&lt;/p&gt;
-
-&lt;p&gt;The other big topic for version 3.0.0 is the new search index which does not only respond much quicker to search queries, 
-but also brings lots of performance improvements regarding MongoDB utilization and also a huge stabilization regarding 
-consistency of the search in Ditto.&lt;/p&gt;
-
-&lt;p&gt;Many other new features and improvements are also part of the release, e.g. a new HTTP API for managing connections and
-even the first version of a Ditto UI.&lt;/p&gt;
-
-&lt;h2 id=&quot;adoption&quot;&gt;Adoption&lt;/h2&gt;
-
-&lt;p&gt;Companies are willing to show their adoption of Eclipse Ditto publicly: 
-&lt;a href=&quot;https://iot.eclipse.org/adopters/?#iot.ditto&quot;&gt;https://iot.eclipse.org/adopters/?#iot.ditto&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;From our various &lt;a href=&quot;feedback.html&quot;&gt;feedback channels&lt;/a&gt; we however know of more adoption.&lt;br /&gt;
-If you are making use of Eclipse Ditto, it would be great to show this by adding your company name to that list of 
-known adopters.&lt;br /&gt;
-In the end, that’s one main way of measuring the success of the project.&lt;/p&gt;
-
-&lt;h2 id=&quot;changelog&quot;&gt;Changelog&lt;/h2&gt;
-
-&lt;p&gt;The main improvements and additions of Ditto 3.0.0 are:&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;Ability to &lt;strong&gt;search in JSON arrays&lt;/strong&gt; and thus also for feature definitions&lt;/li&gt;
-  &lt;li&gt;Several &lt;strong&gt;improvements around “metadata”&lt;/strong&gt; in Ditto managed things&lt;/li&gt;
-  &lt;li&gt;Creation of &lt;strong&gt;new HTTP API for CRUD&lt;/strong&gt; management of Ditto managed &lt;strong&gt;connections&lt;/strong&gt;&lt;/li&gt;
-  &lt;li&gt;Addition of &lt;strong&gt;Ditto explorer UI&lt;/strong&gt; for managing things, policies and connections&lt;/li&gt;
-  &lt;li&gt;Support for EC signed JsonWebKeys (JWKs)&lt;/li&gt;
-  &lt;li&gt;W3C WoT (Web of Things) adjustments and improvements for latest 1.1 “Candidate Recommendation” from W3C&lt;/li&gt;
-  &lt;li&gt;Make “default namespace” for creating new entities configurable&lt;/li&gt;
-  &lt;li&gt;Provide custom namespace when creating things via HTTP POST&lt;/li&gt;
-  &lt;li&gt;Make it possible to provide multiple OIDC issuer urls for a single configured openid-connect “prefix”&lt;/li&gt;
-  &lt;li&gt;Addition of a “CloudEvents” mapper for mapping CE payloads in Ditto connections&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;The following non-functional work is also included:&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;New Ditto &lt;strong&gt;“thing” search index&lt;/strong&gt; massively improving write performance; reducing the search consistency lag
-and improving search query performance&lt;/li&gt;
-  &lt;li&gt;&lt;strong&gt;Removal of former “ditto-concierge” service&lt;/strong&gt;, moving its functionality to other Ditto services; reducing overall
-resource consumption and improving latency+throughput for API calls&lt;/li&gt;
-  &lt;li&gt;Creation of common way to extend Ditto via DittoExtensionPoints&lt;/li&gt;
-  &lt;li&gt;Rewrite of Ditto managed &lt;strong&gt;MQTT connections to use reactive-streams based client&lt;/strong&gt;, supporting consumption applying
-backpressure&lt;/li&gt;
-  &lt;li&gt;Further improvements on rolling updates and other failover scenarios&lt;/li&gt;
-  &lt;li&gt;Consolidate and simplify DevOps command responses&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;The following notable fixes are included:&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;strong&gt;Passwords&lt;/strong&gt; stored in the URI of &lt;strong&gt;connections&lt;/strong&gt; to &lt;strong&gt;no longer need to be double encoded&lt;/strong&gt;&lt;/li&gt;
-  &lt;li&gt;Using the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Normalized&lt;/code&gt; connection payload mapper together with enriched &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;extra&lt;/code&gt; fields lead to wrongly merged things&lt;/li&gt;
-  &lt;li&gt;Adding custom Java based &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;MessageMappers&lt;/code&gt; to Ditto via classpath was no longer possible&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Please have a look at the &lt;a href=&quot;release_notes_300.html&quot;&gt;3.0.0 release notes&lt;/a&gt; for a more detailed information on the release.&lt;/p&gt;
-
-&lt;h2 id=&quot;artifacts&quot;&gt;Artifacts&lt;/h2&gt;
-
-&lt;p&gt;The new Java artifacts have been published at the &lt;a href=&quot;https://repo.eclipse.org/content/repositories/ditto/&quot;&gt;Eclipse Maven repository&lt;/a&gt;
-as well as &lt;a href=&quot;https://repo1.maven.org/maven2/org/eclipse/ditto/&quot;&gt;Maven central&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;The Ditto JavaScript client release was published on &lt;a href=&quot;https://www.npmjs.com/~eclipse_ditto&quot;&gt;npmjs.com&lt;/a&gt;:&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://www.npmjs.com/package/@eclipse-ditto/ditto-javascript-client-dom&quot;&gt;@eclipse-ditto/ditto-javascript-client-dom&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://www.npmjs.com/package/@eclipse-ditto/ditto-javascript-client-node&quot;&gt;@eclipse-ditto/ditto-javascript-client-node&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;The Docker images have been pushed to Docker Hub:&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://hub.docker.com/r/eclipse/ditto-policies/&quot;&gt;eclipse/ditto-policies&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://hub.docker.com/r/eclipse/ditto-things/&quot;&gt;eclipse/ditto-things&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://hub.docker.com/r/eclipse/ditto-things-search/&quot;&gt;eclipse/ditto-things-search&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://hub.docker.com/r/eclipse/ditto-gateway/&quot;&gt;eclipse/ditto-gateway&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://hub.docker.com/r/eclipse/ditto-connectivity/&quot;&gt;eclipse/ditto-connectivity&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;br /&gt;
-&lt;br /&gt;&lt;/p&gt;
-&lt;figure&gt;&lt;img class=&quot;docimage&quot; src=&quot;images/ditto.svg&quot; alt=&quot;Ditto&quot; style=&quot;max-width: 500px&quot; /&gt;&lt;/figure&gt;
-
-&lt;p&gt;–&lt;br /&gt;
-The Eclipse Ditto team&lt;/p&gt;
-</description>
-            <pubDate>Wed, 28 Sep 2022 00:00:00 +0000</pubDate>
-            <link>https://www.eclipse.dev/ditto/2022-09-28-release-announcement-300.html</link>
-            <guid isPermaLink="true">https://www.eclipse.dev/ditto/2022-09-28-release-announcement-300.html</guid>
-            
-            <category>blog</category>
             
             
         </item>
