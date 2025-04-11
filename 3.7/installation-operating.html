@@ -282,6 +282,13 @@
               
               
               
+              <li><a href="release_notes_373.html">3.7.3</a></li>
+              
+              
+              
+              
+              
+              
               <li><a href="release_notes_372.html">3.7.2</a></li>
               
               
@@ -2988,16 +2995,22 @@ This is configured via the <a href="architecture-services-things-search.html">se
 may overload the Prometheus server!</strong></p>
 </blockquote>
 
-<p>Now you can augment the statistic about “Things” managed in Ditto
-fulfilling a certain condition with tags with either predefined values,
-values retrieved from the things or values which are defined based on the matching filter. 
+<blockquote>
+  <p>:note: <strong>Since Ditto 3.7.3 There is a change in how the custom aggregation metrics are configured!.</strong>
+See the <a href="release_notes_373.html">Release notes of 3.7.3</a> for details on migration steps.</p>
+</blockquote>
+
+<p>Now you can augment the statistics about “Things” managed in Ditto
+fulfilling a certain condition with tags with predefined values or
+values retrieved from the things. 
 This is fulfilled by using hardcoded values or placeholders in the tags configuration.
-The supported placeholder types are <code class="language-plaintext highlighter-rouge">inline</code> and <code class="language-plaintext highlighter-rouge">group-by</code> placeholders.
+To use live data for tag values use the <code class="language-plaintext highlighter-rouge">group-by</code> placeholder
+which will get the result from the aggregation query for the specified field.
 <a href="basic-placeholders.html#function-expressions">Function expressions</a> are also supported
-to manipulate the values of the placeholders before they are used in the tags.</p>
+to manipulate the values of the placeholder before they are used in the tags.</p>
 
 <p>This would be an example search service configuration snippet for e.g. providing a metric named
-<code class="language-plaintext highlighter-rouge">online_devices</code> defining a query on the values of a <code class="language-plaintext highlighter-rouge">ConnectionStatus</code> feature:</p>
+<code class="language-plaintext highlighter-rouge">online_devices</code> and <code class="language-plaintext highlighter-rouge">offline_devices</code> defining a query on the values of a <code class="language-plaintext highlighter-rouge">ConnectionStatus</code> feature:</p>
 <div class="language-hocon highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nl">ditto</span><span class="w"> </span><span class="p">{</span><span class="w">
   </span><span class="nl">search</span><span class="w"> </span><span class="p">{</span><span class="w">
     </span><span class="nl">operator-metrics</span><span class="w"> </span><span class="p">{</span><span class="w">
@@ -3007,7 +3020,7 @@ to manipulate the values of the placeholders before they are used in the tags.</
         </span><span class="l">...</span><span class="w">
       </span><span class="p">}</span><span class="w">
       </span><span class="nl">custom-aggregation-metrics</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="nl">online_status</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">online_things</span><span class="w"> </span><span class="p">{</span><span class="w">
           </span><span class="nl">enabled</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="kc">true</span><span class="w">
           </span><span class="nl">scrape-interval</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">20</span><span class="l">m</span><span class="w"> </span><span class="c1"># override scrape interval, run every 20 minutes</span><span class="w">
           </span><span class="nl">namespaces</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="p">[</span><span class="w">
@@ -3018,60 +3031,44 @@ to manipulate the values of the placeholders before they are used in the tags.</
             </span><span class="nl">"isGateway"</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s2">"attributes/Info/gateway"</span><span class="w">
           </span><span class="p">}</span><span class="w">
           </span><span class="nl">tags</span><span class="w"> </span><span class="p">{</span><span class="w">
-            </span><span class="nl">"online"</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s2">"{{ inline:online_placeholder }}"</span><span class="w">
-            </span><span class="nl">"health"</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s2">"{{ inline:health }}"</span><span class="w">
             </span><span class="nl">"hardcoded-tag"</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s2">"hardcoded_value"</span><span class="w">
             </span><span class="nl">"location"</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s2">"{{ group-by:location | fn:default('missing location') }}"</span><span class="w">
             </span><span class="nl">"isGateway"</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s2">"{{ group-by:isGateway }}"</span><span class="w">
           </span><span class="p">}</span><span class="w">
-          </span><span class="nl">filters</span><span class="w"> </span><span class="p">{</span><span class="w">
-            </span><span class="nl">online_filter</span><span class="w"> </span><span class="p">{</span><span class="w">
-              </span><span class="nl">filter</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s2">"gt(features/ConnectionStatus/properties/status/readyUntil,time:now)"</span><span class="w">
-              </span><span class="nl">inline-placeholder-values</span><span class="w">  </span><span class="p">{</span><span class="w">
-                </span><span class="nl">"online_placeholder"</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="kc">true</span><span class="w">
-                </span><span class="nl">"health"</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s2">"good"</span><span class="w">
-              </span><span class="p">}</span><span class="w">
-            </span><span class="p">}</span><span class="w">
-            </span><span class="nl">offline_filter</span><span class="w"> </span><span class="p">{</span><span class="w">
-              </span><span class="nl">filter</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s2">"lt(features/ConnectionStatus/properties/status/readyUntil,time:now)"</span><span class="w">
-              </span><span class="nl">inline-placeholder-values</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="p">{</span><span class="w">
-                </span><span class="nl">"online_placeholder"</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="kc">false</span><span class="w">
-                </span><span class="nl">"health"</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s2">"bad"</span><span class="w">
-              </span><span class="p">}</span><span class="w">
-            </span><span class="p">}</span><span class="w">
-          </span><span class="p">}</span><span class="w">
+          </span><span class="nl">filter</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s2">"gt(features/ConnectionStatus/properties/status/readyUntil,time:now)"</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+        </span><span class="nl">offline_things</span><span class="w"> </span><span class="p">{</span><span class="w">
+         </span><span class="l">...</span><span class="w">
+            </span><span class="nl">filter</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s2">"lt(features/ConnectionStatus/properties/status/readyUntil,time:now)"</span><span class="w">
         </span><span class="p">}</span><span class="w">
       </span><span class="p">}</span><span class="w">
     </span><span class="p">}</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
+
+
 </span></code></pre></div></div>
 
 <p>To add custom metrics via System properties, the following example shows how the above metric can be configured:</p>
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>-Dditto.search.operator-metrics.custom-aggregation-metrics.online_status.enabled=true
 -Dditto.search.operator-metrics.custom-aggregation-metrics.online_status.scrape-interval=20m
 -Dditto.search.operator-metrics.custom-aggregation-metrics.online_status.namespaces.0=org.eclipse.ditto
--Dditto.search.operator-metrics.custom-aggregation-metrics.online_status.tags.online="{{online_placeholder}}"
--Dditto.search.operator-metrics.custom-aggregation-metrics.online_status.tags.location="{{attributes/Info/location}}"
-
--Dditto.search.operator-metrics.custom-aggregation-metrics.online_status.filters.online-filter.filter=gt(features/ConnectionStatus/properties/status/readyUntil/,time:now)
--Dditto.search.operator-metrics.custom-aggregation-metrics.online_status.filters.online-filter.inline-placeholder-values.online_placeholder=true
--Dditto.search.operator-metrics.custom-aggregation-metrics.online_status.filters.online-filter.fields.0=attributes/Info/location
-
--Dditto.search.operator-metrics.custom-aggregation-metrics.online_status.filters.offline-filter.filter=lt(features/ConnectionStatus/properties/status/readyUntil/,time:now)
--Dditto.search.operator-metrics.custom-aggregation-metrics.online_status.filters.offline-filter.inline-placeholder-values.online_placeholder=false
--Dditto.search.operator-metrics.custom-aggregation-metrics.online_status.filters.offline-filter.fields.0=attributes/Info/location
+-Dditto.search.operator-metrics.custom-aggregation-metrics.online_status.group-by.location="attributes/Info/location"
+-Dditto.search.operator-metrics.custom-aggregation-metrics.online_status.group-by.isGateway="attributes/Info/gateway"
+-Dditto.search.operator-metrics.custom-aggregation-metrics.online_status.tags.hardcoded-tag="hardcoded_value"
+-Dditto.search.operator-metrics.custom-aggregation-metrics.online_status.tags.location="{{ group-by:location | fn:default('missing location') }}"
+-Dditto.search.operator-metrics.custom-aggregation-metrics.online_status.tags.isGateway="{ group-by:isGateway }}"
+-Dditto.search.operator-metrics.custom-aggregation-metrics.online_status.filter=gt(features/ConnectionStatus/properties/status/readyUntil/,time:now)
 
 </code></pre></div></div>
 
 <p>Ditto will perform an <a href="https://www.mongodb.com/docs/manual/aggregation/">aggregation operation</a> over the search db collection every <code class="language-plaintext highlighter-rouge">20m</code> (20 minutes), providing
 a gauge named <code class="language-plaintext highlighter-rouge">online_devices</code> with the value of devices that match the filter. 
-The tags <code class="language-plaintext highlighter-rouge">online</code> and <code class="language-plaintext highlighter-rouge">location</code> will be added.
-Their values will be resolved from the placeholders <code class="language-plaintext highlighter-rouge">{{online_placeholder}}</code> and <code class="language-plaintext highlighter-rouge">{{attributes/Info/location}}</code> respectively.</p>
+The tags <code class="language-plaintext highlighter-rouge">hardcoded-tag</code>, <code class="language-plaintext highlighter-rouge">location</code> and <code class="language-plaintext highlighter-rouge">isGateway</code> will be added.</p>
 
 <p>In Prometheus format, this would look like:</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>online_status{location="Berlin",online="false"} 6.0
-online_status{location="Immenstaad",online="true"} 8.0
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>online_status{location="Berlin",isGateway="false",hardcoded-tag="hardcoded_value"} 6.0
+online_status{location="Immenstaad",isGateway="true",hardcoded-tag="hardcoded_value"} 8.0
 </code></pre></div></div>
 
 <h2 id="tracing">Tracing</h2>
@@ -3983,7 +3980,7 @@ to stop blocking messages to a namespace.</p>
                     </div>
                     <p class="notice">
                         &copy;2025 Eclipse Ditto™.
-                         Site last generated: Mar 31, 2025 <br />
+                         Site last generated: Apr 11, 2025 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">
