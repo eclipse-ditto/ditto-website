@@ -110,12 +110,6 @@
                 
                 
                   
-                  <li class="active"><a href="sandbox.html">Sandbox</a></li>
-                  
-                
-                
-                
-                  
                   <li><a href="https://github.com/eclipse-ditto/ditto" target="_blank">
                     <img src="images/GitHub-Mark-Light-32px.png" alt="Sources at GitHub">
                   </a></li>
@@ -2197,12 +2191,6 @@
   
   
     
-    <li class="active"><a href="sandbox.html">Sandbox</a></li>
-    
-  
-  
-  
-    
     <li><a href="presentations.html">Presentations</a></li>
     
   
@@ -2284,67 +2272,8 @@ $('#toc').on('click', 'a', function() {
 
     
 
-  <p>The Ditto team provides a <a href="https://ditto.eclipseprojects.io">sandbox</a> which may be used by everyone wanting to 
-try out Ditto without starting it locally.</p>
-
-<div class="alert alert-danger" role="alert"><i class="fa fa-exclamation-circle"></i> <b>Warning:</b> The Ditto sandbox is not set up in a highly available manner and may experience
-   downtimes. Also, the sandbox will be reset from time to time without prior notice.</div>
-
-<h2 id="instructions">Instructions</h2>
-
-<p>As Ditto makes use of OAuth2.0 in order to authenticate users the sandbox contains a “sign in with Google” 
-functionality. Ditto accepts the <code class="language-plaintext highlighter-rouge">id_token</code> which is issued by Google as <code class="language-plaintext highlighter-rouge">Bearer</code> token on authentication.</p>
-
-<h3 id="http-api-documentation">HTTP API documentation</h3>
-
-<p>The online <a href="https://ditto.eclipseprojects.io/apidoc/">HTTP API documentation</a> of the sandbox implements the OAuth2.0 
-“authorization code” flow.<br />
-Simply click the green <code class="language-plaintext highlighter-rouge">Authorize</code> button, check the checkbox <code class="language-plaintext highlighter-rouge">openid</code> and click the <code class="language-plaintext highlighter-rouge">Authorize</code> button. 
-Your browser will ask you if the Ditto sandbox may access your Google identity which you should acknowledge.<br />
-Afterwards you should be authenticated with your Google user (and therefore your Google ID).</p>
-
-<p>You can try out the API now. For example, expand the <a href="https://ditto.eclipseprojects.io/apidoc/#!/Things/put_things_thingId">PUT /things/{thingId}</a>
-item in order to create a new <code class="language-plaintext highlighter-rouge">Thing</code>, a <strong>digital twin</strong> so to say.<br />
-Scroll down to the parameters and enter the required ones (in this case the <code class="language-plaintext highlighter-rouge">thingId</code>), for example:</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>org.eclipse.ditto:my-first-thing
-</code></pre></div></div>
-
-<p>The ID must contain a namespace (in Java package notation) followed by a <code class="language-plaintext highlighter-rouge">:</code> and an arbitrary string afterwards.</p>
-
-<p>The body must be a JSON object, at least an empty one <code class="language-plaintext highlighter-rouge">{}</code>.<br />
-Or it can be filled with arbitrary <a href="basic-thing.html#attributes">attributes</a> and/or <a href="basic-thing.html#features">features</a>, e.g.:</p>
-
-<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="nl">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="nl">"someAttr"</span><span class="p">:</span><span class="w"> </span><span class="mi">32</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"manufacturer"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ACME corp"</span><span class="w">
-  </span><span class="p">},</span><span class="w">
-  </span><span class="nl">"features"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="nl">"heating-no1"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-          </span><span class="nl">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-              </span><span class="nl">"connected"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-              </span><span class="nl">"complexProperty"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                  </span><span class="nl">"street"</span><span class="p">:</span><span class="w"> </span><span class="s2">"my street"</span><span class="p">,</span><span class="w">
-                  </span><span class="nl">"house no"</span><span class="p">:</span><span class="w"> </span><span class="mi">42</span><span class="w">
-              </span><span class="p">}</span><span class="w">
-          </span><span class="p">}</span><span class="w">
-      </span><span class="p">},</span><span class="w">
-      </span><span class="nl">"switchable"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-          </span><span class="nl">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-              </span><span class="nl">"on"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-              </span><span class="nl">"lastToggled"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2017-11-15T18:21Z"</span><span class="w">
-          </span><span class="p">}</span><span class="w">
-      </span><span class="p">}</span><span class="w">
-  </span><span class="p">}</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre></div></div>
-
-<h3 id="programmatically-access-the-http-api">Programmatically access the HTTP API</h3>
-
-<p>If you want to programmatically (e.g. in a script running on a RaspberryPi) access the sandbox, we currently have 
-to disappoint you. As there is no possibility to obtain a Google JWT with plain username/password and we currently 
-have no other authentication provider configured in the sandbox, we have no possibility to authenticate a script.</p>
+  <div class="alert alert-danger" role="alert"><i class="fa fa-exclamation-circle"></i> <b>Warning:</b> The Ditto sandbox is no longer provided, 
+    we recommend starting Ditto via Docker Compose to try it out.</div>
 
 
     <div class="tags">
@@ -2363,7 +2292,7 @@ have no other authentication provider configured in the sandbox, we have no poss
                     </div>
                     <p class="notice">
                         &copy;2025 Eclipse Ditto™.
-                         Site last generated: May 22, 2025 <br />
+                         Site last generated: May 23, 2025 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">
