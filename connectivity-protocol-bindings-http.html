@@ -2515,7 +2515,41 @@ for how to set it up.</p>
 <p>Ditto supports HMAC request signing for HTTP push connections. Find detailed information on this in 
 <a href="connectivity-hmac-signing.html">Connectivity API &gt; HMAC request signing</a>.</p>
 
-<h3 id="oauth2-client-credentials-flow">OAuth2 client credentials flow</h3>
+<h3 id="oauth2-authentication">OAuth2 authentication</h3>
+
+<p>In the subsections (either using <a href="#client-certificate-authentication">client credentials flow</a> or
+<a href="#oauth2-password-flow">password flow</a>), ach HTTP request to <code class="language-plaintext highlighter-rouge">https://localhost:443/event-publication</code> includes a 
+bearer token issued by <code class="language-plaintext highlighter-rouge">https://localhost:443/oauth2/token</code>.<br />
+The HTTP connection will obtain a new token before the old token expires according to a configured <code class="language-plaintext highlighter-rouge">max-clock-skew</code>. 
+To prevent looping access token requests, each token is used once even if
+the token endpoint responds with expired tokens. Rejected or malformed access token responses are considered
+misconfiguration errors.</p>
+
+<p>It is possible to configure <code class="language-plaintext highlighter-rouge">max-clock-skew</code> and whether to enforce HTTPS for token endpoints in
+<code class="language-plaintext highlighter-rouge">connectivity-extension.conf</code> or by environment variables.</p>
+<div class="language-hocon highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nl">ditto</span><span class="w"> </span><span class="p">{</span><span class="w">
+  </span><span class="nl">connectivity</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">connection</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">http-push</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">oauth2</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="c1"># Maximum clock skew of OAuth2 token endpoints.</span><span class="w">
+          </span><span class="c1"># Access tokens are refreshed this long before expiration.</span><span class="w">
+          </span><span class="nl">max-clock-skew</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">60</span><span class="l">s</span><span class="w">
+          </span><span class="nl">max-clock-skew</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="si">${?</span><span class="nv">CONNECTIVITY_HTTP_OAUTH2_MAX_CLOCK_SKEW</span><span class="si">}</span><span class="w">
+
+          </span><span class="c1"># Whether to enforce HTTPS for OAuth2 token endpoints.</span><span class="w">
+          </span><span class="c1"># Should be `true` for production environments</span><span class="w">
+          </span><span class="c1"># in order not to transmit client secrets in plain text.</span><span class="w">
+          </span><span class="nl">enforce-https</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="kc">true</span><span class="w">
+          </span><span class="nl">enforce-https</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="si">${?</span><span class="nv">CONNECTIVITY_HTTP_OAUTH2_ENFORCE_HTTPS</span><span class="si">}</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h4 id="oauth2-client-credentials-flow">OAuth2 client credentials flow</h4>
 
 <p>HTTP push connections can authenticate themselves via OAuth2 client credentials flow as described in
 <a href="https://datatracker.ietf.org/doc/html/rfc6749#section-4.4">section 4.4 of RFC-6749</a>.
@@ -2546,33 +2580,38 @@ To configure OAuth2 credentials:</p>
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
-<p>Each HTTP request to <code class="language-plaintext highlighter-rouge">https://localhost:443/event-publication</code> includes a bearer token issued by
-<code class="language-plaintext highlighter-rouge">https://localhost:443/oauth2/token</code>. The HTTP connection will obtain a new token before the old token expires
-according to a configured <code class="language-plaintext highlighter-rouge">max-clock-skew</code>. To prevent looping access token requests, each token is used once even if
-the token endpoint responds with expired tokens. Rejected or malformed access token responses are considered
-misconfiguration errors.</p>
+<h4 id="oauth2-password-flow">OAuth2 password flow</h4>
 
-<p>It is possible to configure <code class="language-plaintext highlighter-rouge">max-clock-skew</code> and whether to enforce HTTPS for token endpoints in
-<code class="language-plaintext highlighter-rouge">connectivity-extension.conf</code> or by environment variables.</p>
-<div class="language-hocon highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nl">ditto</span><span class="w"> </span><span class="p">{</span><span class="w">
-  </span><span class="nl">connectivity</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="nl">connection</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="nl">http-push</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="nl">oauth2</span><span class="w"> </span><span class="p">{</span><span class="w">
-          </span><span class="c1"># Maximum clock skew of OAuth2 token endpoints.</span><span class="w">
-          </span><span class="c1"># Access tokens are refreshed this long before expiration.</span><span class="w">
-          </span><span class="nl">max-clock-skew</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">60</span><span class="l">s</span><span class="w">
-          </span><span class="nl">max-clock-skew</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="si">${?</span><span class="nv">CONNECTIVITY_HTTP_OAUTH2_MAX_CLOCK_SKEW</span><span class="si">}</span><span class="w">
+<p>HTTP push connections can authenticate themselves via OAuth2 password flow as described in
+<a href="https://datatracker.ietf.org/doc/html/rfc6749#section-4.3">section 4.3 of RFC-6749</a>.
+To configure OAuth2 credentials:</p>
+<ul>
+  <li>Set <code class="language-plaintext highlighter-rouge">type</code> to <code class="language-plaintext highlighter-rouge">oauth-password</code></li>
+  <li>Set <code class="language-plaintext highlighter-rouge">tokenEndpoint</code> to the URI of the access token request endpoint</li>
+  <li>Set <code class="language-plaintext highlighter-rouge">clientId</code> to the client ID to include in access token requests</li>
+  <li>Optionally: Set <code class="language-plaintext highlighter-rouge">clientSecret</code> to the client secret to include in access token requests (or leave away if the
+client is public and does not have a secret)</li>
+  <li>Set <code class="language-plaintext highlighter-rouge">requestedScopes</code> to the scopes to request in access token requests</li>
+  <li>Set <code class="language-plaintext highlighter-rouge">username</code> to the username to use for obtaining the token</li>
+  <li>Set <code class="language-plaintext highlighter-rouge">password</code> to the password to use for obtaining the token</li>
+</ul>
 
-          </span><span class="c1"># Whether to enforce HTTPS for OAuth2 token endpoints.</span><span class="w">
-          </span><span class="c1"># Should be `true` for production environments</span><span class="w">
-          </span><span class="c1"># in order not to transmit client secrets in plain text.</span><span class="w">
-          </span><span class="nl">enforce-https</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="kc">true</span><span class="w">
-          </span><span class="nl">enforce-https</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="si">${?</span><span class="nv">CONNECTIVITY_HTTP_OAUTH2_ENFORCE_HTTPS</span><span class="si">}</span><span class="w">
-        </span><span class="p">}</span><span class="w">
-      </span><span class="p">}</span><span class="w">
-    </span><span class="p">}</span><span class="w">
-  </span><span class="p">}</span><span class="w">
+<p>This is an example connection with OAuth2 credentials.</p>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"connection"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http-example-connection-124"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"connectionType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http-push"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"connectionStatus"</span><span class="p">:</span><span class="w"> </span><span class="s2">"open"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"uri"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://localhost:443/event-publication"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"credentials"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"oauth-password"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"tokenEndpoint"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://localhost:443/oauth2/token"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"clientId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"my-public-client-id"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"requestedScopes"</span><span class="p">:</span><span class="w"> </span><span class="s2">"user-scope-1 role-scope-2"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"username"</span><span class="p">:</span><span class="w"> </span><span class="s2">"my-username"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"password"</span><span class="p">:</span><span class="w"> </span><span class="s2">"my-password"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="err">...</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
@@ -2609,7 +2648,7 @@ misconfiguration errors.</p>
                     </div>
                     <p class="notice">
                         &copy;2025 Eclipse Ditto™.
-                         Site last generated: Jun 24, 2025 <br />
+                         Site last generated: Jul 25, 2025 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

@@ -2618,6 +2618,13 @@ ditto.entity-creation {
       auth-subjects = [
 //        "pre:ditto-*"
       ]
+      # thing-definitions are only applicable for "thing" resource types - and can enforce that for creation of things only
+      #  certain thing definitions are allowed .. adding a "null" entry will allow to create things also without
+      #  specifying a thing definition at all
+      thing-definitions = [
+//        null
+//        "https://eclipse-ditto.github.io/ditto-examples/wot/models/*"
+      ]
     }
   ]
   revoke = [
@@ -2640,6 +2647,11 @@ ditto.entity-creation {
   <li>The resource types list is empty, or contains the requested resource type</li>
   <li>The namespace wildcard list is empty, or contains a wildcard that matches the requested namespace</li>
   <li>The auth subject wildcard list is empty, or contains at least one matching wildcard of the authorized subjects for the request</li>
+  <li>Only for “thing” resources:
+    <ul>
+      <li>The thing definitions list is empty, or contains at least one matching wildcard of the thing definition used to create the thing</li>
+    </ul>
+  </li>
 </ul>
 
 <p>This means, an existing entry, with all empty lists, will match. So the default configuration, allowing all access,
@@ -3997,7 +4009,7 @@ to stop blocking messages to a namespace.</p>
                     </div>
                     <p class="notice">
                         &copy;2025 Eclipse Ditto™.
-                         Site last generated: Jun 24, 2025 <br />
+                         Site last generated: Jul 25, 2025 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">
