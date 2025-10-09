@@ -2426,8 +2426,10 @@ messages (e.g. events or responses) to arbitrary other formats.</p>
 
 <h3 id="normalized-mapper">Normalized mapper</h3>
 
-<p>This mapper transforms <code class="language-plaintext highlighter-rouge">created</code> and <code class="language-plaintext highlighter-rouge">modified</code> events (other type of messages are dropped) to a normalized view. 
+<p>This mapper transforms <code class="language-plaintext highlighter-rouge">created</code>, <code class="language-plaintext highlighter-rouge">modified</code>, and <code class="language-plaintext highlighter-rouge">deleted</code> events (other type of messages are dropped) to a normalized view. 
 Events are mapped to a nested sparse JSON.</p>
+
+<p><strong>Note:</strong> For deleted events, only complete thing deletions (<code class="language-plaintext highlighter-rouge">ThingDeleted</code>) are mapped with a special <code class="language-plaintext highlighter-rouge">_deleted</code> field. Partial deletions like <code class="language-plaintext highlighter-rouge">AttributeDeleted</code>, <code class="language-plaintext highlighter-rouge">FeatureDeleted</code>, etc. are not mapped and will be dropped.</p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
   </span><span class="nl">"topic"</span><span class="p">:</span><span class="w"> </span><span class="s2">"thing/id/things/twin/events/modified"</span><span class="p">,</span><span class="w">
@@ -2463,6 +2465,36 @@ Events are mapped to a nested sparse JSON.</p>
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 <p>The <code class="language-plaintext highlighter-rouge">_context</code> field contains the original message content excluding the <code class="language-plaintext highlighter-rouge">value</code>.</p>
+
+<p>For <code class="language-plaintext highlighter-rouge">deleted</code> events, the mapper includes a <code class="language-plaintext highlighter-rouge">_deleted</code> field with the deletion timestamp:</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"topic"</span><span class="p">:</span><span class="w"> </span><span class="s2">"thing/id/things/twin/events/deleted"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nl">"content-type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"application/json"</span><span class="w"> </span><span class="p">},</span><span class="w">
+  </span><span class="nl">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"value"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>would result in the following normalized JSON representation:</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"thingId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"thing:id"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"_deleted"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2023-12-01T10:30:00Z"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"_context"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"topic"</span><span class="p">:</span><span class="w"> </span><span class="s2">"thing/id/things/twin/events/deleted"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"value"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"content-type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"application/json"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>The <code class="language-plaintext highlighter-rouge">_deleted</code> field contains the timestamp when the thing was deleted in ISO-8601 format.</p>
+
+<p><strong>Note:</strong> The <code class="language-plaintext highlighter-rouge">_deleted</code> field is only added for complete thing deletions (when the entire thing is deleted). Partial deletions like <code class="language-plaintext highlighter-rouge">AttributeDeleted</code>, <code class="language-plaintext highlighter-rouge">FeatureDeleted</code>, etc. are not mapped and will be dropped.</p>
 
 <h4 id="configuration-options-1">Configuration options</h4>
 
@@ -3727,7 +3759,7 @@ connectivity service for mapping a custom domain specific Protbuf encoded payloa
                     </div>
                     <p class="notice">
                         &copy;2025 Eclipse Ditto™.
-                         Site last generated: Jul 25, 2025 <br />
+                         Site last generated: Oct 9, 2025 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

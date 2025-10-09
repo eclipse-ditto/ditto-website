@@ -2497,8 +2497,7 @@ acknowledgements are only requested if the “qos” header was either not prese
 If the label of an acknowledgement is not in the <code class="language-plaintext highlighter-rouge">declaredAcks</code> array, then the acknowledgement is rejected with
 an error. The declared labels must be prefixed by the connection ID followed by a colon or the 
 <code class="language-plaintext highlighter-rouge">{{connection:id}}</code> placeholder followed by a colon. For example:</p>
-<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="w">
-</span><span class="p">{</span><span class="w">
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
   </span><span class="nl">"addresses"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
     </span><span class="s2">"&lt;source&gt;"</span><span class="w">
   </span><span class="p">],</span><span class="w">
@@ -2507,7 +2506,6 @@ an error. The declared labels must be prefixed by the connection ID followed by 
     </span><span class="s2">"{{connection:id}}:my-custom-ack"</span><span class="w">
   </span><span class="p">]</span><span class="w">
 </span><span class="p">}</span><span class="w">
-
 </span></code></pre></div></div>
 
 <h4 id="source-header-mapping">Source header mapping</h4>
@@ -2580,6 +2578,88 @@ Includes positive <a href="protocol-specification-acks.html#acknowledgements-agg
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
+
+<p>Additionally,
+sources can be configured with special response diversion headers to redirect responses to other connections.</p>
+
+<h4 id="response-diversion-configuration">Response diversion configuration</h4>
+
+<p>Sources can configure <a href="connectivity-response-diversion.html">response diversion</a>
+to redirect responses to different connections instead of the configured reply target.
+This is done through special header mapping keys:</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"headerMapping"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"divert-response-to-connection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"target-connection-id"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"divert-expected-response-types"</span><span class="p">:</span><span class="w"> </span><span class="s2">"response,error,nack"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>Where:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">divert-response-to-connection</code>: Target connection ID for diversion</li>
+  <li><code class="language-plaintext highlighter-rouge">divert-expected-response-types</code>: Comma-separated list of response types to divert</li>
+</ul>
+
+<p>This enables advanced multi-protocol workflows and response routing scenarios.
+See the <a href="connectivity-response-diversion.html">Response diversion</a> documentation for detailed configuration examples
+and use cases.</p>
+
+<h2 id="sources-examples-with-response-diversion">Sources examples with response diversion</h2>
+
+<h3 id="static-response-diversion">Static response diversion</h3>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"addresses"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"commands/sensor"</span><span class="p">],</span><span class="w">
+  </span><span class="nl">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"ditto:sensor-commands"</span><span class="p">],</span><span class="w">
+  </span><span class="nl">"headerMapping"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"divert-response-to-connection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"analytics-connection"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"divert-expected-response-types"</span><span class="p">:</span><span class="w"> </span><span class="s2">"response,error"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nl">"replyTarget"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"responses/sensor"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h3 id="dynamic-response-diversion">Dynamic response diversion</h3>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"addresses"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"commands/+"</span><span class="p">],</span><span class="w">
+  </span><span class="nl">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"ditto:device-commands"</span><span class="p">],</span><span class="w">
+  </span><span class="nl">"headerMapping"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"divert-expected-response-types"</span><span class="p">:</span><span class="w"> </span><span class="s2">"response,error"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nl">"payloadMapping"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"response-router"</span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+<p>With a corresponding JavaScript mapper that sets the target connection dynamically based on message content or headers.</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nf">mapToDittoProtocolMsg</span><span class="p">(</span><span class="nx">headers</span><span class="p">,</span> <span class="nx">textPayload</span><span class="p">,</span> <span class="nx">bytePayload</span><span class="p">,</span> <span class="nx">contentType</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c1">// ... mapping logic ...</span>
+  
+  <span class="kd">let</span> <span class="nx">dittoHeaders</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="dl">"</span><span class="s2">correlation-id</span><span class="dl">"</span><span class="p">:</span> <span class="nx">headers</span><span class="p">[</span><span class="dl">"</span><span class="s2">correlation-id</span><span class="dl">"</span><span class="p">],</span>
+    <span class="dl">"</span><span class="s2">divert-response-to</span><span class="dl">"</span><span class="p">:</span> <span class="nf">determineTargetConnection</span><span class="p">(</span><span class="nx">headers</span><span class="p">,</span> <span class="nx">parsedPayload</span><span class="p">),</span>
+    <span class="dl">"</span><span class="s2">divert-expected-response-types</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">response,error</span><span class="dl">"</span>
+  <span class="p">};</span>
+  
+  <span class="k">return</span> <span class="nx">Ditto</span><span class="p">.</span><span class="nf">buildDittoProtocolMsg</span><span class="p">(</span>
+    <span class="nx">namespace</span><span class="p">,</span> <span class="nx">name</span><span class="p">,</span> <span class="nx">group</span><span class="p">,</span> <span class="nx">channel</span><span class="p">,</span> <span class="nx">criterion</span><span class="p">,</span> <span class="nx">action</span><span class="p">,</span> <span class="nx">path</span><span class="p">,</span>
+    <span class="nx">dittoHeaders</span><span class="p">,</span> <span class="nx">value</span>
+  <span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nf">determineTargetConnection</span><span class="p">(</span><span class="nx">headers</span><span class="p">,</span> <span class="nx">payload</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if </span><span class="p">(</span><span class="nx">payload</span><span class="p">.</span><span class="nx">priority</span> <span class="o">===</span> <span class="dl">"</span><span class="s2">high</span><span class="dl">"</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="dl">"</span><span class="s2">priority-processing-connection</span><span class="dl">"</span><span class="p">;</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="k">if </span><span class="p">(</span><span class="nx">payload</span><span class="p">.</span><span class="nx">deviceType</span> <span class="o">===</span> <span class="dl">"</span><span class="s2">sensor</span><span class="dl">"</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="dl">"</span><span class="s2">sensor-analytics-connection</span><span class="dl">"</span><span class="p">;</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="dl">"</span><span class="s2">default-processing-connection</span><span class="dl">"</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
 
 <h3 id="targets">Targets</h3>
 
@@ -2752,8 +2832,7 @@ forwarded into another system.</p>
 <p>The issued acknowledgement label must be prefixed by the connection ID followed by a colon or the 
 <code class="language-plaintext highlighter-rouge">{{connection:id}}</code> placeholder followed by a colon.<br />
 The JSON for a target with issued acknowledgement labels could look like this:</p>
-<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="w">
-</span><span class="p">{</span><span class="w">
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
   </span><span class="nl">"address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;target&gt;"</span><span class="p">,</span><span class="w">
   </span><span class="nl">"topics"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
     </span><span class="s2">"_/_/things/twin/events"</span><span class="w">
@@ -2761,7 +2840,6 @@ The JSON for a target with issued acknowledgement labels could look like this:</
   </span><span class="nl">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"ditto:inbound-auth-subject"</span><span class="p">],</span><span class="w">
   </span><span class="nl">"issuedAcknowledgementLabel"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{{connection:id}}:my-custom-ack"</span><span class="w">
 </span><span class="p">}</span><span class="w">
-
 </span></code></pre></div></div>
 
 <h4 id="target-header-mapping">Target header mapping</h4>
@@ -2934,7 +3012,7 @@ dropped.</p>
                     </div>
                     <p class="notice">
                         &copy;2025 Eclipse Ditto™.
-                         Site last generated: Jul 25, 2025 <br />
+                         Site last generated: Oct 9, 2025 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

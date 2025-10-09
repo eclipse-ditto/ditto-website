@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="">
+<meta name="keywords" content="blogconnectivity,  ">
+<title>  Response diversion - Multi-protocol workflows made easy • Eclipse Ditto™</title>
+
+<link rel="stylesheet" href="css/syntax.css">
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" crossorigin="anonymous">
+<link rel="stylesheet" href="css/modern-business.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" crossorigin="anonymous">
+<link rel="stylesheet" href="css/customstyles.css">
+<link rel="stylesheet" href="css/boxshadowproperties.css">
+<link rel="stylesheet" href="css/theme-ditto.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,700|Source+Code+Pro:300,600|Titillium+Web:400,600,700">
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/2.1.0/anchor.min.js" crossorigin="anonymous"></script>
+<script src="js/toc.js"></script>
+<script src="js/customscripts.js"></script>
+
+<script type="application/ld+json">
+{
+  "@context": "http://schema.org",
+  "@type": "Organization",
+  "url": "https://www.eclipse.dev/ditto/",
+  "logo": "https://www.eclipse.dev/ditto/images/ditto.svg"
+}
+</script>
+
+<link rel="icon" type="image/png" href="images/favicon-16x16.png" sizes="16x16">
+<link rel="icon" type="image/png" href="images/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="images/favicon-96x96.png" sizes="96x96">
+
+<link rel="alternate" type="application/rss+xml" title="Eclipse Ditto Blog" href="https://www.eclipse.dev/ditto/feed.xml">
+
+<!-- Eclipse Foundation cookie consent: -->
+<link rel="stylesheet" type="text/css" href="https://www.eclipse.org/eclipse.org-common/themes/solstice/public/stylesheets/vendor/cookieconsent/cookieconsent.min.css" />
+<script src="https://www.eclipse.org/eclipse.org-common/themes/solstice/public/javascript/vendor/cookieconsent/default.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            $("#tg-sb-link").click(function() {
+                $("#tg-sb-sidebar").toggle();
+                $("#tg-sb-content").toggleClass('col-md-9');
+                $("#tg-sb-content").toggleClass('col-md-12');
+                $("#tg-sb-icon").toggleClass('fa-toggle-on');
+                $("#tg-sb-icon").toggleClass('fa-toggle-off');
+            });
+        });
+    </script>
+</head>
+
+
+<script>
+    (function(w,d,s,l,i){
+        w[l]=w[l]||[];
+        w[l].push({'gtm.start':
+            new Date().getTime(),event:'gtm.js'});
+        var f=d.getElementsByTagName(s)[0],
+            j=d.createElement(s),
+            dl=l!='dataLayer'?'&l='+l:'';
+        j.async=true;
+        j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;
+        f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-5WLCZXC');
+</script>
+
+
+
+<body>
+<!-- Navigation -->
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container topnavlinks">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-ditto-home" href="index.html">&nbsp;<img src="images/ditto_allwhite_symbolonly.svg" class="ditto-navbar-symbol" alt="Home"> <img src="images/ditto_allwhite_textonly.svg" class="ditto-navbar-symbol-text" alt="Eclipse Ditto™"></a>
+        </div>
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <!-- toggle sidebar button -->
+                <!--<li><a id="tg-sb-link" href="#"><i id="tg-sb-icon" class="fa fa-toggle-on"></i> Nav</a></li>-->
+                <!-- entries without drop-downs appear here -->
+
+
+
+
+                
+                
+                
+                <li><a href="blog.html">Blog</a></li>
+                
+                
+                
+                <li><a href="intro-overview.html">Documentation</a></li>
+                
+                
+                
+                <li><a href="http-api-doc.html">HTTP API</a></li>
+                
+                
+                
+                  
+                  <li><a href="https://github.com/eclipse-ditto/ditto" target="_blank">
+                    <img src="images/GitHub-Mark-Light-32px.png" alt="Sources at GitHub">
+                  </a></li>
+                  
+                
+                
+                
+                  
+                  <li><a href="https://github.com/eclipse-ditto/ditto-clients" target="_blank">
+                    <img src="images/GitHub-Mark-Light-32px.png" alt="SDK sources at GitHub">SDKs
+                  </a></li>
+                  
+                
+                
+                
+                  
+                  <li><a href="https://github.com/eclipse-ditto/ditto-examples" target="_blank">
+                    <img src="images/GitHub-Mark-Light-32px.png" alt="Example sources at GitHub">examples
+                  </a></li>
+                  
+                
+                
+                
+                <!-- entries with drop-downs appear here -->
+                <!-- conditional logic to control which topnav appears for the audience defined in the configuration file.-->
+                
+                
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Links<b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        
+                        
+                        <li><a href="https://projects.eclipse.org/projects/iot.ditto" target="_blank">Eclipse Ditto Project</a></li>
+                        
+                        
+                        
+                        <li><a href="https://www.eclipse.org/forums/index.php/f/364/" target="_blank">Forum</a></li>
+                        
+                        
+                        
+                        <li><a href="https://ci.eclipse.org/ditto/" target="_blank">Jenkins</a></li>
+                        
+                        
+                        
+                        <li><a href="https://dev.eclipse.org/mhonarc/lists/ditto-dev/" target="_blank">Mailing list archives</a></li>
+                        
+                        
+                        
+                        <li><a href="https://gitter.im/eclipse/ditto" target="_blank">Gitter.im chat</a></li>
+                        
+                        
+                    </ul>
+                </li>
+                
+                
+                
+                <!--comment out this block if you want to hide search-->
+                <li>
+                    <!--start search-->
+                    <div id="search-demo-container">
+                        <input type="text" id="search-input" placeholder="search...">
+                        <ul id="results-container"></ul>
+                    </div>
+                    <script src="https://cdnjs.cloudflare.com/ajax/libs/simple-jekyll-search/0.0.9/jekyll-search.js" type="text/javascript"></script>
+                    <script type="text/javascript">
+                            SimpleJekyllSearch.init({
+                                searchInput: document.getElementById('search-input'),
+                                resultsContainer: document.getElementById('results-container'),
+                                dataSource: 'search.json',
+                                searchResultTemplate: '<li><a href="{url}" title="Response diversion - Multi-protocol workflows made easy">{title}</a></li>',
+                                noResultsText: 'No results found.',
+                                limit: 10,
+                                fuzzy: true,
+                    })
+                    </script>
+                    <!--end search-->
+                </li>
+            </ul>
+        </div>
+    </div>
+    <!-- /.container -->
+</nav>
+
+<!-- Page Content -->
+<div class="container">
+  <div id="main">
+    <!-- Content Row -->
+    <div class="row">
+        
+        
+
+        <!-- Content Column -->
+        <div class="col-md-12" id="tg-sb-content">
+            <!-- Look the author details up from the site config. -->
+
+
+<!-- Output author details if some exist. -->
+<!-- Output author details if some exist. -->
+<!---->
+<!--<span>-->
+    <!--&lt;!&ndash; Mugshot. &ndash;&gt;-->
+    <!--<img src="https://www.gravatar.com/avatar/39b4424d08b8fe92e9f0a52daf2cbc00?s=135" alt="A photo of Aleksandar Stanchev" />-->
+
+<!--&lt;!&ndash; Personal Info. &ndash;&gt;-->
+    <!--Written by <a href="https://github.com/alstanchev" target="_blank">Aleksandar Stanchev</a>-->
+<!--</span>-->
+<!---->
+
+<article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+
+    <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">Response diversion - Multi-protocol workflows made easy</h1>
+        <p class="post-meta">Published by <img src="https://www.gravatar.com/avatar/39b4424d08b8fe92e9f0a52daf2cbc00?s=135" alt="A photo of Aleksandar Stanchev" style="width:50px;border-radius:50%;display:inline-block;margin-right:5px;" /><span itemprop="author" itemscope itemtype="http://schema.org/Person"><span itemprop="name"><a href="https://github.com/alstanchev" target="_blank">Aleksandar Stanchev</a> </span></span> on <time datetime="2025-10-09T00:00:00+00:00" itemprop="datePublished">Oct 9, 2025</time> - Tags:
+            
+            
+            
+            <a href="tag_blog.html">blog</a>, 
+            
+            
+            
+            <a href="tag_connectivity.html">connectivity</a>
+            
+            
+            
+
+        </p>
+
+
+    </header>
+
+    <div class="post-content" itemprop="articleBody">
+
+        
+
+        
+        
+<!-- this handles the automatic toc. use ## for subheads to auto-generate the on-page minitoc. if you use html tags, you must supply an ID for the heading element in order for it to appear in the minitoc. -->
+<script>
+$( document ).ready(function() {
+  // Handler for .ready() called.
+
+$('#toc').toc({ minimumHeaders: 0, listType: 'ul', showSpeed: 0, headers: 'h2,h3,h4' });
+
+/* this offset helps account for the space taken up by the floating toolbar. */
+$('#toc').on('click', 'a', function() {
+  var target = $(this.getAttribute('href'))
+    , scroll_target = target.offset().top
+
+  $(window).scrollTop(scroll_target - 10);
+  return false
+})
+  
+});
+</script>
+
+<div id="toc"></div>
+
+        
+
+        <p>Today we’re excited to announce a powerful new connectivity feature in Eclipse Ditto: <strong>Response Diversion</strong>. 
+This feature enables sophisticated multiprotocol workflows by allowing responses from one connection to be redirected to another connection instead of being sent to the originally configured reply target.</p>
+
+<p>With response diversion, Eclipse Ditto becomes even more versatile in bridging different IoT protocols and systems, 
+enabling complex routing scenarios that were previously challenging or impossible to achieve.</p>
+
+<h2 id="the-challenge-multi-protocol-iot-landscapes">The challenge: Multi-protocol IoT landscapes</h2>
+
+<p>Modern IoT deployments often involve multiple protocols and systems working together. Consider these common scenarios:</p>
+
+<ul>
+  <li><strong>Cloud integration</strong>: Your devices use MQTT to communicate with AWS IoT Core, but your analytics pipeline consumes data via Kafka</li>
+  <li><strong>Protocol translation</strong>: Legacy systems expect HTTP webhooks, but your devices communicate via AMQP</li>
+  <li><strong>Response aggregation</strong>: You want to collect all device responses in a central monitoring system regardless of the original protocol</li>
+</ul>
+
+<p>Until now, implementing such multiprotocol workflows required complex external routing logic or multiple intermediate systems. 
+Response diversion brings this capability directly into Ditto’s connectivity layer.</p>
+
+<h2 id="how-response-diversion-works">How response diversion works</h2>
+
+<p>Response diversion is configured at the connection source level using a key in the specific config and special header mapping keys:</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"headerMapping"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"divert-response-to-connection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"target-connection-id"</span><span class="p">,</span><span class="w"> 
+    </span><span class="nl">"divert-expected-response-types"</span><span class="p">:</span><span class="w"> </span><span class="s2">"response,error,nack"</span><span class="w">
+   </span><span class="p">},</span><span class="w"> 
+    </span><span class="nl">"specificConfig"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"is-diversion-source"</span><span class="p">:</span><span class="w"> </span><span class="s2">"true"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>And in the target connection, by defining a target.
+In the case of multiple sources one or exactly the same number of sources targets are required.
+If multiple targets are configured they are mapped to the sources by order.
+Only diverted responses will be accepted by source connections which ids are defined in the specific config under the key
+‘authorized-connections-as-sources’ in a comma separate format.</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+    </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"target-connection-id-1"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"targets"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"command/redirected/response"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"topics"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+            </span><span class="nl">"qos"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                </span><span class="s2">"pre:ditto"</span><span class="w">
+            </span><span class="p">],</span><span class="w">
+            </span><span class="nl">"headerMapping"</span><span class="p">:</span><span class="w"> </span><span class="p">{}</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">],</span><span class="w">
+    </span><span class="nl">"specificConfig"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"is-diversion-target"</span><span class="p">:</span><span class="w"> </span><span class="s2">"true"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="w">  </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"targets"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"command/redirected/response"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"topics"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+            </span><span class="nl">"qos"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                </span><span class="s2">"pre:ditto"</span><span class="w">
+            </span><span class="p">],</span><span class="w">
+            </span><span class="nl">"headerMapping"</span><span class="p">:</span><span class="w"> </span><span class="p">{}</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">],</span><span class="w">
+    </span><span class="nl">"specificConfig"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"is-diversion-target"</span><span class="p">:</span><span class="w"> </span><span class="s2">"true"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"authorized-connections-as-sources"</span><span class="p">:</span><span class="w"> </span><span class="s2">"target-connection-id-1,..."</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+
+
+</span></code></pre></div></div>
+
+<p>When a command is received through a source with response diversion configured, Ditto intercepts the response and routes it through the specified target connection instead of the original reply target.</p>
+
+<h2 id="real-world-use-case-aws-iot-core-with-kafka">Real-world use case: AWS IoT Core with Kafka</h2>
+
+<p>Let’s explore a practical scenario that demonstrates the power of response diversion. In this setup:</p>
+
+<ul>
+  <li>Devices communicate with <strong>AWS IoT Core</strong> via MQTT (bidirectional)</li>
+  <li><strong>Apache Kafka</strong> IoT Core pushes device commands to a Kafka topic</li>
+  <li>Device commands are consumed from Kafka topics</li>
+  <li><strong>Responses must go back to AWS IoT Core via MQTT</strong> (since IoT Core doesn’t support Kafka consumers)</li>
+</ul>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
+│  AWS IoT Core   │    │   Kafka Bridge  │    │  Apache Kafka   │    │  Eclipse Ditto  │
+│    (MQTT)       │    │   /Analytics    │    │                 │    │                 │
+│                 │    │                 │    │                 │    │                 │
+│ ┌─────────────┐ │    │ ┌─────────────┐ │    │ ┌─────────────┐ │    │ ┌─────────────┐ │
+│ │Device       │ │───▶│ │MQTT→Kafka   │ │───▶│ │device-      │ │───▶│ │Kafka Source │ │
+│ │Commands     │ │    │ │Bridge       │ │    │ │commands     │ │    │ │Connection   │ │
+│ │(MQTT topics)│ │    │ │             │ │    │ │topic        │ │    │ │             │ │
+│ └─────────────┘ │    │ └─────────────┘ │    │ └─────────────┘ │    │ └─────────────┘ │
+│        ▲        │    │                 │    │                 │    │        │        │
+│        │        │    │                 │    │                 │    │        ▼        │
+│        │        │    │                 │    │                 │    │ ┌─────────────┐ │
+│        │        │    │                 │    │                 │    │ │Command      │ │
+│        │        │    │                 │    │                 │    │ │Processing   │ │
+│        │        │    │                 │    │                 │    │ │             │ │
+│        │        │    │                 │    │                 │    │ └─────────────┘ │
+│        │        │    │                 │    │                 │    │        │        │
+│        │        │    │                 │    │                 │    │        ▼        │
+│        │        │    │                 │    │                 │    │ ┌─────────────┐ │
+│        │        │    │                 │    │                 │    │ │Response     │ │
+│        │        │    │                 │    │                 │    │ │Diversion    │ │
+│        │        │    │                 │    │                 │    │ │Interceptor  │ │
+│        │        │    │                 │    │                 │    │ └─────────────┘ │
+│        │        │    │                 │    │                 │    │        │        │
+│        │        │    │                 │    │                 │    │        ▼        │
+│ ┌─────────────┐ │    │                 │    │                 │    │ ┌─────────────┐ │
+│ │Device       │ │◀───┼─────────────────┼────┼─────────────────┼────│ │MQTT Target  │ │
+│ │Responses    │ │    │                 │    │                 │    │ │Connection   │ │
+│ │(MQTT topics)│ │    │                 │    │                 │    │ │(AWS IoT)    │ │
+│ └─────────────┘ │    │                 │    │                 │    │ └─────────────┘ │
+└─────────────────┘    └─────────────────┘    └─────────────────┘    └─────────────────┘
+
+Legend:
+───▶ Command Flow (MQTT → Kafka → Ditto)
+◀─── Response Flow (Ditto → MQTT, bypassing Kafka)
+
+</code></pre></div></div>
+
+<h3 id="example-configuration">Example Configuration</h3>
+
+<p>First, create the Kafka connection that consumes device commands:</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"kafka-commands-connection"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"connectionType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"kafka"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"connectionStatus"</span><span class="p">:</span><span class="w"> </span><span class="s2">"open"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"uri"</span><span class="p">:</span><span class="w"> </span><span class="s2">"tcp://kafka-broker:9092"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"specificConfig"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"bootstrapServers"</span><span class="p">:</span><span class="w"> </span><span class="s2">"kafka-broker:9092"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"saslMechanism"</span><span class="p">:</span><span class="w"> </span><span class="s2">"plain"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nl">"sources"</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="w">
+    </span><span class="nl">"addresses"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"device-commands"</span><span class="p">],</span><span class="w">
+    </span><span class="nl">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"ditto:kafka-consumer"</span><span class="p">],</span><span class="w">
+    </span><span class="nl">"headerMapping"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"device-id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{{ header:device-id }}"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"divert-response-to-connection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"aws-iot-mqtt-connection"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"divert-expected-response-types"</span><span class="p">:</span><span class="w"> </span><span class="s2">"response,error"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>Next, create the MQTT connection that will handle diverted responses:</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"aws-iot-mqtt-connection"</span><span class="p">,</span><span class="w"> 
+  </span><span class="nl">"connectionType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"mqtt"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"connectionStatus"</span><span class="p">:</span><span class="w"> </span><span class="s2">"open"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"uri"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ssl://your-iot-endpoint.amazonaws.com:8883"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"sources"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+  </span><span class="nl">"targets"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+      </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"device/{{ header:device-id }}/response"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"topics"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+    </span><span class="nl">"headerMapping"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"device-id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{{ header:device-id }}"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"correlation-id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{{ header:correlation-id }}"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+  </span><span class="p">],</span><span class="w">
+    </span><span class="nl">"specificConfig"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"is-diversion-target"</span><span class="p">:</span><span class="w"> </span><span class="s2">"true"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h3 id="flow-explanation">Flow explanation</h3>
+
+<ol>
+  <li><strong>Command ingestion</strong>: Kafka connection consumes device commands from the <code class="language-plaintext highlighter-rouge">device-commands</code> topic</li>
+  <li><strong>Response diversion</strong>: Commands are configured to divert responses to the <code class="language-plaintext highlighter-rouge">aws-iot-mqtt-connection</code></li>
+  <li><strong>Response routing</strong>: Responses are automatically published to AWS IoT Core via MQTT on the device-specific response topic</li>
+  <li><strong>Device notification</strong>: Devices receive responses via their subscribed MQTT topics in AWS IoT Core</li>
+</ol>
+
+<p>This setup enables a seamless flow from Kafka-based systems back to MQTT-based device communication without requiring external routing logic.</p>
+
+<h2 id="try-it-out">Try it out</h2>
+
+<p>Response diversion is available starting with Eclipse Ditto version 3.8.0. Update your deployment and start experimenting with multi-protocol workflows!</p>
+
+<p>The feature documentation provides comprehensive configuration examples and troubleshooting guidance. We’d love to hear about your use cases and feedback.</p>
+
+<p>Get started with response diversion today and unlock new possibilities for your IoT connectivity architecture.</p>
+
+<p><br />
+<br /></p>
+<figure><img class="docimage" src="images/ditto.svg" alt="Ditto" style="max-width: 500px" /></figure>
+
+<p>–<br />
+The Eclipse Ditto team</p>
+
+    </div>
+
+
+
+</article>
+
+<hr class="shaded"/>
+
+<footer>
+            <div class="row">
+                <div class="col-lg-12 footer">
+                    <div class="logo">
+                        <a href="https://eclipse.org"><img src="images/eclipse_foundation_logo.svg" alt="Eclipse logo"/></a>
+                    </div>
+                    <p class="notice">
+                        &copy;2025 Eclipse Ditto™.
+                         Site last generated: Oct 9, 2025 <br />
+                    </p>
+                    <div class="quickLinks">
+                        <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">
+                            &gt; Privacy Policy
+                        </a>
+                        <a href="https://www.eclipse.org/legal/termsofuse.php" target="_blank">
+                            &gt; Terms of Use
+                        </a>
+                        <a href="https://www.eclipse.org/legal/copyright.php" target="_blank">
+                            &gt; Copyright Agent
+                        </a>
+                        <a href="https://www.eclipse.org/legal" target="_blank">
+                            &gt; Legal
+                        </a>
+                        <a href="https://www.eclipse.org/legal/epl-2.0/" target="_blank">
+                            &gt; License
+                        </a>
+                        <a href="https://eclipse.org/security" target="_blank">
+                            &gt; Report a Vulnerability
+                        </a>
+                    </div>
+                </div>
+            </div>
+</footer>
+
+
+        </div>
+    <!-- /.row -->
+</div>
+<!-- /.container -->
+</div>
+<!-- /#main -->
+    </div>
+
+</body>
+</html>

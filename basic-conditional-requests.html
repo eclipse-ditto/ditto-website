@@ -2437,6 +2437,218 @@ was introduced.</p>
 <p>Upon activation, the digital twin stored in Eclipse Ditto will implicitly be updated with the latest data from the 
 <em>live response</em> sent by the device.</p>
 
+<h2 id="path-specific-conditions">Path-specific conditions</h2>
+
+<p>In addition to global conditions, Ditto supports since version 3.8.0 path-specific conditions for 
+<a href="protocol-specification-things-merge.html">merge operations</a> using the <code class="language-plaintext highlighter-rouge">merge-thing-patch-conditions</code> header.<br />
+This feature allows you to apply different <a href="basic-rql.html">RQL conditions</a> to different parts of a merge patch, 
+enabling fine-grained control over which parts of the patch are applied based on the current state of the Thing.</p>
+
+<p>The <code class="language-plaintext highlighter-rouge">merge-thing-patch-conditions</code> header contains a JSON object where each key represents a JSON pointer path and each 
+value is an RQL expression that must evaluate to <code class="language-plaintext highlighter-rouge">true</code> for that path to be included in the merge.</p>
+
+<ul>
+  <li>If a path-specific condition is fulfilled, that part of the merge patch will be applied.</li>
+  <li>If a path-specific condition is not fulfilled, that part of the merge patch will be skipped.</li>
+  <li>Paths without conditions will always be applied.</li>
+</ul>
+
+<p>Path-specific conditions are supported by HTTP API, WebSocket, Ditto protocol and Ditto Java Client.</p>
+
+<h3 id="permissions-for-path-specific-conditions">Permissions for path-specific conditions</h3>
+
+<p>READ permission is necessary on all resources referenced in the path-specific conditions, otherwise, the request will fail.</p>
+
+<h3 id="examples-1">Examples</h3>
+
+<p>This part shows how to use path-specific conditions via HTTP API, Ditto protocol, and Ditto Java Client.
+The below examples assume that there is a thing with the following thing state:</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"thingId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"org.eclipse.ditto:fancy-thing"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"policyId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"org.eclipse.ditto:fancy-thing"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"location"</span><span class="p">:</span><span class="w"> </span><span class="s2">"kitchen"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"manufacturer"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ACME Corp"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"lastMaintenance"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2023-01-15T10:30:00Z"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nl">"features"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"temperature"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"value"</span><span class="p">:</span><span class="w"> </span><span class="mi">15</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"unit"</span><span class="p">:</span><span class="w"> </span><span class="s2">"celsius"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"lastUpdated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2023-01-20T14:30:00Z"</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"humidity"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"value"</span><span class="p">:</span><span class="w"> </span><span class="mi">90</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"unit"</span><span class="p">:</span><span class="w"> </span><span class="s2">"percent"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"lastUpdated"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2023-01-20T14:30:00Z"</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"status"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"state"</span><span class="p">:</span><span class="w"> </span><span class="s2">"active"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"mode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"automatic"</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h4 id="http-api-1">HTTP API</h4>
+
+<p>Using the HTTP API it is possible to specify path-specific conditions via HTTP header <code class="language-plaintext highlighter-rouge">merge-thing-patch-conditions</code>:</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">-X</span> PATCH <span class="nt">-H</span> <span class="s1">'Content-Type: application/merge-patch+json'</span> <span class="se">\</span>
+    <span class="nt">-H</span> <span class="s1">'merge-thing-patch-conditions: {"features/temperature/properties/value": "gt(features/temperature/properties/value,20)", "features/humidity/properties/value": "lt(features/humidity/properties/value,80)"}'</span> <span class="se">\</span>
+    http://localhost:8080/api/2/things/org.eclipse.ditto:fancy-thing <span class="se">\</span>
+    <span class="nt">-d</span> <span class="s1">'{"features": {"temperature": {"properties": {"value": 25}}, "humidity": {"properties": {"value": 60}}, "status": {"properties": {"state": "updated"}}}}'</span>
+</code></pre></div></div>
+
+<p>In this example:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">temperature</code> will only be updated if the current temperature is greater than 20 (condition fails, so temperature won’t be updated)</li>
+  <li><code class="language-plaintext highlighter-rouge">humidity</code> will only be updated if the current humidity is less than 80 (condition fails, so humidity won’t be updated)</li>
+  <li><code class="language-plaintext highlighter-rouge">status</code> will always be updated (no condition specified)</li>
+</ul>
+
+<h4 id="ditto-protocol-1">Ditto protocol</h4>
+
+<p>The Ditto protocol supports also path-specific conditions for merge operations.
+This is an example how to do a conditional merge via <a href="protocol-specification.html">Ditto Protocol</a> message:</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"topic"</span><span class="p">:</span><span class="w"> </span><span class="s2">"org.eclipse.ditto/fancy-thing/things/twin/commands/merge"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"merge-thing-patch-conditions"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{</span><span class="se">\"</span><span class="s2">features/temperature/properties/value</span><span class="se">\"</span><span class="s2">:</span><span class="se">\"</span><span class="s2">gt(features/temperature/properties/value,20)</span><span class="se">\"</span><span class="s2">,</span><span class="se">\"</span><span class="s2">features/humidity/properties/value</span><span class="se">\"</span><span class="s2">:</span><span class="se">\"</span><span class="s2">lt(features/humidity/properties/value,80)</span><span class="se">\"</span><span class="s2">}"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nl">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"value"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"lastMaintenance"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2023-01-20T15:00:00Z"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"features"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"temperature"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"value"</span><span class="p">:</span><span class="w"> </span><span class="mi">25</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="nl">"humidity"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"value"</span><span class="p">:</span><span class="w"> </span><span class="mi">60</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="nl">"status"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"state"</span><span class="p">:</span><span class="w"> </span><span class="s2">"updated"</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h4 id="ditto-java-client-1">Ditto Java Client</h4>
+
+<p>The third option to use path-specific conditions is the <a href="client-sdk-java.html">ditto-client</a>.<br />
+The following code snippet demonstrates how to achieve this.</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">Map</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">,</span> <span class="nc">String</span><span class="o">&gt;</span> <span class="n">cond</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">HashMap</span><span class="o">&lt;&gt;();</span>
+<span class="n">cond</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="s">"features/temperature/properties/value"</span><span class="o">,</span> <span class="s">"gt(features/temperature/properties/value,20)"</span><span class="o">);</span>
+<span class="n">cond</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="s">"features/humidity/properties/value"</span><span class="o">,</span> <span class="s">"lt(features/humidity/properties/value,80)"</span><span class="o">);</span>
+
+<span class="nc">Option</span><span class="o">&lt;</span><span class="nc">Map</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">,</span> <span class="nc">String</span><span class="o">&gt;&gt;</span> <span class="n">condOption</span> <span class="o">=</span> <span class="nc">Options</span><span class="o">.</span><span class="na">mergeThingPatchConditions</span><span class="o">(</span><span class="n">patchConditions</span><span class="o">);</span>
+
+<span class="n">client</span><span class="o">.</span><span class="na">twin</span><span class="o">().</span><span class="na">forId</span><span class="o">(</span><span class="nc">ThingId</span><span class="o">.</span><span class="na">of</span><span class="o">(</span><span class="s">"org.eclipse.ditto:fancy-thing"</span><span class="o">))</span>
+        <span class="o">.</span><span class="na">merge</span><span class="o">(</span><span class="nc">JsonObject</span><span class="o">.</span><span class="na">newBuilder</span><span class="o">()</span>
+                <span class="o">.</span><span class="na">set</span><span class="o">(</span><span class="s">"attributes"</span><span class="o">,</span> <span class="nc">JsonObject</span><span class="o">.</span><span class="na">newBuilder</span><span class="o">()</span>
+                        <span class="o">.</span><span class="na">set</span><span class="o">(</span><span class="s">"lastMaintenance"</span><span class="o">,</span> <span class="s">"2023-01-20T15:00:00Z"</span><span class="o">)</span>
+                        <span class="o">.</span><span class="na">build</span><span class="o">())</span>
+                <span class="o">.</span><span class="na">set</span><span class="o">(</span><span class="s">"features"</span><span class="o">,</span> <span class="nc">JsonObject</span><span class="o">.</span><span class="na">newBuilder</span><span class="o">()</span>
+                        <span class="o">.</span><span class="na">set</span><span class="o">(</span><span class="s">"temperature"</span><span class="o">,</span> <span class="nc">JsonObject</span><span class="o">.</span><span class="na">newBuilder</span><span class="o">()</span>
+                                <span class="o">.</span><span class="na">set</span><span class="o">(</span><span class="s">"properties"</span><span class="o">,</span> <span class="nc">JsonObject</span><span class="o">.</span><span class="na">newBuilder</span><span class="o">()</span>
+                                        <span class="o">.</span><span class="na">set</span><span class="o">(</span><span class="s">"value"</span><span class="o">,</span> <span class="mi">25</span><span class="o">)</span>
+                                        <span class="o">.</span><span class="na">build</span><span class="o">())</span>
+                                <span class="o">.</span><span class="na">build</span><span class="o">())</span>
+                        <span class="o">.</span><span class="na">set</span><span class="o">(</span><span class="s">"humidity"</span><span class="o">,</span> <span class="nc">JsonObject</span><span class="o">.</span><span class="na">newBuilder</span><span class="o">()</span>
+                                <span class="o">.</span><span class="na">set</span><span class="o">(</span><span class="s">"properties"</span><span class="o">,</span> <span class="nc">JsonObject</span><span class="o">.</span><span class="na">newBuilder</span><span class="o">()</span>
+                                        <span class="o">.</span><span class="na">set</span><span class="o">(</span><span class="s">"value"</span><span class="o">,</span> <span class="mi">60</span><span class="o">)</span>
+                                        <span class="o">.</span><span class="na">build</span><span class="o">())</span>
+                                <span class="o">.</span><span class="na">build</span><span class="o">())</span>
+                        <span class="o">.</span><span class="na">set</span><span class="o">(</span><span class="s">"status"</span><span class="o">,</span> <span class="nc">JsonObject</span><span class="o">.</span><span class="na">newBuilder</span><span class="o">()</span>
+                                <span class="o">.</span><span class="na">set</span><span class="o">(</span><span class="s">"properties"</span><span class="o">,</span> <span class="nc">JsonObject</span><span class="o">.</span><span class="na">newBuilder</span><span class="o">()</span>
+                                        <span class="o">.</span><span class="na">set</span><span class="o">(</span><span class="s">"state"</span><span class="o">,</span> <span class="s">"updated"</span><span class="o">)</span>
+                                        <span class="o">.</span><span class="na">build</span><span class="o">())</span>
+                                <span class="o">.</span><span class="na">build</span><span class="o">())</span>
+                        <span class="o">.</span><span class="na">build</span><span class="o">())</span>
+                <span class="o">.</span><span class="na">build</span><span class="o">(),</span> <span class="n">condOption</span><span class="o">)</span>
+        <span class="o">.</span><span class="na">whenComplete</span><span class="o">((</span><span class="n">unused</span><span class="o">,</span> <span class="n">throwable</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="o">{</span>
+            <span class="k">if</span> <span class="o">(</span><span class="n">throwable</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+                <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"Merge was not successful: "</span> <span class="o">+</span> <span class="n">throwable</span><span class="o">.</span><span class="na">getMessage</span><span class="o">());</span>
+            <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+                <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"Merge was successful."</span><span class="o">);</span>
+            <span class="o">}</span>
+        <span class="o">});</span>
+</code></pre></div></div>
+
+<h3 id="configuration-for-path-specific-conditions">Configuration for path-specific conditions</h3>
+
+<p>When using path-specific conditions, it’s possible that all parts of a merge payload are filtered out, resulting in 
+empty JSON objects being persisted to the database.<br />
+Ditto provides a configuration option to avoid persisting events in case that only empty objects are left after applying 
+the conditions.</p>
+
+<h4 id="empty-object-removal">Empty object removal</h4>
+
+<p><strong>Configuration option:</strong> <code class="language-plaintext highlighter-rouge">MERGE_REMOVE_EMPTY_OBJECTS_AFTER_PATCH_CONDITION_FILTERING</code></p>
+
+<p><strong>Default behavior:</strong> <code class="language-plaintext highlighter-rouge">false</code> (empty objects are preserved for backward compatibility)</p>
+
+<p><strong>When enabled:</strong> Empty objects created by patch condition filtering are removed recursively, preventing unnecessary 
+database operations and saving database I/O.</p>
+
+<p><strong>Example scenario - Complete filtering:</strong></p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">//</span><span class="w"> </span><span class="err">Current</span><span class="w"> </span><span class="err">Thing</span><span class="w"> </span><span class="err">state</span><span class="w">
+</span><span class="p">{</span><span class="w">
+  </span><span class="nl">"features"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"temp"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nl">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nl">"value"</span><span class="p">:</span><span class="w"> </span><span class="mi">15</span><span class="p">}},</span><span class="w">  </span><span class="err">//</span><span class="w"> </span><span class="err">Current:</span><span class="w"> </span><span class="mi">15</span><span class="w">
+    </span><span class="nl">"hum"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nl">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nl">"value"</span><span class="p">:</span><span class="w"> </span><span class="mi">70</span><span class="p">}}</span><span class="w">    </span><span class="err">//</span><span class="w"> </span><span class="err">Current:</span><span class="w"> </span><span class="mi">70</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+
+</span><span class="err">//</span><span class="w"> </span><span class="err">Merge</span><span class="w"> </span><span class="err">payload</span><span class="w">
+</span><span class="p">{</span><span class="w">
+  </span><span class="nl">"features"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"temp"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nl">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nl">"value"</span><span class="p">:</span><span class="w"> </span><span class="mi">25</span><span class="p">}},</span><span class="w">
+    </span><span class="nl">"hum"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nl">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nl">"value"</span><span class="p">:</span><span class="w"> </span><span class="mi">60</span><span class="p">}}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+
+</span><span class="err">//</span><span class="w"> </span><span class="err">Patch</span><span class="w"> </span><span class="err">conditions</span><span class="w"> </span><span class="err">(both</span><span class="w"> </span><span class="err">will</span><span class="w"> </span><span class="err">evaluate</span><span class="w"> </span><span class="err">to</span><span class="w"> </span><span class="kc">false</span><span class="err">)</span><span class="w">
+</span><span class="p">{</span><span class="w">
+  </span><span class="nl">"features/temp/properties/value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"gt(features/temp/properties/value,30)"</span><span class="p">,</span><span class="w">  </span><span class="err">//</span><span class="w"> </span><span class="mi">15</span><span class="w"> </span><span class="err">&gt;</span><span class="w"> </span><span class="mi">30</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="kc">false</span><span class="w">
+  </span><span class="nl">"features/hum/properties/value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"lt(features/hum/properties/value,50)"</span><span class="w">     </span><span class="err">//</span><span class="w"> </span><span class="mi">70</span><span class="w"> </span><span class="err">&lt;</span><span class="w"> </span><span class="mi">50</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="kc">false</span><span class="w">
+</span><span class="p">}</span><span class="w">
+
+</span><span class="err">//</span><span class="w"> </span><span class="err">Result</span><span class="w"> </span><span class="err">with</span><span class="w"> </span><span class="err">configuration</span><span class="w"> </span><span class="err">disabled</span><span class="w"> </span><span class="err">(default)</span><span class="w">
+</span><span class="p">{</span><span class="w">
+  </span><span class="nl">"features"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"temp"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nl">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{}},</span><span class="w">  </span><span class="err">//</span><span class="w"> </span><span class="err">Empty</span><span class="w"> </span><span class="err">object</span><span class="w"> </span><span class="err">preserved</span><span class="w">
+    </span><span class="nl">"hum"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nl">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{}}</span><span class="w">    </span><span class="err">//</span><span class="w"> </span><span class="err">Empty</span><span class="w"> </span><span class="err">object</span><span class="w"> </span><span class="err">preserved</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span><span class="err">//</span><span class="w"> </span><span class="err">→</span><span class="w"> </span><span class="err">Database</span><span class="w"> </span><span class="err">operation</span><span class="w"> </span><span class="err">still</span><span class="w"> </span><span class="err">occurs,</span><span class="w"> </span><span class="err">empty</span><span class="w"> </span><span class="err">objects</span><span class="w"> </span><span class="err">stored</span><span class="w">
+
+</span><span class="err">//</span><span class="w"> </span><span class="err">Result</span><span class="w"> </span><span class="err">with</span><span class="w"> </span><span class="err">configuration</span><span class="w"> </span><span class="err">enabled</span><span class="w">
+</span><span class="p">{}</span><span class="w">  </span><span class="err">//</span><span class="w"> </span><span class="err">Completely</span><span class="w"> </span><span class="err">empty</span><span class="w"> </span><span class="err">payload</span><span class="w">
+</span><span class="err">//</span><span class="w"> </span><span class="err">→</span><span class="w"> </span><span class="err">Database</span><span class="w"> </span><span class="err">operation</span><span class="w"> </span><span class="err">skipped</span><span class="w"> </span><span class="err">entirely,</span><span class="w"> </span><span class="err">no</span><span class="w"> </span><span class="err">storage,</span><span class="w"> </span><span class="err">no</span><span class="w"> </span><span class="err">event</span><span class="w"> </span><span class="err">emission,</span><span class="w"> </span><span class="err">no</span><span class="w"> </span><span class="err">new</span><span class="w"> </span><span class="err">revision</span><span class="w">
+</span></code></pre></div></div>
+
+<p>For configuration details, see <a href="installation-operating.html#merge-operations-configuration">Merge operations configuration</a>.</p>
+
 <h2 id="further-reading-on-rql-expressions">Further reading on RQL expressions</h2>
 
 <p>See <a href="basic-rql.html">RQL expressions</a>.</p>
@@ -2474,7 +2686,7 @@ was introduced.</p>
                     </div>
                     <p class="notice">
                         &copy;2025 Eclipse Ditto™.
-                         Site last generated: Jul 25, 2025 <br />
+                         Site last generated: Oct 9, 2025 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

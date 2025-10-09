@@ -2458,6 +2458,14 @@ When <code class="language-plaintext highlighter-rouge">auth-subjects</code> is 
 <p>Please read <a href="basic-placeholders.html#scope-openid-connect-configuration">more details on the OpenId Connect configuration placeholder</a>
 to find out what is possible when defining the <code class="language-plaintext highlighter-rouge">auth-subjects</code>.</p>
 
+<p>Since Ditto 3.8.0, it is in addition possible to configure <code class="language-plaintext highlighter-rouge">inject-claims-into-headers</code>. This is a configuration which
+takes a map of HTTP header names to JWT claim placeholders. Valid JWT tokens will be resolved and added to the headers
+of the command as custom headers.<br />
+Ditto by default forwards custom headers and preserves them, e.g. when forwarding a <a href="basic-messages.html">message</a> or
+when emitting an <a href="basic-signals-event.html">event</a> after a command changes a thing.<br />
+Using <code class="language-plaintext highlighter-rouge">inject-claims-into-headers</code>, it e.g. is possible to add the email address of the authenticated user as a custom
+header to a command so that e.g. in logging it can be determined which user caused a change.</p>
+
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ditto.gateway.authentication {
     oauth {
       openid-connect-issuers = {
@@ -2474,6 +2482,10 @@ to find out what is possible when defining the <code class="language-plaintext h
             "{{ jwt:sub }}/{{ jwt:scp }}@{{ jwt:non_existing }}",
             "{{ jwt:roles/support }}"
           ]
+          inject-claims-into-headers = {
+            user-email = "{{ jwt:email }}"
+            user-name = "{{ jwt:name }}"
+          }
         }
       }
     }
@@ -2876,6 +2888,64 @@ mount log files to the host system.</li>
     </ul>
   </li>
 </ul>
+
+<h3 id="merge-operations-configuration">Merge operations configuration</h3>
+
+<p>Starting with Ditto <code class="language-plaintext highlighter-rouge">3.8.0</code>, the Things service supports configuration for merge operations with patch conditions.</p>
+
+<h4 id="empty-object-removal-after-patch-condition-filtering">Empty object removal after patch condition filtering</h4>
+
+<p>When using <a href="basic-conditional-requests.html">conditional merge requests</a> with patch conditions, it’s possible that all parts of a merge payload are filtered out, resulting in empty JSON objects being persisted to the database.</p>
+
+<p><strong>Configuration option:</strong></p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">MERGE_REMOVE_EMPTY_OBJECTS_AFTER_PATCH_CONDITION_FILTERING</code>: Controls whether to remove empty JSON objects from merge payloads when patch conditions filter out all content.</li>
+</ul>
+
+<p><strong>Default behavior:</strong></p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">false</code> - Empty objects are preserved (backward compatible)</li>
+</ul>
+
+<p><strong>When enabled:</strong></p>
+<ul>
+  <li>Empty objects created by patch condition filtering are removed recursively</li>
+  <li>Prevents unnecessary database operations for empty merge payloads</li>
+  <li>Improves performance by avoiding storage of empty objects</li>
+  <li>No new revision is created when the payload becomes completely empty</li>
+</ul>
+
+<p><strong>Configuration examples:</strong></p>
+
+<p><strong>Environment variable:</strong></p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">export </span><span class="nv">MERGE_REMOVE_EMPTY_OBJECTS_AFTER_PATCH_CONDITION_FILTERING</span><span class="o">=</span><span class="nb">true</span>
+</code></pre></div></div>
+
+<p><strong>Configuration file (<code class="language-plaintext highlighter-rouge">things.conf</code>):</strong></p>
+<div class="language-hocon highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nl">ditto</span><span class="w"> </span><span class="p">{</span><span class="w">
+  </span><span class="nl">things</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">thing</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">merge</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">remove-empty-objects-after-patch-condition-filtering</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="kc">true</span><span class="w">
+        </span><span class="nl">remove-empty-objects-after-patch-condition-filtering</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="si">${?</span><span class="nv">MERGE_REMOVE_EMPTY_OBJECTS_AFTER_PATCH_CONDITION_FILTERING</span><span class="si">}</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p><strong>Helm values:</strong></p>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">things</span><span class="pi">:</span>
+  <span class="na">config</span><span class="pi">:</span>
+    <span class="na">merge</span><span class="pi">:</span>
+      <span class="na">removeEmptyObjectsAfterPatchConditionFiltering</span><span class="pi">:</span> <span class="kc">true</span>
+</code></pre></div></div>
+
+<p><strong>Kubernetes environment variable:</strong></p>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">env</span><span class="pi">:</span>
+<span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">MERGE_REMOVE_EMPTY_OBJECTS_AFTER_PATCH_CONDITION_FILTERING</span>
+  <span class="na">value</span><span class="pi">:</span> <span class="s2">"</span><span class="s">true"</span>
+</code></pre></div></div>
 
 <h2 id="monitoring">Monitoring</h2>
 
@@ -4009,7 +4079,7 @@ to stop blocking messages to a namespace.</p>
                     </div>
                     <p class="notice">
                         &copy;2025 Eclipse Ditto™.
-                         Site last generated: Jul 25, 2025 <br />
+                         Site last generated: Oct 9, 2025 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

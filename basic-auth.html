@@ -2349,6 +2349,49 @@ browser
   </li>
 </ul>
 
+<h4 id="silent-token-refresh">Silent Token Refresh</h4>
+
+<p>The Ditto UI supports automatic silent token refresh to provide a seamless user experience without frequent redirects to the OIDC provider. This feature:</p>
+
+<ul>
+  <li><strong>Automatically refreshes JWT tokens</strong> before they expire using refresh tokens</li>
+  <li><strong>Retries failed API calls</strong> after successful token refresh</li>
+  <li><strong>Works transparently</strong> without user interaction</li>
+</ul>
+
+<p><strong>Configuration Requirements:</strong></p>
+
+<p>The OIDC provider must support:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">offline_access</code> scope for refresh tokens</li>
+  <li><code class="language-plaintext highlighter-rouge">refresh_token</code> grant type</li>
+  <li>Silent refresh callback endpoint</li>
+</ul>
+
+<p><strong>OIDC Provider Configuration:</strong></p>
+
+<p>Configure your OIDC provider in the environment settings:</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"oidc"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"providers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"your-provider"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"displayName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Your OIDC Provider"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"extractBearerTokenFrom"</span><span class="p">:</span><span class="w"> </span><span class="s2">"access_token"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"authority"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://your-oidc-provider.com"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"client_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"your-client-id"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"redirect_uri"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://your-ditto-ui.com"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"post_logout_redirect_uri"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://your-ditto-ui.com"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"silent_redirect_uri"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://your-ditto-ui.com/silent-callback.html"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"response_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"code"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"scope"</span><span class="p">:</span><span class="w"> </span><span class="s2">"openid groups email offline_access"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"automaticSilentRenew"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
 <h2 id="authorization">Authorization</h2>
 
 <p>Authorization is implemented with a <a href="#" data-toggle="tooltip" data-original-title="A Policy enables developers to configure fine-grained access control in an easy way. A specific policy defines who (subject) is granted or revoked permissions (rights) on a specific resource. The resource can be defined as rough or as fine-grained as necessary for the respective use case. ">Policy</a>
@@ -2391,7 +2434,7 @@ were issued via HTTP from the user <code class="language-plaintext highlighter-r
                     </div>
                     <p class="notice">
                         &copy;2025 Eclipse Ditto™.
-                         Site last generated: Jul 25, 2025 <br />
+                         Site last generated: Oct 9, 2025 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

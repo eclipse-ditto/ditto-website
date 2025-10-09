@@ -2304,6 +2304,60 @@ and <a href="basic-connections.html#target-header-mapping">target header mapping
 If a placeholder fails to resolve for a header value, then that header is not set. Placeholder resolution failure
 does not prevent sending of the message or setting other headers with resolved values.</p>
 
+<h2 id="special-header-mapping-keys">Special header mapping keys</h2>
+
+<p>In addition to general header mapping capabilities, Ditto recognizes several special header mapping keys that control connectivity behavior:</p>
+
+<h3 id="response-diversion-headers">Response diversion headers</h3>
+
+<p>These headers control <a href="connectivity-response-diversion.html">response diversion</a> functionality:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Header Key</th>
+      <th>Description</th>
+      <th>Example Values</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">divert-response-to-connection</code></td>
+      <td>Target connection ID for response diversion</td>
+      <td><code class="language-plaintext highlighter-rouge">"target-connection-id"</code>, <code class="language-plaintext highlighter-rouge">"target-connection-id"</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">divert-expected-response-types</code></td>
+      <td>Response types to divert (comma-separated)</td>
+      <td><code class="language-plaintext highlighter-rouge">"response"</code>, <code class="language-plaintext highlighter-rouge">"error"</code>, <code class="language-plaintext highlighter-rouge">"nack"</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">diverted-response-from-connection</code></td>
+      <td>Source connection of diverted response (automatically set)</td>
+      <td><code class="language-plaintext highlighter-rouge">"source-connection-id"</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Example source configuration with response diversion:</p>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"headerMapping"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"divert-response-to-connection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"webhook-connection"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"divert-expected-response-types"</span><span class="p">:</span><span class="w"> </span><span class="s2">"response,error"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"device-id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{{ header:device_id }}"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h3 id="protocol-specific-headers">Protocol-specific headers</h3>
+
+<p>Different protocols support different sets of headers. Some protocols also have special header behavior:</p>
+
+<div class="alert alert-info" role="alert"><i class="fa fa-info-circle"></i> <b>Note:</b> Response diversion headers (<code class="language-plaintext highlighter-rouge">ditto-divert-*</code>)
+are processed by Ditto internally and are not sent as external protocol headers.
+They control internal routing behavior only.</div>
+
+
 
     <div class="tags">
         
@@ -2329,7 +2383,7 @@ does not prevent sending of the message or setting other headers with resolved v
                     </div>
                     <p class="notice">
                         &copy;2025 Eclipse Ditto™.
-                         Site last generated: Jul 25, 2025 <br />
+                         Site last generated: Oct 9, 2025 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">
