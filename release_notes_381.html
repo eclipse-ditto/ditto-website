@@ -4,9 +4,9 @@
     <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="">
-<meta name="keywords" content="architecture,  architecture, overview, component, services">
-<title>  Architecture overview • Eclipse Ditto™ • a digital twin framework</title>
+<meta name="description" content="Version 3.8.1 of Eclipse Ditto, released on 13.10.2025">
+<meta name="keywords" content="release_notes,  release notes, announcements, changelog">
+<title>  Release notes 3.8.1 • Eclipse Ditto™ • a digital twin framework</title>
 
 <link rel="stylesheet" href="css/syntax.css">
 <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" crossorigin="anonymous">
@@ -179,7 +179,7 @@
                                 searchInput: document.getElementById('search-input'),
                                 resultsContainer: document.getElementById('results-container'),
                                 dataSource: 'search.json',
-                                searchResultTemplate: '<li><a href="{url}" title="Architecture overview">{title}</a></li>',
+                                searchResultTemplate: '<li><a href="{url}" title="Release notes 3.8.1">{title}</a></li>',
                                 noResultsText: 'No results found.',
                                 limit: 10,
                                 fuzzy: true,
@@ -277,6 +277,13 @@
         <li class="subfolders">
           <a href="#"><span></span>Release Notes</a>
           <ul>
+              
+              
+              
+              <li class="active"><a href="release_notes_381.html">3.8.1</a></li>
+              
+              
+              
               
               
               
@@ -1145,7 +1152,7 @@
               
               
               
-              <li class="active"><a href="architecture-overview.html">Overview</a></li>
+              <li><a href="architecture-overview.html">Overview</a></li>
               
               
               
@@ -2237,13 +2244,15 @@
         <!-- Content Column -->
         <div class="col-md-9" id="tg-sb-content">
             <div class="post-header">
-   <h1 class="post-title-main">Architecture overview</h1>
+   <h1 class="post-title-main">Release notes 3.8.1</h1>
 </div>
 
 
 
 <div class="post-content">
 
+   
+    <div class="summary">Version 3.8.1 of Eclipse Ditto, released on 13.10.2025</div>
    
 
     
@@ -2275,7 +2284,7 @@ $('#toc').on('click', 'a', function() {
     
     
 
-    <a target="_blank" href="https://github.com/eclipse/ditto/edit/master/documentation/src/main/resources/pages/ditto/architecture-overview.md" class="btn btn-default githubEditButton" role="button"><i class="fa fa-github fa-lg"></i> Edit this page</a>
+    <a target="_blank" href="https://github.com/eclipse/ditto/edit/master/documentation/src/main/resources/pages/ditto/release_notes_381.md" class="btn btn-default githubEditButton" role="button"><i class="fa fa-github fa-lg"></i> Edit this page</a>
 
     
     
@@ -2283,57 +2292,22 @@ $('#toc').on('click', 'a', function() {
 
     
 
-  <p>The architecture chapter describes the overall architecture of Eclipse Ditto and in detail which sub-components fulfill
-which responsibilities.</p>
+  <p>This is a bugfix release, no new features since <a href="release_notes_380.html">3.8.0</a> were added.</p>
 
-<h2 id="top-level-component-view">Top level component view</h2>
+<h2 id="changelog">Changelog</h2>
 
-<p>This overview shows the Ditto services (components), the externally provided and consumed API endpoints, 
-the external dependencies (MongoDB and nginx) and the relations of the services to each other.</p>
+<p>Compared to the latest release <a href="release_notes_380.html">3.8.0</a>, the following changes and bugfixes were added.</p>
 
-<figure><img class="docimage" src="images/pages/architecture/ditto-architecture-overview-2022.png" alt="Ditto services and context" style="max-width: 800px" /><figcaption>Ditto services in blue and context with nginx as reverse proxy and MongoDB</figcaption></figure>
+<h3 id="bugfixes">Bugfixes</h3>
 
-<p>The components have the following tasks:</p>
+<p>This is a complete list of the
+<a href="https://github.com/eclipse-ditto/ditto/pulls?q=is%3Apr+milestone%3A3.8.1">merged pull requests</a>.</p>
 
-<ul>
-  <li><a href="architecture-services-policies.html">Policies</a>: persistence + enforcement (authorization) of <a href="basic-policy.html">Policies</a></li>
-  <li><a href="architecture-services-things.html">Things</a>: persistence + enforcement (authorization) of <a href="basic-thing.html">Things</a> 
-and <a href="basic-feature.html">Features</a></li>
-  <li><a href="architecture-services-things-search.html">Things-Search</a>: tracking changes to <code class="language-plaintext highlighter-rouge">Things</code>, <code class="language-plaintext highlighter-rouge">Features</code>, <code class="language-plaintext highlighter-rouge">Policies</code> and 
-updating an optimized search index + executes queries on this search index</li>
-  <li><a href="architecture-services-gateway.html">Gateway</a>: provides HTTP and WebSocket API</li>
-  <li><a href="architecture-services-connectivity.html">Connectivity</a>:
-    <ul>
-      <li>persistence of <a href="basic-connections.html">Connections</a></li>
-      <li>sends <a href="protocol-overview.html">Ditto Protocol</a> messages to external message brokers and receives messages from them</li>
-    </ul>
-  </li>
-</ul>
+<h4 id="fix-new-option-merge-empty-objects-after-patch-condition-filtering-only-worked-on-jsonobjects">Fix new option “merge empty objects after patch condition filtering” only worked on JsonObjects</h4>
 
-<p>All services run in the same <a href="https://pekko.apache.org/docs/pekko/current/typed/cluster-concepts.html">Pekko cluster</a> and can
-reach each other via TCP without the need for an additional message broker in between.</p>
-
-<h2 id="components">Components</h2>
-
-<p>Ditto consists of multiple “microservices” as shown in the above component view.</p>
-
-<p>A “microservice” in Ditto is defined as:</p>
-
-<ul>
-  <li>has its own data store which only this microservice may access and write to</li>
-  <li>has an API in form of <a href="basic-signals.html">signals</a> (commands, command responses, events)</li>
-  <li>can be accessed by other services only via the defined <a href="basic-signals.html">signals</a></li>
-</ul>
-
-<h2 id="communication">Communication</h2>
-
-<p>All microservices can communicate asynchronously in a Ditto cluster. Communication is done via 
-<a href="https://pekko.apache.org/docs/pekko/current/general/remoting.html">Pekko remoting</a> which means that each service acts as server, 
-providing a TCP endpoint, as well as client sending data to other services.</p>
-
-<p>All messages which are sent between Ditto microservices must in a way be serializable and deserializable.<br />
-All Ditto <a href="basic-signals.html">signals</a> can be serialized from Java objects to JSON representation and deserialized back 
-from JSON to Java objects.</p>
+<p>PR <a href="https://github.com/eclipse-ditto/ditto/pull/2237">#2237</a> fixes an issue introduced with the new option <code class="language-plaintext highlighter-rouge">MERGE_REMOVE_EMPTY_OBJECTS_AFTER_PATCH_CONDITION_FILTERING</code>
+of the in 3.8.0 added <a href="basic-conditional-requests.html#configuration-for-path-specific-conditions">path specific conditions of thing merge commands</a>
+where it was assumed that the value to be merged is always a <code class="language-plaintext highlighter-rouge">JsonObject</code> and an exception was raised if it was not.</p>
 
 
     <div class="tags">
@@ -2342,7 +2316,7 @@ from JSON to Java objects.</p>
         
         
         
-        <a href="tag_architecture.html" class="btn btn-default navbar-btn cursorNorm" role="button">architecture</a>
+        <a href="tag_release_notes.html" class="btn btn-default navbar-btn cursorNorm" role="button">release_notes</a>
         
         
         
