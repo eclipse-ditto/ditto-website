@@ -280,6 +280,13 @@
               
               
               
+              <li><a href="release_notes_3810.html">3.8.10</a></li>
+              
+              
+              
+              
+              
+              
               <li><a href="release_notes_389.html">3.8.9</a></li>
               
               
@@ -2508,6 +2515,12 @@ enabling fine-grained control over which parts of the patch are applied based on
 <p>The <code class="language-plaintext highlighter-rouge">merge-thing-patch-conditions</code> header contains a JSON object where each key represents a JSON pointer path and each 
 value is an RQL expression that must evaluate to <code class="language-plaintext highlighter-rouge">true</code> for that path to be included in the merge.</p>
 
+<p>The provided key (JSON pointer path) is relative to the modification <code class="language-plaintext highlighter-rouge">path</code> of the merge command.<br />
+When e.g. providing a command which merges at path <code class="language-plaintext highlighter-rouge">/</code>, provided key to target a <code class="language-plaintext highlighter-rouge">value</code> property in a <code class="language-plaintext highlighter-rouge">temperature</code> 
+feature would have the format <code class="language-plaintext highlighter-rouge">features/temperature/properties/value</code>.<br />
+Issuing a merge command to merge at the feature level <code class="language-plaintext highlighter-rouge">features/temperature</code> would require the key to be <code class="language-plaintext highlighter-rouge">properties/value</code> 
+instead.</p>
+
 <ul>
   <li>If a path-specific condition is fulfilled, that part of the merge patch will be applied.</li>
   <li>If a path-specific condition is not fulfilled, that part of the merge patch will be skipped.</li>
@@ -2574,6 +2587,15 @@ The below examples assume that there is a thing with the following thing state:<
   <li><code class="language-plaintext highlighter-rouge">humidity</code> will only be updated if the current humidity is less than 80 (condition fails, so humidity won’t be updated)</li>
   <li><code class="language-plaintext highlighter-rouge">status</code> will always be updated (no condition specified)</li>
 </ul>
+
+<p>The same call could also be done on <code class="language-plaintext highlighter-rouge">/features</code> path with adjusted condition keys.<br />
+Notice that the conditions are still relative to the root of the thing, only the key paths are adjusted accordingly:</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">-X</span> PATCH <span class="nt">-H</span> <span class="s1">'Content-Type: application/merge-patch+json'</span> <span class="se">\</span>
+    <span class="nt">-H</span> <span class="s1">'merge-thing-patch-conditions: {"temperature/properties/value": "gt(features/temperature/properties/value,20)", "humidity/properties/value": "lt(features/humidity/properties/value,80)"}'</span> <span class="se">\</span>
+    http://localhost:8080/api/2/things/org.eclipse.ditto:fancy-thing/features <span class="se">\</span>
+    <span class="nt">-d</span> <span class="s1">'{"temperature": {"properties": {"value": 25}}, "humidity": {"properties": {"value": 60}}, "status": {"properties": {"state": "updated"}}}'</span>
+</code></pre></div></div>
 
 <h4 id="ditto-protocol-1">Ditto protocol</h4>
 
@@ -2747,7 +2769,7 @@ database operations and saving database I/O.</p>
                     </div>
                     <p class="notice">
                         &copy;2025 Eclipse Ditto™.
-                         Site last generated: Dec 11, 2025 <br />
+                         Site last generated: Dec 15, 2025 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">
