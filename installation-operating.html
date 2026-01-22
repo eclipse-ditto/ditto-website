@@ -280,6 +280,13 @@
               
               
               
+              <li><a href="release_notes_3811.html">3.8.11</a></li>
+              
+              
+              
+              
+              
+              
               <li><a href="release_notes_3810.html">3.8.10</a></li>
               
               
@@ -2919,6 +2926,106 @@ necessary.</li>
 <span class="nt">-Dditto</span>.search.namespace-indexed-fields.1.indexed-fields.1<span class="o">=</span>features/info
 </code></pre></div></div>
 
+<h2 id="configuring-additional-search-indexes">Configuring Additional Search Indexes</h2>
+
+<p>Since Ditto <strong>3.9.0</strong>, it is possible to configure additional custom MongoDB indexes for the search collection via
+configuration. This allows you to optimize search queries for specific access patterns without modifying the Ditto
+codebase.</p>
+
+<p>Custom indexes are created in addition to the built-in indexes that Ditto manages. Custom indexes are automatically
+activated when defined - there is no need to add them to <code class="language-plaintext highlighter-rouge">activated-index-names</code>.</p>
+
+<h3 id="configuration-options">Configuration options</h3>
+
+<p>Each custom index requires:</p>
+<ul>
+  <li><strong>name</strong> - The index name (used as the configuration key and MongoDB index name)</li>
+  <li><strong>fields</strong> - A list of fields to include in the compound index, each with:
+    <ul>
+      <li><strong>name</strong> - The field path (e.g., <code class="language-plaintext highlighter-rouge">t.attributes.region</code>, <code class="language-plaintext highlighter-rouge">_namespace</code>, <code class="language-plaintext highlighter-rouge">t.features.sensor.properties.value</code>)</li>
+      <li><strong>direction</strong> - Sort direction, either <code class="language-plaintext highlighter-rouge">ASC</code> (ascending, default) or <code class="language-plaintext highlighter-rouge">DESC</code> (descending)</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="hocon-configuration">HOCON Configuration</h3>
+
+<p>Configure custom indexes in the <code class="language-plaintext highlighter-rouge">search.conf</code> file:</p>
+
+<div class="language-hocon highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nl">ditto</span><span class="w"> </span><span class="p">{</span><span class="w">
+  </span><span class="nl">search</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">index-initialization</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="c1"># Define custom compound indexes (index name is the key)</span><span class="w">
+      </span><span class="c1"># Custom indexes are automatically activated - no need to add them to 'activated-index-names'</span><span class="w">
+      </span><span class="nl">custom-indexes</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">my_custom_idx</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nl">fields</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="p">[</span><span class="w">
+            </span><span class="p">{</span><span class="w"> </span><span class="nl">name</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s2">"t.attributes/region"</span><span class="w"> </span><span class="p">}</span><span class="w">
+            </span><span class="p">{</span><span class="w"> </span><span class="nl">name</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s2">"t.attributes/timestamp"</span><span class="p">,</span><span class="w"> </span><span class="nl">direction</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s2">"DESC"</span><span class="w"> </span><span class="p">}</span><span class="w">
+          </span><span class="p">]</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+        </span><span class="nl">another_index</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nl">fields</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="p">[</span><span class="w">
+            </span><span class="p">{</span><span class="w"> </span><span class="nl">name</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s2">"_namespace"</span><span class="p">,</span><span class="w"> </span><span class="nl">direction</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s2">"ASC"</span><span class="w"> </span><span class="p">}</span><span class="w">
+            </span><span class="p">{</span><span class="w"> </span><span class="nl">name</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s2">"t.features/sensor/properties/value"</span><span class="p">,</span><span class="w"> </span><span class="nl">direction</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s2">"DESC"</span><span class="w"> </span><span class="p">}</span><span class="w">
+          </span><span class="p">]</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h3 id="system-properties-configuration">System Properties Configuration</h3>
+
+<p>Example for configuring custom indexes via system properties for the <code class="language-plaintext highlighter-rouge">things-search</code> service:</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">-Dditto</span>.search.index-initialization.custom-indexes.my_custom_idx.fields.0.name<span class="o">=</span>t.attributes/region
+<span class="nt">-Dditto</span>.search.index-initialization.custom-indexes.my_custom_idx.fields.1.name<span class="o">=</span>t.attributes/timestamp
+<span class="nt">-Dditto</span>.search.index-initialization.custom-indexes.my_custom_idx.fields.1.direction<span class="o">=</span>DESC
+</code></pre></div></div>
+
+<h3 id="helm-configuration">Helm Configuration</h3>
+
+<p>When deploying Ditto via Helm, configure custom indexes in <code class="language-plaintext highlighter-rouge">values.yaml</code>:</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">thingsSearch</span><span class="pi">:</span>
+  <span class="na">config</span><span class="pi">:</span>
+    <span class="na">indexInitialization</span><span class="pi">:</span>
+      <span class="na">enabled</span><span class="pi">:</span> <span class="kc">true</span>
+      <span class="c1"># Custom indexes are automatically activated - no need to add them to 'activatedIndexNames'</span>
+      <span class="na">customIndexes</span><span class="pi">:</span>
+        <span class="na">my_custom_idx</span><span class="pi">:</span>
+          <span class="na">fields</span><span class="pi">:</span>
+            <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s2">"</span><span class="s">t.attributes/region"</span>
+              <span class="na">direction</span><span class="pi">:</span> <span class="s2">"</span><span class="s">ASC"</span>
+            <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s2">"</span><span class="s">t.attributes/timestamp"</span>
+              <span class="na">direction</span><span class="pi">:</span> <span class="s2">"</span><span class="s">DESC"</span>
+</code></pre></div></div>
+
+<h3 id="field-naming-conventions">Field naming conventions</h3>
+
+<p>The field names in custom indexes follow the same conventions as the existing search indexes in Ditto:</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">_namespace</code> - The namespace of the thing</li>
+  <li><code class="language-plaintext highlighter-rouge">_id</code> - The thing ID</li>
+  <li><code class="language-plaintext highlighter-rouge">t.policyId</code> - The policy ID</li>
+  <li><code class="language-plaintext highlighter-rouge">t.attributes.&lt;path&gt;</code> - Attributes at the specified path (e.g., <code class="language-plaintext highlighter-rouge">t.attributes.location.city</code>)</li>
+  <li><code class="language-plaintext highlighter-rouge">t.features.&lt;featureId&gt;.properties.&lt;path&gt;</code> - Feature properties (e.g., <code class="language-plaintext highlighter-rouge">t.features.sensor.properties.value</code>)</li>
+  <li><code class="language-plaintext highlighter-rouge">_modified</code> - The last modification timestamp</li>
+  <li><code class="language-plaintext highlighter-rouge">_created</code> - The creation timestamp</li>
+</ul>
+
+<h3 id="important-notes">Important notes</h3>
+
+<ul>
+  <li>Custom indexes are automatically activated when defined - no need to add them to <code class="language-plaintext highlighter-rouge">activated-index-names</code>.</li>
+  <li>Removing a custom index from <code class="language-plaintext highlighter-rouge">custom-indexes</code> will cause the index to be dropped on service restart.</li>
+  <li>Each custom index must have at least one field defined.</li>
+  <li>The direction is optional and defaults to <code class="language-plaintext highlighter-rouge">ASC</code> if not specified.</li>
+</ul>
+
 <h2 id="logging">Logging</h2>
 
 <p>Gathering logs for a running Ditto installation can be achieved by:</p>
@@ -4146,8 +4253,8 @@ to stop blocking messages to a namespace.</p>
                         <a href="https://eclipse.org"><img src="images/eclipse_foundation_logo.svg" alt="Eclipse logo"/></a>
                     </div>
                     <p class="notice">
-                        &copy;2025 Eclipse Ditto™.
-                         Site last generated: Dec 15, 2025 <br />
+                        &copy;2026 Eclipse Ditto™.
+                         Site last generated: Jan 22, 2026 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">
