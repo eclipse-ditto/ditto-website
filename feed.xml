@@ -5,9 +5,472 @@
         <description>Announcements, tutorials and examples around Eclipse Ditto and Digital Twins</description>
         <link>https://www.eclipse.dev/ditto/</link>
         <atom:link href="https://www.eclipse.dev/ditto/feed.xml" rel="self" type="application/rss+xml"/>
-        <pubDate>Thu, 22 Jan 2026 14:25:52 +0000</pubDate>
-        <lastBuildDate>Thu, 22 Jan 2026 14:25:52 +0000</lastBuildDate>
+        <pubDate>Mon, 02 Feb 2026 15:21:39 +0000</pubDate>
+        <lastBuildDate>Mon, 02 Feb 2026 15:21:39 +0000</lastBuildDate>
         <generator>Jekyll v4.3.4</generator>
+        
+        <item>
+            <title>WoT Tooling: Code Generation and OpenAPI from Thing Models</title>
+            <description>&lt;p&gt;Eclipse Ditto’s &lt;a href=&quot;2022-03-03-wot-integration.html&quot;&gt;W3C WoT (Web of Things) integration&lt;/a&gt; lets you reference Thing Models in &lt;a href=&quot;basic-thing.html#definition&quot;&gt;Thing Definitions&lt;/a&gt;, 
+generate &lt;a href=&quot;basic-wot-integration.html&quot;&gt;Thing Descriptions&lt;/a&gt;, and create Thing skeletons at runtime. 
+Alongside that, the &lt;strong&gt;&lt;a href=&quot;https://github.com/eclipse-ditto/ditto-wot-tooling&quot;&gt;ditto-wot-tooling&lt;/a&gt;&lt;/strong&gt; project provides build-time 
+and CLI tools to generate &lt;strong&gt;Kotlin code&lt;/strong&gt; and &lt;strong&gt;OpenAPI specifications&lt;/strong&gt; from the same WoT Thing Models.&lt;/p&gt;
+
+&lt;p&gt;This post gives an overview of the available tools, their configuration, and some best practices so the Ditto community can use them effectively.&lt;/p&gt;
+
+&lt;h2 id=&quot;overview-of-ditto-wot-tooling&quot;&gt;Overview of ditto-wot-tooling&lt;/h2&gt;
+
+&lt;p&gt;The &lt;a href=&quot;https://github.com/eclipse-ditto/ditto-wot-tooling&quot;&gt;ditto-wot-tooling&lt;/a&gt; repository hosts two main tools:&lt;/p&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;Tool&lt;/th&gt;
+      &lt;th&gt;Purpose&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;strong&gt;WoT Kotlin Generator&lt;/strong&gt;&lt;/td&gt;
+      &lt;td&gt;Maven plugin that downloads a WoT Thing Model (JSON-LD) via HTTP and generates Kotlin data classes and path helpers for type-safe use in your application.&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;strong&gt;WoT to OpenAPI Generator&lt;/strong&gt;&lt;/td&gt;
+      &lt;td&gt;Converts WoT Thing Models into &lt;strong&gt;OpenAPI 3.1.0&lt;/strong&gt; specifications that describe Ditto’s HTTP API for Things conforming to that model. Usable as CLI or library.&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;Both tools consume Thing Models from a URL (e.g. a deployed model registry). They complement Ditto’s runtime WoT support: 
+Ditto fetches Thing Models (TMs) to build skeletons and Thing Descriptions; the tooling uses the same TMs at build time or in CI to generate client code and API docs.&lt;/p&gt;
+
+&lt;h2 id=&quot;wot-kotlin-generator-maven-plugin&quot;&gt;WoT Kotlin Generator Maven plugin&lt;/h2&gt;
+
+&lt;p&gt;The WoT Kotlin Generator produces Kotlin code (data classes, builders, path DSL) from a single Thing Model URL. The generated code aligns with Ditto’s API and can be used to build merge commands, RQL filters, and path references in a type-safe way.&lt;/p&gt;
+
+&lt;h3 id=&quot;why-use-generated-models&quot;&gt;Why use generated models?&lt;/h3&gt;
+
+&lt;p&gt;Using the Kotlin generator gives you a &lt;strong&gt;single source of truth&lt;/strong&gt;: your backend models are derived directly from the WoT Thing Models, which act as the schema for your Things. Ditto supports &lt;a href=&quot;basic-wot-integration.html&quot;&gt;WoT-based validation&lt;/a&gt; of Things and Features against the referenced Thing Model. If you maintain models by hand, they can drift from the WoT schema and become incompatible—leading to validation errors at runtime, failed updates, or subtle bugs. Generated models stay in sync with the Thing Model you point the plugin at, so the payloads you build are valid by construction. That makes development easier, safer, and more predictable: you get compile-time safety and alignment with Ditto’s validation instead of discovering mismatches only when Ditto rejects a request.&lt;/p&gt;
+
+&lt;h3 id=&quot;maven-setup&quot;&gt;Maven setup&lt;/h3&gt;
+
+&lt;p&gt;Add the &lt;strong&gt;common-models&lt;/strong&gt; dependency (required by the generated code) and the plugin to your &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;pom.xml&lt;/code&gt;:&lt;/p&gt;
+
+&lt;div class=&quot;language-xml highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nt&quot;&gt;&amp;lt;dependency&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;groupId&amp;gt;&lt;/span&gt;org.eclipse.ditto&lt;span class=&quot;nt&quot;&gt;&amp;lt;/groupId&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;artifactId&amp;gt;&lt;/span&gt;wot-kotlin-generator-common-models&lt;span class=&quot;nt&quot;&gt;&amp;lt;/artifactId&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;version&amp;gt;&lt;/span&gt;1.0.0&lt;span class=&quot;nt&quot;&gt;&amp;lt;/version&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;/dependency&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;div class=&quot;language-xml highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nt&quot;&gt;&amp;lt;plugin&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;groupId&amp;gt;&lt;/span&gt;org.eclipse.ditto&lt;span class=&quot;nt&quot;&gt;&amp;lt;/groupId&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;artifactId&amp;gt;&lt;/span&gt;wot-kotlin-generator-maven-plugin&lt;span class=&quot;nt&quot;&gt;&amp;lt;/artifactId&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;version&amp;gt;&lt;/span&gt;1.0.0&lt;span class=&quot;nt&quot;&gt;&amp;lt;/version&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;executions&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;execution&amp;gt;&lt;/span&gt;
+            &lt;span class=&quot;nt&quot;&gt;&amp;lt;id&amp;gt;&lt;/span&gt;code-generator-my-model&lt;span class=&quot;nt&quot;&gt;&amp;lt;/id&amp;gt;&lt;/span&gt;
+            &lt;span class=&quot;nt&quot;&gt;&amp;lt;phase&amp;gt;&lt;/span&gt;generate-sources&lt;span class=&quot;nt&quot;&gt;&amp;lt;/phase&amp;gt;&lt;/span&gt;
+            &lt;span class=&quot;nt&quot;&gt;&amp;lt;goals&amp;gt;&lt;/span&gt;
+                &lt;span class=&quot;nt&quot;&gt;&amp;lt;goal&amp;gt;&lt;/span&gt;codegen&lt;span class=&quot;nt&quot;&gt;&amp;lt;/goal&amp;gt;&lt;/span&gt;
+            &lt;span class=&quot;nt&quot;&gt;&amp;lt;/goals&amp;gt;&lt;/span&gt;
+            &lt;span class=&quot;nt&quot;&gt;&amp;lt;configuration&amp;gt;&lt;/span&gt;
+                &lt;span class=&quot;nt&quot;&gt;&amp;lt;thingModelUrl&amp;gt;&lt;/span&gt;${modelBaseUrl}/my-domain/my-model-${my-model.version}.tm.jsonld&lt;span class=&quot;nt&quot;&gt;&amp;lt;/thingModelUrl&amp;gt;&lt;/span&gt;
+                &lt;span class=&quot;nt&quot;&gt;&amp;lt;packageName&amp;gt;&lt;/span&gt;com.example.wot.model.mymodel&lt;span class=&quot;nt&quot;&gt;&amp;lt;/packageName&amp;gt;&lt;/span&gt;
+                &lt;span class=&quot;nt&quot;&gt;&amp;lt;classNamingStrategy&amp;gt;&lt;/span&gt;ORIGINAL_THEN_COMPOUND&lt;span class=&quot;nt&quot;&gt;&amp;lt;/classNamingStrategy&amp;gt;&lt;/span&gt;
+            &lt;span class=&quot;nt&quot;&gt;&amp;lt;/configuration&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;lt;/execution&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;/executions&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;/plugin&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;full-plugin-configuration-options&quot;&gt;Full plugin configuration options&lt;/h3&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;Parameter&lt;/th&gt;
+      &lt;th&gt;Type&lt;/th&gt;
+      &lt;th&gt;Required&lt;/th&gt;
+      &lt;th&gt;Default&lt;/th&gt;
+      &lt;th&gt;Description&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;thingModelUrl&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;String&lt;/td&gt;
+      &lt;td&gt;Yes&lt;/td&gt;
+      &lt;td&gt;-&lt;/td&gt;
+      &lt;td&gt;Full HTTP(S) URL of the WoT Thing Model (JSON-LD). The plugin downloads it at build time.&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;packageName&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;String&lt;/td&gt;
+      &lt;td&gt;No&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;org.eclipse.ditto.wot.kotlin.generator.model&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;Target package for generated Kotlin classes.&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;outputDir&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;String&lt;/td&gt;
+      &lt;td&gt;No&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;target/generated-sources&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;Directory where generated sources are written (Maven adds it as a source root).&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;enumGenerationStrategy&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;String&lt;/td&gt;
+      &lt;td&gt;No&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;INLINE&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;How to generate enums: &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;INLINE&lt;/code&gt; (nested in the class that uses them) or &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;SEPARATE_CLASS&lt;/code&gt; (standalone enum classes).&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;classNamingStrategy&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;String&lt;/td&gt;
+      &lt;td&gt;No&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;COMPOUND_ALL&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;How to name generated classes: &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;COMPOUND_ALL&lt;/code&gt; (e.g. &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;RoomAttributes&lt;/code&gt;, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;BatteryProperties&lt;/code&gt;) or &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ORIGINAL_THEN_COMPOUND&lt;/code&gt; (use schema title when possible, compound only on conflict).&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;generateSuspendDsl&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;boolean&lt;/td&gt;
+      &lt;td&gt;No&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;false&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;If &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;true&lt;/code&gt;, generated DSL builder functions are &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;suspend&lt;/code&gt; functions for Kotlin coroutines.&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;Use Maven properties for the base URL and model version so you can switch environments and pin versions in one place:&lt;/p&gt;
+
+&lt;div class=&quot;language-xml highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nt&quot;&gt;&amp;lt;properties&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;modelBaseUrl&amp;gt;&lt;/span&gt;https://models.example.com&lt;span class=&quot;nt&quot;&gt;&amp;lt;/modelBaseUrl&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;lt;my-model.version&amp;gt;&lt;/span&gt;1.0.0&lt;span class=&quot;nt&quot;&gt;&amp;lt;/my-model.version&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;/properties&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;enum-and-class-naming-strategies&quot;&gt;Enum and class naming strategies&lt;/h3&gt;
+
+&lt;p&gt;&lt;strong&gt;Enum generation&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;INLINE&lt;/code&gt;&lt;/strong&gt; (default): Enums are nested inside the class that uses them (e.g. &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Thermostat.ThermostatStatus&lt;/code&gt;). Keeps the number of files lower and is convenient for simple enums.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;SEPARATE_CLASS&lt;/code&gt;&lt;/strong&gt;: Enums are generated as standalone classes in separate files. Better for IDE navigation and reuse across multiple classes.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;strong&gt;Class naming&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;COMPOUND_ALL&lt;/code&gt;&lt;/strong&gt; (default): Class names always combine parent and child (e.g. &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;SmartheatingThermostat&lt;/code&gt;, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;RoomAttributes&lt;/code&gt;). Guarantees unique names and makes hierarchy clear.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ORIGINAL_THEN_COMPOUND&lt;/code&gt;&lt;/strong&gt;: Uses the schema &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;title&lt;/code&gt; when there is no conflict (e.g. &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Thermostat&lt;/code&gt;); falls back to compound names (e.g. &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;SmartheatingThermostat&lt;/code&gt;) when needed. Produces shorter, more readable names when possible.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;dsl-regular-vs-suspend&quot;&gt;DSL: regular vs suspend&lt;/h3&gt;
+
+&lt;p&gt;By default, the plugin generates regular Kotlin DSL functions for building thing/feature/property objects. Set &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;generateSuspendDsl=true&lt;/code&gt; to generate &lt;strong&gt;suspend&lt;/strong&gt; DSL functions instead, so you can use them inside coroutines and call suspend code from within the DSL block.&lt;/p&gt;
+
+&lt;h3 id=&quot;generated-code-structure&quot;&gt;Generated code structure&lt;/h3&gt;
+
+&lt;p&gt;The plugin generates a package structure aligned with your Thing Model:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;Main thing class&lt;/strong&gt; – root class for the thing (e.g. &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;FloorLamp&lt;/code&gt;, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Device&lt;/code&gt;).&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;attributes/&lt;/code&gt;&lt;/strong&gt; – interfaces/classes for thing-level attributes (e.g. &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Location&lt;/code&gt;, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Room&lt;/code&gt;).&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;features/&lt;/code&gt;&lt;/strong&gt; – one subpackage per feature with feature and property types (e.g. &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;lamp/Lamp.kt&lt;/code&gt;, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;LampProperties.kt&lt;/code&gt;).&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;DSL functions&lt;/strong&gt; – fluent builders (e.g. &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;floorLamp { ... }&lt;/code&gt;, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;features { lamp { ... } }&lt;/code&gt;).&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Path and RQL helpers&lt;/strong&gt; – provided by the &lt;strong&gt;common-models&lt;/strong&gt; dependency; the generated code uses them for type-safe paths and &lt;a href=&quot;basic-rql.html&quot;&gt;RQL&lt;/a&gt; expressions.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;You must add the &lt;strong&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;wot-kotlin-generator-common-models&lt;/code&gt;&lt;/strong&gt; dependency to your project; the generated code extends interfaces and uses path builders from that artifact.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;What the generator supports&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;The plugin follows the WoT Thing Model specification: it handles &lt;strong&gt;properties&lt;/strong&gt; (read/write, various types), &lt;strong&gt;actions&lt;/strong&gt; (with input/output schemas), &lt;strong&gt;events&lt;/strong&gt;, and &lt;strong&gt;links&lt;/strong&gt; (e.g. &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;tm:extends&lt;/code&gt;, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;tm:submodel&lt;/code&gt;). Supported data types include primitives (&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;string&lt;/code&gt;, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;number&lt;/code&gt;, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;integer&lt;/code&gt;, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;boolean&lt;/code&gt;), &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;object&lt;/code&gt;, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;array&lt;/code&gt;, and custom types via &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;$ref&lt;/code&gt;. Enums in the schema become Kotlin enums according to &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;enumGenerationStrategy&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h3 id=&quot;best-practices&quot;&gt;Best practices&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;Pin model versions&lt;/strong&gt; in &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;pom.xml&lt;/code&gt; (or a BOM) so builds are reproducible and you can upgrade TMs in a controlled way.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;One execution per “logical” model&lt;/strong&gt;: use a separate &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;&amp;lt;execution&amp;gt;&lt;/code&gt; for each Thing Model you need (e.g. device, room, building). Each execution has its own &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;thingModelUrl&lt;/code&gt; and &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;packageName&lt;/code&gt;.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Align with runtime definitions&lt;/strong&gt;: use the same base URL and versioning as the &lt;a href=&quot;basic-thing.html#definition&quot;&gt;Thing Definition&lt;/a&gt; URLs you send to Ditto, so the generated types match what Ditto expects.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Add the common-models dependency&lt;/strong&gt;: the generated code depends on &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;wot-kotlin-generator-common-models&lt;/code&gt; for path building and Ditto RQL helpers; do not omit it.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;running-the-plugin-from-the-command-line&quot;&gt;Running the plugin from the command line&lt;/h3&gt;
+
+&lt;p&gt;You can invoke the plugin directly without a full POM execution by passing parameters with &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;-D&lt;/code&gt;:&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mvn org.eclipse.ditto:wot-kotlin-generator-maven-plugin:codegen &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;-DthingModelUrl&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;https://models.example.com/device-1.0.0.tm.jsonld &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;-DpackageName&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;com.example.wot.model.device &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;-DoutputDir&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;target/generated-sources &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;-DenumGenerationStrategy&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;SEPARATE_CLASS &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;-DclassNamingStrategy&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;ORIGINAL_THEN_COMPOUND
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Optional: &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;-DgenerateSuspendDsl=true&lt;/code&gt; for suspend DSL. Useful for one-off generation or scripts.&lt;/p&gt;
+
+&lt;h3 id=&quot;path-generation-and-type-safe-rql&quot;&gt;Path generation and type-safe RQL&lt;/h3&gt;
+
+&lt;p&gt;The &lt;strong&gt;common-models&lt;/strong&gt; dependency provides a path builder API that works with the generated classes. You get compile-time–safe paths and &lt;a href=&quot;basic-rql.html&quot;&gt;RQL&lt;/a&gt; expressions instead of string concatenation.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Path builder API&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;pathBuilder().from(start = SomeClass::property)&lt;/code&gt;&lt;/strong&gt; – start a path from a property (e.g. &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Thing::features&lt;/code&gt;, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Device::attributes&lt;/code&gt;).&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;.add(NextClass::property)&lt;/code&gt;&lt;/strong&gt; – append path segments (e.g. &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Features::thermostat&lt;/code&gt;, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Attributes::location&lt;/code&gt;).&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;.build()&lt;/code&gt;&lt;/strong&gt; – finalize as a path string (e.g. for logging or custom use).&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;.buildSearchProperty()&lt;/code&gt;&lt;/strong&gt; – create a search property object for RQL comparisons (see below).&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;.buildJsonPointer()&lt;/code&gt;&lt;/strong&gt; – build a Ditto JSON Pointer (e.g. for &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;MergeThing&lt;/code&gt;, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;DeleteAttribute&lt;/code&gt;). Useful when the generated model exposes a &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;startPath&lt;/code&gt; (e.g. &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Location::startPath&lt;/code&gt;) for a nested type.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;strong&gt;RQL combinators&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;Use these from &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;DittoRql.Companion&lt;/code&gt; to combine conditions:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;and(condition1, condition2, ...)&lt;/code&gt;&lt;/strong&gt; – all conditions must hold.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;or(condition1, condition2, ...)&lt;/code&gt;&lt;/strong&gt; – at least one condition must hold.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;not(condition)&lt;/code&gt;&lt;/strong&gt; – negate a condition.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Each condition is often a search property expression (see below). Call &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;.toString()&lt;/code&gt; on the result to get the RQL string for Ditto’s search API or conditional request headers.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Search property methods&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;After &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;.buildSearchProperty()&lt;/code&gt; you can chain one of:&lt;/p&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;Method&lt;/th&gt;
+      &lt;th&gt;RQL&lt;/th&gt;
+      &lt;th&gt;Example&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;exists()&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;property exists&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;.exists()&lt;/code&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;eq(value)&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;equals&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;.eq(&quot;THERMOSTAT&quot;)&lt;/code&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ne(value)&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;not equal&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;.ne(0)&lt;/code&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;gt(value)&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;greater than&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;.gt(20.0)&lt;/code&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ge(value)&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;greater or equal&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;.ge(timestamp)&lt;/code&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;lt(value)&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;less than&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;.lt(timestamp)&lt;/code&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;le(value)&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;less or equal&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;.le(&quot;2026-02-20T08:00:00Z&quot;)&lt;/code&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;like(pattern)&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;wildcard &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;?&lt;/code&gt; / &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;*&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;.like(&quot;room-*&quot;)&lt;/code&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ilike(pattern)&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;case-insensitive like&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;.ilike(&quot;*sensor*&quot;)&lt;/code&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;in(values)&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;value in collection&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;.in(listOf(&quot;A&quot;, &quot;B&quot;))&lt;/code&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;&lt;strong&gt;Example: conditional merge (RQL for Ditto headers)&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;Typical use is building a condition for Ditto’s &lt;a href=&quot;basic-conditional-requests.html&quot;&gt;conditional request&lt;/a&gt; header (e.g. for merge or delete). 
+Below, we require that the thing has a given attribute type and either no &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;mountedOn&lt;/code&gt; or &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;mountedOn&lt;/code&gt; less than or equal to a timestamp:&lt;/p&gt;
+
+&lt;div class=&quot;language-kotlin highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;com.example.wot.model.path.DittoRql.Companion.and&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;com.example.wot.model.path.DittoRql.Companion.or&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;com.example.wot.model.path.DittoRql.Companion.not&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;com.example.wot.model.path.DittoRql.Companion.pathBuilder&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;// Condition: type eq &quot;THERMOSTAT&quot; AND&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;//   (NOT exists(location/mountedOn) OR location/mountedOn &amp;lt;= eventDate)&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;val&lt;/span&gt; &lt;span class=&quot;py&quot;&gt;updateCondition&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;and&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
+    &lt;span class=&quot;nf&quot;&gt;pathBuilder&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;().&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;from&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;Device&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;attributes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;add&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;Attributes&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;buildSearchProperty&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;eq&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;THERMOSTAT&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;
+    &lt;span class=&quot;nf&quot;&gt;or&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
+        &lt;span class=&quot;nf&quot;&gt;not&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
+            &lt;span class=&quot;nf&quot;&gt;pathBuilder&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;().&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;from&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;Device&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;attributes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+                &lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;add&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;Attributes&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;location&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+                &lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;add&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;Location&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;mountedOn&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+                &lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;buildSearchProperty&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+                &lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;exists&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;
+        &lt;span class=&quot;nf&quot;&gt;pathBuilder&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;().&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;from&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;Device&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;attributes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;add&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;Attributes&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;location&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;add&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;Location&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;mountedOn&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;buildSearchProperty&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;le&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;eventDate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;toString&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;// Use in Ditto merge headers&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;val&lt;/span&gt; &lt;span class=&quot;py&quot;&gt;mergeCmd&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;MergeThing&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;withThing&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;thingId&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;thing&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;dittoHeaders&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;toBuilder&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;().&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;condition&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;updateCondition&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;build&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;strong&gt;Example: JSON pointer for DeleteAttribute&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;For commands that take a JSON pointer (e.g. delete a nested attribute), use the generated &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;startPath&lt;/code&gt; and &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;buildJsonPointer()&lt;/code&gt;:&lt;/p&gt;
+
+&lt;div class=&quot;language-kotlin highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;val&lt;/span&gt; &lt;span class=&quot;py&quot;&gt;deleteLocationAttribute&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;DeleteAttribute&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;of&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;thingId&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;nf&quot;&gt;pathBuilder&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;().&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;from&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;Location&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;startPath&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;buildJsonPointer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(),&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;dittoHeaders&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;strong&gt;Example: RQL for search&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;The same RQL string can be passed to Ditto’s &lt;a href=&quot;basic-search.html&quot;&gt;search API&lt;/a&gt; (e.g. &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;GET /search/things?filter=...&lt;/code&gt;):&lt;/p&gt;
+
+&lt;div class=&quot;language-kotlin highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;val&lt;/span&gt; &lt;span class=&quot;py&quot;&gt;filter&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;pathBuilder&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;().&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;from&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;Device&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;attributes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;add&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;Attributes&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;location&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;buildSearchProperty&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;exists&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;dittoClient&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;searchThings&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;filter&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;toString&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(),&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;..&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;The exact property names and types (&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Device&lt;/code&gt;, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Attributes&lt;/code&gt;, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Location&lt;/code&gt;, etc.) come from your Thing Model; the generator produces the matching classes and path helpers so that paths and RQL stay in sync with the model.&lt;/p&gt;
+
+&lt;h2 id=&quot;wot-to-openapi-generator&quot;&gt;WoT to OpenAPI Generator&lt;/h2&gt;
+
+&lt;p&gt;The WoT to OpenAPI Generator turns a WoT Thing Model into an &lt;strong&gt;OpenAPI 3.1.0&lt;/strong&gt; YAML (or JSON) that describes Ditto’s HTTP API for Things that follow that model: thing and attribute paths, feature properties, and actions (e.g. inbox messages).&lt;/p&gt;
+
+&lt;h3 id=&quot;benefits-for-frontends-and-api-consumers&quot;&gt;Benefits for frontends and API consumers&lt;/h3&gt;
+
+&lt;p&gt;The generated OpenAPI spec is a standard, tool-friendly contract. 
+Frontend teams can feed it into code generators (e.g. OpenAPI Generator, Orval, or the OpenAPI TypeScript/JavaScript generators) to &lt;strong&gt;generate TypeScript or JavaScript models&lt;/strong&gt;, &lt;strong&gt;typed HTTP client methods&lt;/strong&gt;, and &lt;strong&gt;request/response types&lt;/strong&gt; for thing, attribute, feature, and action endpoints. 
+That keeps the UI in sync with the backend: API changes are reflected in the spec, and regenerating client code updates types and calls in one step. 
+You get autocomplete, fewer manual typos, and consistent request shapes. The same spec can drive API documentation (e.g. Swagger UI or Redoc), integration tests, or other clients (mobile, scripts). 
+One Thing Model (TM) thus drives both backend Kotlin models and frontend API usage from a single source of truth.&lt;/p&gt;
+
+&lt;h3 id=&quot;usage&quot;&gt;Usage&lt;/h3&gt;
+
+&lt;p&gt;The generator is available as a &lt;strong&gt;CLI&lt;/strong&gt; (run with &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;java -jar&lt;/code&gt;) or as a &lt;strong&gt;library&lt;/strong&gt;. You can get the JAR from &lt;a href=&quot;https://search.maven.org/artifact/org.eclipse.ditto/wot-to-openapi-generator&quot;&gt;Maven Central&lt;/a&gt; or build from &lt;a href=&quot;https://github.com/eclipse-ditto/ditto-wot-tooling/tree/main/wot-to-openapi-generator&quot;&gt;source&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Command-line:&lt;/strong&gt;&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;java &lt;span class=&quot;nt&quot;&gt;-jar&lt;/span&gt; wot-to-openapi-generator-1.0.0.jar &amp;lt;model-base-url&amp;gt; &amp;lt;model-name&amp;gt; &amp;lt;model-version&amp;gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;ditto-base-url]
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;Argument&lt;/th&gt;
+      &lt;th&gt;Description&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;model-base-url&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;Base URL where the TM is served (e.g. &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;https://models.example.com&lt;/code&gt;).&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;model-name&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;Model name (e.g. &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;dimmable-colored-lamp&lt;/code&gt;). The generator will load &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;{model-base-url}/{model-name}-{model-version}.tm.jsonld&lt;/code&gt;.&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;model-version&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;Version (e.g. &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;1.0.0&lt;/code&gt;).&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ditto-base-url&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;(Optional) Base URL of the Ditto API (e.g. &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;https://ditto.example.com/api/2/things&lt;/code&gt;). Used in the generated &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;servers&lt;/code&gt; section.&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;&lt;strong&gt;Example:&lt;/strong&gt;&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;java &lt;span class=&quot;nt&quot;&gt;-jar&lt;/span&gt; wot-to-openapi-generator-1.0.0.jar &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+  https://eclipse-ditto.github.io/ditto-examples/wot/models/ &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+  dimmable-colored-lamp &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+  1.0.0 &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+  https://ditto.example.com/api/2/things
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Generated specs are written under a &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;generated/&lt;/code&gt; directory (path may vary by version). The output includes thing-level and attribute-level endpoints, feature properties, and action endpoints with request/response schemas derived from the TM.&lt;/p&gt;
+
+&lt;h3 id=&quot;best-practices-1&quot;&gt;Best practices&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;Run in CI&lt;/strong&gt;: generate OpenAPI from your main Thing Models in your pipeline and publish the artifacts (e.g. to a docs site or S3) so API consumers always see up-to-date specs.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Use the same model base URL and versions&lt;/strong&gt; as in your Kotlin generator and Ditto Thing definitions, so docs and code stay in sync.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Set &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ditto-base-url&lt;/code&gt;&lt;/strong&gt; when you want the generated &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;servers&lt;/code&gt; section to point at your Ditto instance; otherwise the generator may use a default.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;summary&quot;&gt;Summary&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;ditto-wot-tooling&lt;/strong&gt; provides the &lt;strong&gt;WoT Kotlin Generator&lt;/strong&gt; (Maven plugin) and the &lt;strong&gt;WoT to OpenAPI Generator&lt;/strong&gt; (CLI/library). Both take a WoT Thing Model URL and produce artifacts you can use at build time or in CI.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;WoT Kotlin Generator&lt;/strong&gt;: configure &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;thingModelUrl&lt;/code&gt;, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;packageName&lt;/code&gt;, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;outputDir&lt;/code&gt;, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;enumGenerationStrategy&lt;/code&gt; (&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;INLINE&lt;/code&gt; / &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;SEPARATE_CLASS&lt;/code&gt;), &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;classNamingStrategy&lt;/code&gt; (&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;COMPOUND_ALL&lt;/code&gt; / &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ORIGINAL_THEN_COMPOUND&lt;/code&gt;), and optionally &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;generateSuspendDsl&lt;/code&gt;; pin model versions; add one execution per model; depend on &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;wot-kotlin-generator-common-models&lt;/code&gt;. The generated code plus common-models give you type-safe path building (e.g. &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;pathBuilder().from().add().buildSearchProperty()&lt;/code&gt;) and RQL combinators (&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;and&lt;/code&gt;, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;or&lt;/code&gt;, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;not&lt;/code&gt;) and comparison methods (&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;exists&lt;/code&gt;, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;eq&lt;/code&gt;, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;gt&lt;/code&gt;, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;lt&lt;/code&gt;, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;like&lt;/code&gt;, &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;in&lt;/code&gt;, etc.) for Ditto search and conditional requests.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;WoT to OpenAPI Generator&lt;/strong&gt;: run with model base URL, model name, and version (and optionally Ditto base URL); integrate into CI to keep API docs aligned with your Thing Models.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;For more on WoT in Ditto (definitions, skeleton generation, Thing Descriptions), see the &lt;a href=&quot;basic-wot-integration.html&quot;&gt;WoT integration documentation&lt;/a&gt; and the &lt;a href=&quot;2022-03-03-wot-integration.html&quot;&gt;WoT integration blog post&lt;/a&gt;. For the tools themselves, go to &lt;a href=&quot;https://github.com/eclipse-ditto/ditto-wot-tooling&quot;&gt;eclipse-ditto/ditto-wot-tooling&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h2 id=&quot;feedback&quot;&gt;Feedback?&lt;/h2&gt;
+
+&lt;p&gt;Please &lt;a href=&quot;feedback.html&quot;&gt;get in touch&lt;/a&gt; if you have feedback or questions about the WoT tooling.&lt;/p&gt;
+
+&lt;p&gt;&lt;br /&gt;
+&lt;br /&gt;&lt;/p&gt;
+&lt;figure&gt;&lt;img class=&quot;docimage&quot; src=&quot;images/ditto.svg&quot; alt=&quot;Ditto&quot; style=&quot;max-width: 500px&quot; /&gt;&lt;/figure&gt;
+
+&lt;p&gt;–&lt;br /&gt;
+The Eclipse Ditto team&lt;/p&gt;
+</description>
+            <pubDate>Mon, 02 Feb 2026 00:00:00 +0000</pubDate>
+            <link>https://www.eclipse.dev/ditto/2026-02-02-wot-tooling-blog.html</link>
+            <guid isPermaLink="true">https://www.eclipse.dev/ditto/2026-02-02-wot-tooling-blog.html</guid>
+            
+            <category>blog</category>
+            
+            <category>wot</category>
+            
+            <category>http</category>
+            
+            
+        </item>
         
         <item>
             <title>Announcing Eclipse Ditto Release 3.8.0</title>
@@ -2193,97 +2656,6 @@ The Eclipse Ditto team&lt;/p&gt;
             <pubDate>Fri, 23 Jun 2023 00:00:00 +0000</pubDate>
             <link>https://www.eclipse.dev/ditto/2023-06-23-release-announcement-330.html</link>
             <guid isPermaLink="true">https://www.eclipse.dev/ditto/2023-06-23-release-announcement-330.html</guid>
-            
-            <category>blog</category>
-            
-            
-        </item>
-        
-        <item>
-            <title>Announcing Eclipse Ditto Release 3.2.0</title>
-            <description>&lt;p&gt;The Eclipse Ditto teams is proud to announce the availability of Eclipse Ditto 
-&lt;a href=&quot;https://projects.eclipse.org/projects/iot.ditto/releases/3.2.0&quot;&gt;3.2.0&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;Version 3.2.0 brings a new &lt;strong&gt;History API&lt;/strong&gt;, &lt;strong&gt;Eclipse Hono&lt;/strong&gt; connection type, &lt;strong&gt;case-insensitive searches&lt;/strong&gt; and
-other smaller improvements, e.g. on the Ditto UI and in the JS client.&lt;/p&gt;
-
-&lt;h2 id=&quot;adoption&quot;&gt;Adoption&lt;/h2&gt;
-
-&lt;p&gt;Companies are willing to show their adoption of Eclipse Ditto publicly: 
-&lt;a href=&quot;https://iot.eclipse.org/adopters/?#iot.ditto&quot;&gt;https://iot.eclipse.org/adopters/?#iot.ditto&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;When you use Eclipse Ditto it would be great to support the project by putting your logo there.&lt;/p&gt;
-
-&lt;h2 id=&quot;changelog&quot;&gt;Changelog&lt;/h2&gt;
-
-&lt;p&gt;The main improvements and additions of Ditto 3.2.0 are:&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;New &lt;strong&gt;History API&lt;/strong&gt; in order to be able to:
-    &lt;ul&gt;
-      &lt;li&gt;access historical state of things/policies/connections (with either given revision number or timestamp)&lt;/li&gt;
-      &lt;li&gt;stream persisted events of things/policies via async APIs (WebSocket, Connections) and things also via existing SSE (Server-Sent-Events) API&lt;/li&gt;
-      &lt;li&gt;configure deletion retention of events in the database for each entity&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;Addition of new &lt;strong&gt;Eclipse Hono&lt;/strong&gt; connection type for Ditto managed connections&lt;/li&gt;
-  &lt;li&gt;Option to do &lt;strong&gt;case-insensitive searches&lt;/strong&gt; and addition of a new RQL operator to declare case-insensitive like: &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ilike&lt;/code&gt;&lt;/li&gt;
-  &lt;li&gt;UI enhancements:
-    &lt;ul&gt;
-      &lt;li&gt;Push notifications on the Ditto UI using SSE (Server-Sent-Events), e.g. on thing updates&lt;/li&gt;
-      &lt;li&gt;Autocomplete functionality for the search slot&lt;/li&gt;
-      &lt;li&gt;Added configuring &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Bearer&lt;/code&gt; auth type for the “devops” authentication&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;JavaScript client:
-    &lt;ul&gt;
-      &lt;li&gt;Support for &lt;strong&gt;“merge” / “patch”&lt;/strong&gt; functionality in the &lt;strong&gt;JS client&lt;/strong&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;The following non-functional enhancements are also included:&lt;/p&gt;
-
-&lt;p&gt;None in this release.&lt;/p&gt;
-
-&lt;p&gt;The following notable fixes are included:&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;Undo creating implicitly created policy as part of thing creation if creation of thing failed&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Please have a look at the &lt;a href=&quot;release_notes_320.html&quot;&gt;3.2.0 release notes&lt;/a&gt; for a more detailed information on the release.&lt;/p&gt;
-
-&lt;h2 id=&quot;artifacts&quot;&gt;Artifacts&lt;/h2&gt;
-
-&lt;p&gt;The new Java artifacts have been published at the &lt;a href=&quot;https://repo.eclipse.org/content/repositories/ditto/&quot;&gt;Eclipse Maven repository&lt;/a&gt;
-as well as &lt;a href=&quot;https://repo1.maven.org/maven2/org/eclipse/ditto/&quot;&gt;Maven central&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;The Ditto JavaScript client release was published on &lt;a href=&quot;https://www.npmjs.com/~eclipse_ditto&quot;&gt;npmjs.com&lt;/a&gt;:&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://www.npmjs.com/package/@eclipse-ditto/ditto-javascript-client-dom&quot;&gt;@eclipse-ditto/ditto-javascript-client-dom&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://www.npmjs.com/package/@eclipse-ditto/ditto-javascript-client-node&quot;&gt;@eclipse-ditto/ditto-javascript-client-node&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;The Docker images have been pushed to Docker Hub:&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://hub.docker.com/r/eclipse/ditto-policies/&quot;&gt;eclipse/ditto-policies&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://hub.docker.com/r/eclipse/ditto-things/&quot;&gt;eclipse/ditto-things&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://hub.docker.com/r/eclipse/ditto-things-search/&quot;&gt;eclipse/ditto-things-search&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://hub.docker.com/r/eclipse/ditto-gateway/&quot;&gt;eclipse/ditto-gateway&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://hub.docker.com/r/eclipse/ditto-connectivity/&quot;&gt;eclipse/ditto-connectivity&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;br /&gt;
-&lt;br /&gt;&lt;/p&gt;
-&lt;figure&gt;&lt;img class=&quot;docimage&quot; src=&quot;images/ditto.svg&quot; alt=&quot;Ditto&quot; style=&quot;max-width: 500px&quot; /&gt;&lt;/figure&gt;
-
-&lt;p&gt;–&lt;br /&gt;
-The Eclipse Ditto team&lt;/p&gt;
-</description>
-            <pubDate>Wed, 08 Mar 2023 00:00:00 +0000</pubDate>
-            <link>https://www.eclipse.dev/ditto/2023-03-08-release-announcement-320.html</link>
-            <guid isPermaLink="true">https://www.eclipse.dev/ditto/2023-03-08-release-announcement-320.html</guid>
             
             <category>blog</category>
             

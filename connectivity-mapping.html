@@ -2504,7 +2504,16 @@ messages (e.g. events or responses) to arbitrary other formats.</p>
 <p>This mapper transforms <code class="language-plaintext highlighter-rouge">created</code>, <code class="language-plaintext highlighter-rouge">modified</code>, and <code class="language-plaintext highlighter-rouge">deleted</code> events (other type of messages are dropped) to a normalized view. 
 Events are mapped to a nested sparse JSON.</p>
 
-<p><strong>Note:</strong> For deleted events, only complete thing deletions (<code class="language-plaintext highlighter-rouge">ThingDeleted</code>) are mapped with a special <code class="language-plaintext highlighter-rouge">_deleted</code> field. Partial deletions like <code class="language-plaintext highlighter-rouge">AttributeDeleted</code>, <code class="language-plaintext highlighter-rouge">FeatureDeleted</code>, etc. are not mapped and will be dropped.</p>
+<p><strong>Note:</strong> By default, only complete thing deletions (<code class="language-plaintext highlighter-rouge">ThingDeleted</code>) are mapped with a special <code class="language-plaintext highlighter-rouge">_deleted</code> field. Partial
+deletions like <code class="language-plaintext highlighter-rouge">AttributeDeleted</code>, <code class="language-plaintext highlighter-rouge">FeatureDeleted</code>, etc. are dropped unless explicitly enabled (see option below).</p>
+
+<h4 id="configuration-options-1">Configuration options</h4>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">includeDeletedFields</code> (optional, default: <code class="language-plaintext highlighter-rouge">false</code>): when enabled, partial delete events are mapped and merge-patch
+<code class="language-plaintext highlighter-rouge">null</code> values are tracked in <code class="language-plaintext highlighter-rouge">_deletedFields</code>. The <code class="language-plaintext highlighter-rouge">_deletedFields</code> object mirrors the JSON structure of the deleted
+paths and stores ISO-8601 timestamps at the leaf nodes.</li>
+</ul>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
   </span><span class="nl">"topic"</span><span class="p">:</span><span class="w"> </span><span class="s2">"thing/id/things/twin/events/modified"</span><span class="p">,</span><span class="w">
@@ -2569,9 +2578,26 @@ Events are mapped to a nested sparse JSON.</p>
 
 <p>The <code class="language-plaintext highlighter-rouge">_deleted</code> field contains the timestamp when the thing was deleted in ISO-8601 format.</p>
 
-<p><strong>Note:</strong> The <code class="language-plaintext highlighter-rouge">_deleted</code> field is only added for complete thing deletions (when the entire thing is deleted). Partial deletions like <code class="language-plaintext highlighter-rouge">AttributeDeleted</code>, <code class="language-plaintext highlighter-rouge">FeatureDeleted</code>, etc. are not mapped and will be dropped.</p>
+<p><strong>Note:</strong> The <code class="language-plaintext highlighter-rouge">_deleted</code> field is only added for complete thing deletions (when the entire thing is deleted).</p>
 
-<h4 id="configuration-options-1">Configuration options</h4>
+<p>When <code class="language-plaintext highlighter-rouge">includeDeletedFields</code> is enabled, the mapper adds <code class="language-plaintext highlighter-rouge">_deletedFields</code> for partial deletions and merge-patch deletions:</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"thingId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"thing:id"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"_deletedFields"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"location"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"mountedOn"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2025-01-27T10:00:00Z"</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"features"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"myFeature"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2025-01-27T11:00:00Z"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h4 id="configuration-options-2">Configuration options</h4>
 
 <ul>
   <li><code class="language-plaintext highlighter-rouge">fields</code> (optional, default: all fields): comma separated list of fields that are contained in the result (see also
@@ -2604,7 +2630,7 @@ It is mostly used in conjunction with another mapper that transforms the payload
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
-<h4 id="configuration-options-2">Configuration options</h4>
+<h4 id="configuration-options-3">Configuration options</h4>
 
 <ul>
   <li><code class="language-plaintext highlighter-rouge">thingId</code> (required): The ID of the Thing that is updated with the connectivity state. It can either be a fixed value
@@ -2645,7 +2671,7 @@ ditto-message-feature-id: water-tank
 </code></pre></div></div>
 <p>The headers are lost for connection protocols without application headers such as MQTT 3.</p>
 
-<h4 id="configuration-options-3">Configuration options</h4>
+<h4 id="configuration-options-4">Configuration options</h4>
 
 <p>Example configuration:</p>
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
@@ -2721,7 +2747,7 @@ Exclude to send it to the thing itself. Default to <code class="language-plainte
 
 <p>The created thing contains the values defined in the template, configured in the <code class="language-plaintext highlighter-rouge">mappingDefinitions</code> <code class="language-plaintext highlighter-rouge">options</code>.</p>
 
-<h4 id="configuration-options-4">Configuration options</h4>
+<h4 id="configuration-options-5">Configuration options</h4>
 
 <ul>
   <li><code class="language-plaintext highlighter-rouge">thing</code> (required): The values of the thing that is created implicitly. It can either contain fixed values
@@ -2835,7 +2861,7 @@ received the message for which a thing should be created implicitly)</li>
 <a href="protocol-specification-things-retrieve.html">retrieve command</a> was received via the 
 <a href="protocol-twinlive.html#live">live channel</a> patching exactly the retrieved “live” data into the twin.</p>
 
-<h4 id="configuration-options-5">Configuration options</h4>
+<h4 id="configuration-options-6">Configuration options</h4>
 
 <ul>
   <li><code class="language-plaintext highlighter-rouge">dittoHeadersForMerge</code> (optional): The Ditto headers to use for constructing the “merge thing”
@@ -3834,7 +3860,7 @@ connectivity service for mapping a custom domain specific Protbuf encoded payloa
                     </div>
                     <p class="notice">
                         &copy;2026 Eclipse Ditto™.
-                         Site last generated: Jan 22, 2026 <br />
+                         Site last generated: Feb 2, 2026 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">
