@@ -1,0 +1,10 @@
+# Modify Feature Properties
+
+{% capture command %}{% include_relative generated/commands/modify/modifyfeatureproperties.md %}{% endcapture %}
+{{ command | markdownify }}
+
+{% capture response %}{% include_relative generated/commands/modify/modifyfeaturepropertiesresponse.md %}{% endcapture %}
+{{ response | markdownify }}
+
+{% capture event %}{% include_relative generated/events/featurepropertiesmodified.md %}{% endcapture %}
+{{ event | markdownify }}

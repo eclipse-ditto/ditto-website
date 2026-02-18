@@ -2732,7 +2732,7 @@ endpoints to a valid WoT Thing Model.</p>
   <li>referencing HTTP(s) URLs to WoT Thing Models in <a href="basic-thing.html#definition">Thing Definitions</a> and in <a href="basic-feature.html#feature-definition">Feature Definitions</a></li>
   <li>generation of WoT Thing Descriptions for Thing and Feature instances based on referenced Thing Models
     <ul>
-      <li>resolving potential <a href="https://www.w3.org/TR/wot-thing-description11/#thing-model-extension-import">extensions via <code class="language-plaintext highlighter-rouge">tm:extends</code> and imports via <code class="language-plaintext highlighter-rouge">tm:ref</code></a></li>
+      <li>resolving potential <a href="https://www.w3.org/TR/wot-thing-description11/#thing-model-extension-import">extensions via <code class="language-plaintext highlighter-rouge">tm:extends</code> and imports via <code class="language-plaintext highlighter-rouge">tm:ref</code></a> - both external references to other TMs and local references within the same TM</li>
       <li>resolving potential Thing level <a href="https://www.w3.org/TR/wot-thing-description11/#thing-model-composition">compositions via <code class="language-plaintext highlighter-rouge">tm:submodel</code></a></li>
       <li>resolving potential <a href="https://www.w3.org/TR/wot-thing-description11/#thing-model-td-placeholder">TM placeholders</a></li>
     </ul>
@@ -2788,7 +2788,7 @@ publicly downloadable via its HTTP(s) URL</li>
   <li>Ditto generates a WoT Thing Description and returns it as JSON response
     <ul>
       <li>defined TM <code class="language-plaintext highlighter-rouge">tm:extends</code> extensions are resolved by downloading those TMs as well</li>
-      <li>defined TM <code class="language-plaintext highlighter-rouge">tm:refs</code> imports are also resolved by downloading those TMs as well</li>
+      <li>defined TM <code class="language-plaintext highlighter-rouge">tm:ref</code> imports are resolved - both external references (e.g., <code class="language-plaintext highlighter-rouge">https://example.com/model.tm.jsonld#/properties/temp</code>) by downloading those TMs, and local references within the same TM (e.g., <code class="language-plaintext highlighter-rouge">#/properties/genericTemperature</code>)</li>
       <li>defined TM <code class="language-plaintext highlighter-rouge">tm:submodel</code>s are added to the <code class="language-plaintext highlighter-rouge">links</code> of the TD pointing to the TDs of the Features of the Thing</li>
       <li>metadata available in the Thing or in the Ditto configuration is also included in the generated TD</li>
     </ul>
@@ -2821,7 +2821,7 @@ publicly downloadable via its HTTP(s) URL</li>
   <li>Ditto generates a WoT Thing Description and returns it as JSON response
     <ul>
       <li>defined TM <code class="language-plaintext highlighter-rouge">tm:extends</code> extensions are resolved by downloading those TMs as well</li>
-      <li>defined TM <code class="language-plaintext highlighter-rouge">tm:refs</code> imports are also resolved by downloading those TMs as well</li>
+      <li>defined TM <code class="language-plaintext highlighter-rouge">tm:ref</code> imports are resolved - both external references by downloading those TMs, and local references within the same TM</li>
       <li>metadata available in the Thing or in the Ditto configuration is also included in the generated TD</li>
     </ul>
   </li>
@@ -3643,7 +3643,7 @@ example are quite long.</p>
                     </div>
                     <p class="notice">
                         &copy;2026 Eclipse Ditto™.
-                         Site last generated: Feb 11, 2026 <br />
+                         Site last generated: Feb 18, 2026 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">
