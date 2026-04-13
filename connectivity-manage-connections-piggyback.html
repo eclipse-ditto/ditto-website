@@ -2714,12 +2714,209 @@ retrieving the connection metrics is the <code class="language-plaintext highlig
   </span><span class="nl">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
     </span><span class="nl">"aggregate"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
     </span><span class="nl">"is-group-topic"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"ditto-sudo"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w"> 
+    </span><span class="nl">"ditto-sudo"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
   </span><span class="p">},</span><span class="w">
   </span><span class="nl">"piggybackCommand"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
     </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"connectivity.commands:resetConnectionLogs"</span><span class="p">,</span><span class="w">
     </span><span class="nl">"connectionId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;connectionID&gt;"</span><span class="w">
   </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h2 id="encryption-of-secrets-migration-commands">Encryption of secrets migration commands</h2>
+
+<p>Since Ditto 3.9.0, the following commands are available for managing encryption key rotation:</p>
+
+<ul>
+  <li><a href="#migrate-encryption">migrate encryption</a></li>
+  <li><a href="#migration-status">migration status</a></li>
+  <li><a href="#abort-migration">abort migration</a></li>
+</ul>
+
+<p>These commands enable safe encryption key rotation and encryption disable workflows without downtime or data loss.
+For detailed information about encryption configuration and workflows, refer to
+<a href="installation-operating.html#encrypt-sensitive-data-in-connections">Encrypt sensitive data in Connections</a>.</p>
+
+<h3 id="migrate-encryption">Migrate encryption</h3>
+
+<p>Trigger batch processing of all persisted connection data (snapshots and journal events). The command supports two workflows:</p>
+
+<p><strong>Migration Logic:</strong></p>
+<ul>
+  <li><strong>Key Rotation:</strong> <code class="language-plaintext highlighter-rouge">encryption-enabled = true</code> + both keys set → Decrypt with old key, re-encrypt with new key</li>
+  <li><strong>Disable Encryption:</strong> <code class="language-plaintext highlighter-rouge">encryption-enabled = false</code> + old key set → Decrypt with old key, write plaintext</li>
+</ul>
+
+<p>The configuration determines which workflow is executed.</p>
+
+<p><strong>Start a new migration:</strong></p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"targetActorSelection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/user/connectivityRoot/encryptionMigration"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"aggregate"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nl">"piggybackCommand"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"connectivity.commands:migrateEncryption"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"dryRun"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"resume"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p><strong>Dry-run migration (count affected documents without making changes):</strong></p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"targetActorSelection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/user/connectivityRoot/encryptionMigration"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"aggregate"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nl">"piggybackCommand"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"connectivity.commands:migrateEncryption"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"dryRun"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"resume"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p><strong>Resume a previously started/aborted migration:</strong></p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"targetActorSelection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/user/connectivityRoot/encryptionMigration"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"aggregate"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nl">"piggybackCommand"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"connectivity.commands:migrateEncryption"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"dryRun"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"resume"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>If the previous migration already completed, or no previous migration exists (e.g., after a dry run which does
+not persist progress), the response will be <code class="language-plaintext highlighter-rouge">200 OK</code> with <code class="language-plaintext highlighter-rouge">phase: "already_completed"</code> instead of starting a new
+migration.</p>
+
+<p><strong>Example response when starting/resuming migration:</strong></p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"connectivity.responses:migrateEncryption"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"status"</span><span class="p">:</span><span class="w"> </span><span class="mi">202</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"phase"</span><span class="p">:</span><span class="w"> </span><span class="s2">"snapshots"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"dryRun"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"resumed"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"startedAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2026-02-16T10:00:00Z"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p><strong>Example response when there is nothing to resume (already completed or never started):</strong></p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"connectivity.responses:migrateEncryption"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"status"</span><span class="p">:</span><span class="w"> </span><span class="mi">200</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"phase"</span><span class="p">:</span><span class="w"> </span><span class="s2">"already_completed"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"dryRun"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"resumed"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"startedAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2026-02-16T10:00:00Z"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>The response indicates:</p>
+<ul>
+  <li><strong>phase</strong>: Starting phase of the migration</li>
+  <li><strong>dryRun</strong>: Whether this is a dry-run (no changes made)</li>
+  <li><strong>resumed</strong>: Whether migration was resumed from previous state or started fresh</li>
+  <li><strong>startedAt</strong>: When migration originally started (for resumed migrations) or now (for new migrations)</li>
+</ul>
+
+<h3 id="migration-status">Migration status</h3>
+
+<p>Query the current status and progress of an encryption migration.</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"targetActorSelection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/user/connectivityRoot/encryptionMigration"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"aggregate"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nl">"piggybackCommand"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"connectivity.commands:migrateEncryptionStatus"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p><strong>Example response:</strong></p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"connectivity.responses:migrateEncryptionStatus"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"status"</span><span class="p">:</span><span class="w"> </span><span class="mi">200</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"phase"</span><span class="p">:</span><span class="w"> </span><span class="s2">"in_progress:snapshots"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"snapshots"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"processed"</span><span class="p">:</span><span class="w"> </span><span class="mi">150</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"skipped"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"failed"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nl">"journalEvents"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"processed"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"skipped"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"failed"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nl">"progress"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"lastProcessedSnapshotId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"507f1f77bcf86cd799439011"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"lastProcessedSnapshotPid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"connection:mqtt-prod-sensor-01"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"lastProcessedJournalId"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"lastProcessedJournalPid"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nl">"timing"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"startedAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2026-02-16T10:00:00Z"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"updatedAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2026-02-16T10:30:00Z"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nl">"migrationActive"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>The response includes:</p>
+<ul>
+  <li><strong>phase</strong>: Current migration phase (<code class="language-plaintext highlighter-rouge">snapshots</code>, <code class="language-plaintext highlighter-rouge">journal</code>, <code class="language-plaintext highlighter-rouge">completed</code>, or <code class="language-plaintext highlighter-rouge">in_progress:&lt;phase&gt;</code>)</li>
+  <li><strong>snapshots/journalEvents</strong>: Document counters (processed, skipped, failed)</li>
+  <li><strong>progress</strong>: Last processed document IDs and persistence IDs (connection IDs) for resume tracking</li>
+  <li><strong>timing</strong>: When migration started and was last updated</li>
+  <li><strong>migrationActive</strong>: Whether migration is currently running</li>
+</ul>
+
+<h3 id="abort-migration">Abort migration</h3>
+
+<p>Abort a currently running encryption migration. The migration will stop after the current batch completes,
+and progress will be saved to allow resuming later.</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"targetActorSelection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/user/connectivityRoot/encryptionMigration"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"aggregate"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nl">"piggybackCommand"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"connectivity.commands:migrateEncryptionAbort"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p><strong>Example response:</strong></p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"connectivity.responses:migrateEncryptionAbort"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"status"</span><span class="p">:</span><span class="w"> </span><span class="mi">200</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"phase"</span><span class="p">:</span><span class="w"> </span><span class="s2">"aborted:snapshots"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"snapshots"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"processed"</span><span class="p">:</span><span class="w"> </span><span class="mi">150</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"skipped"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"failed"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nl">"journalEvents"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"processed"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"skipped"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"failed"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nl">"abortedAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2026-02-16T10:35:00Z"</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
@@ -2730,7 +2927,7 @@ HTTP API section about managing connections.</p>
 
 <h2 id="payload-mapping-configuration">Payload mapping configuration</h2>
 
-<p>Please refer to <a href="connectivity-manage-connections.html#payload-mapping-configuration">Payload mapping configuration</a> in 
+<p>Please refer to <a href="connectivity-manage-connections.html#payload-mapping-configuration">Payload mapping configuration</a> in
 HTTP API section about managing connections.</p>
 
 
@@ -2758,7 +2955,7 @@ HTTP API section about managing connections.</p>
                     </div>
                     <p class="notice">
                         &copy;2026 Eclipse Ditto™.
-                         Site last generated: Feb 18, 2026 <br />
+                         Site last generated: Apr 13, 2026 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

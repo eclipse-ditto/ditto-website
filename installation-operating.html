@@ -2641,21 +2641,18 @@ old events that are no longer needed for the event sourcing.</p>
 <p>Encryption is done using a 256-bit AES symmetrical key and the AES/GCM/NoPadding transformation.</p>
 
 <h4 id="symmetric-key">Symmetric key</h4>
+<p>To generate it you can run in terminal:</p>
 
-<p>To generate it you can use a convenience method already available
-at <a href="https://github.com/eclipse-ditto/ditto/blob/master/connectivity/service/src/main/java/org/eclipse/ditto/connectivity/service/util/EncryptorAesGcm.java#L100">EncryptorAesGcm.generateAESKeyAsString()</a></p>
-
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>openssl rand <span class="nt">-base64</span> 32
+</code></pre></div></div>
 <p>or you can use the java standard library</p>
 
 <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code>        <span class="n">javax</span><span class="o">.</span><span class="na">crypto</span><span class="o">.</span><span class="na">KeyGenerator</span> <span class="n">keyGen</span><span class="o">=</span><span class="nc">KeyGenerator</span><span class="o">.</span><span class="na">getInstance</span><span class="o">(</span><span class="s">"AES"</span><span class="o">);</span>
         <span class="n">keyGen</span><span class="o">.</span><span class="na">init</span><span class="o">(</span><span class="mi">256</span><span class="o">);</span>
         <span class="n">javax</span><span class="o">.</span><span class="na">crypto</span><span class="o">.</span><span class="na">SecretKey</span> <span class="n">aes256SymetricKey</span> <span class="o">=</span> <span class="n">keyGen</span><span class="o">.</span><span class="na">generateKey</span><span class="o">();</span>
 </code></pre></div></div>
-
-<p>or with a terminal command.</p>
-
-<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>openssl rand 32 | basenc <span class="nt">--base64url</span>
-</code></pre></div></div>
+<p>or use a convenience method already available
+at <a href="https://github.com/eclipse-ditto/ditto/blob/master/connectivity/service/src/main/java/org/eclipse/ditto/connectivity/service/util/EncryptorAesGcm.java#L100">EncryptorAesGcm.generateAESKeyAsString()</a></p>
 
 <p>The key must be <strong>256-bit <a href="https://www.rfc-editor.org/rfc/rfc4648#section-5">Base64-encoded with url-safe alphabet</a> using the UTF-8</strong> charset.
 This is done already by the convenience method mentioned
@@ -2682,9 +2679,203 @@ encrypted.</p>
 the <a href="https://github.com/eclipse-ditto/ditto/blob/master/connectivity/service/src/main/resources/connectivity.conf">connectivity.conf</a>
 at “ditto.connectivity.connection.encryption” section of the config.</p>
 
-<p>If at some point encryption is decided to be disabled the symmetric key is important to be kept in the 
+<p>If at some point encryption is decided to be disabled the symmetric key is important to be kept in the
 configuration otherwise the encrypted values will not be decrypted and the only way to fix the connections will be to edit
 the encrypted parts and save them.</p>
+
+<h4 id="encryption-key-rotation">Encryption key rotation</h4>
+
+<p>Since Ditto 3.9.0, it is possible to rotate encryption keys without downtime or data loss using a dual-key configuration
+and a migration command.</p>
+
+<h5 id="dual-key-configuration">Dual-key configuration</h5>
+
+<p>The encryption configuration supports both a current key and an optional old key for fallback decryption:</p>
+
+<div class="language-hocon highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nl">ditto.connectivity.connection.encryption</span><span class="w"> </span><span class="p">{</span><span class="w">
+  </span><span class="nl">encryption-enabled</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="kc">true</span><span class="w">
+  </span><span class="nl">symmetrical-key</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s2">"YOUR_NEW_KEY_HERE"</span><span class="w">           </span><span class="c1"># Current key for encrypting new data</span><span class="w">
+  </span><span class="nl">old-symmetrical-key</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s2">"YOUR_OLD_KEY_HERE"</span><span class="w">       </span><span class="c1"># Optional fallback key for decrypting old data</span><span class="w">
+  </span><span class="nl">json-pointers</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="p">[</span><span class="l">...</span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p><strong>Behavior:</strong></p>
+<ul>
+  <li><strong>Encryption:</strong> Always uses <code class="language-plaintext highlighter-rouge">symmetrical-key</code> for encrypting new data</li>
+  <li><strong>Decryption:</strong> Tries <code class="language-plaintext highlighter-rouge">symmetrical-key</code> first, falls back to <code class="language-plaintext highlighter-rouge">old-symmetrical-key</code> if decryption fails</li>
+  <li><strong>Migration:</strong> Explicit DevOps command re-encrypts existing data from old key to new key</li>
+</ul>
+
+<p><strong>Migration Decision Logic:</strong></p>
+
+<p>The migration command automatically detects the intended workflow based on configuration:</p>
+
+<ul>
+  <li><strong>Encryption enabled + both keys set</strong> → Key rotation (decrypt with old, encrypt with new)</li>
+  <li><strong>Encryption enabled + only current key</strong> → Error (nothing to migrate)</li>
+  <li><strong>Encryption disabled + old key set</strong> → Disable workflow (decrypt with old, write plaintext)</li>
+  <li><strong>Encryption disabled + no keys</strong> → Error (cannot migrate)</li>
+</ul>
+
+<h5 id="key-rotation-workflow">Key rotation workflow</h5>
+
+<p>To rotate an encryption key:</p>
+
+<ol>
+  <li>
+    <p><strong>Generate a new encryption key</strong> using the methods described above</p>
+  </li>
+  <li><strong>Update configuration</strong> with both keys:
+    <div class="language-hocon highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nl">ditto.connectivity.connection.encryption</span><span class="w"> </span><span class="p">{</span><span class="w">
+  </span><span class="nl">encryption-enabled</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="kc">true</span><span class="w">
+  </span><span class="nl">symmetrical-key</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s2">"NEW_KEY"</span><span class="w">      </span><span class="c1"># New key</span><span class="w">
+  </span><span class="nl">old-symmetrical-key</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s2">"OLD_KEY"</span><span class="w">  </span><span class="c1"># Current key becomes old key</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div>    </div>
+  </li>
+  <li>
+    <p><strong>Restart connectivity service</strong> to load the new configuration</p>
+  </li>
+  <li><strong>Run dry-run migration</strong> to verify affected documents:
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">-X</span> POST http://localhost:8080/devops/piggyback/connectivity <span class="se">\</span>
+  <span class="nt">-u</span> devops:devopsPw1! <span class="se">\</span>
+  <span class="nt">-H</span> <span class="s1">'Content-Type: application/json'</span> <span class="se">\</span>
+  <span class="nt">-d</span> <span class="s1">'{
+  "targetActorSelection": "/user/connectivityRoot/encryptionMigration",
+  "headers": {
+    "aggregate": false
+  },
+  "piggybackCommand": {
+    "type": "connectivity.commands:migrateEncryption",
+    "dryRun": true,
+    "resume": false
+  }
+}'</span>
+</code></pre></div>    </div>
+  </li>
+  <li><strong>Start actual migration</strong> to re-encrypt all persisted data:
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">-X</span> POST http://localhost:8080/devops/piggyback/connectivity <span class="se">\</span>
+  <span class="nt">-u</span> devops:devopsPw1! <span class="se">\</span>
+  <span class="nt">-H</span> <span class="s1">'Content-Type: application/json'</span> <span class="se">\</span>
+  <span class="nt">-d</span> <span class="s1">'{
+  "targetActorSelection": "/user/connectivityRoot/encryptionMigration",
+  "headers": {
+    "aggregate": false
+  },
+  "piggybackCommand": {
+    "type": "connectivity.commands:migrateEncryption",
+    "dryRun": false,
+    "resume": false
+  }
+}'</span>
+</code></pre></div>    </div>
+  </li>
+  <li><strong>Monitor migration progress</strong>:
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">-X</span> POST http://localhost:8080/devops/piggyback/connectivity <span class="se">\</span>
+  <span class="nt">-u</span> devops:devopsPw1! <span class="se">\</span>
+  <span class="nt">-H</span> <span class="s1">'Content-Type: application/json'</span> <span class="se">\</span>
+  <span class="nt">-d</span> <span class="s1">'{
+  "targetActorSelection": "/user/connectivityRoot/encryptionMigration",
+  "headers": {
+    "aggregate": false
+  },
+  "piggybackCommand": {
+    "type": "connectivity.commands:migrateEncryptionStatus"
+  }
+}'</span>
+</code></pre></div>    </div>
+  </li>
+  <li><strong>After successful migration</strong>, remove the old key from configuration and restart the service</li>
+</ol>
+
+<p><strong>Additional migration commands:</strong></p>
+
+<ul>
+  <li><strong>Abort running migration:</strong>
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">-X</span> POST http://localhost:8080/devops/piggyback/connectivity <span class="se">\</span>
+  <span class="nt">-u</span> devops:devopsPw1! <span class="se">\</span>
+  <span class="nt">-H</span> <span class="s1">'Content-Type: application/json'</span> <span class="se">\</span>
+  <span class="nt">-d</span> <span class="s1">'{
+  "targetActorSelection": "/user/connectivityRoot/encryptionMigration",
+  "headers": {
+    "aggregate": false
+  },
+  "piggybackCommand": {
+    "type": "connectivity.commands:migrateEncryptionAbort"
+  }
+}'</span>
+</code></pre></div>    </div>
+  </li>
+  <li><strong>Resume aborted migration:</strong>
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">-X</span> POST http://localhost:8080/devops/piggyback/connectivity <span class="se">\</span>
+  <span class="nt">-u</span> devops:devopsPw1! <span class="se">\</span>
+  <span class="nt">-H</span> <span class="s1">'Content-Type: application/json'</span> <span class="se">\</span>
+  <span class="nt">-d</span> <span class="s1">'{
+  "targetActorSelection": "/user/connectivityRoot/encryptionMigration",
+  "headers": {
+    "aggregate": false
+  },
+  "piggybackCommand": {
+    "type": "connectivity.commands:migrateEncryption",
+    "dryRun": false,
+    "resume": true
+  }
+}'</span>
+</code></pre></div>    </div>
+
+    <p><strong>Note:</strong> If the previous migration already completed, was never started, or only ran as a dry run (which does not
+persist progress), the resume command returns <code class="language-plaintext highlighter-rouge">200 OK</code> with <code class="language-plaintext highlighter-rouge">phase: "already_completed"</code> instead of starting a new
+migration. This makes resume safe to call idempotently.</p>
+  </li>
+</ul>
+
+<p><strong>Migration details:</strong></p>
+<ul>
+  <li>The migration processes both connection snapshots and journal events in MongoDB</li>
+  <li>Progress is persisted to allow resuming after abort or service restart</li>
+  <li>Migration runs in batches to avoid overwhelming the database</li>
+  <li>The batch size can be configured via <code class="language-plaintext highlighter-rouge">ditto.connectivity.connection.encryption.migration.batch-size</code></li>
+  <li>Migration is throttled to prevent database overload (default: 200 documents/minute)</li>
+  <li>Throttling rate can be configured via <code class="language-plaintext highlighter-rouge">ditto.connectivity.connection.encryption.migration.max-documents-per-minute</code></li>
+  <li>Set throttling to 0 to disable (not recommended for production)</li>
+</ul>
+
+<h5 id="disabling-encryption">Disabling encryption</h5>
+
+<p>To disable encryption while preserving access to already encrypted data:</p>
+
+<ol>
+  <li><strong>Update configuration</strong> with encryption disabled but old key present:
+    <div class="language-hocon highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nl">ditto.connectivity.connection.encryption</span><span class="w"> </span><span class="p">{</span><span class="w">
+  </span><span class="nl">encryption-enabled</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="kc">false</span><span class="w">
+  </span><span class="nl">symmetrical-key</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s2">""</span><span class="w">                       </span><span class="c1"># Empty - no new encryption</span><span class="w">
+  </span><span class="nl">old-symmetrical-key</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s2">"YOUR_CURRENT_KEY"</span><span class="w">   </span><span class="c1"># Keep for decryption</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div>    </div>
+  </li>
+  <li>
+    <p><strong>Restart connectivity service</strong></p>
+  </li>
+  <li><strong>Run migration</strong> to decrypt all existing encrypted data:
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">-X</span> POST http://localhost:8080/devops/piggyback/connectivity <span class="se">\</span>
+  <span class="nt">-u</span> devops:devopsPw1! <span class="se">\</span>
+  <span class="nt">-H</span> <span class="s1">'Content-Type: application/json'</span> <span class="se">\</span>
+  <span class="nt">-d</span> <span class="s1">'{
+  "targetActorSelection": "/user/connectivityRoot/encryptionMigration",
+  "headers": {
+    "aggregate": false
+  },
+  "piggybackCommand": {
+    "type": "connectivity.commands:migrateEncryption",
+    "dryRun": false,
+    "resume": false
+  }
+}'</span>
+</code></pre></div>    </div>
+  </li>
+  <li><strong>After migration completes</strong>, remove the old key from configuration and restart</li>
+</ol>
 
 <h3 id="rate-limiting">Rate limiting</h3>
 
@@ -2785,6 +2976,181 @@ entities (things/policies) and no-one other:</p>
 
 <p>These system properties would have to be configured for the “things” and “policies” services.</p>
 
+<h2 id="gateway-namespace-access-control">Gateway namespace access control</h2>
+
+<p>Since Ditto <em>3.9.0</em>, the Ditto <strong>gateway</strong> service supports restricting which namespaces a client can access based on
+the JWT claims or HTTP headers present in the request. This provides a cheap enforcement layer at the API gateway level,
+before policy-based access control is evaluated.</p>
+
+<p>Namespace access control is configured via <code class="language-plaintext highlighter-rouge">ditto.gateway.authentication.namespace-access</code> in
+<a href="https://github.com/eclipse/ditto/blob/master/gateway/service/src/main/resources/gateway.conf">gateway.conf</a>.</p>
+
+<h3 id="how-it-works">How it works</h3>
+
+<p>A list of <strong>rules</strong> is defined. Each rule can specify:</p>
+<ul>
+  <li><strong><code class="language-plaintext highlighter-rouge">conditions</code></strong> (AND semantics): a list of placeholder expressions that must all evaluate to a non-empty value for
+the rule to apply. Placeholders: <code class="language-plaintext highlighter-rouge">for JWT claims,</code> for HTTP headers.
+Functions <code class="language-plaintext highlighter-rouge">fn:filter</code> and <code class="language-plaintext highlighter-rouge">fn:default</code> can be used (see below).</li>
+  <li><strong><code class="language-plaintext highlighter-rouge">resource-types</code></strong>: list of resource types this rule applies to (<code class="language-plaintext highlighter-rouge">"thing"</code>, <code class="language-plaintext highlighter-rouge">"policy"</code>).
+An empty list means the rule applies to all resource types.</li>
+  <li><strong><code class="language-plaintext highlighter-rouge">allowed-namespaces</code></strong>: list of exact namespace names or wildcard patterns (<code class="language-plaintext highlighter-rouge">*</code> = any chars, <code class="language-plaintext highlighter-rouge">?</code> = single char).
+Examples: <code class="language-plaintext highlighter-rouge">"org.eclipse.ditto"</code> (exact match), <code class="language-plaintext highlighter-rouge">"org.eclipse.*"</code> (wildcard).
+An empty list means all namespaces are allowed (unless blocked).</li>
+  <li><strong><code class="language-plaintext highlighter-rouge">blocked-namespaces</code></strong>: list of exact namespace names or wildcard patterns that are explicitly blocked (takes precedence over allowed).</li>
+</ul>
+
+<p>Multiple rules are evaluated with <strong>OR semantics</strong>: a namespace is accessible if it is allowed by <em>any</em> matching rule.
+<strong>Fail-closed</strong>: if namespace-access rules are configured but none of them match the current request (i.e. no rule’s
+conditions are satisfied), access is <strong>denied</strong>. If no rules are configured at all, access is allowed (backward compatible).
+This means a request from an unrecognized issuer or with unexpected headers will be denied rather than silently granted full access.</p>
+
+<h3 id="search-behavior">Search behavior</h3>
+
+<p>For <code class="language-plaintext highlighter-rouge">GET /search/things</code> requests without an explicit <code class="language-plaintext highlighter-rouge">namespaces</code> parameter, Ditto automatically injects the
+allowed namespaces from the applicable rule. If only wildcard patterns are configured (e.g. <code class="language-plaintext highlighter-rouge">"org.eclipse.*"</code>),
+or if no rule conditions match (fail-closed), Ditto injects an <strong>empty namespaces set</strong>, returning no results.
+In this case, clients should provide explicit namespace values in the <code class="language-plaintext highlighter-rouge">namespaces</code> query parameter.</p>
+
+<h3 id="websocket-and-sse-behavior">WebSocket and SSE behavior</h3>
+
+<p>Namespace access rules are evaluated once at <strong>connection time</strong> using the JWT present when the WebSocket or SSE
+session is established. The validator is <strong>not updated</strong> when a JWT is refreshed mid-session; namespace access
+continues to reflect the access granted at connect time.</p>
+
+<p>Namespace enforcement applies to incoming commands (things and policies) sent over WebSocket. Search commands
+(<code class="language-plaintext highlighter-rouge">QueryThings</code>) are not blocked at the namespace level since they carry no entity ID; namespace filtering for
+search is handled via the <code class="language-plaintext highlighter-rouge">namespaces</code> parameter instead.</p>
+
+<h3 id="configuration-example">Configuration example</h3>
+
+<div class="language-hocon highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nl">ditto.gateway.authentication</span><span class="w"> </span><span class="p">{</span><span class="w">
+  </span><span class="nl">namespace-access</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="c1"># Rule applies only when the JWT issuer matches</span><span class="w">
+      </span><span class="nl">conditions</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">""</span><span class="w">
+      </span><span class="p">]</span><span class="w">
+      </span><span class="nl">resource-types</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="p">[</span><span class="s2">"thing"</span><span class="p">,</span><span class="w"> </span><span class="s2">"policy"</span><span class="p">]</span><span class="w">
+      </span><span class="nl">allowed-namespaces</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"org.example.*"</span><span class="w">
+        </span><span class="s2">"concrete.namespace"</span><span class="w">
+      </span><span class="p">]</span><span class="w">
+      </span><span class="nl">blocked-namespaces</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"forbidden.namespace"</span><span class="w">
+      </span><span class="p">]</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h3 id="using-fndefault-before-fnfilter-for-optional-headers">Using <code class="language-plaintext highlighter-rouge">fn:default</code> before <code class="language-plaintext highlighter-rouge">fn:filter</code> for optional headers</h3>
+
+<p>When a condition references an HTTP header that may be absent, always add <code class="language-plaintext highlighter-rouge">fn:default</code> before <code class="language-plaintext highlighter-rouge">fn:filter</code>:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>""
+</code></pre></div></div>
+
+<p>Without <code class="language-plaintext highlighter-rouge">fn:default</code>, an absent header produces an empty pipeline result which causes the entire condition to fail.
+This would silently bypass the rule rather than enforcing it, which is a security footgun.</p>
+
+<h3 id="invalid-namespace-patterns">Invalid namespace patterns</h3>
+
+<p>If a namespace pattern (in <code class="language-plaintext highlighter-rouge">allowed-namespaces</code> or <code class="language-plaintext highlighter-rouge">blocked-namespaces</code>) is syntactically invalid, Ditto will fail
+at startup with a <code class="language-plaintext highlighter-rouge">DittoConfigError</code>. This prevents operators from inadvertently deploying a configuration where
+access control rules are silently skipped.</p>
+
+<h2 id="namespace-root-policies">Namespace root policies</h2>
+
+<p>Since Ditto <em>3.9.0</em>, operators can configure <strong>namespace root policies</strong> — pre-existing policies whose
+<code class="language-plaintext highlighter-rouge">importable: implicit</code> entries are automatically merged into every policy in a matching namespace at enforcer-build
+time. This enables cross-cutting access grants (e.g. a tenant-wide read subject) without modifying any stored
+policy.</p>
+
+<p>For the end-user concept, see <a href="basic-policy.html#namespace-root-policies">basic-policy.html#namespace-root-policies</a>.</p>
+
+<h3 id="configuration-1">Configuration</h3>
+
+<p>The mapping is defined under <code class="language-plaintext highlighter-rouge">ditto.namespace-policies</code> in the <code class="language-plaintext highlighter-rouge">policies.conf</code>, <code class="language-plaintext highlighter-rouge">things.conf</code>, and <code class="language-plaintext highlighter-rouge">search.conf</code>
+service configuration files (or overridden via a <code class="language-plaintext highlighter-rouge">-dev.conf</code> / extension config for a given deployment):</p>
+
+<div class="language-hocon highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nl">ditto.namespace-policies</span><span class="w"> </span><span class="p">{</span><span class="w">
+  </span><span class="c1"># Exact namespace match — applies only to org.eclipse.ditto.devices</span><span class="w">
+  </span><span class="nl">"org.eclipse.ditto.devices"</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="p">[</span><span class="s2">"org.eclipse.ditto.devices:devices-root"</span><span class="p">]</span><span class="w">
+
+  </span><span class="c1"># Prefix wildcard — applies to any sub-namespace of org.eclipse.ditto</span><span class="w">
+  </span><span class="c1"># Does NOT match org.eclipse.ditto itself (requires at least one sub-segment)</span><span class="w">
+  </span><span class="nl">"org.eclipse.ditto.*"</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="p">[</span><span class="s2">"org.eclipse.ditto:tenant-root"</span><span class="p">]</span><span class="w">
+
+  </span><span class="c1"># Catch-all — applies to every namespace</span><span class="w">
+  </span><span class="c1"># "*" = ["root:global-policy"]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>Multiple patterns can match a single namespace. When they do, patterns are applied in deterministic precedence
+order: exact match first, then prefix wildcards from most specific to least specific, then <code class="language-plaintext highlighter-rouge">"*"</code>.</p>
+
+<p>Multiple root policy IDs can be listed per pattern. They are applied left-to-right.</p>
+
+<h3 id="pattern-syntax">Pattern syntax</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Pattern</th>
+      <th>Matches</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">"org.example.devices"</code></td>
+      <td>Only the exact namespace <code class="language-plaintext highlighter-rouge">org.example.devices</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">"org.example.*"</code></td>
+      <td>Any namespace starting with <code class="language-plaintext highlighter-rouge">org.example.</code> (requires at least one sub-segment)</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">"*"</code></td>
+      <td>Every namespace</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Unsupported patterns (e.g. <code class="language-plaintext highlighter-rouge">"org.*.devices"</code> or <code class="language-plaintext highlighter-rouge">"foo*"</code>) are rejected at startup with a <code class="language-plaintext highlighter-rouge">DittoConfigError</code>.</p>
+
+<h3 id="behaviour-details">Behaviour details</h3>
+
+<p><strong>Label conflict — local wins:</strong> If a local policy already has an entry with the same label as a root policy
+entry, the local entry is preserved unchanged. The root policy entry is silently skipped for that label.</p>
+
+<p><strong>Self-referential guard:</strong> A root policy is never merged into itself. If <code class="language-plaintext highlighter-rouge">org.eclipse.ditto:tenant-root</code> is
+configured for <code class="language-plaintext highlighter-rouge">"org.eclipse.ditto.*"</code>, it is not merged when building the enforcer for <code class="language-plaintext highlighter-rouge">tenant-root</code> itself.</p>
+
+<p><strong>Missing root policy:</strong> If a configured root policy does not exist or cannot be loaded, its entries are skipped
+and an ERROR is logged. The child policy’s enforcer is still built successfully from its own entries.</p>
+
+<p><strong>Cache invalidation:</strong> When a root policy is modified, Ditto automatically invalidates all cached enforcers for
+policies in matching namespaces. This is an O(n) scan over the enforcer cache and happens transparently.
+For very large deployments with frequently-changing root policies, consider keeping the root policies stable
+and pushing changes via individual child policies instead.</p>
+
+<p><strong>Search consistency:</strong> Root policy changes are reflected in the things-search index. The search service tracks
+root policy revisions as part of the resolved-policy cache key, so a root policy update triggers re-indexing
+of all affected things.</p>
+
+<h3 id="helm-configuration">Helm configuration</h3>
+
+<p>For Helm deployments, configure namespace root policies in <code class="language-plaintext highlighter-rouge">values.yaml</code> via the shared <code class="language-plaintext highlighter-rouge">global</code> section:</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">global</span><span class="pi">:</span>
+  <span class="na">namespacePolicies</span><span class="pi">:</span>
+    <span class="s2">"</span><span class="s">org.eclipse.ditto.*"</span><span class="err">:</span>
+      <span class="pi">-</span> <span class="s2">"</span><span class="s">org.eclipse.ditto:tenant-root"</span>
+</code></pre></div></div>
+
+<p>This shared mapping is rendered into the respective service extension config files under <code class="language-plaintext highlighter-rouge">ditto.namespace-policies</code>.</p>
+
 <h2 id="configuring-pre-defined-extra-fields">Configuring pre-defined extra fields</h2>
 
 <p>Starting with Ditto 3.7.0, it is possible to configure <a href="basic-enrichment.html">enrichment of <code class="language-plaintext highlighter-rouge">extraFields</code></a> statically 
@@ -2862,7 +3228,10 @@ reducing internal lookups.</p>
             </span><span class="p">]</span><span class="w">
           </span><span class="p">}</span><span class="w">
         </span><span class="p">]</span><span class="w">
-    </span><span class="c1">//...</span><span class="w">
+        </span><span class="c1">//...</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
@@ -2909,6 +3278,7 @@ lookup in Ditto and save an internal roundtrip + caching of the result.</p>
       </span><span class="p">}</span><span class="w">
     </span><span class="p">]</span><span class="w">
   </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
 <p>There is a new implementation of the caching signal enrichment facade provider that must be configured to enable this
@@ -2998,7 +3368,7 @@ activated when defined - there is no need to add them to <code class="language-p
 <span class="nt">-Dditto</span>.search.index-initialization.custom-indexes.my_custom_idx.fields.1.direction<span class="o">=</span>DESC
 </code></pre></div></div>
 
-<h3 id="helm-configuration">Helm Configuration</h3>
+<h3 id="helm-configuration-1">Helm Configuration</h3>
 
 <p>When deploying Ditto via Helm, configure custom indexes in <code class="language-plaintext highlighter-rouge">values.yaml</code>:</p>
 
@@ -4267,7 +4637,7 @@ to stop blocking messages to a namespace.</p>
                     </div>
                     <p class="notice">
                         &copy;2026 Eclipse Ditto™.
-                         Site last generated: Feb 18, 2026 <br />
+                         Site last generated: Apr 13, 2026 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

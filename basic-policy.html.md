@@ -303,6 +303,23 @@ The [Things example at the end of the page](basic-policy.html#example) also defi
 | revoke | WRITE      | All subjects named in the section are _prohibited to write_ on the resources specified in the path, and all nested paths, except they are granted again such permission at a deeper level, or another policy entry (label). |
 | revoke | EXECUTE    | All subjects named in the section are _prohibited to execute_ on the resources specified in the path, and all nested paths, except they are granted again such permission at a deeper level, or another policy entry (label). |
 
+## Namespaces
+
+Since Ditto version **3.9.0**, each entry can also specify `namespaces` to restrict the entry to Things/Policies whose 
+namespace matches at least one configured pattern. 
+If the field is omitted or empty, the entry applies to all Thing/Policy namespaces. This keeps existing policies 
+(created before Ditto 3.9.0) backward compatible.
+
+Supported namespace patterns are:
+1. `com.acme` - matches only the exact namespace `com.acme`
+2. `com.acme.*` - matches namespaces below `com.acme`, for example `com.acme.vehicles`, but not `com.acme` itself
+
+If an entry should apply to both the base namespace and all nested namespaces, both patterns must be specified:
+`["com.acme", "com.acme.*"]`.
+
+This is useful for multi-tenant setups where one policy should protect Things from several tenants, but a specific
+entry should only grant access for one tenant subtree.
+
 ## Policy imports
 
 With policy imports it is possible to import entries from other referenced policies. 
@@ -316,7 +333,13 @@ The field can have one of the following three values:
 
 If the field is not specified, the default value is `implicit`.
 
-Example of a policy specifying different types of `importable` entries: 
+Additionally, each entry can specify `allowedImportAdditions` to control what kinds of additions importing
+policies are permitted to merge into this entry via `entriesAdditions`. Valid values are `"subjects"`,
+`"resources"`, and `"namespaces"`. If the field is omitted or empty, no additions are allowed. This default is intentional: existing
+policies that were created before this feature cannot be extended with additional subjects or resources through
+`entriesAdditions` unless the policy author explicitly opts in by setting `allowedImportAdditions`.
+
+Example of a policy specifying different types of `importable` entries and allowed additions:
 ```json
 {
   "entries": {
@@ -327,12 +350,15 @@ Example of a policy specifying different types of `importable` entries:
     "IMPLICIT": {
       "subjects": { ... },
       "resources": { ... },
-      "importable": "implicit"
+      "namespaces": [ "com.acme", "com.acme.*" ],
+      "importable": "implicit",
+      "allowedImportAdditions": [ "subjects" ]
     },
     "EXPLICIT": {
       "subjects": { ... },
       "resources": { ... },
-      "importable": "explicit"
+      "importable": "explicit",
+      "allowedImportAdditions": [ "subjects", "resources", "namespaces" ]
     },
     "NEVER": {
       "subjects": { ... },
@@ -343,6 +369,28 @@ Example of a policy specifying different types of `importable` entries:
 }
 ``` 
 
+Example of a tenant-scoped reader entry:
+```json
+{
+  "entries": {
+    "TENANT_READER": {
+      "subjects": {
+        "test:bob": {
+          "type": "pre-authenticated"
+        }
+      },
+      "resources": {
+        "thing:/": {
+          "grant": [ "READ" ],
+          "revoke": []
+        }
+      },
+      "namespaces": [ "com.acme", "com.acme.*" ]
+    }
+  }
+}
+```
+
 Secondly, the importing policy may define a set of entries (identified by their label) it wants to import in addition to those entries that are implicitly imported.
 
 Example of a policy importing two other policies:
@@ -352,13 +400,104 @@ Example of a policy importing two other policies:
   "entries": {  ...  },
   "imports": {
     "ditto:imported-policy" : {
-      // import the "EXPLICIT" entry and entries that are of importable type implicit      
-      "entries": [ "EXPLICIT" ] 
+      // import the "EXPLICIT" entry and entries that are of importable type implicit
+      "entries": [ "EXPLICIT" ]
     },
     "ditto:another-imported-policy" : { } // import only entries that are of importable type implicit
   }
 }
-``` 
+```
+
+### Entries additions
+
+Optionally, the importing policy can define `entriesAdditions` to additively merge additional subjects and/or
+resources and/or namespaces into imported policy entries. This enables template-based policy reuse: the imported (template) policy
+defines resources (the "what"), and the importing policy adds subjects (the "who") and namespaces (the "where"),
+optionally extending existing resources.
+
+Each key in `entriesAdditions` is the label of an imported entry. The value is an object with optional `subjects`
+and/or `resources` fields:
+* **Subjects** are merged additively — all subjects from the template are preserved, and the additional subjects
+  are added.
+* **Resources** at new paths are added directly. For overlapping resource paths, permissions are merged as a union
+  of grants and revokes. Template revokes are always preserved and cannot be removed by additions.
+* **Namespaces** are merged additively — all namespaces from the template are preserved, and the additional namespaces are added.
+
+The imported policy entry must explicitly allow these additions via its `allowedImportAdditions` field.
+If the entry does not allow subject additions, any `subjects` in `entriesAdditions` for that entry will be rejected.
+Likewise for `resources` and `namespaces`.  
+This gives the template policy author full control over what importing policies can extend.
+
+#### Example: role-based access template for a power plant
+
+A central template policy defines the roles and permissions that apply to all power plants in an organization.
+Each entry specifies `allowedImportAdditions: ["subjects"]` so that the individual power plant policies can add
+their own employees while the centrally defined permissions remain unchanged and under central control.
+
+Template policy (`energy-corp:power-plant-roles`):
+```json
+{
+  "policyId": "energy-corp:power-plant-roles",
+  "entries": {
+    "operator": {
+      "subjects": {},
+      "resources": {
+        "thing:/features/reactor": { "grant": ["READ", "WRITE"], "revoke": [] },
+        "thing:/features/turbine":  { "grant": ["READ", "WRITE"], "revoke": [] },
+        "thing:/features/cooling":  { "grant": ["READ", "WRITE"], "revoke": [] }
+      },
+      "importable": "implicit",
+      "allowedImportAdditions": [ "subjects" ]
+    },
+    "safetyInspector": {
+      "subjects": {},
+      "resources": {
+        "thing:/features/reactor":    { "grant": ["READ"], "revoke": [] },
+        "thing:/features/cooling":    { "grant": ["READ"], "revoke": [] },
+        "thing:/features/safetyLogs": { "grant": ["READ"], "revoke": [] }
+      },
+      "importable": "implicit",
+      "allowedImportAdditions": [ "subjects" ]
+    }
+  }
+}
+```
+
+A specific power plant imports this template and assigns its employees to the predefined roles via
+`entriesAdditions`:
+```json
+{
+  "policyId": "energy-corp:plant-springfield",
+  "entries": {
+    "admin": {
+      "subjects": { "oauth2:plant-springfield-admin@energy-corp.com": { "type": "employee" } },
+      "resources": { "policy:/": { "grant": ["READ", "WRITE"], "revoke": [] } }
+    }
+  },
+  "imports": {
+    "energy-corp:power-plant-roles": {
+      "entriesAdditions": {
+        "operator": {
+          "subjects": {
+            "oauth2:homer.simpson@energy-corp.com": { "type": "employee" },
+            "oauth2:lenny.leonard@energy-corp.com": { "type": "employee" }
+          }
+        },
+        "safetyInspector": {
+          "subjects": {
+            "oauth2:frank.grimes@energy-corp.com": { "type": "employee" }
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+With this setup the operator subjects (`homer.simpson`, `lenny.leonard`) receive READ and WRITE access to the
+reactor, turbine, and cooling features, while the safety inspector (`frank.grimes`) receives READ-only access to
+reactor, cooling, and safety logs — all defined centrally. If the organization later adds a new resource to the
+`operator` role in the template, every power plant that imports it automatically inherits the change.
 
 A subject creating or modifying a policy with policy imports must have the following permissions:
  * permission on the _importing policy_ to `WRITE` the modified policy import or policy imports
@@ -375,6 +514,72 @@ When managing and using policy imports the following limitations apply:
 
  * The maximum number of policy imports allowed per policy is 10.
  * To avoid conflicts with imported entries, it is not allowed to use the prefix `imported` for the name of a policy entry label. Trying to do so will result in an error.
+
+## Namespace root policies
+
+Since Ditto *3.9.0*, operators can designate one or more **namespace root policies** that are transparently merged
+into every policy in a matching namespace, without modifying the stored policies.
+
+This is an operator-level feature (see [operator configuration](installation-operating.html#namespace-root-policies)).
+End users do not create or manage namespace root policies themselves; they are applied automatically by the
+policy enforcement layer when a policy enforcer is built.
+
+### How it works
+
+1. The operator configures a mapping of namespace patterns to policy IDs in `ditto.namespace-policies`.
+2. When an enforcer is built for a policy in namespace `org.example.devices`, Ditto looks up all root policy IDs
+   whose patterns match that namespace (e.g. `"org.example.*"` or `"org.example.devices"`).
+3. Only entries with `"importable": "implicit"` from the root policy are merged. Entries marked `"explicit"` or
+   `"never"` are skipped.
+4. **Local entries always win on label conflicts**: if the local policy already has an entry with the same label as
+   a root policy entry, the local entry is used unchanged. The root policy cannot override local entries.
+5. The merge happens entirely at enforcer-build time — the stored policy document is never modified.
+
+### Differences from policy imports
+
+| | Policy imports | Namespace root policies |
+|---|---|---|
+| Configured by | Policy author (in the policy document) | Operator (in service config) |
+| Subject permission required | Yes — importer needs READ on imported policy | No — transparent to API users |
+| Stored in the policy document | Yes (`imports` block) | No |
+| Max per policy | 10 | Unlimited (operator configures globally) |
+| Applies automatically | No — each policy must declare its imports | Yes — automatically applied to all policies in matching namespaces |
+
+### Example
+
+Given a root policy `org.eclipse.ditto:tenant-root` with an entry:
+```json
+{
+  "entries": {
+    "TENANT_READER": {
+      "subjects": {
+        "pre:tenant-reader": { "type": "tenant read access" }
+      },
+      "resources": {
+        "thing:/":   { "grant": ["READ"], "revoke": [] },
+        "policy:/":  { "grant": ["READ"], "revoke": [] },
+        "message:/": { "grant": ["READ"], "revoke": [] }
+      },
+      "importable": "implicit"
+    }
+  }
+}
+```
+
+And the operator configuration:
+```hocon
+ditto.namespace-policies {
+  "org.eclipse.ditto.*" = ["org.eclipse.ditto:tenant-root"]
+}
+```
+
+Then every policy in `org.eclipse.ditto.sensors`, `org.eclipse.ditto.devices`, etc. will automatically have
+`pre:tenant-reader` granted READ access, as if `TENANT_READER` had been declared in each of those policies.
+A local policy in `org.eclipse.ditto.sensors` that already has a `TENANT_READER` entry will keep its own entry.
+
+> **Note:** The namespace root policy itself is never merged into itself. A root policy
+at <code>org.eclipse.ditto:tenant-root</code> configured for pattern <code>org.eclipse.ditto.*</code> does not match
+namespace <code>org.eclipse.ditto</code> (the pattern requires at least one sub-segment after the dot).
 
 ## Tools for editing a Policy
 

@@ -2398,7 +2398,7 @@ Eclipse Ditto.</p>
 
 <div class="alert alert-info" role="alert"><i class="fa fa-info-circle"></i> <b>Note:</b> Please note that only the “normalized” RQL form, e.g. 
     <code class="language-plaintext highlighter-rouge">eq(foo,3)</code>, is supported by Eclipse Ditto and that Ditto added more non-specified operators, e.g. 
-    <code class="language-plaintext highlighter-rouge">like</code> and <code class="language-plaintext highlighter-rouge">exists</code>.</div>
+    <code class="language-plaintext highlighter-rouge">like</code>, <code class="language-plaintext highlighter-rouge">exists</code> and <code class="language-plaintext highlighter-rouge">empty</code>.</div>
 
 <h2 id="rql-filter">RQL filter</h2>
 
@@ -2621,6 +2621,39 @@ ilike(attributes/key1,"just-som?-char?-unkn?wn")
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>and(exists(features/lamp),eq(attributes/location,"living-room"))
 </code></pre></div></div>
 
+<h4 id="empty">empty</h4>
+
+<p>Filter property values which are absent or void of content.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>empty(&lt;property&gt;)
+</code></pre></div></div>
+
+<div class="alert alert-info" role="alert"><i class="fa fa-info-circle"></i> <b>Note:</b> The <code class="language-plaintext highlighter-rouge">empty</code> operator is not defined in the linked RQL grammar, it is a Ditto
+    specific operator.</div>
+
+<p>A field is considered “empty” when:</p>
+<ul>
+  <li>The field does not exist</li>
+  <li>The field is <code class="language-plaintext highlighter-rouge">null</code></li>
+  <li>The field is an empty array <code class="language-plaintext highlighter-rouge">[]</code></li>
+  <li>The field is an empty object <code class="language-plaintext highlighter-rouge">{}</code></li>
+  <li>The field is an empty string <code class="language-plaintext highlighter-rouge">""</code></li>
+</ul>
+
+<p>Numeric values (including <code class="language-plaintext highlighter-rouge">0</code>) and boolean values (including <code class="language-plaintext highlighter-rouge">false</code>) are <strong>not</strong> considered empty.</p>
+
+<p><strong>Example - filter things where tags are absent or empty</strong></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>empty(attributes/tags)
+</code></pre></div></div>
+
+<p><strong>Example - filter things where tags exist and have content</strong></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>not(empty(attributes/tags))
+</code></pre></div></div>
+
+<p><strong>Example - filter things where tags are either empty or contain “default”</strong></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>or(empty(attributes/tags),eq(attributes/tags,"default"))
+</code></pre></div></div>
+
 <h3 id="logical-operators">Logical operators</h3>
 
 <h4 id="and">and</h4>
@@ -2722,7 +2755,7 @@ In case there are multiple things with the same location attribute, these are so
                     </div>
                     <p class="notice">
                         &copy;2026 Eclipse Ditto™.
-                         Site last generated: Feb 18, 2026 <br />
+                         Site last generated: Apr 13, 2026 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

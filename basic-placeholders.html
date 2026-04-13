@@ -2759,6 +2759,65 @@ are resolved in the following way:</p>
   <li><code class="language-plaintext highlighter-rouge">{{ jwt:extra/roles | fn:filter('like','*moderator') }}@{{ jwt:aud }}</code> - resolves to 2 entries: <code class="language-plaintext highlighter-rouge">"super-moderator@client-id-0815"</code> and <code class="language-plaintext highlighter-rouge">"moderator@client-id-0815"</code></li>
 </ul>
 
+<h4 id="correlated-field-extraction-with-fnformat">Correlated field extraction with fn:format()</h4>
+
+<p>When a JWT claim contains an <strong>array of JSON objects</strong> and the authorization subject template references multiple fields
+from that array, each <code class="language-plaintext highlighter-rouge">{{ jwt:&lt;path&gt; }}</code> placeholder resolves independently across all array elements
+and a Cartesian product is formed — which produces incorrect cross-combinations.</p>
+
+<p>The <code class="language-plaintext highlighter-rouge">fn:format()</code> function solves this by processing each JSON object individually, keeping field extractions
+<strong>correlated</strong> within each object.</p>
+
+<p><strong>Example</strong>: Assuming the JWT contains:</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"authz"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="nl">"reseller"</span><span class="p">:</span><span class="w"> </span><span class="s2">"io.test"</span><span class="p">,</span><span class="w"> </span><span class="nl">"service_provider"</span><span class="p">:</span><span class="w"> </span><span class="s2">"acme"</span><span class="p">,</span><span class="w"> </span><span class="nl">"roles"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"op"</span><span class="p">]</span><span class="w"> </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w"> </span><span class="nl">"reseller"</span><span class="p">:</span><span class="w"> </span><span class="s2">"io.test"</span><span class="p">,</span><span class="w"> </span><span class="nl">"service_provider"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w"> </span><span class="nl">"roles"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"resellerAdmin"</span><span class="p">]</span><span class="w"> </span><span class="p">}</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>Using separate placeholders (produces <strong>wrong</strong> cross-combinations):</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">{{ jwt:authz/reseller }}#{{ jwt:authz/service_provider }}#{{ jwt:authz/roles }}</code> - resolves to <strong>4</strong> entries including incorrect mixes like <code class="language-plaintext highlighter-rouge">"io.test#acme#resellerAdmin"</code> and <code class="language-plaintext highlighter-rouge">"io.test##op"</code></li>
+</ul>
+
+<p>Using <code class="language-plaintext highlighter-rouge">fn:format()</code> (keeps fields correlated per object):</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">{{ jwt:authz | fn:format('{reseller}#{service_provider}#{roles}') }}</code> - resolves to only the <strong>2 correct</strong> entries: <code class="language-plaintext highlighter-rouge">"io.test#acme#op"</code> and <code class="language-plaintext highlighter-rouge">"io.test##resellerAdmin"</code></li>
+</ul>
+
+<h4 id="section-syntax-for-nested-arrays">Section syntax for nested arrays</h4>
+
+<p>When fields contain arrays of objects (or nested arrays), use Mustache-inspired <strong>section syntax</strong>
+<code class="language-plaintext highlighter-rouge">{#arrayField}...{/arrayField}</code> to iterate over each element. Inside a section, field references
+resolve against each array element. Use <code class="language-plaintext highlighter-rouge">{.}</code> for arrays of primitives.</p>
+
+<p><strong>Example</strong>: Assuming the JWT contains:</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"authz"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"reseller"</span><span class="p">:</span><span class="w"> </span><span class="s2">"io.test"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"service_provider"</span><span class="p">:</span><span class="w"> </span><span class="s2">"acme"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"permissions"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w"> </span><span class="nl">"resource"</span><span class="p">:</span><span class="w"> </span><span class="s2">"things"</span><span class="p">,</span><span class="w"> </span><span class="nl">"actions"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"read"</span><span class="p">,</span><span class="w"> </span><span class="s2">"write"</span><span class="p">]</span><span class="w"> </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w"> </span><span class="nl">"resource"</span><span class="p">:</span><span class="w"> </span><span class="s2">"policies"</span><span class="p">,</span><span class="w"> </span><span class="nl">"actions"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"read"</span><span class="p">]</span><span class="w"> </span><span class="p">}</span><span class="w">
+      </span><span class="p">]</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">{{ jwt:authz | fn:format('{reseller}:{service_provider}:{#permissions}{resource}:{#actions}{.}{/actions}{/permissions}') }}</code> - resolves to <strong>3</strong> entries: <code class="language-plaintext highlighter-rouge">"io.test:acme:things:read"</code>, <code class="language-plaintext highlighter-rouge">"io.test:acme:things:write"</code> and <code class="language-plaintext highlighter-rouge">"io.test:acme:policies:read"</code></li>
+</ul>
+
+<p>The <code class="language-plaintext highlighter-rouge">{#permissions}</code> section iterates over the 2 permission objects. Within each, <code class="language-plaintext highlighter-rouge">{#actions}{.}{/actions}</code>
+iterates over the actions array. Results from all iterations are collected, and combined with the outer
+fields via Cartesian product.</p>
+
 <h3 id="scope-policy-actions">Scope: Policy actions</h3>
 
 <p>In <a href="basic-policy.html#actions">policy actions</a>, the following placeholders are available in general:</p>
@@ -3048,6 +3107,12 @@ be placeholders again.</p>
       <td>Joins the previous pipeline elements (when they were an array) resulting a single string pipeline output delimited with the passed <code class="language-plaintext highlighter-rouge">delimiter</code>.</td>
       <td><code class="language-plaintext highlighter-rouge">fn:join(':')</code><br /><code class="language-plaintext highlighter-rouge">fn:join(',')</code></td>
     </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">fn:format</code></td>
+      <td><code class="language-plaintext highlighter-rouge">(String template)</code></td>
+      <td>Formats each input value (a JSON object string) using the given <code class="language-plaintext highlighter-rouge">template</code>. Field references like <code class="language-plaintext highlighter-rouge">{fieldName}</code> or <code class="language-plaintext highlighter-rouge">{/json/pointer}</code> are extracted from each JSON object individually, keeping fields <strong>correlated</strong> within each object.<br />Array fields of primitives produce multiple results (Cartesian product within a single object). Missing or null fields are substituted with an empty string.<br />Use <code class="language-plaintext highlighter-rouge">\{</code> and <code class="language-plaintext highlighter-rouge">\}</code> to include literal braces.<br />Supports Mustache-inspired <strong>section syntax</strong> for iterating over arrays of objects: <code class="language-plaintext highlighter-rouge">{#arrayField}...{/arrayField}</code>. Inside a section, field references resolve against each array element. Use <code class="language-plaintext highlighter-rouge">{.}</code> to reference the current element itself (for arrays of primitives). Sections can be nested.<br />Especially useful with the <a href="#scope-openid-connect-configuration">JWT placeholder</a> when JWT claims contain arrays of JSON objects and multiple fields must stay correlated per object (avoiding incorrect cross-combinations).</td>
+      <td><code class="language-plaintext highlighter-rouge">fn:format('{reseller}#{service_provider}#{roles}')</code><br /><code class="language-plaintext highlighter-rouge">fn:format('{#permissions}{resource}:{#actions}{.}{/actions}{/permissions}')</code></td>
+    </tr>
   </tbody>
 </table>
 
@@ -3119,7 +3184,7 @@ be placeholders again.</p>
                     </div>
                     <p class="notice">
                         &copy;2026 Eclipse Ditto™.
-                         Site last generated: Feb 18, 2026 <br />
+                         Site last generated: Apr 13, 2026 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

@@ -2888,6 +2888,25 @@ For providing access to feature-related messages, you have to either grant top-l
   </tbody>
 </table>
 
+<h2 id="namespaces">Namespaces</h2>
+
+<p>Since Ditto version <strong>3.9.0</strong>, each entry can also specify <code class="language-plaintext highlighter-rouge">namespaces</code> to restrict the entry to Things/Policies whose 
+namespace matches at least one configured pattern. 
+If the field is omitted or empty, the entry applies to all Thing/Policy namespaces. This keeps existing policies 
+(created before Ditto 3.9.0) backward compatible.</p>
+
+<p>Supported namespace patterns are:</p>
+<ol>
+  <li><code class="language-plaintext highlighter-rouge">com.acme</code> - matches only the exact namespace <code class="language-plaintext highlighter-rouge">com.acme</code></li>
+  <li><code class="language-plaintext highlighter-rouge">com.acme.*</code> - matches namespaces below <code class="language-plaintext highlighter-rouge">com.acme</code>, for example <code class="language-plaintext highlighter-rouge">com.acme.vehicles</code>, but not <code class="language-plaintext highlighter-rouge">com.acme</code> itself</li>
+</ol>
+
+<p>If an entry should apply to both the base namespace and all nested namespaces, both patterns must be specified:
+<code class="language-plaintext highlighter-rouge">["com.acme", "com.acme.*"]</code>.</p>
+
+<p>This is useful for multi-tenant setups where one policy should protect Things from several tenants, but a specific
+entry should only grant access for one tenant subtree.</p>
+
 <h2 id="policy-imports">Policy imports</h2>
 
 <p>With policy imports it is possible to import entries from other referenced policies. 
@@ -2903,7 +2922,13 @@ The field can have one of the following three values:</p>
 
 <p>If the field is not specified, the default value is <code class="language-plaintext highlighter-rouge">implicit</code>.</p>
 
-<p>Example of a policy specifying different types of <code class="language-plaintext highlighter-rouge">importable</code> entries:</p>
+<p>Additionally, each entry can specify <code class="language-plaintext highlighter-rouge">allowedImportAdditions</code> to control what kinds of additions importing
+policies are permitted to merge into this entry via <code class="language-plaintext highlighter-rouge">entriesAdditions</code>. Valid values are <code class="language-plaintext highlighter-rouge">"subjects"</code>,
+<code class="language-plaintext highlighter-rouge">"resources"</code>, and <code class="language-plaintext highlighter-rouge">"namespaces"</code>. If the field is omitted or empty, no additions are allowed. This default is intentional: existing
+policies that were created before this feature cannot be extended with additional subjects or resources through
+<code class="language-plaintext highlighter-rouge">entriesAdditions</code> unless the policy author explicitly opts in by setting <code class="language-plaintext highlighter-rouge">allowedImportAdditions</code>.</p>
+
+<p>Example of a policy specifying different types of <code class="language-plaintext highlighter-rouge">importable</code> entries and allowed additions:</p>
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
   </span><span class="nl">"entries"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
     </span><span class="nl">"DEFAULT"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
@@ -2913,17 +2938,41 @@ The field can have one of the following three values:</p>
     </span><span class="nl">"IMPLICIT"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
       </span><span class="nl">"subjects"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="err">...</span><span class="w"> </span><span class="p">},</span><span class="w">
       </span><span class="nl">"resources"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="err">...</span><span class="w"> </span><span class="p">},</span><span class="w">
-      </span><span class="nl">"importable"</span><span class="p">:</span><span class="w"> </span><span class="s2">"implicit"</span><span class="w">
+      </span><span class="nl">"namespaces"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="s2">"com.acme"</span><span class="p">,</span><span class="w"> </span><span class="s2">"com.acme.*"</span><span class="w"> </span><span class="p">],</span><span class="w">
+      </span><span class="nl">"importable"</span><span class="p">:</span><span class="w"> </span><span class="s2">"implicit"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"allowedImportAdditions"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="s2">"subjects"</span><span class="w"> </span><span class="p">]</span><span class="w">
     </span><span class="p">},</span><span class="w">
     </span><span class="nl">"EXPLICIT"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
       </span><span class="nl">"subjects"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="err">...</span><span class="w"> </span><span class="p">},</span><span class="w">
       </span><span class="nl">"resources"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="err">...</span><span class="w"> </span><span class="p">},</span><span class="w">
-      </span><span class="nl">"importable"</span><span class="p">:</span><span class="w"> </span><span class="s2">"explicit"</span><span class="w">
+      </span><span class="nl">"importable"</span><span class="p">:</span><span class="w"> </span><span class="s2">"explicit"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"allowedImportAdditions"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="s2">"subjects"</span><span class="p">,</span><span class="w"> </span><span class="s2">"resources"</span><span class="p">,</span><span class="w"> </span><span class="s2">"namespaces"</span><span class="w"> </span><span class="p">]</span><span class="w">
     </span><span class="p">},</span><span class="w">
     </span><span class="nl">"NEVER"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
       </span><span class="nl">"subjects"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="err">...</span><span class="w"> </span><span class="p">},</span><span class="w">
       </span><span class="nl">"resources"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="err">...</span><span class="w"> </span><span class="p">},</span><span class="w">
       </span><span class="nl">"importable"</span><span class="p">:</span><span class="w"> </span><span class="s2">"never"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>Example of a tenant-scoped reader entry:</p>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"entries"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"TENANT_READER"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"subjects"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"test:bob"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"pre-authenticated"</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="nl">"resources"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"thing:/"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"grant"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="s2">"READ"</span><span class="w"> </span><span class="p">],</span><span class="w">
+          </span><span class="nl">"revoke"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="nl">"namespaces"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="s2">"com.acme"</span><span class="p">,</span><span class="w"> </span><span class="s2">"com.acme.*"</span><span class="w"> </span><span class="p">]</span><span class="w">
     </span><span class="p">}</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
@@ -2937,13 +2986,104 @@ The field can have one of the following three values:</p>
   </span><span class="nl">"entries"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">  </span><span class="err">...</span><span class="w">  </span><span class="p">},</span><span class="w">
   </span><span class="nl">"imports"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
     </span><span class="nl">"ditto:imported-policy"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="err">//</span><span class="w"> </span><span class="err">import</span><span class="w"> </span><span class="err">the</span><span class="w"> </span><span class="s2">"EXPLICIT"</span><span class="w"> </span><span class="err">entry</span><span class="w"> </span><span class="err">and</span><span class="w"> </span><span class="err">entries</span><span class="w"> </span><span class="err">that</span><span class="w"> </span><span class="err">are</span><span class="w"> </span><span class="err">of</span><span class="w"> </span><span class="err">importable</span><span class="w"> </span><span class="err">type</span><span class="w"> </span><span class="err">implicit</span><span class="w">      
-      </span><span class="nl">"entries"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="s2">"EXPLICIT"</span><span class="w"> </span><span class="p">]</span><span class="w"> 
+      </span><span class="err">//</span><span class="w"> </span><span class="err">import</span><span class="w"> </span><span class="err">the</span><span class="w"> </span><span class="s2">"EXPLICIT"</span><span class="w"> </span><span class="err">entry</span><span class="w"> </span><span class="err">and</span><span class="w"> </span><span class="err">entries</span><span class="w"> </span><span class="err">that</span><span class="w"> </span><span class="err">are</span><span class="w"> </span><span class="err">of</span><span class="w"> </span><span class="err">importable</span><span class="w"> </span><span class="err">type</span><span class="w"> </span><span class="err">implicit</span><span class="w">
+      </span><span class="nl">"entries"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="s2">"EXPLICIT"</span><span class="w"> </span><span class="p">]</span><span class="w">
     </span><span class="p">},</span><span class="w">
     </span><span class="nl">"ditto:another-imported-policy"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="err">//</span><span class="w"> </span><span class="err">import</span><span class="w"> </span><span class="err">only</span><span class="w"> </span><span class="err">entries</span><span class="w"> </span><span class="err">that</span><span class="w"> </span><span class="err">are</span><span class="w"> </span><span class="err">of</span><span class="w"> </span><span class="err">importable</span><span class="w"> </span><span class="err">type</span><span class="w"> </span><span class="err">implicit</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
+
+<h3 id="entries-additions">Entries additions</h3>
+
+<p>Optionally, the importing policy can define <code class="language-plaintext highlighter-rouge">entriesAdditions</code> to additively merge additional subjects and/or
+resources and/or namespaces into imported policy entries. This enables template-based policy reuse: the imported (template) policy
+defines resources (the “what”), and the importing policy adds subjects (the “who”) and namespaces (the “where”),
+optionally extending existing resources.</p>
+
+<p>Each key in <code class="language-plaintext highlighter-rouge">entriesAdditions</code> is the label of an imported entry. The value is an object with optional <code class="language-plaintext highlighter-rouge">subjects</code>
+and/or <code class="language-plaintext highlighter-rouge">resources</code> fields:</p>
+<ul>
+  <li><strong>Subjects</strong> are merged additively — all subjects from the template are preserved, and the additional subjects
+are added.</li>
+  <li><strong>Resources</strong> at new paths are added directly. For overlapping resource paths, permissions are merged as a union
+of grants and revokes. Template revokes are always preserved and cannot be removed by additions.</li>
+  <li><strong>Namespaces</strong> are merged additively — all namespaces from the template are preserved, and the additional namespaces are added.</li>
+</ul>
+
+<p>The imported policy entry must explicitly allow these additions via its <code class="language-plaintext highlighter-rouge">allowedImportAdditions</code> field.
+If the entry does not allow subject additions, any <code class="language-plaintext highlighter-rouge">subjects</code> in <code class="language-plaintext highlighter-rouge">entriesAdditions</code> for that entry will be rejected.
+Likewise for <code class="language-plaintext highlighter-rouge">resources</code> and <code class="language-plaintext highlighter-rouge">namespaces</code>.<br />
+This gives the template policy author full control over what importing policies can extend.</p>
+
+<h4 id="example-role-based-access-template-for-a-power-plant">Example: role-based access template for a power plant</h4>
+
+<p>A central template policy defines the roles and permissions that apply to all power plants in an organization.
+Each entry specifies <code class="language-plaintext highlighter-rouge">allowedImportAdditions: ["subjects"]</code> so that the individual power plant policies can add
+their own employees while the centrally defined permissions remain unchanged and under central control.</p>
+
+<p>Template policy (<code class="language-plaintext highlighter-rouge">energy-corp:power-plant-roles</code>):</p>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"policyId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"energy-corp:power-plant-roles"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"entries"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"operator"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"subjects"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
+      </span><span class="nl">"resources"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"thing:/features/reactor"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nl">"grant"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"READ"</span><span class="p">,</span><span class="w"> </span><span class="s2">"WRITE"</span><span class="p">],</span><span class="w"> </span><span class="nl">"revoke"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w"> </span><span class="p">},</span><span class="w">
+        </span><span class="nl">"thing:/features/turbine"</span><span class="p">:</span><span class="w">  </span><span class="p">{</span><span class="w"> </span><span class="nl">"grant"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"READ"</span><span class="p">,</span><span class="w"> </span><span class="s2">"WRITE"</span><span class="p">],</span><span class="w"> </span><span class="nl">"revoke"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w"> </span><span class="p">},</span><span class="w">
+        </span><span class="nl">"thing:/features/cooling"</span><span class="p">:</span><span class="w">  </span><span class="p">{</span><span class="w"> </span><span class="nl">"grant"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"READ"</span><span class="p">,</span><span class="w"> </span><span class="s2">"WRITE"</span><span class="p">],</span><span class="w"> </span><span class="nl">"revoke"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w"> </span><span class="p">}</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="nl">"importable"</span><span class="p">:</span><span class="w"> </span><span class="s2">"implicit"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"allowedImportAdditions"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="s2">"subjects"</span><span class="w"> </span><span class="p">]</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"safetyInspector"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"subjects"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
+      </span><span class="nl">"resources"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"thing:/features/reactor"</span><span class="p">:</span><span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nl">"grant"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"READ"</span><span class="p">],</span><span class="w"> </span><span class="nl">"revoke"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w"> </span><span class="p">},</span><span class="w">
+        </span><span class="nl">"thing:/features/cooling"</span><span class="p">:</span><span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nl">"grant"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"READ"</span><span class="p">],</span><span class="w"> </span><span class="nl">"revoke"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w"> </span><span class="p">},</span><span class="w">
+        </span><span class="nl">"thing:/features/safetyLogs"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nl">"grant"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"READ"</span><span class="p">],</span><span class="w"> </span><span class="nl">"revoke"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w"> </span><span class="p">}</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="nl">"importable"</span><span class="p">:</span><span class="w"> </span><span class="s2">"implicit"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"allowedImportAdditions"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="s2">"subjects"</span><span class="w"> </span><span class="p">]</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>A specific power plant imports this template and assigns its employees to the predefined roles via
+<code class="language-plaintext highlighter-rouge">entriesAdditions</code>:</p>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"policyId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"energy-corp:plant-springfield"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"entries"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"admin"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"subjects"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nl">"oauth2:plant-springfield-admin@energy-corp.com"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"employee"</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">},</span><span class="w">
+      </span><span class="nl">"resources"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nl">"policy:/"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nl">"grant"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"READ"</span><span class="p">,</span><span class="w"> </span><span class="s2">"WRITE"</span><span class="p">],</span><span class="w"> </span><span class="nl">"revoke"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nl">"imports"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"energy-corp:power-plant-roles"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"entriesAdditions"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"operator"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"subjects"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"oauth2:homer.simpson@energy-corp.com"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"employee"</span><span class="w"> </span><span class="p">},</span><span class="w">
+            </span><span class="nl">"oauth2:lenny.leonard@energy-corp.com"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"employee"</span><span class="w"> </span><span class="p">}</span><span class="w">
+          </span><span class="p">}</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="nl">"safetyInspector"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"subjects"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"oauth2:frank.grimes@energy-corp.com"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"employee"</span><span class="w"> </span><span class="p">}</span><span class="w">
+          </span><span class="p">}</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>With this setup the operator subjects (<code class="language-plaintext highlighter-rouge">homer.simpson</code>, <code class="language-plaintext highlighter-rouge">lenny.leonard</code>) receive READ and WRITE access to the
+reactor, turbine, and cooling features, while the safety inspector (<code class="language-plaintext highlighter-rouge">frank.grimes</code>) receives READ-only access to
+reactor, cooling, and safety logs — all defined centrally. If the organization later adds a new resource to the
+<code class="language-plaintext highlighter-rouge">operator</code> role in the template, every power plant that imports it automatically inherits the change.</p>
 
 <p>A subject creating or modifying a policy with policy imports must have the following permissions:</p>
 <ul>
@@ -2964,6 +3104,101 @@ The field can have one of the following three values:</p>
   <li>To avoid conflicts with imported entries, it is not allowed to use the prefix <code class="language-plaintext highlighter-rouge">imported</code> for the name of a policy entry label. Trying to do so will result in an error.</li>
 </ul>
 
+<h2 id="namespace-root-policies">Namespace root policies</h2>
+
+<p>Since Ditto <em>3.9.0</em>, operators can designate one or more <strong>namespace root policies</strong> that are transparently merged
+into every policy in a matching namespace, without modifying the stored policies.</p>
+
+<p>This is an operator-level feature (see <a href="installation-operating.html#namespace-root-policies">operator configuration</a>).
+End users do not create or manage namespace root policies themselves; they are applied automatically by the
+policy enforcement layer when a policy enforcer is built.</p>
+
+<h3 id="how-it-works">How it works</h3>
+
+<ol>
+  <li>The operator configures a mapping of namespace patterns to policy IDs in <code class="language-plaintext highlighter-rouge">ditto.namespace-policies</code>.</li>
+  <li>When an enforcer is built for a policy in namespace <code class="language-plaintext highlighter-rouge">org.example.devices</code>, Ditto looks up all root policy IDs
+whose patterns match that namespace (e.g. <code class="language-plaintext highlighter-rouge">"org.example.*"</code> or <code class="language-plaintext highlighter-rouge">"org.example.devices"</code>).</li>
+  <li>Only entries with <code class="language-plaintext highlighter-rouge">"importable": "implicit"</code> from the root policy are merged. Entries marked <code class="language-plaintext highlighter-rouge">"explicit"</code> or
+<code class="language-plaintext highlighter-rouge">"never"</code> are skipped.</li>
+  <li><strong>Local entries always win on label conflicts</strong>: if the local policy already has an entry with the same label as
+a root policy entry, the local entry is used unchanged. The root policy cannot override local entries.</li>
+  <li>The merge happens entirely at enforcer-build time — the stored policy document is never modified.</li>
+</ol>
+
+<h3 id="differences-from-policy-imports">Differences from policy imports</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th> </th>
+      <th>Policy imports</th>
+      <th>Namespace root policies</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Configured by</td>
+      <td>Policy author (in the policy document)</td>
+      <td>Operator (in service config)</td>
+    </tr>
+    <tr>
+      <td>Subject permission required</td>
+      <td>Yes — importer needs READ on imported policy</td>
+      <td>No — transparent to API users</td>
+    </tr>
+    <tr>
+      <td>Stored in the policy document</td>
+      <td>Yes (<code class="language-plaintext highlighter-rouge">imports</code> block)</td>
+      <td>No</td>
+    </tr>
+    <tr>
+      <td>Max per policy</td>
+      <td>10</td>
+      <td>Unlimited (operator configures globally)</td>
+    </tr>
+    <tr>
+      <td>Applies automatically</td>
+      <td>No — each policy must declare its imports</td>
+      <td>Yes — automatically applied to all policies in matching namespaces</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="example">Example</h3>
+
+<p>Given a root policy <code class="language-plaintext highlighter-rouge">org.eclipse.ditto:tenant-root</code> with an entry:</p>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"entries"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"TENANT_READER"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"subjects"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"pre:tenant-reader"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"tenant read access"</span><span class="w"> </span><span class="p">}</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="nl">"resources"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"thing:/"</span><span class="p">:</span><span class="w">   </span><span class="p">{</span><span class="w"> </span><span class="nl">"grant"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"READ"</span><span class="p">],</span><span class="w"> </span><span class="nl">"revoke"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w"> </span><span class="p">},</span><span class="w">
+        </span><span class="nl">"policy:/"</span><span class="p">:</span><span class="w">  </span><span class="p">{</span><span class="w"> </span><span class="nl">"grant"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"READ"</span><span class="p">],</span><span class="w"> </span><span class="nl">"revoke"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w"> </span><span class="p">},</span><span class="w">
+        </span><span class="nl">"message:/"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nl">"grant"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"READ"</span><span class="p">],</span><span class="w"> </span><span class="nl">"revoke"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w"> </span><span class="p">}</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="nl">"importable"</span><span class="p">:</span><span class="w"> </span><span class="s2">"implicit"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>And the operator configuration:</p>
+<div class="language-hocon highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nl">ditto.namespace-policies</span><span class="w"> </span><span class="p">{</span><span class="w">
+  </span><span class="nl">"org.eclipse.ditto.*"</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="p">[</span><span class="s2">"org.eclipse.ditto:tenant-root"</span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>Then every policy in <code class="language-plaintext highlighter-rouge">org.eclipse.ditto.sensors</code>, <code class="language-plaintext highlighter-rouge">org.eclipse.ditto.devices</code>, etc. will automatically have
+<code class="language-plaintext highlighter-rouge">pre:tenant-reader</code> granted READ access, as if <code class="language-plaintext highlighter-rouge">TENANT_READER</code> had been declared in each of those policies.
+A local policy in <code class="language-plaintext highlighter-rouge">org.eclipse.ditto.sensors</code> that already has a <code class="language-plaintext highlighter-rouge">TENANT_READER</code> entry will keep its own entry.</p>
+
+<div class="alert alert-info" role="alert"><i class="fa fa-info-circle"></i> <b>Note:</b> The namespace root policy itself is never merged into itself. A root policy
+at <code>org.eclipse.ditto:tenant-root</code> configured for pattern <code>org.eclipse.ditto.*</code> does not match
+namespace <code>org.eclipse.ditto</code> (the pattern requires at least one sub-segment after the dot).</div>
+
 <h2 id="tools-for-editing-a-policy">Tools for editing a Policy</h2>
 
 <p>The Policy can be edited with a text editor of your choice.
@@ -2976,7 +3211,7 @@ the root resources.</p>
 <p>In case of fine-grained access on Things, keep an eye on your actual Thing structure to make sure that all paths will be
 granted or revoked the permissions your use case is supposed to support.</p>
 
-<h2 id="example">Example</h2>
+<h2 id="example-1">Example</h2>
 
 <p>Given you need to support the following scenario:</p>
 
@@ -3102,7 +3337,7 @@ query parameter.</li>
                     </div>
                     <p class="notice">
                         &copy;2026 Eclipse Ditto™.
-                         Site last generated: Feb 18, 2026 <br />
+                         Site last generated: Apr 13, 2026 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">
