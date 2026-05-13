@@ -1,0 +1,3236 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="">
+<meta name="keywords" content="installation,  operating, configuration, environment variables, system properties, config files, rate limiting, entity creation">
+<title>  Operating - Configuration • Eclipse Ditto™ • a digital twin framework</title>
+
+<link rel="stylesheet" href="css/syntax.css">
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" crossorigin="anonymous">
+<link rel="stylesheet" href="css/modern-business.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" crossorigin="anonymous">
+<link rel="stylesheet" href="css/customstyles.css">
+<link rel="stylesheet" href="css/boxshadowproperties.css">
+<link rel="stylesheet" href="css/theme-ditto.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,700|Source+Code+Pro:300,600|Titillium+Web:400,600,700">
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/2.1.0/anchor.min.js" crossorigin="anonymous"></script>
+<script src="js/toc.js"></script>
+<script src="js/customscripts.js"></script>
+
+<script type="application/ld+json">
+{
+  "@context": "http://schema.org",
+  "@type": "Organization",
+  "url": "https://www.eclipse.dev/ditto/",
+  "logo": "https://www.eclipse.dev/ditto/images/ditto.svg"
+}
+</script>
+
+<link rel="icon" type="image/png" href="images/favicon-16x16.png" sizes="16x16">
+<link rel="icon" type="image/png" href="images/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="images/favicon-96x96.png" sizes="96x96">
+
+<link rel="alternate" type="application/rss+xml" title="Eclipse Ditto Blog" href="https://www.eclipse.dev/ditto/feed.xml">
+
+<!-- Eclipse Foundation cookie consent: -->
+<link rel="stylesheet" type="text/css" href="https://www.eclipse.org/eclipse.org-common/themes/solstice/public/stylesheets/vendor/cookieconsent/cookieconsent.min.css" />
+<script src="https://www.eclipse.org/eclipse.org-common/themes/solstice/public/javascript/vendor/cookieconsent/default.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            $("#tg-sb-link").click(function() {
+                $("#tg-sb-sidebar").toggle();
+                $("#tg-sb-content").toggleClass('col-md-9');
+                $("#tg-sb-content").toggleClass('col-md-12');
+                $("#tg-sb-icon").toggleClass('fa-toggle-on');
+                $("#tg-sb-icon").toggleClass('fa-toggle-off');
+            });
+        });
+    </script>
+</head>
+
+
+<script>
+    (function(w,d,s,l,i){
+        w[l]=w[l]||[];
+        w[l].push({'gtm.start':
+            new Date().getTime(),event:'gtm.js'});
+        var f=d.getElementsByTagName(s)[0],
+            j=d.createElement(s),
+            dl=l!='dataLayer'?'&l='+l:'';
+        j.async=true;
+        j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;
+        f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-5WLCZXC');
+</script>
+
+
+
+<body>
+<!-- Navigation -->
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container topnavlinks">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-ditto-home" href="index.html">&nbsp;<img src="images/ditto_allwhite_symbolonly.svg" class="ditto-navbar-symbol" alt="Home"> <img src="images/ditto_allwhite_textonly.svg" class="ditto-navbar-symbol-text" alt="Eclipse Ditto™"></a>
+        </div>
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <!-- toggle sidebar button -->
+                <!--<li><a id="tg-sb-link" href="#"><i id="tg-sb-icon" class="fa fa-toggle-on"></i> Nav</a></li>-->
+                <!-- entries without drop-downs appear here -->
+
+
+
+
+                
+                
+                
+                <li><a href="blog.html">Blog</a></li>
+                
+                
+                
+                <li><a href="intro-overview.html">Documentation</a></li>
+                
+                
+                
+                <li><a href="http-api-doc.html">HTTP API</a></li>
+                
+                
+                
+                  
+                  <li><a href="https://github.com/eclipse-ditto/ditto" target="_blank">
+                    <img src="images/GitHub-Mark-Light-32px.png" alt="Sources at GitHub">
+                  </a></li>
+                  
+                
+                
+                
+                  
+                  <li><a href="https://github.com/eclipse-ditto/ditto-clients" target="_blank">
+                    <img src="images/GitHub-Mark-Light-32px.png" alt="SDK sources at GitHub">SDKs
+                  </a></li>
+                  
+                
+                
+                
+                  
+                  <li><a href="https://github.com/eclipse-ditto/ditto-examples" target="_blank">
+                    <img src="images/GitHub-Mark-Light-32px.png" alt="Example sources at GitHub">examples
+                  </a></li>
+                  
+                
+                
+                
+                <!-- entries with drop-downs appear here -->
+                <!-- conditional logic to control which topnav appears for the audience defined in the configuration file.-->
+                
+                
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Links<b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        
+                        
+                        <li><a href="https://projects.eclipse.org/projects/iot.ditto" target="_blank">Eclipse Ditto Project</a></li>
+                        
+                        
+                        
+                        <li><a href="https://www.eclipse.org/forums/index.php/f/364/" target="_blank">Forum</a></li>
+                        
+                        
+                        
+                        <li><a href="https://ci.eclipse.org/ditto/" target="_blank">Jenkins</a></li>
+                        
+                        
+                        
+                        <li><a href="https://dev.eclipse.org/mhonarc/lists/ditto-dev/" target="_blank">Mailing list archives</a></li>
+                        
+                        
+                        
+                        <li><a href="https://gitter.im/eclipse/ditto" target="_blank">Gitter.im chat</a></li>
+                        
+                        
+                    </ul>
+                </li>
+                
+                
+                
+                <!--comment out this block if you want to hide search-->
+                <li>
+                    <!--start search-->
+                    <div id="search" class="pagefind-search-container"></div>
+                    <link href="https://cdn.jsdelivr.net/npm/@pagefind/default-ui@1.5.2/css/ui.css" rel="stylesheet">
+                    <script type="module">
+                        import { PagefindUI } from "https://cdn.jsdelivr.net/npm/@pagefind/default-ui@1.5.2/+esm";
+                        var pf = new PagefindUI({
+                            element: "#search",
+                            bundlePath: window.location.origin + "/pagefind/",
+                            showSubResults: true,
+                            showImages: false
+                        });
+                        var savedQuery = sessionStorage.getItem("pagefind-query");
+                        if (savedQuery) {
+                            var input = document.querySelector("#search .pagefind-ui__search-input");
+                            if (input) {
+                                input.value = savedQuery;
+                                input.dispatchEvent(new Event("input", { bubbles: true }));
+                            }
+                        }
+                        document.querySelector("#search").addEventListener("input", function(e) {
+                            if (e.target.classList.contains("pagefind-ui__search-input")) {
+                                sessionStorage.setItem("pagefind-query", e.target.value);
+                            }
+                            var drawer = document.querySelector("#search .pagefind-ui__drawer");
+                            if (drawer) {
+                                drawer.style.display = "";
+                            }
+                        });
+                        document.querySelector("#search").addEventListener("click", function(e) {
+                            if (e.target.closest("a")) {
+                                var drawer = document.querySelector("#search .pagefind-ui__drawer");
+                                if (drawer) {
+                                    drawer.style.display = "none";
+                                }
+                            }
+                        });
+                        document.querySelector("#search").addEventListener("focusin", function(e) {
+                            if (e.target.classList.contains("pagefind-ui__search-input") && e.target.value.length > 0) {
+                                var drawer = document.querySelector("#search .pagefind-ui__drawer");
+                                if (drawer) {
+                                    drawer.style.display = "";
+                                }
+                            }
+                        });
+                        document.addEventListener("click", function(e) {
+                            if (!e.target.closest("#search")) {
+                                var drawer = document.querySelector("#search .pagefind-ui__drawer");
+                                if (drawer) {
+                                    drawer.style.display = "none";
+                                }
+                            }
+                        });
+                    </script>
+                    <!--end search-->
+                </li>
+            </ul>
+        </div>
+    </div>
+    <!-- /.container -->
+</nav>
+
+<!-- Page Content -->
+<div class="container">
+  <div id="main">
+    <!-- Content Row -->
+    <div class="row">
+        
+        
+            <!-- Sidebar Column -->
+            <div class="col-md-3" id="tg-sb-sidebar">
+                
+
+<ul id="mysidebar" class="nav">
+  <li class="sidebarTitle">
+    <label for="docVersion">Eclipse Ditto™ version:</label>
+    <div class="select-wrapper">
+      <select id="docVersion" name="docVersion">
+        
+        <option value="">development</option>
+        
+        <option value="3.9">3.9</option>
+        
+        <option value="3.8">3.8</option>
+        
+        <option value="3.7">3.7</option>
+        
+        <option value="3.6">3.6</option>
+        
+        <option value="3.5">3.5</option>
+        
+        <option value="3.4">3.4</option>
+        
+        <option value="3.3">3.3</option>
+        
+        <option value="3.2">3.2</option>
+        
+        <option value="3.1">3.1</option>
+        
+        <option value="3.0">3.0</option>
+        
+        <option value="2.4">2.4</option>
+        
+      </select>
+    </div>
+    <div id="dev-warning">
+      <div markdown="span" class="alert alert-warning" role="alert" style="font-size:0.6em"><i class="fa fa-warning"></i> <b>Important:</b> This documentation reflects the latest 'development'. You might want to choose a released version.</div>
+    </div>
+  </li>
+  
+  
+  
+    
+        <li class="subfolders">
+          <a href="#"><span></span>Getting Started</a>
+          <ul>
+              
+              
+              
+              <li><a href="intro-overview.html">Overview</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="intro-digitaltwins.html">Digital Twins Explained</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="intro-hello-world.html">Hello World Tutorial</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="installation-building.html">Building Ditto</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="installation-running.html">Running Ditto</a></li>
+              
+              
+              
+              
+          </ul>
+        </li>
+    
+  
+  
+  
+    
+        <li class="subfolders">
+          <a href="#"><span></span>Core Concepts</a>
+          <ul>
+              
+              
+              
+              <li><a href="basic-overview.html">Overview</a></li>
+              
+              
+              
+              <li class="subfolders">
+                  <a href="#"><span></span>Model Entities</a>
+                  <ul>
+                      
+                      
+                      
+                      <li><a href="basic-thing.html">Thing</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="basic-feature.html">Feature</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="basic-policy.html">Policy</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="basic-namespaces-and-names.html">Namespaces and Names</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="basic-metadata.html">Metadata</a></li>
+                      
+                      
+                      
+                  </ul>
+              </li>
+              
+              
+              
+              <li class="subfolders">
+                  <a href="#"><span></span>Communication</a>
+                  <ul>
+                      
+                      
+                      
+                      <li><a href="basic-signals.html">Signals</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="basic-signals-command.html">Command</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="basic-signals-commandresponse.html">Command Response</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="basic-signals-errorresponse.html">Error Response</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="basic-signals-event.html">Event</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="basic-signals-announcement.html">Announcement</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="basic-messages.html">Messages</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="basic-changenotifications.html">Change Notifications</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="basic-enrichment.html">Signal Enrichment</a></li>
+                      
+                      
+                      
+                  </ul>
+              </li>
+              
+              
+              
+              <li class="subfolders">
+                  <a href="#"><span></span>Access Control</a>
+                  <ul>
+                      
+                      
+                      
+                      <li><a href="basic-auth.html">Authentication & Authorization</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="basic-auth-checkpermissions.html">Checking Permissions</a></li>
+                      
+                      
+                      
+                  </ul>
+              </li>
+              
+              
+              
+              <li class="subfolders">
+                  <a href="#"><span></span>Querying</a>
+                  <ul>
+                      
+                      
+                      
+                      <li><a href="basic-search.html">Search</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="basic-rql.html">RQL Expressions</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="basic-conditional-requests.html">Conditional Requests</a></li>
+                      
+                      
+                      
+                  </ul>
+              </li>
+              
+              
+              
+              
+              
+              
+              <li><a href="basic-connections.html">Connections</a></li>
+              
+              
+              
+              <li class="subfolders">
+                  <a href="#"><span></span>Advanced Capabilities</a>
+                  <ul>
+                      
+                      
+                      
+                      <li><a href="basic-acknowledgements.html">Acknowledgements / QoS</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="basic-history.html">History</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="basic-placeholders.html">Placeholders</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="basic-errors.html">Errors</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="advanced-data-by-pass.html">Data By-Pass</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="basic-apis.html">APIs</a></li>
+                      
+                      
+                      
+                  </ul>
+              </li>
+              
+              
+              
+              
+          </ul>
+        </li>
+    
+  
+  
+  
+    
+        <li class="subfolders">
+          <a href="#"><span></span>Architecture</a>
+          <ul>
+              
+              
+              
+              <li><a href="architecture-overview.html">Overview</a></li>
+              
+              
+              
+              <li class="subfolders">
+                  <a href="#"><span></span>Services</a>
+                  <ul>
+                      
+                      
+                      
+                      <li><a href="architecture-services-policies.html">Policies</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="architecture-services-things.html">Things</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="architecture-services-things-search.html">Things-Search</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="architecture-services-connectivity.html">Connectivity</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="architecture-services-gateway.html">Gateway</a></li>
+                      
+                      
+                      
+                  </ul>
+              </li>
+              
+              
+              
+              
+          </ul>
+        </li>
+    
+  
+  
+  
+    
+        <li class="subfolders">
+          <a href="#"><span></span>Connectivity</a>
+          <ul>
+              
+              
+              
+              <li><a href="connectivity-overview.html">Overview</a></li>
+              
+              
+              
+              <li class="subfolders">
+                  <a href="#"><span></span>Manage Connections</a>
+                  <ul>
+                      
+                      
+                      
+                      <li><a href="connectivity-manage-connections.html">via HTTP API</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="connectivity-manage-connections-piggyback.html">via Piggyback Commands</a></li>
+                      
+                      
+                      
+                  </ul>
+              </li>
+              
+              
+              
+              <li class="subfolders">
+                  <a href="#"><span></span>Protocol Bindings</a>
+                  <ul>
+                      
+                      
+                      
+                      <li><a href="connectivity-protocol-bindings-amqp091.html">AMQP 0.9.1</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="connectivity-protocol-bindings-amqp10.html">AMQP 1.0</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="connectivity-protocol-bindings-mqtt.html">MQTT 3.1.1</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="connectivity-protocol-bindings-mqtt5.html">MQTT 5</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="connectivity-protocol-bindings-http.html">HTTP 1.1</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="connectivity-protocol-bindings-kafka2.html">Kafka 2.x</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="connectivity-protocol-bindings-hono.html">Eclipse Hono</a></li>
+                      
+                      
+                      
+                  </ul>
+              </li>
+              
+              
+              
+              <li class="subfolders">
+                  <a href="#"><span></span>Data Transformation</a>
+                  <ul>
+                      
+                      
+                      
+                      <li><a href="connectivity-mapping.html">Payload Mapping</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="connectivity-header-mapping.html">Header Mapping</a></li>
+                      
+                      
+                      
+                  </ul>
+              </li>
+              
+              
+              
+              <li class="subfolders">
+                  <a href="#"><span></span>Security</a>
+                  <ul>
+                      
+                      
+                      
+                      <li><a href="connectivity-tls-certificates.html">TLS Certificates</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="connectivity-ssh-tunneling.html">SSH Tunneling</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="connectivity-hmac-signing.html">HMAC Signing</a></li>
+                      
+                      
+                      
+                  </ul>
+              </li>
+              
+              
+              
+              
+          </ul>
+        </li>
+    
+  
+  
+  
+    
+        <li class="subfolders">
+          <a href="#"><span></span>APIs & Interfaces</a>
+          <ul>
+              
+              
+              
+              <li><a href="httpapi-overview.html">Overview</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="httpapi-concepts.html">HTTP API Concepts</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="httpapi-search.html">HTTP API Search</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="httpapi-messages.html">HTTP API Messages</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="httpapi-protocol-bindings-websocket.html">WebSocket Binding</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="httpapi-sse.html">Server-Sent Events</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="httpapi-protocol-bindings-cloudevents.html">Cloud Events Binding</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="user-interface.html">Explorer UI</a></li>
+              
+              
+              
+              <li class="subfolders">
+                  <a href="#"><span></span>Client SDKs</a>
+                  <ul>
+                      
+                      
+                      
+                      <li><a href="client-sdk-overview.html">SDK Overview</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="client-sdk-java.html">Java SDK</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="client-sdk-javascript.html">JavaScript SDK</a></li>
+                      
+                      
+                      
+                  </ul>
+              </li>
+              
+              
+              
+              
+          </ul>
+        </li>
+    
+  
+  
+  
+    
+        <li class="subfolders">
+          <a href="#"><span></span>WoT Integration</a>
+          <ul>
+              
+              
+              
+              <li><a href="basic-wot-integration.html">WoT Overview</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="basic-wot-validation-config.html">WoT Validation Config</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="basic-wot-integration-example.html">WoT Integration Example</a></li>
+              
+              
+              
+              
+          </ul>
+        </li>
+    
+  
+  
+  
+    
+        <li class="subfolders">
+          <a href="#"><span></span>Operating & Extending</a>
+          <ul>
+              
+              
+              
+              <li><a href="installation-operating.html">Operating Ditto</a></li>
+              
+              
+              
+              <li class="subfolders">
+                  <a href="#"><span></span>Operating Details</a>
+                  <ul>
+                      
+                      
+                      
+                      <li class="active"><a href="operating-configuration.html">Configuration</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="operating-authentication.html">Authentication</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="operating-mongodb.html">MongoDB</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="operating-monitoring.html">Monitoring & Tracing</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="operating-devops.html">DevOps Commands</a></li>
+                      
+                      
+                      
+                  </ul>
+              </li>
+              
+              
+              
+              
+              
+              
+              <li><a href="installation-extending.html">Extending Ditto</a></li>
+              
+              
+              
+              
+          </ul>
+        </li>
+    
+  
+  
+  
+    
+        <li class="subfolders">
+          <a href="#"><span></span>Ditto Protocol</a>
+          <ul>
+              
+              
+              
+              <li><a href="protocol-overview.html">Overview</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="protocol-twinlive.html">Twin / Live Channel</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="protocol-specification.html">Specification</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="protocol-specification-topic.html">Topic Structure</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="protocol-specification-errors.html">Errors</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="protocol-bindings.html">Bindings</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="protocol-specification-things.html">Things Group</a></li>
+              
+              
+              
+              <li class="subfolders">
+                  <a href="#"><span></span>Commands & Events</a>
+                  <ul>
+                      
+                      
+                      
+                      <li><a href="protocol-specification-things-create-or-modify.html">Create / Modify</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-specification-things-merge.html">Merge</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-specification-things-retrieve.html">Retrieve</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-specification-things-delete.html">Delete</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-specification-acks.html">Acknowledgements</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-specification-things-search.html">Search</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-specification-things-messages.html">Messages</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-specification-streaming-subscription.html">Streaming Subscriptions</a></li>
+                      
+                      
+                      
+                  </ul>
+              </li>
+              
+              
+              
+              
+              
+              
+              <li><a href="protocol-specification-policies.html">Policies Group</a></li>
+              
+              
+              
+              <li class="subfolders">
+                  <a href="#"><span></span>Commands & Announcements</a>
+                  <ul>
+                      
+                      
+                      
+                      <li><a href="protocol-specification-policies-create-or-modify.html">Create / Modify</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-specification-policies-retrieve.html">Retrieve</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-specification-policies-delete.html">Delete</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-specification-policies-announcement.html">Announcement</a></li>
+                      
+                      
+                      
+                  </ul>
+              </li>
+              
+              
+              
+              
+              
+              
+              <li><a href="protocol-specification-connections.html">Connections Group</a></li>
+              
+              
+              
+              <li class="subfolders">
+                  <a href="#"><span></span>Announcements</a>
+                  <ul>
+                      
+                      
+                      
+                      <li><a href="protocol-specification-connections-announcement.html">Announcement</a></li>
+                      
+                      
+                      
+                  </ul>
+              </li>
+              
+              
+              
+              
+              
+              
+              <li><a href="protocol-examples.html">Examples</a></li>
+              
+              
+              
+              <li class="subfolders">
+                  <a href="#"><span></span>Things Examples</a>
+                  <ul>
+                      
+                      
+                      
+                      <li><a href="protocol-examples-creatething.html">Create a Thing</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-deletething.html">Delete a Thing</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-modifything.html">Modify a Thing</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-retrievething.html">Retrieve a Thing</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-retrievethings.html">Retrieve multiple Things</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-modifypolicyid.html">Modify Policy ID</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-createattributes.html">Create Attributes</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-deleteattributes.html">Delete Attributes</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-modifyattributes.html">Modify Attributes</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-retrieveattributes.html">Retrieve Attributes</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-createattribute.html">Create a single Attribute</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-deleteattribute.html">Delete a single Attribute</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-modifyattribute.html">Modify a single Attribute</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-retrieveattribute.html">Retrieve a single Attribute</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-createthingdefinition.html">Create a Definition</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-deletethingdefinition.html">Delete a Definition</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-modifythingdefinition.html">Modify a Definition</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-retrievethingdefinition.html">Retrieve a Definition</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-createfeatures.html">Create Features</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-deletefeatures.html">Delete Features</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-modifyfeatures.html">Modify Features</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-retrievefeatures.html">Retrieve Features</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-createfeature.html">Create a single Feature</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-deletefeature.html">Delete a single Feature</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-modifyfeature.html">Modify a single Feature</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-retrievefeature.html">Retrieve a single Feature</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-createdefinition.html">Create Feature Definition</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-deletedefinition.html">Delete Feature Definition</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-modifydefinition.html">Modify Feature Definition</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-retrievedefinition.html">Retrieve Feature Definition</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-createproperties.html">Create Feature Properties</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-deleteproperties.html">Delete Feature Properties</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-modifyproperties.html">Modify Feature Properties</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-retrieveproperties.html">Retrieve Feature Properties</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-createproperty.html">Create a single Property</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-deleteproperty.html">Delete a single Property</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-modifyproperty.html">Modify a single Property</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-retrieveproperty.html">Retrieve a single Property</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-createdesiredproperties.html">Create desired Feature Properties</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-deletedesiredproperties.html">Delete desired Feature Properties</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-modifydesiredproperties.html">Modify desired Feature Properties</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-retrievedesiredproperties.html">Retrieve desired Feature Properties</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-createdesiredproperty.html">Create a single desired Property</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-deletedesiredproperty.html">Delete a single desired Property</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-modifydesiredproperty.html">Modify a single desired Property</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-retrievedesiredproperty.html">Retrieve a single desired Property</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-errorresponses.html">Error responses</a></li>
+                      
+                      
+                      
+                  </ul>
+              </li>
+              
+              
+              
+              <li class="subfolders">
+                  <a href="#"><span></span>Merge Examples</a>
+                  <ul>
+                      
+                      
+                      
+                      <li><a href="protocol-examples-mergething.html">Merge a Thing</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-mergepolicyid.html">Merge Policy ID</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-mergeattributes.html">Merge Attributes</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-mergeattribute.html">Merge a single Attribute</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-mergethingdefinition.html">Merge a Definition</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-mergefeatures.html">Merge Features</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-mergefeature.html">Merge a single Feature</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-mergefeaturedefinition.html">Merge Feature Definition</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-mergeproperties.html">Merge Feature Properties</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-mergeproperty.html">Merge a single Property</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-mergedesiredproperties.html">Merge desired Feature Properties</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-mergedesiredproperty.html">Merge a single desired Property</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-errorresponses.html">Error responses</a></li>
+                      
+                      
+                      
+                  </ul>
+              </li>
+              
+              
+              
+              <li class="subfolders">
+                  <a href="#"><span></span>Policies Examples</a>
+                  <ul>
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-createpolicy.html">Create a Policy</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-deletepolicy.html">Delete a Policy</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-modifypolicy.html">Modify a Policy</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-retrievepolicy.html">Retrieve a Policy</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-modifypolicyentries.html">Modify entries</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-retrievepolicyentries.html">Retrieve entries</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-createpolicyentry.html">Create a single entry</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-deletepolicyentry.html">Delete a single entry</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-modifypolicyentry.html">Modify a single entry</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-retrievepolicyentry.html">Retrieve a single entry</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-modifysubjects.html">Modify subjects</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-retrievesubjects.html">Retrieve subjects</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-createsubject.html">Create a single subject</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-deletesubject.html">Delete a single subject</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-modifysubject.html">Modify a single subject</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-retrievesubject.html">Retrieve a single subject</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-modifyresources.html">Modify resources</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-retrieveresources.html">Retrieve resources</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-createresource.html">Create a single resource</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-deleteresource.html">Delete a single resource</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-modifyresource.html">Modify a single resource</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-retrieveresource.html">Retrieve a single resource</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-modifyimports.html">Modify policy imports</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-retrieveimports.html">Retrieve policy imports</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-deleteimport.html">Delete a single policy import</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-modifyimport.html">Modify a single policy import</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-retrieveimport.html">Retrieve a single policy import</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-errorresponses.html">Error responses</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-announcement-subjectDeletion.html">Announcement for subject deletion</a></li>
+                      
+                      
+                      
+                  </ul>
+              </li>
+              
+              
+              
+              <li class="subfolders">
+                  <a href="#"><span></span>Connections & Search Examples</a>
+                  <ul>
+                      
+                      
+                      
+                      <li><a href="protocol-examples-connections-announcement-opened.html">Connection opened announcement</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-connections-announcement-closed.html">Connection closed announcement</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-search.html">Search examples</a></li>
+                      
+                      
+                      
+                  </ul>
+              </li>
+              
+              
+              
+              
+          </ul>
+        </li>
+    
+  
+  
+  
+    
+        <li class="subfolders">
+          <a href="#"><span></span>Release Notes</a>
+          <ul>
+              
+              
+              
+              <li><a href="release_notes_390.html">3.9.0</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="release_notes_3812.html">3.8.12</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="release_notes_3811.html">3.8.11</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="release_notes_3810.html">3.8.10</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="release_notes_389.html">3.8.9</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="release_notes_388.html">3.8.8</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="release_notes_387.html">3.8.7</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="release_notes_386.html">3.8.6</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="release_notes_385.html">3.8.5</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="release_notes_384.html">3.8.4</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="release_notes_383.html">3.8.3</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="release_notes_382.html">3.8.2</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="release_notes_381.html">3.8.1</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="release_notes_380.html">3.8.0</a></li>
+              
+              
+              
+              <li class="subfolders">
+                  <a href="#"><span></span>Archive</a>
+                  <ul>
+                      
+                      
+                      
+                      <li><a href="release_notes_376.html">3.7.6</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_375.html">3.7.5</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_374.html">3.7.4</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_373.html">3.7.3</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_372.html">3.7.2</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_371.html">3.7.1</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_370.html">3.7.0</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_3611.html">3.6.11</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_3610.html">3.6.10</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_369.html">3.6.9</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_368.html">3.6.8</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_367.html">3.6.7</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_365.html">3.6.5</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_364.html">3.6.4</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_363.html">3.6.3</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_362.html">3.6.2</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_361.html">3.6.1</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_360.html">3.6.0</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_3512.html">3.5.12</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_3511.html">3.5.11</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_3510.html">3.5.10</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_359.html">3.5.9</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_358.html">3.5.8</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_357.html">3.5.7</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_356.html">3.5.6</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_355.html">3.5.5</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_354.html">3.5.4</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_353.html">3.5.3</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_352.html">3.5.2</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_351.html">3.5.1</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_350.html">3.5.0</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_345.html">3.4.5</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_344.html">3.4.4</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_343.html">3.4.3</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_342.html">3.4.2</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_341.html">3.4.1</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_340.html">3.4.0</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_337.html">3.3.7</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_336.html">3.3.6</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_335.html">3.3.5</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_334.html">3.3.4</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_333.html">3.3.3</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_332.html">3.3.2</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_330.html">3.3.0</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_321.html">3.2.1</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_320.html">3.2.0</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_312.html">3.1.2</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_311.html">3.1.1</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_310.html">3.1.0</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_300.html">3.0.0</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_242.html">2.4.2</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_241.html">2.4.1</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_240.html">2.4.0</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_232.html">2.3.2</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_231.html">2.3.1</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_230.html">2.3.0</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_222.html">2.2.2</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_221.html">2.2.1</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_220.html">2.2.0</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_213.html">2.1.3</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_212.html">2.1.2</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_211.html">2.1.1</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_210.html">2.1.0</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_201.html">2.0.1</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_200.html">2.0.0</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_151.html">1.5.1</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_150.html">1.5.0</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_140.html">1.4.0</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_130.html">1.3.0</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_121.html">1.2.1</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_120.html">1.2.0</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_115.html">1.1.5</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_113.html">1.1.3</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_112.html">1.1.2</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_111.html">1.1.1</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_110.html">1.1.0</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_100.html">1.0.0</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_090.html">0.9.0</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_080.html">0.8.0</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_100-M2.html">1.0.0-M2</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_100-M1a.html">1.0.0-M1a</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_090-M2.html">0.9.0-M2</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_090-M1.html">0.9.0-M1</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_080-M3.html">0.8.0-M3</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_080-M2.html">0.8.0-M2</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_080-M1.html">0.8.0-M1</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_030-M2.html">0.3.0-M2</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_030-M1.html">0.3.0-M1</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_020-M1.html">0.2.0-M1</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_010-M3.html">0.1.0-M3</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_010-M1.html">0.1.0-M1</a></li>
+                      
+                      
+                      
+                  </ul>
+              </li>
+              
+              
+              
+              
+          </ul>
+        </li>
+    
+  
+  
+  
+    
+        <li class="subfolders">
+          <a href="#"><span></span>Resources</a>
+          <ul>
+              
+              
+              
+              <li><a href="glossary.html">Glossary</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="presentations.html">Presentations & Talks</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="feedback.html">Feedback & Community</a></li>
+              
+              
+              
+              
+          </ul>
+        </li>
+    
+  
+  
+  
+    
+         <p class="external">
+             <a href="#" id="collapseAll">Collapse All</a> | <a href="#" id="expandAll">Expand All</a>
+         </p>
+    
+</ul>
+
+<!-- this highlights the active parent class in the sidebar. this is critical so that the parent expands when you're viewing a page. This must appear below the sidebar code above. Otherwise, if placed inside customscripts.js, the script runs before the sidebar code runs and the class never gets inserted.-->
+<script>$("li.active").parents('li').toggleClass("active");
+</script>
+
+            </div>
+            
+        
+
+        <!-- Content Column -->
+        <div class="col-md-9" id="tg-sb-content" data-pagefind-body>
+            <div class="post-header">
+   <h1 class="post-title-main">Operating - Configuration</h1>
+</div>
+
+
+
+<div class="post-content">
+
+   
+
+    
+    
+<!-- this handles the automatic toc. use ## for subheads to auto-generate the on-page minitoc. if you use html tags, you must supply an ID for the heading element in order for it to appear in the minitoc. -->
+<script>
+$( document ).ready(function() {
+  // Handler for .ready() called.
+
+$('#toc').toc({ minimumHeaders: 0, listType: 'ul', showSpeed: 0, headers: 'h2,h3,h4' });
+
+/* this offset helps account for the space taken up by the floating toolbar. */
+$('#toc').on('click', 'a', function() {
+  var target = $(this.getAttribute('href'))
+    , scroll_target = target.offset().top
+
+  $(window).scrollTop(scroll_target - 10);
+  return false
+})
+  
+});
+</script>
+
+<div id="toc"></div>
+
+    
+
+
+    
+    
+
+    <a target="_blank" href="https://github.com/eclipse/ditto/edit/master/documentation/src/main/resources/pages/ditto/operating-configuration.md" class="btn btn-default githubEditButton" role="button"><i class="fa fa-github fa-lg"></i> Edit this page</a>
+
+    
+    
+
+
+    
+
+  <p>You configure Ditto services through config files, environment variables, or Java system properties.</p>
+
+<div class="bs-callout bs-callout-primary"><strong>TL;DR</strong>: Override any Ditto config value by setting an environment variable (when the config uses <code class="language-plaintext highlighter-rouge">${?ENV_NAME}</code> syntax) or by passing a Java system property (<code class="language-plaintext highlighter-rouge">-Dkey=value</code>) to the service process.</div>
+
+<h2 id="overview">Overview</h2>
+
+<p>Each Ditto microservice ships with a default <a href="https://github.com/lightbend/config/blob/main/HOCON.md">HOCON</a> configuration file. You can customize behavior without modifying source code by using environment variables, Java system properties, or extension config files.</p>
+
+<h2 id="how-it-works">How it works</h2>
+
+<h3 id="config-file-structure">Config file structure</h3>
+
+<p>Each microservice has its own configuration file with sensible defaults:</p>
+
+<ul>
+  <li>Policies: <a href="https://github.com/eclipse-ditto/ditto/blob/master/policies/service/src/main/resources/policies.conf">policies.conf</a></li>
+  <li>Things: <a href="https://github.com/eclipse-ditto/ditto/blob/master/things/service/src/main/resources/things.conf">things.conf</a></li>
+  <li>Things-Search: <a href="https://github.com/eclipse-ditto/ditto/blob/master/thingsearch/service/src/main/resources/search.conf">things-search.conf</a></li>
+  <li>Connectivity: <a href="https://github.com/eclipse-ditto/ditto/blob/master/connectivity/service/src/main/resources/connectivity.conf">connectivity.conf</a></li>
+  <li>Gateway: <a href="https://github.com/eclipse-ditto/ditto/blob/master/gateway/service/src/main/resources/gateway.conf">gateway.conf</a></li>
+</ul>
+
+<h3 id="environment-variables">Environment variables</h3>
+
+<p>When you find the syntax <code class="language-plaintext highlighter-rouge">${?UPPER_CASE_ENV_NAME}</code> in a config file, you can override that value by setting the corresponding environment variable in the container.</p>
+
+<h3 id="java-system-properties">Java system properties</h3>
+
+<p>When no environment variable is defined for a config option, you can still change the default by passing a Java system property to the process.</p>
+
+<p>The following example sets the DevOps password for the gateway service in a <code class="language-plaintext highlighter-rouge">docker-compose.yml</code> file:</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">environment</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">JAVA_TOOL_OPTIONS=-Dditto.gateway.authentication.devops.password=foobar</span>
+</code></pre></div></div>
+
+<p>The microservice executable is called <code class="language-plaintext highlighter-rouge">starter.jar</code>. Place all system properties before the <code class="language-plaintext highlighter-rouge">-jar</code> option.</p>
+
+<h2 id="configuration-topics">Configuration topics</h2>
+
+<h3 id="restricting-entity-creation">Restricting entity creation</h3>
+
+<p>By default, Ditto allows any authenticated user to create policies or things in any namespace. You can restrict this by editing the <code class="language-plaintext highlighter-rouge">ditto-entity-creation.conf</code> file.</p>
+
+<p>The basic schema uses <code class="language-plaintext highlighter-rouge">grant</code> and <code class="language-plaintext highlighter-rouge">revoke</code> lists:</p>
+
+<div class="language-hocon highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nl">ditto.entity-creation</span><span class="w"> </span><span class="p">{</span><span class="w">
+  </span><span class="nl">grant</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nl">resource-types</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="p">[]</span><span class="w">
+      </span><span class="nl">namespaces</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="p">[]</span><span class="w">
+      </span><span class="nl">auth-subjects</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="p">[]</span><span class="w">
+      </span><span class="nl">thing-definitions</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="p">[]</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+  </span><span class="nl">revoke</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="p">[]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>The enforcement logic works as follows:</p>
+
+<ol>
+  <li>Find a matching entry in the <code class="language-plaintext highlighter-rouge">grant</code> list.</li>
+  <li>Check that no matching entry exists in the <code class="language-plaintext highlighter-rouge">revoke</code> list.</li>
+  <li>Accept the request if both conditions pass; otherwise deny it.</li>
+</ol>
+
+<p>An entry matches when <strong>all</strong> of these conditions are true:</p>
+
+<ul>
+  <li>The <code class="language-plaintext highlighter-rouge">resource-types</code> list is empty or contains the requested resource type (<code class="language-plaintext highlighter-rouge">policy</code> or <code class="language-plaintext highlighter-rouge">thing</code>).</li>
+  <li>The <code class="language-plaintext highlighter-rouge">namespaces</code> list is empty or contains a wildcard matching the requested namespace (<code class="language-plaintext highlighter-rouge">*</code> matches any number of characters, <code class="language-plaintext highlighter-rouge">?</code> matches exactly one).</li>
+  <li>The <code class="language-plaintext highlighter-rouge">auth-subjects</code> list is empty or contains at least one matching wildcard for the request’s auth subjects.</li>
+  <li>For <code class="language-plaintext highlighter-rouge">thing</code> resources only: the <code class="language-plaintext highlighter-rouge">thing-definitions</code> list is empty or contains a matching wildcard.</li>
+</ul>
+
+<p>An entry with all empty lists matches everything. So the simplest “allow all” configuration is:</p>
+
+<div class="language-hocon highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nl">ditto.entity-creation</span><span class="w"> </span><span class="p">{</span><span class="w">
+  </span><span class="nl">grant</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="p">[{}]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>To restrict entity creation to specific subjects via system properties:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">-Dditto</span>.entity-creation.grant.0.auth-subjects.0<span class="o">=</span>pre:admin
+<span class="nt">-Dditto</span>.entity-creation.grant.0.auth-subjects.1<span class="o">=</span>integration:some-connection
+</code></pre></div></div>
+
+<p>Configure these properties on both the “things” and “policies” services.</p>
+
+<h3 id="encrypting-sensitive-connection-data">Encrypting sensitive connection data</h3>
+
+<p>Since Ditto 3.1.0, you can encrypt sensitive fields in <a href="basic-connections.html">connections</a> before they reach the database. This encryption is transparent – retrieval endpoints return decrypted data automatically.</p>
+
+<p>Ditto uses 256-bit AES with AES/GCM/NoPadding. You can generate a key with:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>openssl rand <span class="nt">-base64</span> 32
+</code></pre></div></div>
+
+<p>or using the Java standard library:</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">javax</span><span class="o">.</span><span class="na">crypto</span><span class="o">.</span><span class="na">KeyGenerator</span> <span class="n">keyGen</span> <span class="o">=</span> <span class="nc">KeyGenerator</span><span class="o">.</span><span class="na">getInstance</span><span class="o">(</span><span class="s">"AES"</span><span class="o">);</span>
+<span class="n">keyGen</span><span class="o">.</span><span class="na">init</span><span class="o">(</span><span class="mi">256</span><span class="o">);</span>
+<span class="n">javax</span><span class="o">.</span><span class="na">crypto</span><span class="o">.</span><span class="na">SecretKey</span> <span class="n">aes256SymmetricKey</span> <span class="o">=</span> <span class="n">keyGen</span><span class="o">.</span><span class="na">generateKey</span><span class="o">();</span>
+</code></pre></div></div>
+
+<p>or use the convenience method <a href="https://github.com/eclipse-ditto/ditto/blob/master/connectivity/service/src/main/java/org/eclipse/ditto/connectivity/service/util/EncryptorAesGcm.java#L100">EncryptorAesGcm.generateAESKeyAsString()</a>.</p>
+
+<p>The key must be 256-bit, <a href="https://www.rfc-editor.org/rfc/rfc4648#section-5">Base64-encoded with URL-safe alphabet</a> using UTF-8.</p>
+
+<p>The default fields that get encrypted are:</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">/uri</code></li>
+  <li><code class="language-plaintext highlighter-rouge">/credentials/key</code></li>
+  <li><code class="language-plaintext highlighter-rouge">/sshTunnel/credentials/password</code></li>
+  <li><code class="language-plaintext highlighter-rouge">/sshTunnel/credentials/privateKey</code></li>
+  <li><code class="language-plaintext highlighter-rouge">/credentials/parameters/accessKey</code></li>
+  <li><code class="language-plaintext highlighter-rouge">/credentials/parameters/secretKey</code></li>
+  <li><code class="language-plaintext highlighter-rouge">/credentials/parameters/sharedKey</code></li>
+  <li><code class="language-plaintext highlighter-rouge">/credentials/clientSecret</code></li>
+</ul>
+
+<p>Only string values are supported. URI values receive special treatment – only the password portion of the user info is encrypted.</p>
+
+<p>Find the full encryption configuration in <a href="https://github.com/eclipse-ditto/ditto/blob/master/connectivity/service/src/main/resources/connectivity.conf">connectivity.conf</a> at the <code class="language-plaintext highlighter-rouge">ditto.connectivity.connection.encryption</code> section.</p>
+
+<div class="alert alert-info" role="alert"><i class="fa fa-info-circle"></i> <b>Note:</b> If you disable encryption later, keep the symmetric key in the configuration. Without it, previously encrypted values cannot be decrypted, and you would need to manually re-enter the encrypted connection fields.</div>
+
+<h4 id="encryption-key-rotation">Encryption key rotation</h4>
+
+<p>Since Ditto 3.9.0, you can rotate encryption keys without downtime or data loss using a dual-key configuration
+and a migration command.</p>
+
+<h5 id="dual-key-configuration">Dual-key configuration</h5>
+
+<p>The encryption configuration supports both a current key and an optional old key for fallback decryption:</p>
+
+<div class="language-hocon highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nl">ditto.connectivity.connection.encryption</span><span class="w"> </span><span class="p">{</span><span class="w">
+  </span><span class="nl">encryption-enabled</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="kc">true</span><span class="w">
+  </span><span class="nl">symmetrical-key</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s2">"YOUR_NEW_KEY_HERE"</span><span class="w">           </span><span class="c1"># Current key for encrypting new data</span><span class="w">
+  </span><span class="nl">old-symmetrical-key</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s2">"YOUR_OLD_KEY_HERE"</span><span class="w">       </span><span class="c1"># Optional fallback key for decrypting old data</span><span class="w">
+  </span><span class="nl">json-pointers</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="p">[</span><span class="l">...</span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p><strong>Behavior:</strong></p>
+<ul>
+  <li><strong>Encryption:</strong> Always uses <code class="language-plaintext highlighter-rouge">symmetrical-key</code> for encrypting new data</li>
+  <li><strong>Decryption:</strong> Tries <code class="language-plaintext highlighter-rouge">symmetrical-key</code> first, falls back to <code class="language-plaintext highlighter-rouge">old-symmetrical-key</code> if decryption fails</li>
+  <li><strong>Migration:</strong> Explicit DevOps command re-encrypts existing data from old key to new key</li>
+</ul>
+
+<p><strong>Migration Decision Logic:</strong></p>
+
+<p>The migration command automatically detects the intended workflow based on configuration:</p>
+
+<ul>
+  <li><strong>Encryption enabled + both keys set</strong> → Key rotation (decrypt with old, encrypt with new)</li>
+  <li><strong>Encryption enabled + only current key</strong> → Error (nothing to migrate)</li>
+  <li><strong>Encryption disabled + old key set</strong> → Disable workflow (decrypt with old, write plaintext)</li>
+  <li><strong>Encryption disabled + no keys</strong> → Error (cannot migrate)</li>
+</ul>
+
+<h5 id="key-rotation-workflow">Key rotation workflow</h5>
+
+<p>To rotate an encryption key:</p>
+
+<ol>
+  <li>
+    <p><strong>Generate a new encryption key</strong> using the methods described above</p>
+  </li>
+  <li><strong>Update configuration</strong> with both keys:
+    <div class="language-hocon highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nl">ditto.connectivity.connection.encryption</span><span class="w"> </span><span class="p">{</span><span class="w">
+  </span><span class="nl">encryption-enabled</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="kc">true</span><span class="w">
+  </span><span class="nl">symmetrical-key</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s2">"NEW_KEY"</span><span class="w">      </span><span class="c1"># New key</span><span class="w">
+  </span><span class="nl">old-symmetrical-key</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s2">"OLD_KEY"</span><span class="w">  </span><span class="c1"># Current key becomes old key</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div>    </div>
+  </li>
+  <li>
+    <p><strong>Restart connectivity service</strong> to load the new configuration</p>
+  </li>
+  <li><strong>Run dry-run migration</strong> to verify affected documents:
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">-X</span> POST http://localhost:8080/devops/piggyback/connectivity <span class="se">\</span>
+  <span class="nt">-u</span> devops:devopsPw1! <span class="se">\</span>
+  <span class="nt">-H</span> <span class="s1">'Content-Type: application/json'</span> <span class="se">\</span>
+  <span class="nt">-d</span> <span class="s1">'{
+  "targetActorSelection": "/user/connectivityRoot/encryptionMigration",
+  "headers": {
+    "aggregate": false
+  },
+  "piggybackCommand": {
+    "type": "connectivity.commands:migrateEncryption",
+    "dryRun": true,
+    "resume": false
+  }
+}'</span>
+</code></pre></div>    </div>
+  </li>
+  <li><strong>Start actual migration</strong> to re-encrypt all persisted data:
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">-X</span> POST http://localhost:8080/devops/piggyback/connectivity <span class="se">\</span>
+  <span class="nt">-u</span> devops:devopsPw1! <span class="se">\</span>
+  <span class="nt">-H</span> <span class="s1">'Content-Type: application/json'</span> <span class="se">\</span>
+  <span class="nt">-d</span> <span class="s1">'{
+  "targetActorSelection": "/user/connectivityRoot/encryptionMigration",
+  "headers": {
+    "aggregate": false
+  },
+  "piggybackCommand": {
+    "type": "connectivity.commands:migrateEncryption",
+    "dryRun": false,
+    "resume": false
+  }
+}'</span>
+</code></pre></div>    </div>
+  </li>
+  <li><strong>Monitor migration progress</strong>:
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">-X</span> POST http://localhost:8080/devops/piggyback/connectivity <span class="se">\</span>
+  <span class="nt">-u</span> devops:devopsPw1! <span class="se">\</span>
+  <span class="nt">-H</span> <span class="s1">'Content-Type: application/json'</span> <span class="se">\</span>
+  <span class="nt">-d</span> <span class="s1">'{
+  "targetActorSelection": "/user/connectivityRoot/encryptionMigration",
+  "headers": {
+    "aggregate": false
+  },
+  "piggybackCommand": {
+    "type": "connectivity.commands:migrateEncryptionStatus"
+  }
+}'</span>
+</code></pre></div>    </div>
+  </li>
+  <li><strong>After successful migration</strong>, remove the old key from configuration and restart the service</li>
+</ol>
+
+<p><strong>Additional migration commands:</strong></p>
+
+<ul>
+  <li><strong>Abort running migration:</strong>
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">-X</span> POST http://localhost:8080/devops/piggyback/connectivity <span class="se">\</span>
+  <span class="nt">-u</span> devops:devopsPw1! <span class="se">\</span>
+  <span class="nt">-H</span> <span class="s1">'Content-Type: application/json'</span> <span class="se">\</span>
+  <span class="nt">-d</span> <span class="s1">'{
+  "targetActorSelection": "/user/connectivityRoot/encryptionMigration",
+  "headers": {
+    "aggregate": false
+  },
+  "piggybackCommand": {
+    "type": "connectivity.commands:migrateEncryptionAbort"
+  }
+}'</span>
+</code></pre></div>    </div>
+  </li>
+  <li><strong>Resume aborted migration:</strong>
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">-X</span> POST http://localhost:8080/devops/piggyback/connectivity <span class="se">\</span>
+  <span class="nt">-u</span> devops:devopsPw1! <span class="se">\</span>
+  <span class="nt">-H</span> <span class="s1">'Content-Type: application/json'</span> <span class="se">\</span>
+  <span class="nt">-d</span> <span class="s1">'{
+  "targetActorSelection": "/user/connectivityRoot/encryptionMigration",
+  "headers": {
+    "aggregate": false
+  },
+  "piggybackCommand": {
+    "type": "connectivity.commands:migrateEncryption",
+    "dryRun": false,
+    "resume": true
+  }
+}'</span>
+</code></pre></div>    </div>
+
+    <div class="alert alert-info" role="alert"><i class="fa fa-info-circle"></i> <b>Note:</b> If the previous migration already completed, was never started, or only ran as a dry run (which does not persist progress), the resume command returns <code class="language-plaintext highlighter-rouge">200 OK</code> with <code class="language-plaintext highlighter-rouge">phase: "already_completed"</code> instead of starting a new migration. This makes resume safe to call idempotently.</div>
+  </li>
+</ul>
+
+<p><strong>Migration details:</strong></p>
+<ul>
+  <li>The migration processes both connection snapshots and journal events in MongoDB</li>
+  <li>Progress is persisted to allow resuming after abort or service restart</li>
+  <li>Migration runs in batches to avoid overwhelming the database</li>
+  <li>The batch size can be configured via <code class="language-plaintext highlighter-rouge">ditto.connectivity.connection.encryption.migration.batch-size</code></li>
+  <li>Migration is throttled to prevent database overload (default: 200 documents/minute)</li>
+  <li>Throttling rate can be configured via <code class="language-plaintext highlighter-rouge">ditto.connectivity.connection.encryption.migration.max-documents-per-minute</code></li>
+  <li>Set throttling to 0 to disable (not recommended for production)</li>
+</ul>
+
+<h5 id="disabling-encryption">Disabling encryption</h5>
+
+<p>To disable encryption while preserving access to already encrypted data:</p>
+
+<ol>
+  <li><strong>Update configuration</strong> with encryption disabled but old key present:
+    <div class="language-hocon highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nl">ditto.connectivity.connection.encryption</span><span class="w"> </span><span class="p">{</span><span class="w">
+  </span><span class="nl">encryption-enabled</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="kc">false</span><span class="w">
+  </span><span class="nl">symmetrical-key</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s2">""</span><span class="w">                       </span><span class="c1"># Empty - no new encryption</span><span class="w">
+  </span><span class="nl">old-symmetrical-key</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s2">"YOUR_CURRENT_KEY"</span><span class="w">   </span><span class="c1"># Keep for decryption</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div>    </div>
+  </li>
+  <li>
+    <p><strong>Restart connectivity service</strong></p>
+  </li>
+  <li><strong>Run migration</strong> to decrypt all existing encrypted data:
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">-X</span> POST http://localhost:8080/devops/piggyback/connectivity <span class="se">\</span>
+  <span class="nt">-u</span> devops:devopsPw1! <span class="se">\</span>
+  <span class="nt">-H</span> <span class="s1">'Content-Type: application/json'</span> <span class="se">\</span>
+  <span class="nt">-d</span> <span class="s1">'{
+  "targetActorSelection": "/user/connectivityRoot/encryptionMigration",
+  "headers": {
+    "aggregate": false
+  },
+  "piggybackCommand": {
+    "type": "connectivity.commands:migrateEncryption",
+    "dryRun": false,
+    "resume": false
+  }
+}'</span>
+</code></pre></div>    </div>
+  </li>
+  <li><strong>After migration completes</strong>, remove the old key from configuration and restart</li>
+</ol>
+
+<h3 id="rate-limiting">Rate limiting</h3>
+
+<p>Since Ditto 2.4.0, <a href="basic-connections.html">connections</a> and <a href="httpapi-protocol-bindings-websocket.html">WebSockets</a> are not artificially throttled when consuming messages by default. You can enable per-connection or per-WebSocket throttling through the <code class="language-plaintext highlighter-rouge">throttling</code> sections in the service configuration files.</p>
+
+<h3 id="pre-defined-extra-fields">Pre-defined extra fields</h3>
+
+<p>Starting with Ditto 3.7.0, you can statically configure <a href="basic-enrichment.html">enrichment of <code class="language-plaintext highlighter-rouge">extraFields</code></a> in the “things” service configuration. This avoids an internal roundtrip from edge services to the things service for each event or message.</p>
+
+<p>Configure pre-defined extra fields for events and messages independently:</p>
+
+<div class="language-hocon highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nl">ditto</span><span class="w"> </span><span class="p">{</span><span class="w">
+  </span><span class="nl">things</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">thing</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">event</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">pre-defined-extra-fields</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="p">[</span><span class="w">
+          </span><span class="p">{</span><span class="w">
+            </span><span class="nl">namespaces</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="p">[]</span><span class="w">
+            </span><span class="nl">condition</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s2">"exists(definition)"</span><span class="w">
+            </span><span class="nl">extra-fields</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="p">[</span><span class="s2">"definition"</span><span class="p">]</span><span class="w">
+          </span><span class="p">},</span><span class="w">
+          </span><span class="p">{</span><span class="w">
+            </span><span class="nl">namespaces</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="p">[</span><span class="s2">"org.eclipse.ditto.lamps"</span><span class="p">]</span><span class="w">
+            </span><span class="nl">extra-fields</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="p">[</span><span class="w">
+              </span><span class="s2">"attributes/manufacturer"</span><span class="p">,</span><span class="w">
+              </span><span class="s2">"attributes/serial"</span><span class="w">
+            </span><span class="p">]</span><span class="w">
+          </span><span class="p">}</span><span class="w">
+        </span><span class="p">]</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+
+      </span><span class="nl">message</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">pre-defined-extra-fields</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="p">[</span><span class="w">
+          </span><span class="p">{</span><span class="w">
+            </span><span class="nl">namespaces</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="p">[]</span><span class="w">
+            </span><span class="nl">condition</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s2">"exists(definition)"</span><span class="w">
+            </span><span class="nl">extra-fields</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="p">[</span><span class="w">
+              </span><span class="s2">"definition"</span><span class="w">
+            </span><span class="p">]</span><span class="w">
+          </span><span class="p">}</span><span class="w">
+        </span><span class="p">]</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>Configure pre-defined extra fields for <code class="language-plaintext highlighter-rouge">event</code> and <code class="language-plaintext highlighter-rouge">message</code> independently. Each entry supports:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">namespaces</code>: restrict to specific namespaces (empty means all; supports <code class="language-plaintext highlighter-rouge">*</code> and <code class="language-plaintext highlighter-rouge">?</code> wildcards)</li>
+  <li><code class="language-plaintext highlighter-rouge">condition</code>: an <a href="basic-rql.html">RQL condition</a> to check before adding extra fields</li>
+  <li><code class="language-plaintext highlighter-rouge">extra-fields</code>: list of JSON pointers to include proactively</li>
+</ul>
+
+<h3 id="limiting-indexed-fields">Limiting indexed fields</h3>
+
+<p>Since Ditto 3.5.0, you can control which thing fields get indexed in the search database per namespace pattern. This reduces search database load when you only search on a few fields.</p>
+
+<div class="language-hocon highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nl">ditto</span><span class="w"> </span><span class="p">{</span><span class="w">
+  </span><span class="nl">caching-signal-enrichment-facade-provider</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="l">org.eclipse.ditto.thingsearch.service.persistence.write.streaming.SearchIndexingSignalEnrichmentFacadeProvider</span><span class="w">
+  </span><span class="nl">search</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">namespace-indexed-fields</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="p">[</span><span class="w">
+      </span><span class="p">{</span><span class="w">
+        </span><span class="nl">namespace-pattern</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s2">"org.eclipse.test"</span><span class="w">
+        </span><span class="nl">indexed-fields</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="p">[</span><span class="w">
+          </span><span class="s2">"attributes"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"features/info/properties"</span><span class="w">
+        </span><span class="p">]</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>Ditto matches the thing’s namespace against the <strong>first</strong> matching <code class="language-plaintext highlighter-rouge">namespace-pattern</code>, so order your patterns from most specific to least specific. Ditto automatically adds system-level fields it needs to operate.</p>
+
+<p>To configure via system properties:</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">-Dditto</span>.search.namespace-indexed-fields.0.namespace-pattern<span class="o">=</span>org.eclipse.test
+<span class="nt">-Dditto</span>.search.namespace-indexed-fields.0.indexed-fields.0<span class="o">=</span>attributes
+<span class="nt">-Dditto</span>.search.namespace-indexed-fields.0.indexed-fields.1<span class="o">=</span>features/info/properties
+<span class="nt">-Dditto</span>.search.namespace-indexed-fields.0.indexed-fields.2<span class="o">=</span>features/info/other
+<span class="nt">-Dditto</span>.search.namespace-indexed-fields.1.namespace-pattern<span class="o">=</span>org.eclipse<span class="k">*</span>
+<span class="nt">-Dditto</span>.search.namespace-indexed-fields.1.indexed-fields.0<span class="o">=</span>attributes
+<span class="nt">-Dditto</span>.search.namespace-indexed-fields.1.indexed-fields.1<span class="o">=</span>features/info
+</code></pre></div></div>
+
+<h3 id="configuring-additional-search-indexes">Configuring additional search indexes</h3>
+
+<p>Since Ditto 3.9.0, you can define custom MongoDB indexes for the search collection to optimize specific query patterns.</p>
+
+<div class="language-hocon highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nl">ditto</span><span class="w"> </span><span class="p">{</span><span class="w">
+  </span><span class="nl">search</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">index-initialization</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">custom-indexes</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">my_custom_idx</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nl">fields</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="p">[</span><span class="w">
+            </span><span class="p">{</span><span class="w"> </span><span class="nl">name</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s2">"t.attributes/region"</span><span class="w"> </span><span class="p">}</span><span class="w">
+            </span><span class="p">{</span><span class="w"> </span><span class="nl">name</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s2">"t.attributes/timestamp"</span><span class="p">,</span><span class="w"> </span><span class="nl">direction</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s2">"DESC"</span><span class="w"> </span><span class="p">}</span><span class="w">
+          </span><span class="p">]</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>Field naming conventions for custom indexes:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Field</th>
+      <th>Path</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Namespace</td>
+      <td><code class="language-plaintext highlighter-rouge">_namespace</code></td>
+    </tr>
+    <tr>
+      <td>Thing ID</td>
+      <td><code class="language-plaintext highlighter-rouge">_id</code></td>
+    </tr>
+    <tr>
+      <td>Policy ID</td>
+      <td><code class="language-plaintext highlighter-rouge">t.policyId</code></td>
+    </tr>
+    <tr>
+      <td>Attributes</td>
+      <td><code class="language-plaintext highlighter-rouge">t.attributes.&lt;path&gt;</code></td>
+    </tr>
+    <tr>
+      <td>Feature properties</td>
+      <td><code class="language-plaintext highlighter-rouge">t.features.&lt;featureId&gt;.properties.&lt;path&gt;</code></td>
+    </tr>
+    <tr>
+      <td>Last modified</td>
+      <td><code class="language-plaintext highlighter-rouge">_modified</code></td>
+    </tr>
+    <tr>
+      <td>Created</td>
+      <td><code class="language-plaintext highlighter-rouge">_created</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Custom indexes activate automatically when defined, and Ditto drops them if you remove them from configuration.</p>
+
+<p>To configure via system properties:</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">-Dditto</span>.search.index-initialization.custom-indexes.my_custom_idx.fields.0.name<span class="o">=</span>t.attributes/region
+<span class="nt">-Dditto</span>.search.index-initialization.custom-indexes.my_custom_idx.fields.1.name<span class="o">=</span>t.attributes/timestamp
+<span class="nt">-Dditto</span>.search.index-initialization.custom-indexes.my_custom_idx.fields.1.direction<span class="o">=</span>DESC
+</code></pre></div></div>
+
+<p>When deploying via Helm, configure in <code class="language-plaintext highlighter-rouge">values.yaml</code>:</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">thingsSearch</span><span class="pi">:</span>
+  <span class="na">config</span><span class="pi">:</span>
+    <span class="na">indexInitialization</span><span class="pi">:</span>
+      <span class="na">enabled</span><span class="pi">:</span> <span class="kc">true</span>
+      <span class="na">customIndexes</span><span class="pi">:</span>
+        <span class="na">my_custom_idx</span><span class="pi">:</span>
+          <span class="na">fields</span><span class="pi">:</span>
+            <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s2">"</span><span class="s">t.attributes/region"</span>
+              <span class="na">direction</span><span class="pi">:</span> <span class="s2">"</span><span class="s">ASC"</span>
+            <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s2">"</span><span class="s">t.attributes/timestamp"</span>
+              <span class="na">direction</span><span class="pi">:</span> <span class="s2">"</span><span class="s">DESC"</span>
+</code></pre></div></div>
+
+<h3 id="merge-operations-configuration">Merge operations configuration</h3>
+
+<p>Starting with Ditto 3.8.0, the Things service supports configuration for merge operations with patch conditions. Set <code class="language-plaintext highlighter-rouge">MERGE_REMOVE_EMPTY_OBJECTS_AFTER_PATCH_CONDITION_FILTERING</code> to <code class="language-plaintext highlighter-rouge">true</code> to remove empty JSON objects that result from patch condition filtering:</p>
+
+<div class="language-hocon highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nl">ditto</span><span class="w"> </span><span class="p">{</span><span class="w">
+  </span><span class="nl">things</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">thing</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">merge</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">remove-empty-objects-after-patch-condition-filtering</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="kc">true</span><span class="w">
+        </span><span class="nl">remove-empty-objects-after-patch-condition-filtering</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="si">${?</span><span class="nv">MERGE_REMOVE_EMPTY_OBJECTS_AFTER_PATCH_CONDITION_FILTERING</span><span class="si">}</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>When deploying via Helm:</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">things</span><span class="pi">:</span>
+  <span class="na">config</span><span class="pi">:</span>
+    <span class="na">merge</span><span class="pi">:</span>
+      <span class="na">removeEmptyObjectsAfterPatchConditionFiltering</span><span class="pi">:</span> <span class="kc">true</span>
+</code></pre></div></div>
+
+<p>Or as a Kubernetes environment variable:</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">env</span><span class="pi">:</span>
+<span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">MERGE_REMOVE_EMPTY_OBJECTS_AFTER_PATCH_CONDITION_FILTERING</span>
+  <span class="na">value</span><span class="pi">:</span> <span class="s2">"</span><span class="s">true"</span>
+</code></pre></div></div>
+
+<h3 id="gateway-namespace-access-control">Gateway namespace access control</h3>
+
+<p>Since Ditto <em>3.9.0</em>, the Ditto <strong>gateway</strong> service supports restricting which namespaces a client can access based on
+the JWT claims or HTTP headers present in the request. This provides a cheap enforcement layer at the API gateway level,
+before policy-based access control is evaluated.</p>
+
+<p>Namespace access control is configured via <code class="language-plaintext highlighter-rouge">ditto.gateway.authentication.namespace-access</code> in
+<a href="https://github.com/eclipse/ditto/blob/master/gateway/service/src/main/resources/gateway.conf">gateway.conf</a>.</p>
+
+<h4 id="how-it-works-1">How it works</h4>
+
+<p>A list of <strong>rules</strong> is defined. Each rule can specify:</p>
+<ul>
+  <li><strong><code class="language-plaintext highlighter-rouge">conditions</code></strong> (AND semantics): a list of placeholder expressions that must all evaluate to a non-empty value for
+the rule to apply. Placeholders: <code class="language-plaintext highlighter-rouge">{{ jwt:claim }}</code> for JWT claims, <code class="language-plaintext highlighter-rouge">{{ header:name }}</code> for HTTP headers.
+Functions <code class="language-plaintext highlighter-rouge">fn:filter</code> and <code class="language-plaintext highlighter-rouge">fn:default</code> can be used (see below).</li>
+  <li><strong><code class="language-plaintext highlighter-rouge">resource-types</code></strong>: list of resource types this rule applies to (<code class="language-plaintext highlighter-rouge">"thing"</code>, <code class="language-plaintext highlighter-rouge">"policy"</code>).
+An empty list means the rule applies to all resource types.</li>
+  <li><strong><code class="language-plaintext highlighter-rouge">allowed-namespaces</code></strong>: list of exact namespace names or wildcard patterns (<code class="language-plaintext highlighter-rouge">*</code> = any chars, <code class="language-plaintext highlighter-rouge">?</code> = single char).
+An empty list means all namespaces are allowed (unless blocked).</li>
+  <li><strong><code class="language-plaintext highlighter-rouge">blocked-namespaces</code></strong>: list of exact namespace names or wildcard patterns that are explicitly blocked (takes precedence over allowed).</li>
+</ul>
+
+<p>Multiple rules are evaluated with <strong>OR semantics</strong>: a namespace is accessible if it is allowed by <em>any</em> matching rule.
+<strong>Fail-closed</strong>: if namespace-access rules are configured but none of them match the current request (i.e. no rule’s
+conditions are satisfied), access is <strong>denied</strong>. If no rules are configured at all, access is allowed (backward compatible).
+This means a request from an unrecognized issuer or with unexpected headers will be denied rather than silently granted full access.</p>
+
+<h4 id="search-behavior">Search behavior</h4>
+
+<p>For <code class="language-plaintext highlighter-rouge">GET /search/things</code> requests without an explicit <code class="language-plaintext highlighter-rouge">namespaces</code> parameter, Ditto automatically injects the
+allowed namespaces from the applicable rule. If only wildcard patterns are configured (e.g. <code class="language-plaintext highlighter-rouge">"org.eclipse.*"</code>),
+or if no rule conditions match (fail-closed), Ditto injects an <strong>empty namespaces set</strong>, returning no results.
+In this case, clients should provide explicit namespace values in the <code class="language-plaintext highlighter-rouge">namespaces</code> query parameter.</p>
+
+<h4 id="websocket-and-sse-behavior">WebSocket and SSE behavior</h4>
+
+<p>Namespace access rules are evaluated once at <strong>connection time</strong> using the JWT present when the WebSocket or SSE
+session is established. The validator is <strong>not updated</strong> when a JWT is refreshed mid-session; namespace access
+continues to reflect the access granted at connect time.</p>
+
+<p>Namespace enforcement applies to incoming commands (things and policies) sent over WebSocket. Search commands
+(<code class="language-plaintext highlighter-rouge">QueryThings</code>) are not blocked at the namespace level since they carry no entity ID; namespace filtering for
+search is handled via the <code class="language-plaintext highlighter-rouge">namespaces</code> parameter instead.</p>
+
+<h4 id="configuration-example">Configuration example</h4>
+
+<div class="language-hocon highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nl">ditto.gateway.authentication</span><span class="w"> </span><span class="p">{</span><span class="w">
+  </span><span class="nl">namespace-access</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="c1"># Rule applies only when the JWT issuer matches</span><span class="w">
+      </span><span class="nl">conditions</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"{{ jwt:iss | fn:filter('like','https://my-idp.example.com*') }}"</span><span class="w">
+      </span><span class="p">]</span><span class="w">
+      </span><span class="nl">resource-types</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="p">[</span><span class="s2">"thing"</span><span class="p">,</span><span class="w"> </span><span class="s2">"policy"</span><span class="p">]</span><span class="w">
+      </span><span class="nl">allowed-namespaces</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"org.example.*"</span><span class="w">
+        </span><span class="s2">"concrete.namespace"</span><span class="w">
+      </span><span class="p">]</span><span class="w">
+      </span><span class="nl">blocked-namespaces</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"forbidden.namespace"</span><span class="w">
+      </span><span class="p">]</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h4 id="using-fndefault-before-fnfilter-for-optional-headers">Using <code class="language-plaintext highlighter-rouge">fn:default</code> before <code class="language-plaintext highlighter-rouge">fn:filter</code> for optional headers</h4>
+
+<p>When a condition references an HTTP header that may be absent, always add <code class="language-plaintext highlighter-rouge">fn:default</code> before <code class="language-plaintext highlighter-rouge">fn:filter</code>:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>"{{ header:someheader | fn:default('safe') | fn:filter('ne','dangerous') }}"
+</code></pre></div></div>
+
+<p>Without <code class="language-plaintext highlighter-rouge">fn:default</code>, an absent header produces an empty pipeline result which causes the entire condition to fail.
+This would silently bypass the rule rather than enforcing it, which is a security footgun.</p>
+
+<h4 id="invalid-namespace-patterns">Invalid namespace patterns</h4>
+
+<p>If a namespace pattern (in <code class="language-plaintext highlighter-rouge">allowed-namespaces</code> or <code class="language-plaintext highlighter-rouge">blocked-namespaces</code>) is syntactically invalid, Ditto will fail
+at startup with a <code class="language-plaintext highlighter-rouge">DittoConfigError</code>. This prevents operators from inadvertently deploying a configuration where
+access control rules are silently skipped.</p>
+
+<h3 id="namespace-root-policies">Namespace root policies</h3>
+
+<p>Since Ditto <em>3.9.0</em>, operators can configure <strong>namespace root policies</strong> — pre-existing policies whose
+<code class="language-plaintext highlighter-rouge">importable: implicit</code> entries are automatically merged into every policy in a matching namespace at enforcer-build
+time. This enables cross-cutting access grants (e.g. a tenant-wide read subject) without modifying any stored
+policy.</p>
+
+<p>For the end-user concept, see <a href="basic-policy.html#namespace-root-policies">basic-policy.html#namespace-root-policies</a>.</p>
+
+<h4 id="configuration">Configuration</h4>
+
+<p>The mapping is defined under <code class="language-plaintext highlighter-rouge">ditto.namespace-policies</code> in the <code class="language-plaintext highlighter-rouge">policies.conf</code>, <code class="language-plaintext highlighter-rouge">things.conf</code>, and <code class="language-plaintext highlighter-rouge">search.conf</code>
+service configuration files (or overridden via a <code class="language-plaintext highlighter-rouge">-dev.conf</code> / extension config for a given deployment):</p>
+
+<div class="language-hocon highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nl">ditto.namespace-policies</span><span class="w"> </span><span class="p">{</span><span class="w">
+  </span><span class="c1"># Exact namespace match</span><span class="w">
+  </span><span class="nl">"org.eclipse.ditto.devices"</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="p">[</span><span class="s2">"org.eclipse.ditto.devices:devices-root"</span><span class="p">]</span><span class="w">
+
+  </span><span class="c1"># Prefix wildcard — applies to any sub-namespace of org.eclipse.ditto</span><span class="w">
+  </span><span class="c1"># Does NOT match org.eclipse.ditto itself (requires at least one sub-segment)</span><span class="w">
+  </span><span class="nl">"org.eclipse.ditto.*"</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="p">[</span><span class="s2">"org.eclipse.ditto:tenant-root"</span><span class="p">]</span><span class="w">
+
+  </span><span class="c1"># Catch-all — applies to every namespace</span><span class="w">
+  </span><span class="c1"># "*" = ["root:global-policy"]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>Multiple patterns can match a single namespace. When they do, patterns are applied in deterministic precedence
+order: exact match first, then prefix wildcards from most specific to least specific, then <code class="language-plaintext highlighter-rouge">"*"</code>.</p>
+
+<p>Multiple root policy IDs can be listed per pattern. They are applied left-to-right.</p>
+
+<h4 id="pattern-syntax">Pattern syntax</h4>
+
+<table>
+  <thead>
+    <tr>
+      <th>Pattern</th>
+      <th>Matches</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">"org.example.devices"</code></td>
+      <td>Only the exact namespace <code class="language-plaintext highlighter-rouge">org.example.devices</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">"org.example.*"</code></td>
+      <td>Any namespace starting with <code class="language-plaintext highlighter-rouge">org.example.</code> (requires at least one sub-segment)</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">"*"</code></td>
+      <td>Every namespace</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Unsupported patterns (e.g. <code class="language-plaintext highlighter-rouge">"org.*.devices"</code> or <code class="language-plaintext highlighter-rouge">"foo*"</code>) are rejected at startup with a <code class="language-plaintext highlighter-rouge">DittoConfigError</code>.</p>
+
+<h4 id="behaviour-details">Behaviour details</h4>
+
+<p><strong>Label conflict — local wins:</strong> If a local policy already has an entry with the same label as a root policy
+entry, the local entry is preserved unchanged. The root policy entry is silently skipped for that label.</p>
+
+<p><strong>Self-referential guard:</strong> A root policy is never merged into itself. If <code class="language-plaintext highlighter-rouge">org.eclipse.ditto:tenant-root</code> is
+configured for <code class="language-plaintext highlighter-rouge">"org.eclipse.ditto.*"</code>, it is not merged when building the enforcer for <code class="language-plaintext highlighter-rouge">tenant-root</code> itself.</p>
+
+<p><strong>Missing root policy:</strong> If a configured root policy does not exist or cannot be loaded, its entries are skipped
+and an ERROR is logged. The child policy’s enforcer is still built successfully from its own entries.</p>
+
+<p><strong>Cache invalidation:</strong> When a root policy is modified, Ditto automatically invalidates all cached enforcers for
+policies in matching namespaces. This is an O(n) scan over the enforcer cache and happens transparently.
+For very large deployments with frequently-changing root policies, consider keeping the root policies stable
+and pushing changes via individual child policies instead.</p>
+
+<p><strong>Search consistency:</strong> Root policy changes are reflected in the things-search index. The search service tracks
+root policy revisions as part of the resolved-policy cache key, so a root policy update triggers re-indexing
+of all affected things.</p>
+
+<h4 id="helm-configuration">Helm configuration</h4>
+
+<p>For Helm deployments, configure namespace root policies in <code class="language-plaintext highlighter-rouge">values.yaml</code> via the shared <code class="language-plaintext highlighter-rouge">global</code> section:</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">global</span><span class="pi">:</span>
+  <span class="na">namespacePolicies</span><span class="pi">:</span>
+    <span class="s2">"</span><span class="s">org.eclipse.ditto.*"</span><span class="err">:</span>
+      <span class="pi">-</span> <span class="s2">"</span><span class="s">org.eclipse.ditto:tenant-root"</span>
+</code></pre></div></div>
+
+<p>This shared mapping is rendered into the respective service extension config files under <code class="language-plaintext highlighter-rouge">ditto.namespace-policies</code>.</p>
+
+<h2 id="further-reading">Further reading</h2>
+
+<ul>
+  <li><a href="operating-mongodb.html">Operating - MongoDB</a></li>
+  <li><a href="operating-authentication.html">Operating - Authentication</a></li>
+  <li><a href="operating-devops.html">Operating - DevOps Commands</a></li>
+  <li><a href="operating-monitoring.html">Operating - Monitoring &amp; Tracing</a></li>
+  <li><a href="installation-extending.html">Extending Ditto</a></li>
+</ul>
+
+
+    <div class="tags">
+        
+        <b>Tags: </b>
+        
+        
+        
+        <a href="tag_installation.html" class="btn btn-default navbar-btn cursorNorm" role="button">installation</a>
+        
+        
+        
+    </div>
+
+</div>
+
+<hr class="shaded"/>
+
+<footer>
+            <div class="row">
+                <div class="col-lg-12 footer">
+                    <div class="logo">
+                        <a href="https://eclipse.org"><img src="images/eclipse_foundation_logo.svg" alt="Eclipse logo"/></a>
+                    </div>
+                    <p class="notice">
+                        &copy;2026 Eclipse Ditto™.
+                         Site last generated: May 13, 2026 <br />
+                    </p>
+                    <div class="quickLinks">
+                        <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">
+                            &gt; Privacy Policy
+                        </a>
+                        <a href="https://www.eclipse.org/legal/termsofuse.php" target="_blank">
+                            &gt; Terms of Use
+                        </a>
+                        <a href="https://www.eclipse.org/legal/copyright.php" target="_blank">
+                            &gt; Copyright Agent
+                        </a>
+                        <a href="https://www.eclipse.org/legal" target="_blank">
+                            &gt; Legal
+                        </a>
+                        <a href="https://www.eclipse.org/legal/epl-2.0/" target="_blank">
+                            &gt; License
+                        </a>
+                        <a href="https://eclipse.org/security" target="_blank">
+                            &gt; Report a Vulnerability
+                        </a>
+                    </div>
+                </div>
+            </div>
+</footer>
+
+
+        </div>
+    <!-- /.row -->
+</div>
+<!-- /.container -->
+</div>
+<!-- /#main -->
+    </div>
+
+</body>
+</html>
