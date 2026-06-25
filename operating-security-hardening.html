@@ -1,0 +1,2807 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="">
+<meta name="keywords" content="installation,  operating, security, hardening, production, authentication, reverse proxy, network policy, tls, devops, jwt, secrets">
+<title>  Operating - Security Hardening • Eclipse Ditto™ • a digital twin framework</title>
+
+<link rel="stylesheet" href="css/syntax.css">
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" crossorigin="anonymous">
+<link rel="stylesheet" href="css/modern-business.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" crossorigin="anonymous">
+<link rel="stylesheet" href="css/customstyles.css">
+<link rel="stylesheet" href="css/boxshadowproperties.css">
+<link rel="stylesheet" href="css/theme-ditto.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,700|Source+Code+Pro:300,600|Titillium+Web:400,600,700">
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/2.1.0/anchor.min.js" crossorigin="anonymous"></script>
+<script src="js/toc.js"></script>
+<script src="js/customscripts.js"></script>
+
+<script type="application/ld+json">
+{
+  "@context": "http://schema.org",
+  "@type": "Organization",
+  "url": "https://www.eclipse.dev/ditto/",
+  "logo": "https://www.eclipse.dev/ditto/images/ditto.svg"
+}
+</script>
+
+<link rel="icon" type="image/png" href="images/favicon-16x16.png" sizes="16x16">
+<link rel="icon" type="image/png" href="images/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="images/favicon-96x96.png" sizes="96x96">
+
+<link rel="alternate" type="application/rss+xml" title="Eclipse Ditto Blog" href="https://www.eclipse.dev/ditto/feed.xml">
+
+<!-- Eclipse Foundation cookie consent: -->
+<link rel="stylesheet" type="text/css" href="https://www.eclipse.org/eclipse.org-common/themes/solstice/public/stylesheets/vendor/cookieconsent/cookieconsent.min.css" />
+<script src="https://www.eclipse.org/eclipse.org-common/themes/solstice/public/javascript/vendor/cookieconsent/default.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            $("#tg-sb-link").click(function() {
+                $("#tg-sb-sidebar").toggle();
+                $("#tg-sb-content").toggleClass('col-md-9');
+                $("#tg-sb-content").toggleClass('col-md-12');
+                $("#tg-sb-icon").toggleClass('fa-toggle-on');
+                $("#tg-sb-icon").toggleClass('fa-toggle-off');
+            });
+        });
+    </script>
+</head>
+
+
+<script>
+    (function(w,d,s,l,i){
+        w[l]=w[l]||[];
+        w[l].push({'gtm.start':
+            new Date().getTime(),event:'gtm.js'});
+        var f=d.getElementsByTagName(s)[0],
+            j=d.createElement(s),
+            dl=l!='dataLayer'?'&l='+l:'';
+        j.async=true;
+        j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;
+        f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-5WLCZXC');
+</script>
+
+
+
+<body>
+<!-- Navigation -->
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container topnavlinks">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-ditto-home" href="index.html">&nbsp;<img src="images/ditto_allwhite_symbolonly.svg" class="ditto-navbar-symbol" alt="Home"> <img src="images/ditto_allwhite_textonly.svg" class="ditto-navbar-symbol-text" alt="Eclipse Ditto™"></a>
+        </div>
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <!-- toggle sidebar button -->
+                <!--<li><a id="tg-sb-link" href="#"><i id="tg-sb-icon" class="fa fa-toggle-on"></i> Nav</a></li>-->
+                <!-- entries without drop-downs appear here -->
+
+
+
+
+                
+                
+                
+                <li><a href="blog.html">Blog</a></li>
+                
+                
+                
+                <li><a href="intro-overview.html">Documentation</a></li>
+                
+                
+                
+                <li><a href="http-api-doc.html">HTTP API</a></li>
+                
+                
+                
+                  
+                  <li><a href="https://github.com/eclipse-ditto/ditto" target="_blank">
+                    <img src="images/GitHub-Mark-Light-32px.png" alt="Sources at GitHub">
+                  </a></li>
+                  
+                
+                
+                
+                  
+                  <li><a href="https://github.com/eclipse-ditto/ditto-clients" target="_blank">
+                    <img src="images/GitHub-Mark-Light-32px.png" alt="SDK sources at GitHub">SDKs
+                  </a></li>
+                  
+                
+                
+                
+                  
+                  <li><a href="https://github.com/eclipse-ditto/ditto-examples" target="_blank">
+                    <img src="images/GitHub-Mark-Light-32px.png" alt="Example sources at GitHub">examples
+                  </a></li>
+                  
+                
+                
+                
+                <!-- entries with drop-downs appear here -->
+                <!-- conditional logic to control which topnav appears for the audience defined in the configuration file.-->
+                
+                
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Links<b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        
+                        
+                        <li><a href="https://projects.eclipse.org/projects/iot.ditto" target="_blank">Eclipse Ditto Project</a></li>
+                        
+                        
+                        
+                        <li><a href="https://www.eclipse.org/forums/index.php/f/364/" target="_blank">Forum</a></li>
+                        
+                        
+                        
+                        <li><a href="https://ci.eclipse.org/ditto/" target="_blank">Jenkins</a></li>
+                        
+                        
+                        
+                        <li><a href="https://dev.eclipse.org/mhonarc/lists/ditto-dev/" target="_blank">Mailing list archives</a></li>
+                        
+                        
+                        
+                        <li><a href="https://gitter.im/eclipse/ditto" target="_blank">Gitter.im chat</a></li>
+                        
+                        
+                    </ul>
+                </li>
+                
+                
+                
+                <!--comment out this block if you want to hide search-->
+                <li>
+                    <!--start search-->
+                    <div id="search" class="pagefind-search-container"></div>
+                    <link href="https://cdn.jsdelivr.net/npm/@pagefind/default-ui@1.5.2/css/ui.css" rel="stylesheet">
+                    <script type="module">
+                        import { PagefindUI } from "https://cdn.jsdelivr.net/npm/@pagefind/default-ui@1.5.2/+esm";
+                        var pf = new PagefindUI({
+                            element: "#search",
+                            bundlePath: window.location.origin + "/ditto/pagefind/",
+                            showSubResults: true,
+                            showImages: false
+                        });
+                        var savedQuery = sessionStorage.getItem("pagefind-query");
+                        if (savedQuery) {
+                            var input = document.querySelector("#search .pagefind-ui__search-input");
+                            if (input) {
+                                input.value = savedQuery;
+                                input.dispatchEvent(new Event("input", { bubbles: true }));
+                            }
+                        }
+                        document.querySelector("#search").addEventListener("input", function(e) {
+                            if (e.target.classList.contains("pagefind-ui__search-input")) {
+                                sessionStorage.setItem("pagefind-query", e.target.value);
+                            }
+                            var drawer = document.querySelector("#search .pagefind-ui__drawer");
+                            if (drawer) {
+                                drawer.style.display = "";
+                            }
+                        });
+                        document.querySelector("#search").addEventListener("click", function(e) {
+                            if (e.target.closest("a")) {
+                                var drawer = document.querySelector("#search .pagefind-ui__drawer");
+                                if (drawer) {
+                                    drawer.style.display = "none";
+                                }
+                            }
+                        });
+                        document.querySelector("#search").addEventListener("focusin", function(e) {
+                            if (e.target.classList.contains("pagefind-ui__search-input") && e.target.value.length > 0) {
+                                var drawer = document.querySelector("#search .pagefind-ui__drawer");
+                                if (drawer) {
+                                    drawer.style.display = "";
+                                }
+                            }
+                        });
+                        document.addEventListener("click", function(e) {
+                            if (!e.target.closest("#search")) {
+                                var drawer = document.querySelector("#search .pagefind-ui__drawer");
+                                if (drawer) {
+                                    drawer.style.display = "none";
+                                }
+                            }
+                        });
+                    </script>
+                    <!--end search-->
+                </li>
+            </ul>
+        </div>
+    </div>
+    <!-- /.container -->
+</nav>
+
+<!-- Page Content -->
+<div class="container">
+  <div id="main">
+    <!-- Content Row -->
+    <div class="row">
+        
+        
+            <!-- Sidebar Column -->
+            <div class="col-md-3" id="tg-sb-sidebar">
+                
+
+<ul id="mysidebar" class="nav">
+  <li class="sidebarTitle">
+    <label for="docVersion">Eclipse Ditto™ version:</label>
+    <div class="select-wrapper">
+      <select id="docVersion" name="docVersion">
+        
+        <option value="">development</option>
+        
+        <option value="3.9">3.9</option>
+        
+        <option value="3.8">3.8</option>
+        
+        <option value="3.7">3.7</option>
+        
+        <option value="3.6">3.6</option>
+        
+        <option value="3.5">3.5</option>
+        
+        <option value="3.4">3.4</option>
+        
+        <option value="3.3">3.3</option>
+        
+        <option value="3.2">3.2</option>
+        
+        <option value="3.1">3.1</option>
+        
+        <option value="3.0">3.0</option>
+        
+        <option value="2.4">2.4</option>
+        
+      </select>
+    </div>
+    <div id="dev-warning">
+      <div markdown="span" class="alert alert-warning" role="alert" style="font-size:0.6em"><i class="fa fa-warning"></i> <b>Important:</b> This documentation reflects the latest 'development'. You might want to choose a released version.</div>
+    </div>
+  </li>
+  
+  
+  
+    
+        <li class="subfolders">
+          <a href="#"><span></span>Getting Started</a>
+          <ul>
+              
+              
+              
+              <li><a href="intro-overview.html">Overview</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="intro-digitaltwins.html">Digital Twins Explained</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="intro-hello-world.html">Hello World Tutorial</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="installation-building.html">Building Ditto</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="installation-running.html">Running Ditto</a></li>
+              
+              
+              
+              
+          </ul>
+        </li>
+    
+  
+  
+  
+    
+        <li class="subfolders">
+          <a href="#"><span></span>Core Concepts</a>
+          <ul>
+              
+              
+              
+              <li><a href="basic-overview.html">Overview</a></li>
+              
+              
+              
+              <li class="subfolders">
+                  <a href="#"><span></span>Model Entities</a>
+                  <ul>
+                      
+                      
+                      
+                      <li><a href="basic-thing.html">Thing</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="basic-feature.html">Feature</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="basic-policy.html">Policy</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="basic-namespaces-and-names.html">Namespaces and Names</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="basic-metadata.html">Metadata</a></li>
+                      
+                      
+                      
+                  </ul>
+              </li>
+              
+              
+              
+              <li class="subfolders">
+                  <a href="#"><span></span>Communication</a>
+                  <ul>
+                      
+                      
+                      
+                      <li><a href="basic-signals.html">Signals</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="basic-signals-command.html">Command</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="basic-signals-commandresponse.html">Command Response</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="basic-signals-errorresponse.html">Error Response</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="basic-signals-event.html">Event</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="basic-signals-announcement.html">Announcement</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="basic-messages.html">Messages</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="basic-changenotifications.html">Change Notifications</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="basic-enrichment.html">Signal Enrichment</a></li>
+                      
+                      
+                      
+                  </ul>
+              </li>
+              
+              
+              
+              <li class="subfolders">
+                  <a href="#"><span></span>Access Control</a>
+                  <ul>
+                      
+                      
+                      
+                      <li><a href="basic-auth.html">Authentication & Authorization</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="basic-auth-checkpermissions.html">Checking Permissions</a></li>
+                      
+                      
+                      
+                  </ul>
+              </li>
+              
+              
+              
+              <li class="subfolders">
+                  <a href="#"><span></span>Querying</a>
+                  <ul>
+                      
+                      
+                      
+                      <li><a href="basic-search.html">Search</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="basic-rql.html">RQL Expressions</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="basic-conditional-requests.html">Conditional Requests</a></li>
+                      
+                      
+                      
+                  </ul>
+              </li>
+              
+              
+              
+              
+              
+              
+              <li><a href="basic-connections.html">Connections</a></li>
+              
+              
+              
+              <li class="subfolders">
+                  <a href="#"><span></span>Advanced Capabilities</a>
+                  <ul>
+                      
+                      
+                      
+                      <li><a href="basic-acknowledgements.html">Acknowledgements / QoS</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="basic-history.html">History</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="basic-placeholders.html">Placeholders</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="basic-errors.html">Errors</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="advanced-data-by-pass.html">Data By-Pass</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="basic-apis.html">APIs</a></li>
+                      
+                      
+                      
+                  </ul>
+              </li>
+              
+              
+              
+              
+          </ul>
+        </li>
+    
+  
+  
+  
+    
+        <li class="subfolders">
+          <a href="#"><span></span>Architecture</a>
+          <ul>
+              
+              
+              
+              <li><a href="architecture-overview.html">Overview</a></li>
+              
+              
+              
+              <li class="subfolders">
+                  <a href="#"><span></span>Services</a>
+                  <ul>
+                      
+                      
+                      
+                      <li><a href="architecture-services-policies.html">Policies</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="architecture-services-things.html">Things</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="architecture-services-things-search.html">Things-Search</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="architecture-services-connectivity.html">Connectivity</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="architecture-services-gateway.html">Gateway</a></li>
+                      
+                      
+                      
+                  </ul>
+              </li>
+              
+              
+              
+              
+          </ul>
+        </li>
+    
+  
+  
+  
+    
+        <li class="subfolders">
+          <a href="#"><span></span>Connectivity</a>
+          <ul>
+              
+              
+              
+              <li><a href="connectivity-overview.html">Overview</a></li>
+              
+              
+              
+              <li class="subfolders">
+                  <a href="#"><span></span>Manage Connections</a>
+                  <ul>
+                      
+                      
+                      
+                      <li><a href="connectivity-manage-connections.html">via HTTP API</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="connectivity-manage-connections-piggyback.html">via Piggyback Commands</a></li>
+                      
+                      
+                      
+                  </ul>
+              </li>
+              
+              
+              
+              <li class="subfolders">
+                  <a href="#"><span></span>Protocol Bindings</a>
+                  <ul>
+                      
+                      
+                      
+                      <li><a href="connectivity-protocol-bindings-amqp091.html">AMQP 0.9.1</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="connectivity-protocol-bindings-amqp10.html">AMQP 1.0</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="connectivity-protocol-bindings-mqtt.html">MQTT 3.1.1</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="connectivity-protocol-bindings-mqtt5.html">MQTT 5</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="connectivity-protocol-bindings-http.html">HTTP 1.1</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="connectivity-protocol-bindings-kafka2.html">Kafka 2.x</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="connectivity-protocol-bindings-hono.html">Eclipse Hono</a></li>
+                      
+                      
+                      
+                  </ul>
+              </li>
+              
+              
+              
+              <li class="subfolders">
+                  <a href="#"><span></span>Data Transformation</a>
+                  <ul>
+                      
+                      
+                      
+                      <li><a href="connectivity-mapping.html">Payload Mapping</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="connectivity-header-mapping.html">Header Mapping</a></li>
+                      
+                      
+                      
+                  </ul>
+              </li>
+              
+              
+              
+              <li class="subfolders">
+                  <a href="#"><span></span>Security</a>
+                  <ul>
+                      
+                      
+                      
+                      <li><a href="connectivity-tls-certificates.html">TLS Certificates</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="connectivity-ssh-tunneling.html">SSH Tunneling</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="connectivity-hmac-signing.html">HMAC Signing</a></li>
+                      
+                      
+                      
+                  </ul>
+              </li>
+              
+              
+              
+              
+          </ul>
+        </li>
+    
+  
+  
+  
+    
+        <li class="subfolders">
+          <a href="#"><span></span>APIs & Interfaces</a>
+          <ul>
+              
+              
+              
+              <li><a href="httpapi-overview.html">Overview</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="httpapi-concepts.html">HTTP API Concepts</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="httpapi-search.html">HTTP API Search</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="httpapi-messages.html">HTTP API Messages</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="httpapi-protocol-bindings-websocket.html">WebSocket Binding</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="httpapi-sse.html">Server-Sent Events</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="httpapi-protocol-bindings-cloudevents.html">Cloud Events Binding</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="user-interface.html">Explorer UI</a></li>
+              
+              
+              
+              <li class="subfolders">
+                  <a href="#"><span></span>Client SDKs</a>
+                  <ul>
+                      
+                      
+                      
+                      <li><a href="client-sdk-overview.html">SDK Overview</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="client-sdk-java.html">Java SDK</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="client-sdk-javascript.html">JavaScript SDK</a></li>
+                      
+                      
+                      
+                  </ul>
+              </li>
+              
+              
+              
+              
+          </ul>
+        </li>
+    
+  
+  
+  
+    
+        <li class="subfolders">
+          <a href="#"><span></span>WoT Integration</a>
+          <ul>
+              
+              
+              
+              <li><a href="basic-wot-integration.html">WoT Overview</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="basic-wot-validation-config.html">WoT Validation Config</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="basic-wot-integration-example.html">WoT Integration Example</a></li>
+              
+              
+              
+              
+          </ul>
+        </li>
+    
+  
+  
+  
+    
+        <li class="subfolders">
+          <a href="#"><span></span>Operating & Extending</a>
+          <ul>
+              
+              
+              
+              <li><a href="installation-operating.html">Operating Ditto</a></li>
+              
+              
+              
+              <li class="subfolders">
+                  <a href="#"><span></span>Operating Details</a>
+                  <ul>
+                      
+                      
+                      
+                      <li><a href="operating-configuration.html">Configuration</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="operating-authentication.html">Authentication</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li class="active"><a href="operating-security-hardening.html">Security Hardening</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="operating-mongodb.html">MongoDB</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="operating-monitoring.html">Monitoring & Tracing</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="operating-devops.html">DevOps Commands</a></li>
+                      
+                      
+                      
+                  </ul>
+              </li>
+              
+              
+              
+              
+              
+              
+              <li><a href="installation-extending.html">Extending Ditto</a></li>
+              
+              
+              
+              
+          </ul>
+        </li>
+    
+  
+  
+  
+    
+        <li class="subfolders">
+          <a href="#"><span></span>Ditto Protocol</a>
+          <ul>
+              
+              
+              
+              <li><a href="protocol-overview.html">Overview</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="protocol-twinlive.html">Twin / Live Channel</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="protocol-specification.html">Specification</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="protocol-specification-topic.html">Topic Structure</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="protocol-specification-errors.html">Errors</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="protocol-bindings.html">Bindings</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="protocol-specification-things.html">Things Group</a></li>
+              
+              
+              
+              <li class="subfolders">
+                  <a href="#"><span></span>Commands & Events</a>
+                  <ul>
+                      
+                      
+                      
+                      <li><a href="protocol-specification-things-create-or-modify.html">Create / Modify</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-specification-things-merge.html">Merge</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-specification-things-retrieve.html">Retrieve</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-specification-things-delete.html">Delete</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-specification-acks.html">Acknowledgements</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-specification-things-search.html">Search</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-specification-things-messages.html">Messages</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-specification-streaming-subscription.html">Streaming Subscriptions</a></li>
+                      
+                      
+                      
+                  </ul>
+              </li>
+              
+              
+              
+              
+              
+              
+              <li><a href="protocol-specification-policies.html">Policies Group</a></li>
+              
+              
+              
+              <li class="subfolders">
+                  <a href="#"><span></span>Commands & Announcements</a>
+                  <ul>
+                      
+                      
+                      
+                      <li><a href="protocol-specification-policies-create-or-modify.html">Create / Modify</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-specification-policies-retrieve.html">Retrieve</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-specification-policies-delete.html">Delete</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-specification-policies-announcement.html">Announcement</a></li>
+                      
+                      
+                      
+                  </ul>
+              </li>
+              
+              
+              
+              
+              
+              
+              <li><a href="protocol-specification-connections.html">Connections Group</a></li>
+              
+              
+              
+              <li class="subfolders">
+                  <a href="#"><span></span>Announcements</a>
+                  <ul>
+                      
+                      
+                      
+                      <li><a href="protocol-specification-connections-announcement.html">Announcement</a></li>
+                      
+                      
+                      
+                  </ul>
+              </li>
+              
+              
+              
+              
+              
+              
+              <li><a href="protocol-examples.html">Examples</a></li>
+              
+              
+              
+              <li class="subfolders">
+                  <a href="#"><span></span>Things Examples</a>
+                  <ul>
+                      
+                      
+                      
+                      <li><a href="protocol-examples-creatething.html">Create a Thing</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-deletething.html">Delete a Thing</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-modifything.html">Modify a Thing</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-retrievething.html">Retrieve a Thing</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-retrievethings.html">Retrieve multiple Things</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-modifypolicyid.html">Modify Policy ID</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-createattributes.html">Create Attributes</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-deleteattributes.html">Delete Attributes</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-modifyattributes.html">Modify Attributes</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-retrieveattributes.html">Retrieve Attributes</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-createattribute.html">Create a single Attribute</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-deleteattribute.html">Delete a single Attribute</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-modifyattribute.html">Modify a single Attribute</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-retrieveattribute.html">Retrieve a single Attribute</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-createthingdefinition.html">Create a Definition</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-deletethingdefinition.html">Delete a Definition</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-modifythingdefinition.html">Modify a Definition</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-retrievethingdefinition.html">Retrieve a Definition</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-createfeatures.html">Create Features</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-deletefeatures.html">Delete Features</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-modifyfeatures.html">Modify Features</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-retrievefeatures.html">Retrieve Features</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-createfeature.html">Create a single Feature</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-deletefeature.html">Delete a single Feature</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-modifyfeature.html">Modify a single Feature</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-retrievefeature.html">Retrieve a single Feature</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-createdefinition.html">Create Feature Definition</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-deletedefinition.html">Delete Feature Definition</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-modifydefinition.html">Modify Feature Definition</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-retrievedefinition.html">Retrieve Feature Definition</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-createproperties.html">Create Feature Properties</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-deleteproperties.html">Delete Feature Properties</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-modifyproperties.html">Modify Feature Properties</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-retrieveproperties.html">Retrieve Feature Properties</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-createproperty.html">Create a single Property</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-deleteproperty.html">Delete a single Property</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-modifyproperty.html">Modify a single Property</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-retrieveproperty.html">Retrieve a single Property</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-createdesiredproperties.html">Create desired Feature Properties</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-deletedesiredproperties.html">Delete desired Feature Properties</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-modifydesiredproperties.html">Modify desired Feature Properties</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-retrievedesiredproperties.html">Retrieve desired Feature Properties</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-createdesiredproperty.html">Create a single desired Property</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-deletedesiredproperty.html">Delete a single desired Property</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-modifydesiredproperty.html">Modify a single desired Property</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-retrievedesiredproperty.html">Retrieve a single desired Property</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-errorresponses.html">Error responses</a></li>
+                      
+                      
+                      
+                  </ul>
+              </li>
+              
+              
+              
+              <li class="subfolders">
+                  <a href="#"><span></span>Merge Examples</a>
+                  <ul>
+                      
+                      
+                      
+                      <li><a href="protocol-examples-mergething.html">Merge a Thing</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-mergepolicyid.html">Merge Policy ID</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-mergeattributes.html">Merge Attributes</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-mergeattribute.html">Merge a single Attribute</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-mergethingdefinition.html">Merge a Definition</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-mergefeatures.html">Merge Features</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-mergefeature.html">Merge a single Feature</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-mergefeaturedefinition.html">Merge Feature Definition</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-mergeproperties.html">Merge Feature Properties</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-mergeproperty.html">Merge a single Property</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-mergedesiredproperties.html">Merge desired Feature Properties</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-mergedesiredproperty.html">Merge a single desired Property</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-errorresponses.html">Error responses</a></li>
+                      
+                      
+                      
+                  </ul>
+              </li>
+              
+              
+              
+              <li class="subfolders">
+                  <a href="#"><span></span>Policies Examples</a>
+                  <ul>
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-createpolicy.html">Create a Policy</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-deletepolicy.html">Delete a Policy</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-modifypolicy.html">Modify a Policy</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-retrievepolicy.html">Retrieve a Policy</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-modifypolicyentries.html">Modify entries</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-retrievepolicyentries.html">Retrieve entries</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-createpolicyentry.html">Create a single entry</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-deletepolicyentry.html">Delete a single entry</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-modifypolicyentry.html">Modify a single entry</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-retrievepolicyentry.html">Retrieve a single entry</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-modifysubjects.html">Modify subjects</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-retrievesubjects.html">Retrieve subjects</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-createsubject.html">Create a single subject</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-deletesubject.html">Delete a single subject</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-modifysubject.html">Modify a single subject</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-retrievesubject.html">Retrieve a single subject</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-modifyresources.html">Modify resources</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-retrieveresources.html">Retrieve resources</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-createresource.html">Create a single resource</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-deleteresource.html">Delete a single resource</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-modifyresource.html">Modify a single resource</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-retrieveresource.html">Retrieve a single resource</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-modifyimports.html">Modify policy imports</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-retrieveimports.html">Retrieve policy imports</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-deleteimport.html">Delete a single policy import</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-modifyimport.html">Modify a single policy import</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-retrieveimport.html">Retrieve a single policy import</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-errorresponses.html">Error responses</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-policies-announcement-subjectDeletion.html">Announcement for subject deletion</a></li>
+                      
+                      
+                      
+                  </ul>
+              </li>
+              
+              
+              
+              <li class="subfolders">
+                  <a href="#"><span></span>Connections & Search Examples</a>
+                  <ul>
+                      
+                      
+                      
+                      <li><a href="protocol-examples-connections-announcement-opened.html">Connection opened announcement</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-connections-announcement-closed.html">Connection closed announcement</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="protocol-examples-search.html">Search examples</a></li>
+                      
+                      
+                      
+                  </ul>
+              </li>
+              
+              
+              
+              
+          </ul>
+        </li>
+    
+  
+  
+  
+    
+        <li class="subfolders">
+          <a href="#"><span></span>Release Notes</a>
+          <ul>
+              
+              
+              
+              <li><a href="release_notes_392.html">3.9.2</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="release_notes_391.html">3.9.1</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="release_notes_390.html">3.9.0</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="release_notes_3812.html">3.8.12</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="release_notes_3811.html">3.8.11</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="release_notes_3810.html">3.8.10</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="release_notes_389.html">3.8.9</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="release_notes_388.html">3.8.8</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="release_notes_387.html">3.8.7</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="release_notes_386.html">3.8.6</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="release_notes_385.html">3.8.5</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="release_notes_384.html">3.8.4</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="release_notes_383.html">3.8.3</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="release_notes_382.html">3.8.2</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="release_notes_381.html">3.8.1</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="release_notes_380.html">3.8.0</a></li>
+              
+              
+              
+              <li class="subfolders">
+                  <a href="#"><span></span>Archive</a>
+                  <ul>
+                      
+                      
+                      
+                      <li><a href="release_notes_376.html">3.7.6</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_375.html">3.7.5</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_374.html">3.7.4</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_373.html">3.7.3</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_372.html">3.7.2</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_371.html">3.7.1</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_370.html">3.7.0</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_3611.html">3.6.11</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_3610.html">3.6.10</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_369.html">3.6.9</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_368.html">3.6.8</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_367.html">3.6.7</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_365.html">3.6.5</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_364.html">3.6.4</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_363.html">3.6.3</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_362.html">3.6.2</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_361.html">3.6.1</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_360.html">3.6.0</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_3512.html">3.5.12</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_3511.html">3.5.11</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_3510.html">3.5.10</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_359.html">3.5.9</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_358.html">3.5.8</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_357.html">3.5.7</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_356.html">3.5.6</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_355.html">3.5.5</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_354.html">3.5.4</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_353.html">3.5.3</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_352.html">3.5.2</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_351.html">3.5.1</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_350.html">3.5.0</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_345.html">3.4.5</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_344.html">3.4.4</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_343.html">3.4.3</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_342.html">3.4.2</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_341.html">3.4.1</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_340.html">3.4.0</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_337.html">3.3.7</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_336.html">3.3.6</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_335.html">3.3.5</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_334.html">3.3.4</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_333.html">3.3.3</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_332.html">3.3.2</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_330.html">3.3.0</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_321.html">3.2.1</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_320.html">3.2.0</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_312.html">3.1.2</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_311.html">3.1.1</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_310.html">3.1.0</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_300.html">3.0.0</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_242.html">2.4.2</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_241.html">2.4.1</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_240.html">2.4.0</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_232.html">2.3.2</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_231.html">2.3.1</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_230.html">2.3.0</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_222.html">2.2.2</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_221.html">2.2.1</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_220.html">2.2.0</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_213.html">2.1.3</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_212.html">2.1.2</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_211.html">2.1.1</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_210.html">2.1.0</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_201.html">2.0.1</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_200.html">2.0.0</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_151.html">1.5.1</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_150.html">1.5.0</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_140.html">1.4.0</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_130.html">1.3.0</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_121.html">1.2.1</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_120.html">1.2.0</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_115.html">1.1.5</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_113.html">1.1.3</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_112.html">1.1.2</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_111.html">1.1.1</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_110.html">1.1.0</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_100.html">1.0.0</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_090.html">0.9.0</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_080.html">0.8.0</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_100-M2.html">1.0.0-M2</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_100-M1a.html">1.0.0-M1a</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_090-M2.html">0.9.0-M2</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_090-M1.html">0.9.0-M1</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_080-M3.html">0.8.0-M3</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_080-M2.html">0.8.0-M2</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_080-M1.html">0.8.0-M1</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_030-M2.html">0.3.0-M2</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_030-M1.html">0.3.0-M1</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_020-M1.html">0.2.0-M1</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_010-M3.html">0.1.0-M3</a></li>
+                      
+                      
+                      
+                      
+                      
+                      <li><a href="release_notes_010-M1.html">0.1.0-M1</a></li>
+                      
+                      
+                      
+                  </ul>
+              </li>
+              
+              
+              
+              
+          </ul>
+        </li>
+    
+  
+  
+  
+    
+        <li class="subfolders">
+          <a href="#"><span></span>Resources</a>
+          <ul>
+              
+              
+              
+              <li><a href="glossary.html">Glossary</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="presentations.html">Presentations & Talks</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="feedback.html">Feedback & Community</a></li>
+              
+              
+              
+              
+          </ul>
+        </li>
+    
+  
+  
+  
+    
+         <p class="external">
+             <a href="#" id="collapseAll">Collapse All</a> | <a href="#" id="expandAll">Expand All</a>
+         </p>
+    
+</ul>
+
+<!-- this highlights the active parent class in the sidebar. this is critical so that the parent expands when you're viewing a page. This must appear below the sidebar code above. Otherwise, if placed inside customscripts.js, the script runs before the sidebar code runs and the class never gets inserted.-->
+<script>$("li.active").parents('li').toggleClass("active");
+</script>
+
+            </div>
+            
+        
+
+        <!-- Content Column -->
+        <div class="col-md-9" id="tg-sb-content" data-pagefind-body>
+            <div class="post-header">
+   <h1 class="post-title-main">Operating - Security Hardening</h1>
+</div>
+
+
+
+<div class="post-content">
+
+   
+
+    
+    
+<!-- this handles the automatic toc. use ## for subheads to auto-generate the on-page minitoc. if you use html tags, you must supply an ID for the heading element in order for it to appear in the minitoc. -->
+<script>
+$( document ).ready(function() {
+  // Handler for .ready() called.
+
+$('#toc').toc({ minimumHeaders: 0, listType: 'ul', showSpeed: 0, headers: 'h2,h3,h4' });
+
+/* this offset helps account for the space taken up by the floating toolbar. */
+$('#toc').on('click', 'a', function() {
+  var target = $(this.getAttribute('href'))
+    , scroll_target = target.offset().top
+
+  $(window).scrollTop(scroll_target - 10);
+  return false
+})
+  
+});
+</script>
+
+<div id="toc"></div>
+
+    
+
+
+    
+    
+
+    <a target="_blank" href="https://github.com/eclipse/ditto/edit/master/documentation/src/main/resources/pages/ditto/operating-security-hardening.md" class="btn btn-default githubEditButton" role="button"><i class="fa fa-github fa-lg"></i> Edit this page</a>
+
+    
+    
+
+
+    
+
+  <p>This guide collects the configuration and deployment steps required to run Eclipse Ditto securely in
+production.</p>
+
+<div class="bs-callout bs-callout-warning"><strong>TL;DR</strong>: Ditto’s default Docker Compose and Helm settings are tuned for getting started quickly, <strong>not</strong> for production. The most important rule is to keep the gateway behind a correctly configured trust boundary (reverse proxy + network isolation), enforce real authentication, and replace all sample credentials.</div>
+
+<h2 id="shared-responsibility">Shared responsibility</h2>
+
+<p>Ditto’s security model deliberately delegates parts of the trust boundary to the operator. These are
+not bugs, but each becomes a real risk if the deployment assumptions are not met — the sections
+below make those assumptions explicit and tell you how to satisfy them:</p>
+
+<ul>
+  <li>The gateway trusts a <a href="operating-authentication.html#pre-authentication">pre-authenticated</a> header
+<em>because</em> it is meant to run behind a reverse proxy that sets and protects that header.</li>
+  <li>DevOps and status endpoints are protected by credentials that you are expected to change.</li>
+  <li>JSON Web Tokens are stateless, so a token remains valid until it expires unless you keep lifetimes
+short.</li>
+</ul>
+
+<h2 id="threat-model-in-one-paragraph">Threat model in one paragraph</h2>
+
+<p>Ditto assumes a single, well-defined ingress that terminates TLS and over which every API caller is
+authenticated — either by a reverse proxy that owns the identity (pre-authentication) or by the
+gateway itself validating a JWT (OIDC). See <a href="#1-trust-boundary-choose-one-of-two-models">section 1</a>
+for the two models. Everything inside the cluster is treated as trusted. If an attacker can reach the
+Ditto gateway with a spoofable pre-auth header, the DevOps endpoint, or the inter-service Pekko
+cluster <em>without</em> passing through that authenticated ingress, the model is broken. The checklist
+below is mostly about keeping that boundary intact.</p>
+
+<h2 id="hardening-checklist">Hardening checklist</h2>
+
+<div class="alert alert-info" role="alert"><i class="fa fa-info-circle"></i> <b>Note:</b> One item per section below. Each links to the detailed guidance.</div>
+
+<ol>
+  <li><code class="language-plaintext highlighter-rouge">[ ]</code> <a href="#1-trust-boundary-choose-one-of-two-models">Trust boundary</a> — pick one model (header-sanitising proxy <strong>with</strong> pre-authentication, or pre-authentication <strong>disabled</strong> with the gateway enforcing OIDC/JWT) and apply it consistently.</li>
+  <li><code class="language-plaintext highlighter-rouge">[ ]</code> <a href="#2-reverse-proxy-configuration">Reverse proxy</a> — if you use a proxy, authenticate every request, <strong>strip/overwrite</strong> the <code class="language-plaintext highlighter-rouge">x-ditto-pre-authenticated</code> header, and replace the sample <code class="language-plaintext highlighter-rouge">nginx.htpasswd</code> credentials (default user <code class="language-plaintext highlighter-rouge">ditto</code>).</li>
+  <li><code class="language-plaintext highlighter-rouge">[ ]</code> <a href="#3-network-isolation-kubernetes">Network isolation</a> — in Kubernetes, restrict pod-to-pod traffic with <code class="language-plaintext highlighter-rouge">NetworkPolicy</code> so only the ingress reaches the gateway, and the Pekko / DevOps / status ports stay internal.</li>
+  <li><code class="language-plaintext highlighter-rouge">[ ]</code> <a href="#4-authentication">Authentication</a> — prefer OpenID Connect (JWT) with short token lifetimes for end users; remember the client must refresh WebSocket tokens before expiry.</li>
+  <li><code class="language-plaintext highlighter-rouge">[ ]</code> <a href="#5-devops-and-status-endpoints">DevOps &amp; status endpoints</a> — secure with OAuth2 (first choice, else rotated basic-auth secrets), keep them off public ingress, and keep secrets out of retrievable config.</li>
+  <li><code class="language-plaintext highlighter-rouge">[ ]</code> <a href="#6-error-responses-and-information-disclosure">Error responses</a> — keep production log and error verbosity appropriate (stack traces are already suppressed in API responses) and strip version/topology headers at the proxy.</li>
+  <li><code class="language-plaintext highlighter-rouge">[ ]</code> <a href="#7-policy-design">Policy design</a> — follow least-privilege; use <code class="language-plaintext highlighter-rouge">importable = never</code> for entries that must never be shared and review <code class="language-plaintext highlighter-rouge">WRITE</code> on <code class="language-plaintext highlighter-rouge">policy:/</code>.</li>
+  <li><code class="language-plaintext highlighter-rouge">[ ]</code> <a href="#8-transport-security-tls">Transport security</a> — terminate TLS at the ingress and use TLS for MongoDB and connectivity targets.</li>
+  <li><code class="language-plaintext highlighter-rouge">[ ]</code> <a href="#9-rate-limiting-and-abuse-protection">Rate limiting</a> — enforce rate limiting at the proxy for <code class="language-plaintext highlighter-rouge">/devops</code>, <code class="language-plaintext highlighter-rouge">/status</code>, and the authenticated API (Ditto has no built-in brute-force protection).</li>
+</ol>
+
+<h3 id="1-trust-boundary-choose-one-of-two-models">1. Trust boundary: choose one of two models</h3>
+
+<p>The gateway’s authentication depends on whether <a href="operating-authentication.html#pre-authentication">pre-authentication</a>
+is enabled. There are two safe configurations; pick one and apply it consistently.</p>
+
+<h4 id="model-a-reverse-proxy-with-pre-authentication">Model A: reverse proxy with pre-authentication</h4>
+
+<p>The gateway runs <strong>behind</strong> a reverse proxy that owns the user’s identity. In the default
+<code class="language-plaintext highlighter-rouge">deployment/docker/docker-compose.yml</code> the gateway runs with <code class="language-plaintext highlighter-rouge">ENABLE_PRE_AUTHENTICATION=true</code>, which
+means it trusts the value of the <code class="language-plaintext highlighter-rouge">x-ditto-pre-authenticated</code> header. This is safe <strong>only</strong> when:</p>
+
+<ul>
+  <li>the gateway’s HTTP port is not reachable from outside the deployment, and</li>
+  <li>the proxy in front of it always sets the header from a verified identity and <strong>removes any
+client-supplied value</strong> of that header.</li>
+</ul>
+
+<p>If you expose the gateway directly <em>while pre-authentication is enabled</em>, any client can impersonate
+any subject by sending the header themselves. The code carries an explicit warning about this in
+<code class="language-plaintext highlighter-rouge">PreAuthenticatedAuthenticationProvider</code>. So with this model: publish only the reverse proxy port and
+keep the gateway on an internal network.</p>
+
+<h4 id="model-b-gateway-enforced-oidc-pre-authentication-disabled">Model B: gateway-enforced OIDC, pre-authentication disabled</h4>
+
+<p>Alternatively, <strong>disable</strong> pre-authentication (<code class="language-plaintext highlighter-rouge">ENABLE_PRE_AUTHENTICATION=false</code>) and let the gateway
+authenticate callers itself via <a href="operating-authentication.html#openid-connect">OpenID Connect</a>. When
+pre-authentication is disabled the gateway does not add the pre-auth provider to its authentication
+chain at all, so the <code class="language-plaintext highlighter-rouge">x-ditto-pre-authenticated</code> header is <strong>ignored</strong> — there is no spoofable
+header. Every request must then carry a valid <code class="language-plaintext highlighter-rouge">Authorization: Bearer &lt;JWT&gt;</code>, which the gateway
+validates against the configured OIDC provider.</p>
+
+<p>This makes it safe to expose the gateway more directly (for example behind a plain TLS-terminating
+load balancer that does <em>not</em> perform authentication), because authentication is enforced by the
+gateway rather than delegated to the proxy. You still want to:</p>
+
+<ul>
+  <li>terminate TLS in front of the gateway (see <a href="#8-transport-security-tls">section 8</a>), and</li>
+  <li>keep the <a href="#5-devops-and-status-endpoints">DevOps and status endpoints</a> off the public ingress.</li>
+</ul>
+
+<div class="alert alert-info" role="alert"><i class="fa fa-info-circle"></i> <b>Note:</b> Do <strong>not</strong> mix the models: if pre-authentication is enabled, never expose the gateway without a header-sanitising proxy in front of it.</div>
+
+<h3 id="2-reverse-proxy-configuration">2. Reverse proxy configuration</h3>
+
+<p>The bundled nginx configuration (<code class="language-plaintext highlighter-rouge">deployment/docker/nginx.conf</code>) already enforces HTTP Basic Auth
+before forwarding to the gateway:</p>
+
+<div class="language-nginx highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">auth_basic</span>                    <span class="s">"Authentication</span> <span class="s">required"</span><span class="p">;</span>
+<span class="k">auth_basic_user_file</span>          <span class="s">nginx.htpasswd</span><span class="p">;</span>
+<span class="k">...</span>
+<span class="s">proxy_set_header</span>              <span class="s">x-ditto-pre-authenticated</span> <span class="s">"nginx:</span>$<span class="p">{</span><span class="kn">remote_user</span><span class="err">}</span><span class="s">"</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>When you adapt this for production, make sure the proxy:</p>
+
+<ul>
+  <li><strong>Authenticates</strong> every request to the API (<code class="language-plaintext highlighter-rouge">/api</code>, <code class="language-plaintext highlighter-rouge">/ws</code>, and any custom routes).</li>
+  <li><strong>Overwrites</strong> <code class="language-plaintext highlighter-rouge">x-ditto-pre-authenticated</code> on every request so a client cannot inject its own
+value. Setting <code class="language-plaintext highlighter-rouge">proxy_set_header</code> as above replaces any incoming header — do not forward a
+client-supplied value.</li>
+  <li>Terminates TLS (see <a href="#8-transport-security-tls">section 8</a>).</li>
+</ul>
+
+<h4 id="replace-the-sample-credentials">Replace the sample credentials</h4>
+
+<p>The bundled <code class="language-plaintext highlighter-rouge">deployment/docker/nginx.htpasswd</code> ships with a sample user (<code class="language-plaintext highlighter-rouge">ditto</code>) and a well-known
+password. <strong>This is for local development only.</strong> Generate your own credentials, or remove basic auth
+entirely in favour of OIDC.</p>
+
+<h3 id="3-network-isolation-kubernetes">3. Network isolation (Kubernetes)</h3>
+
+<p>Ditto’s five services communicate over a Pekko cluster with <strong>no authentication between services</strong> —
+the cluster network is assumed to be trusted. In Kubernetes, enforce that assumption with
+<code class="language-plaintext highlighter-rouge">NetworkPolicy</code> resources so that:</p>
+
+<ul>
+  <li>only the reverse proxy / ingress can reach the gateway’s HTTP port,</li>
+  <li>only Ditto pods can join the Pekko remoting / management ports, and</li>
+  <li>the DevOps and status ports are not reachable from general workloads.</li>
+</ul>
+
+<p>Without NetworkPolicies, any pod in the cluster can reach the gateway and — if pre-authentication
+is enabled — spoof the identity header. Treat NetworkPolicies as mandatory for multi-tenant or
+shared clusters.</p>
+
+<h3 id="4-authentication">4. Authentication</h3>
+
+<p>See <a href="operating-authentication.html">Operating - Authentication</a> for full configuration. For
+production:</p>
+
+<ul>
+  <li><strong>Prefer OpenID Connect (JWT)</strong> from a provider such as Keycloak for end-user traffic. Ditto
+validates the token signature against the provider’s published keys (JWKS), selecting the key by
+the token’s <code class="language-plaintext highlighter-rouge">kid</code> and enforcing the key’s algorithm — <code class="language-plaintext highlighter-rouge">alg: none</code> and HMAC-with-public-key
+confusion attacks are rejected by the underlying library.</li>
+  <li>Configure the expected <code class="language-plaintext highlighter-rouge">issuer</code> and validate the audience where applicable.</li>
+  <li>Use <strong>pre-authentication only</strong> when a trustworthy proxy owns the identity (see section 1).</li>
+</ul>
+
+<h4 id="token-lifetime">Token lifetime</h4>
+
+<p>Ditto enforces JWT expiry, including terminating long-lived
+<a href="httpapi-protocol-bindings-websocket.html">WebSocket</a> sessions when the token expires
+(<code class="language-plaintext highlighter-rouge">GatewayWebsocketSessionExpiredException</code>), and supports in-band token refresh on WebSocket
+connections. Note that Ditto does <strong>not</strong> send a warning before a token expires — the client must
+track its own token lifetime and send a refreshed JWT over the WebSocket <em>before</em> expiry, otherwise
+the connection is closed the moment the token expires. However, because JWTs are stateless, <strong>a token
+that is revoked before its expiry is not detected mid-session</strong> — this is inherent to JWTs, not
+specific to Ditto. Mitigate it by:</p>
+
+<ul>
+  <li>issuing <strong>short-lived</strong> access tokens, and</li>
+  <li>relying on the client to refresh, so revocation takes effect within one token lifetime.</li>
+</ul>
+
+<h3 id="5-devops-and-status-endpoints">5. DevOps and status endpoints</h3>
+
+<p>The <a href="operating-devops.html">DevOps API</a> can change log levels, retrieve runtime configuration, and
+send piggyback commands to internal actors. It is <strong>secured by default</strong>, but with a well-known
+sample password.</p>
+
+<ul>
+  <li><strong>Prefer OAuth2</strong> as the first choice for both the DevOps and the status endpoints
+(<code class="language-plaintext highlighter-rouge">devops-authentication-method = "oauth2"</code> and <code class="language-plaintext highlighter-rouge">status-authentication-method = "oauth2"</code>). With an
+OIDC provider you get short-lived tokens, central revocation, and per-operator identity — so
+when an administrator should no longer have access you revoke it at the provider, with nothing to
+rotate across the Ditto deployment. Basic auth, by contrast, is a single shared secret that must be
+changed and redistributed every time anyone who knew it loses access.</li>
+  <li>If you must use basic auth, treat the password as a shared secret: change the DevOps password
+(default <code class="language-plaintext highlighter-rouge">foobar</code>) via <code class="language-plaintext highlighter-rouge">DEVOPS_PASSWORD</code> / configuration and the status endpoint password, and
+rotate both whenever an operator leaves or the secret may have leaked.</li>
+  <li><strong>Do not expose</strong> <code class="language-plaintext highlighter-rouge">/devops</code> or <code class="language-plaintext highlighter-rouge">/status</code> through the public ingress regardless of the
+authentication method. Keep them on an internal, operator-only path.</li>
+</ul>
+
+<p>DevOps and piggyback commands are reachable <strong>only</strong> through this HTTP <code class="language-plaintext highlighter-rouge">/devops</code> endpoint. The
+user-facing <a href="httpapi-protocol-bindings-websocket.html">WebSocket</a> (<code class="language-plaintext highlighter-rouge">/ws/2</code>) accepts only twin/live
+signals and policy announcements (plus in-band JWT refresh) — it cannot carry DevOps or
+administrative commands — so securing <code class="language-plaintext highlighter-rouge">/devops</code> and <code class="language-plaintext highlighter-rouge">/status</code> fully covers the administrative
+surface.</p>
+
+<h4 id="keep-secrets-out-of-retrievable-configuration">Keep secrets out of retrievable configuration</h4>
+
+<p><code class="language-plaintext highlighter-rouge">/devops/config</code> (the <code class="language-plaintext highlighter-rouge">RetrieveConfig</code> command) returns the live service configuration. If you place
+secrets (database passwords, connection credentials, signing keys) directly in the HOCON
+configuration, an operator with DevOps access can read them. Prefer injecting secrets via mounted
+files or a secrets manager and referencing them indirectly, and restrict DevOps access to trusted
+operators.</p>
+
+<h3 id="6-error-responses-and-information-disclosure">6. Error responses and information disclosure</h3>
+
+<p>Ditto error responses are intentionally minimal: they contain only <code class="language-plaintext highlighter-rouge">status</code>, <code class="language-plaintext highlighter-rouge">error</code>, <code class="language-plaintext highlighter-rouge">message</code>,
+<code class="language-plaintext highlighter-rouge">description</code>, and an optional <code class="language-plaintext highlighter-rouge">href</code>. <strong>Stack traces are never included</strong> in the HTTP response, and
+client-error (4xx) exceptions are constructed without capturing a stack trace at all. No additional
+configuration is required to suppress stack traces from API responses.</p>
+
+<p>For defence in depth, still:</p>
+
+<ul>
+  <li>keep production log levels at <code class="language-plaintext highlighter-rouge">INFO</code> or higher to avoid logging sensitive payloads,</li>
+  <li>avoid echoing request bodies in custom proxy error pages, and</li>
+  <li>suppress version- and topology-revealing response headers at the proxy (for example strip or
+overwrite <code class="language-plaintext highlighter-rouge">Server</code> and any <code class="language-plaintext highlighter-rouge">X-</code>-prefixed version headers) so responses do not advertise the Ditto
+version or internal service names for reconnaissance.</li>
+</ul>
+
+<h3 id="7-policy-design">7. Policy design</h3>
+
+<p>Ditto’s <a href="basic-policy.html">policy import</a> mechanism is access-controlled: a subject can only import
+policy entries it already has <code class="language-plaintext highlighter-rouge">READ</code> access to, and a source policy controls what may be imported via
+the entry’s <code class="language-plaintext highlighter-rouge">importable</code> setting (<code class="language-plaintext highlighter-rouge">implicit</code>, <code class="language-plaintext highlighter-rouge">explicit</code>, <code class="language-plaintext highlighter-rouge">never</code>). Importing therefore <strong>cannot be
+used to escalate privileges</strong> beyond what the subject already holds. Still, follow least-privilege:</p>
+
+<ul>
+  <li>grant the narrowest permissions necessary,</li>
+  <li>use <code class="language-plaintext highlighter-rouge">importable = never</code> for entries that should never be shared, and</li>
+  <li>review policies that grant <code class="language-plaintext highlighter-rouge">WRITE</code> on the <code class="language-plaintext highlighter-rouge">policy:/</code> resource, since that allows editing the
+policy itself.</li>
+</ul>
+
+<h3 id="8-transport-security-tls">8. Transport security (TLS)</h3>
+
+<ul>
+  <li>Terminate TLS at the reverse proxy; redirect plain HTTP to HTTPS.</li>
+  <li>Use TLS for the <a href="operating-mongodb.html">MongoDB</a> connection.</li>
+  <li>Use TLS (and credentials) for all <a href="connectivity-overview.html">connectivity</a> targets and sources.</li>
+</ul>
+
+<h3 id="9-rate-limiting-and-abuse-protection">9. Rate limiting and abuse protection</h3>
+
+<p>Ditto does <strong>not</strong> include brute-force protection for failed authentication attempts — basic-auth
+and JWT validation simply succeed or fail per request, with no lockout or attempt throttling. Enforce
+rate limiting at the reverse proxy / ingress, in particular for:</p>
+
+<ul>
+  <li>the <code class="language-plaintext highlighter-rouge">/devops</code> and <code class="language-plaintext highlighter-rouge">/status</code> endpoints (limits brute-forcing of basic-auth credentials and reduces
+the value of any differential / timing-based credential enumeration), and</li>
+  <li>the authenticated API and WebSocket upgrade endpoints generally.</li>
+</ul>
+
+<p>Ditto does provide optional, per-connection <strong>WebSocket and SSE throttling</strong> that you can enable to
+cap the message rate of an established stream (<code class="language-plaintext highlighter-rouge">ditto.gateway.websocket.throttling</code> and
+<code class="language-plaintext highlighter-rouge">ditto.gateway.sse.throttling</code>; both are <strong>disabled by default</strong>, with a default of 100 messages per
+second when enabled). These protect against a single noisy client, but are not a substitute for
+proxy-level rate limiting of authentication and connection attempts.</p>
+
+<h2 id="summary">Summary</h2>
+
+<p>The default Docker Compose and Helm settings are tuned for getting started quickly, not for
+production. If you keep the gateway behind an authenticating, header-sanitising proxy, isolate the
+cluster network, rotate all sample credentials, restrict the DevOps endpoint, and keep token
+lifetimes short, your deployment is in good shape. Use the <a href="#hardening-checklist">checklist</a> above as
+a pre-production gate.</p>
+
+
+    <div class="tags">
+        
+        <b>Tags: </b>
+        
+        
+        
+        <a href="tag_installation.html" class="btn btn-default navbar-btn cursorNorm" role="button">installation</a>
+        
+        
+        
+    </div>
+
+</div>
+
+<hr class="shaded"/>
+
+<footer>
+            <div class="row">
+                <div class="col-lg-12 footer">
+                    <div class="logo">
+                        <a href="https://eclipse.org"><img src="images/eclipse_foundation_logo.svg" alt="Eclipse logo"/></a>
+                    </div>
+                    <p class="notice">
+                        &copy;2026 Eclipse Ditto™.
+                         Site last generated: Jun 25, 2026 <br />
+                    </p>
+                    <div class="quickLinks">
+                        <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">
+                            &gt; Privacy Policy
+                        </a>
+                        <a href="https://www.eclipse.org/legal/termsofuse.php" target="_blank">
+                            &gt; Terms of Use
+                        </a>
+                        <a href="https://www.eclipse.org/legal/copyright.php" target="_blank">
+                            &gt; Copyright Agent
+                        </a>
+                        <a href="https://www.eclipse.org/legal" target="_blank">
+                            &gt; Legal
+                        </a>
+                        <a href="https://www.eclipse.org/legal/epl-2.0/" target="_blank">
+                            &gt; License
+                        </a>
+                        <a href="https://eclipse.org/security" target="_blank">
+                            &gt; Report a Vulnerability
+                        </a>
+                    </div>
+                </div>
+            </div>
+</footer>
+
+
+        </div>
+    <!-- /.row -->
+</div>
+<!-- /.container -->
+</div>
+<!-- /#main -->
+    </div>
+
+</body>
+</html>
