@@ -117,6 +117,7 @@ For commands, events, and messages, the `{action}` segment further specifies the
 - `modify` -- replace an entity or sub-resource
 - `merge` -- partially update using JSON Merge Patch
 - `delete` -- remove an entity or sub-resource
+- `migrate` -- migrate a thing's definition
 
 ### Event criterion actions
 
@@ -124,6 +125,7 @@ For commands, events, and messages, the `{action}` segment further specifies the
 - `modified` -- an entity or sub-resource was replaced
 - `merged` -- an entity or sub-resource was partially updated
 - `deleted` -- an entity or sub-resource was removed
+- `migrated` -- a thing's definition was migrated
 
 ### Messages criterion actions
 
