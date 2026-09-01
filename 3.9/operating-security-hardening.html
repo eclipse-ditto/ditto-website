@@ -1717,6 +1717,13 @@
               
               
               
+              <li><a href="release_notes_397.html">3.9.7</a></li>
+              
+              
+              
+              
+              
+              
               <li><a href="release_notes_396.html">3.9.6</a></li>
               
               
@@ -2555,6 +2562,7 @@ below is mostly about keeping that boundary intact.</p>
   <li><code class="language-plaintext highlighter-rouge">[ ]</code> <a href="#7-policy-design">Policy design</a> — follow least-privilege; use <code class="language-plaintext highlighter-rouge">importable = never</code> for entries that must never be shared and review <code class="language-plaintext highlighter-rouge">WRITE</code> on <code class="language-plaintext highlighter-rouge">policy:/</code>.</li>
   <li><code class="language-plaintext highlighter-rouge">[ ]</code> <a href="#8-transport-security-tls">Transport security</a> — terminate TLS at the ingress and use TLS for MongoDB and connectivity targets.</li>
   <li><code class="language-plaintext highlighter-rouge">[ ]</code> <a href="#9-rate-limiting-and-abuse-protection">Rate limiting</a> — enforce rate limiting at the proxy for <code class="language-plaintext highlighter-rouge">/devops</code>, <code class="language-plaintext highlighter-rouge">/status</code>, and the authenticated API (Ditto has no built-in brute-force protection).</li>
+  <li><code class="language-plaintext highlighter-rouge">[ ]</code> <a href="#10-outbound-http-requests-ssrf">Outbound HTTP</a> — restrict which hosts the things and connectivity services may call outbound, and back it with network-level egress controls.</li>
 </ol>
 
 <h3 id="1-trust-boundary-choose-one-of-two-models">1. Trust boundary: choose one of two models</h3>
@@ -2763,12 +2771,95 @@ cap the message rate of an established stream (<code class="language-plaintext h
 second when enabled). These protect against a single noisy client, but are not a substitute for
 proxy-level rate limiting of authentication and connection attempts.</p>
 
+<h3 id="10-outbound-http-requests-ssrf">10. Outbound HTTP requests (SSRF)</h3>
+
+<p>Two Ditto features cause a service to issue outbound HTTP requests to a host that is not fixed in the
+deployment’s own configuration:</p>
+
+<ul>
+  <li>the <strong>things</strong> service fetches a <a href="basic-wot-integration.html">WoT ThingModel</a> when a Thing or
+Feature <code class="language-plaintext highlighter-rouge">definition</code> contains an <code class="language-plaintext highlighter-rouge">http(s)://</code> URL — the URL comes from the API caller, and
+the <code class="language-plaintext highlighter-rouge">tm:extends</code>, <code class="language-plaintext highlighter-rouge">tm:ref</code> and <code class="language-plaintext highlighter-rouge">tm:submodel</code> links of the fetched model are followed as well;</li>
+  <li>the <strong>connectivity</strong> service connects to the targets of configured connections.</li>
+</ul>
+
+<p>Because these requests originate inside the cluster, an unrestricted target host would let a caller
+reach internal endpoints that are not exposed externally — cloud instance-metadata services,
+the Kubernetes API server, internal admin interfaces — which is a classic Server-Side Request
+Forgery (SSRF) exposure.</p>
+
+<p>Both services validate the target host before connecting, using the same configuration keys and the
+same semantics:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th> </th>
+      <th>things (WoT)</th>
+      <th>connectivity</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Configuration path</td>
+      <td><code class="language-plaintext highlighter-rouge">ditto.things.wot.http.security</code></td>
+      <td><code class="language-plaintext highlighter-rouge">ditto.connectivity.connection</code></td>
+    </tr>
+    <tr>
+      <td>Active by default</td>
+      <td>yes (<code class="language-plaintext highlighter-rouge">enabled = true</code>)</td>
+      <td><strong>no</strong> — <code class="language-plaintext highlighter-rouge">blocked-hostnames</code> is empty, which disables validation entirely</td>
+    </tr>
+    <tr>
+      <td>Keys</td>
+      <td><code class="language-plaintext highlighter-rouge">allowed-hostnames</code>, <code class="language-plaintext highlighter-rouge">blocked-hostnames</code>, <code class="language-plaintext highlighter-rouge">blocked-subnets</code>, <code class="language-plaintext highlighter-rouge">blocked-host-regex</code></td>
+      <td>same</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>Understand what the allow-list does.</strong> In both services the validation is a <em>block</em>-list: hosts
+resolving to loopback, link-local (covering the cloud metadata address <code class="language-plaintext highlighter-rouge">169.254.169.254</code>),
+site-local, IPv6 unique-local and multicast or wildcard addresses are rejected, and
+<code class="language-plaintext highlighter-rouge">allowed-hostnames</code> <em>overrides</em> those checks for deployments that intentionally serve ThingModels or
+run connection targets on an internal host. It is <strong>not</strong> a gate: adding entries to
+<code class="language-plaintext highlighter-rouge">allowed-hostnames</code> does not restrict anything, and any host that does not resolve into a blocked
+range remains reachable. In particular this means an internal service that lives on
+publicly-routable address space is not covered by the address-class checks.</p>
+
+<p>Recommended steps:</p>
+
+<ul>
+  <li><strong>Enable connectivity’s validation.</strong> It is inert until <code class="language-plaintext highlighter-rouge">blocked-hostnames</code> is non-empty; setting
+it to <code class="language-plaintext highlighter-rouge">localhost</code> is enough to activate the built-in address-class checks
+(<code class="language-plaintext highlighter-rouge">CONNECTIVITY_CONNECTION_BLOCKED_HOSTNAMES</code>).</li>
+  <li><strong>Add your own ranges.</strong> Use <code class="language-plaintext highlighter-rouge">blocked-subnets</code> for internal networks the address classes do not
+cover, and <code class="language-plaintext highlighter-rouge">blocked-host-regex</code> for internal DNS suffixes, e.g. <code class="language-plaintext highlighter-rouge">^.*\\.svc\\.cluster\\.local$</code>.</li>
+  <li><strong>Restrict which ThingModel URLs may be used at all.</strong> The
+<a href="installation-operating.html#restricting-entity-creation">entity creation restriction</a> accepts
+wildcard patterns for <code class="language-plaintext highlighter-rouge">thing-definitions</code>, which is the closest thing to a true allow-list of
+ThingModel registries. Note that it applies to <em>creation</em> only, so it does not cover
+<code class="language-plaintext highlighter-rouge">migrateDefinition</code> or the <code class="language-plaintext highlighter-rouge">definition</code> modification endpoints — those are governed by the
+host validation above and by <code class="language-plaintext highlighter-rouge">WRITE</code> permission on the affected Thing.</li>
+  <li><strong>Turn the feature off if unused.</strong> If your deployment does not use the WoT integration, disable
+it (<code class="language-plaintext highlighter-rouge">DITTO_DEVOPS_FEATURE_WOT_INTEGRATION_ENABLED=false</code>) rather than relying on host validation.</li>
+</ul>
+
+<div class="alert alert-info" role="alert"><i class="fa fa-info-circle"></i> <b>Note:</b> Host validation resolves the target’s hostname to decide whether to
+allow the request, while the request itself resolves the hostname again independently. For hostnames
+whose DNS is attacker-controlled, the two lookups can in principle return different addresses (DNS
+rebinding), which a hostname-based check cannot fully prevent; literal-IP targets are always
+validated. Treat the checks above as one layer and combine them with network-level egress controls
+— see <a href="#3-network-isolation-kubernetes">Network isolation</a> — that stop the things and
+connectivity pods from reaching internal address ranges and the metadata endpoint at all.</div>
+
 <h2 id="summary">Summary</h2>
 
 <p>The default Docker Compose and Helm settings are tuned for getting started quickly, not for
 production. If you keep the gateway behind an authenticating, header-sanitising proxy, isolate the
-cluster network, rotate all sample credentials, restrict the DevOps endpoint, and keep token
-lifetimes short, your deployment is in good shape. Use the <a href="#hardening-checklist">checklist</a> above as
+cluster network, rotate all sample credentials, restrict the DevOps endpoint, keep token lifetimes
+short, and constrain outbound requests from the things and connectivity services, your deployment is
+in good shape. Use the <a href="#hardening-checklist">checklist</a> above as
 a pre-production gate.</p>
 
 
@@ -2796,7 +2887,7 @@ a pre-production gate.</p>
                     </div>
                     <p class="notice">
                         &copy;2026 Eclipse Ditto™.
-                         Site last generated: Jul 29, 2026 <br />
+                         Site last generated: Sep 1, 2026 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

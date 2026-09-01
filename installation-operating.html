@@ -1717,6 +1717,13 @@
               
               
               
+              <li><a href="release_notes_397.html">3.9.7</a></li>
+              
+              
+              
+              
+              
+              
               <li><a href="release_notes_396.html">3.9.6</a></li>
               
               
@@ -1760,6 +1767,13 @@
               
               
               <li><a href="release_notes_390.html">3.9.0</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="release_notes_3813.html">3.8.13</a></li>
               
               
               
@@ -3112,6 +3126,67 @@ entities (things/policies) and no-one other:</p>
 </code></pre></div></div>
 
 <p>These system properties would have to be configured for the “things” and “policies” services.</p>
+
+<h2 id="restricting-wot-thingmodel-fetching">Restricting WoT ThingModel fetching</h2>
+
+<p>When a Thing or Feature <code class="language-plaintext highlighter-rouge">definition</code> contains an <code class="language-plaintext highlighter-rouge">http(s)://</code> URL, the Ditto <strong>things</strong> service fetches the referenced
+<a href="basic-wot-integration.html">WoT (Web of Things) ThingModel</a> from that URL (and, transitively, any <code class="language-plaintext highlighter-rouge">tm:extends</code>,
+<code class="language-plaintext highlighter-rouge">tm:ref</code> and <code class="language-plaintext highlighter-rouge">tm:submodel</code> links it contains). Since this fetch originates from inside the cluster, an unrestricted
+fetch would allow Server-Side Request Forgery (SSRF) against internal infrastructure (e.g. cloud instance-metadata
+endpoints, internal admin UIs, the Kubernetes API).</p>
+
+<p>Since Ditto <em>3.9.7</em>, the things service therefore validates the target host of every ThingModel fetch (including each
+redirect target) and, by default, <strong>blocks</strong> hosts resolving to loopback, link-local (e.g. the cloud metadata address
+<code class="language-plaintext highlighter-rouge">169.254.169.254</code>), site-local, IPv6 unique-local (<code class="language-plaintext highlighter-rouge">fc00::/7</code>, e.g. the IPv6 metadata address <code class="language-plaintext highlighter-rouge">fd00:ec2::254</code>),
+multicast and wildcard addresses. The number of HTTP redirects to follow is bounded.</p>
+
+<p>Note that Java’s address classification only covers the <em>deprecated</em> <code class="language-plaintext highlighter-rouge">fec0::/10</code> site-local prefix, so the IPv6
+unique-local range is checked explicitly. The carrier-grade NAT range <code class="language-plaintext highlighter-rouge">100.64.0.0/10</code> (RFC 6598) matches no address
+class at all and is therefore blocked via the <code class="language-plaintext highlighter-rouge">blocked-subnets</code> default below.</p>
+
+<p>This is configured in <code class="language-plaintext highlighter-rouge">things.conf</code> under <code class="language-plaintext highlighter-rouge">ditto.things.wot.http.security</code> (all settings can also be provided via the
+corresponding environment variables):</p>
+
+<div class="language-hocon highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nl">ditto.things.wot.http.security</span><span class="w"> </span><span class="p">{</span><span class="w">
+  </span><span class="c1"># whether host validation is enabled (default: true)</span><span class="w">
+  </span><span class="nl">enabled</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="kc">true</span><span class="w">
+  </span><span class="nl">enabled</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="si">${?</span><span class="nv">THINGS_WOT_THING_MODEL_HTTP_SECURITY_ENABLED</span><span class="si">}</span><span class="w">
+
+  </span><span class="c1"># comma separated hostnames which are always allowed, overriding the blocked address checks - use this for</span><span class="w">
+  </span><span class="c1">#  deployments that intentionally host ThingModels on internal hosts (e.g. an internal model registry)</span><span class="w">
+  </span><span class="nl">allowed-hostnames</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s2">""</span><span class="w">
+  </span><span class="nl">allowed-hostnames</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="si">${?</span><span class="nv">THINGS_WOT_THING_MODEL_HTTP_SECURITY_ALLOWED_HOSTNAMES</span><span class="si">}</span><span class="w">
+
+  </span><span class="c1"># comma separated additional blocked hostnames</span><span class="w">
+  </span><span class="nl">blocked-hostnames</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s2">""</span><span class="w">
+  </span><span class="nl">blocked-hostnames</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="si">${?</span><span class="nv">THINGS_WOT_THING_MODEL_HTTP_SECURITY_BLOCKED_HOSTNAMES</span><span class="si">}</span><span class="w">
+
+  </span><span class="c1"># comma separated blocked subnets in CIDR notation - keep the default entry when overriding this setting</span><span class="w">
+  </span><span class="nl">blocked-subnets</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s2">"100.64.0.0/10"</span><span class="w">
+  </span><span class="nl">blocked-subnets</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="si">${?</span><span class="nv">THINGS_WOT_THING_MODEL_HTTP_SECURITY_BLOCKED_SUBNETS</span><span class="si">}</span><span class="w">
+
+  </span><span class="c1"># a regular expression blocking matching hosts (empty disables the check)</span><span class="w">
+  </span><span class="nl">blocked-host-regex</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s2">""</span><span class="w">
+  </span><span class="nl">blocked-host-regex</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="si">${?</span><span class="nv">THINGS_WOT_THING_MODEL_HTTP_SECURITY_BLOCKED_HOST_REGEX</span><span class="si">}</span><span class="w">
+
+  </span><span class="c1"># maximum number of HTTP redirects to follow when fetching a ThingModel</span><span class="w">
+  </span><span class="nl">max-redirects</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="mi">5</span><span class="w">
+  </span><span class="nl">max-redirects</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="si">${?</span><span class="nv">THINGS_WOT_THING_MODEL_HTTP_SECURITY_MAX_REDIRECTS</span><span class="si">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>Deployments that legitimately serve ThingModels from an internal host must add that host to <code class="language-plaintext highlighter-rouge">allowed-hostnames</code>.
+Setting <code class="language-plaintext highlighter-rouge">enabled = false</code> disables the validation entirely and is strongly discouraged.</p>
+
+<div class="alert alert-info" role="alert"><i class="fa fa-info-circle"></i> <b>Note:</b> Host validation resolves the URL’s hostname to decide whether to allow the fetch, but
+the subsequent HTTP request resolves the hostname again independently. For hostnames whose DNS is controlled by an
+attacker, the two lookups can in principle return different addresses (DNS rebinding), which the hostname-based check
+cannot fully prevent (literal-IP targets are always validated). For defense in depth against SSRF, combine this check
+with network-level egress controls (e.g. Kubernetes NetworkPolicies / firewall rules) that block the things service
+from reaching internal address ranges and the cloud metadata endpoint.</div>
+
+<p>In addition, operators can restrict <em>which</em> <code class="language-plaintext highlighter-rouge">definition</code> URLs may be used to create Things at all - and <em>who</em> may create
+them - via the <a href="#restricting-entity-creation">entity creation restriction</a> <code class="language-plaintext highlighter-rouge">thing-definitions</code> allow-list.</p>
 
 <h2 id="gateway-namespace-access-control">Gateway namespace access control</h2>
 
@@ -4774,7 +4849,7 @@ to stop blocking messages to a namespace.</p>
                     </div>
                     <p class="notice">
                         &copy;2026 Eclipse Ditto™.
-                         Site last generated: Jul 29, 2026 <br />
+                         Site last generated: Sep 1, 2026 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">
