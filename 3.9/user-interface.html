@@ -1717,6 +1717,13 @@
               
               
               
+              <li><a href="release_notes_398.html">3.9.8</a></li>
+              
+              
+              
+              
+              
+              
               <li><a href="release_notes_397.html">3.9.7</a></li>
               
               
@@ -2605,6 +2612,39 @@ docker run <span class="nt">-p</span> 8088:8080 eclipse/ditto-ui:nightly
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>https://&lt;ditto-hostname&gt;/ui/?environmentsURL=/ui-environments.json&amp;primaryEnvironmentName=dev
 </code></pre></div></div>
 
+<h4 id="restrictions-for-environmentsurl">Restrictions for <code class="language-plaintext highlighter-rouge">environmentsURL</code></h4>
+
+<p>Environments contain the Ditto API URI and the OIDC (SSO) provider configuration. Whoever controls the loaded file
+therefore controls where the UI sends the user’s credentials and tokens. To prevent crafted links from taking over
+users’ sessions, the UI only loads environments via <code class="language-plaintext highlighter-rouge">environmentsURL</code>:</p>
+
+<ul>
+  <li>from the <strong>same origin</strong> the UI is served from (e.g. <code class="language-plaintext highlighter-rouge">/ui-environments.json</code>), and</li>
+  <li>never from paths containing <code class="language-plaintext highlighter-rouge">/api/</code> or <code class="language-plaintext highlighter-rouge">/ws/</code>, as the Ditto API serves JSON written by its users there,</li>
+  <li>only via <code class="language-plaintext highlighter-rouge">http</code> or <code class="language-plaintext highlighter-rouge">https</code> (e.g. no <code class="language-plaintext highlighter-rouge">data:</code> URLs).</li>
+</ul>
+
+<p>Environments may additionally be loaded from other origins listed in an optional <code class="language-plaintext highlighter-rouge">ui-config.json</code> file, served next to
+the UI’s <code class="language-plaintext highlighter-rouge">index.html</code> (e.g. <code class="language-plaintext highlighter-rouge">https://&lt;ditto-hostname&gt;/ui/ui-config.json</code>):</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"environmentsURL"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"allowedOrigins"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"https://config.example.com"</span><span class="p">]</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<div class="alert alert-danger" role="alert"><i class="fa fa-exclamation-circle"></i> <b>Warning:</b> Only add origins whose content you fully trust: anyone who can place a file on an
+allowed origin can take over the sessions of users opening a crafted UI link. <code class="language-plaintext highlighter-rouge">*</code> accepts environments from any
+origin and makes the UI vulnerable to exactly that.</div>
+
+<p>When deploying with the Helm chart, configure the allowed origins via <code class="language-plaintext highlighter-rouge">dittoui.environmentsURL.allowedOrigins</code>. The
+same <code class="language-plaintext highlighter-rouge">ui-config.json</code> is also applied to the Swagger UI, which reads the OIDC configuration from environments as well.</p>
+
+<p>If you opened a UI link containing an <code class="language-plaintext highlighter-rouge">environmentsURL</code> from an untrusted source with an earlier Ditto version, remove
+the environments stored in your browser (in the UI’s “Environments” tab, or by clearing the site data of the UI)
+and log out from your identity provider.</p>
+
 <h3 id="environment-configuration-reference">Environment configuration reference</h3>
 
 <p>Each environment is defined with the following structure:</p>
@@ -2922,7 +2962,7 @@ docker run <span class="nt">-p</span> 8088:8080 eclipse/ditto-ui:nightly
                     </div>
                     <p class="notice">
                         &copy;2026 Eclipse Ditto™.
-                         Site last generated: Sep 1, 2026 <br />
+                         Site last generated: Oct 8, 2026 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

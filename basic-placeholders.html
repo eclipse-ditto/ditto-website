@@ -1717,6 +1717,13 @@
               
               
               
+              <li><a href="release_notes_398.html">3.9.8</a></li>
+              
+              
+              
+              
+              
+              
               <li><a href="release_notes_397.html">3.9.7</a></li>
               
               
@@ -1767,6 +1774,13 @@
               
               
               <li><a href="release_notes_390.html">3.9.0</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="release_notes_3814.html">3.8.14</a></li>
               
               
               
@@ -3139,6 +3153,59 @@ Note that in RQL expressions placeholders must not be surrounded by curly braces
   </tbody>
 </table>
 
+<h3 id="scope-connection-target-topic-filter">Scope: Connection target topic filter</h3>
+
+<p>In a connection’s <a href="basic-connections.html#filtering-with-placeholder-functions">target topic filter</a>,
+a placeholder pipeline ending with <a href="#function-library"><code class="language-plaintext highlighter-rouge">fn:filter()</code></a> may be used as the repeatable
+<code class="language-plaintext highlighter-rouge">fn-filter</code> query parameter, alongside an optional <a href="basic-rql.html">RQL expression</a> in the <code class="language-plaintext highlighter-rouge">filter</code> parameter
+(all given filters must match). As with
+<a href="#scope-rql-expressions-when-filtering-for-ditto-protocol-messages">RQL expressions when filtering for Ditto Protocol messages</a>,
+such a pipeline is a bare expression and placeholders must not be surrounded by curly braces. The pipeline
+has a fixed shape: it starts with the placeholder whose value is filtered, may continue with value-transforming
+stages and ends with its only <code class="language-plaintext highlighter-rouge">fn:filter</code> stage in the 2-parameter form, e.g.
+<code class="language-plaintext highlighter-rouge">topic:action|fn:filter('ne','deleted')</code> or
+<code class="language-plaintext highlighter-rouge">header:content-type|fn:lower()|fn:filter('like','application/json*')</code>.</p>
+
+<p>The topic is published exactly when the pipeline resolves to a value, so a placeholder which does not resolve
+for a signal (e.g. an absent header) suppresses the topic – whatever the <code class="language-plaintext highlighter-rouge">rqlFunction</code>, also for <code class="language-plaintext highlighter-rouge">ne</code>. To
+publish on an absent value, opt in explicitly with an <code class="language-plaintext highlighter-rouge">fn:default(...)</code> stage before the <code class="language-plaintext highlighter-rouge">fn:filter</code>, e.g.
+<code class="language-plaintext highlighter-rouge">header:ditto-originator|fn:default('none')|fn:filter('ne','some:subject')</code>.</p>
+
+<p>Everything else is rejected at connection creation/update time – see
+<a href="basic-connections.html#filtering-with-placeholder-functions">filtering with placeholder functions</a> – in
+particular:</p>
+<ul>
+  <li>the function-first form, e.g. <code class="language-plaintext highlighter-rouge">fn:filter(header:qos,'ne','0')</code> (write <code class="language-plaintext highlighter-rouge">header:qos|fn:filter('ne','0')</code>):
+a leading <code class="language-plaintext highlighter-rouge">fn:filter</code> has no value to filter and never resolves</li>
+  <li>a value to filter which is passed to <code class="language-plaintext highlighter-rouge">fn:filter</code> as a parameter (its 3-parameter form): a placeholder passed
+that way would be filtered as the empty value when it does not resolve and therefore match on <code class="language-plaintext highlighter-rouge">ne</code></li>
+  <li>a bare placeholder such as <code class="language-plaintext highlighter-rouge">header:ditto-originator</code> (write
+<code class="language-plaintext highlighter-rouge">header:ditto-originator|fn:filter('exists','true')</code> to publish when the header is present and not empty)</li>
+  <li>a second <code class="language-plaintext highlighter-rouge">fn:filter</code> stage, a trailing value-producing stage such as <code class="language-plaintext highlighter-rouge">fn:upper()</code> or <code class="language-plaintext highlighter-rouge">fn:default('...')</code>,
+and an <code class="language-plaintext highlighter-rouge">fn:delete()</code> anywhere (the topic would never publish)</li>
+</ul>
+
+<p>The pipeline is evaluated per outbound signal, before enrichment, so the following placeholders are available
+in general (the <code class="language-plaintext highlighter-rouge">thing-json</code> placeholder only as the leading placeholder, and only with the data carried by a
+thing event):</p>
+<ul>
+  <li><a href="#entity-placeholder">entity placeholder</a></li>
+  <li><a href="#thing-placeholder">thing placeholder</a></li>
+  <li><a href="#thing-json-placeholder">thing-json placeholder</a></li>
+  <li><a href="#feature-placeholder">feature placeholder</a></li>
+  <li><a href="#header-placeholder">header placeholder</a></li>
+  <li><a href="#request-placeholder">request placeholder</a></li>
+  <li><a href="#resource-placeholder">resource placeholder</a></li>
+  <li><a href="#topic-placeholder">topic placeholder</a></li>
+  <li><a href="#time-placeholder">time placeholder</a></li>
+  <li><a href="#connection-placeholder">connection placeholder</a></li>
+</ul>
+
+<p>These are the same placeholders as for target addresses and header mappings, with one difference: an
+<code class="language-plaintext highlighter-rouge">fn-filter</code> never sees fields declared via <code class="language-plaintext highlighter-rouge">extraFields</code> enrichment. The
+<a href="#policy-placeholder">policy placeholder</a> listed in the general <a href="#scope-connections">Connections</a> scope is
+only available in source enforcement filters, not here.</p>
+
 <h2 id="function-expressions">Function expressions</h2>
 
 <p>Whenever placeholders can be used (e.g. for <a href="basic-connections.html#placeholders">connections</a>), function expressions 
@@ -3294,8 +3361,8 @@ be placeholders again.</p>
     </tr>
     <tr>
       <td><code class="language-plaintext highlighter-rouge">exists</code></td>
-      <td><code class="language-plaintext highlighter-rouge">(String filterValue, 'exists', String true|false)</code>,  <br /><code class="language-plaintext highlighter-rouge">('exists', String true/false)</code>, <br /><code class="language-plaintext highlighter-rouge">('exists')</code></td>
-      <td>If 3 parameters are passed in, the function filters on the first parameter being existent/non-existent. <br />If 2 parameters are passed in, the function filters the previous pipeline element being being existent/non-existent. <br />If 1 parameter is passed in, the function filters the previous pipeline element being true.</td>
+      <td><code class="language-plaintext highlighter-rouge">(String filterValue, 'exists', String true|false)</code>, <br /><code class="language-plaintext highlighter-rouge">(String filterValue, 'exists')</code>, <br /><code class="language-plaintext highlighter-rouge">('exists', String true/false)</code></td>
+      <td>If 3 parameters are passed in, the function filters on the first parameter being existent/non-existent. <br />If 2 parameters are passed in and the second one is <code class="language-plaintext highlighter-rouge">'exists'</code>, the function filters on the first parameter being existent. <br />If 2 parameters are passed in and the first one is <code class="language-plaintext highlighter-rouge">'exists'</code>, the function filters the previous pipeline element being existent/non-existent (with <code class="language-plaintext highlighter-rouge">'false'</code> only a previous element which resolved to the empty string is kept – an unresolved one stays unresolved).</td>
     </tr>
     <tr>
       <td><code class="language-plaintext highlighter-rouge">like</code></td>
@@ -3304,6 +3371,10 @@ be placeholders again.</p>
     </tr>
   </tbody>
 </table>
+
+<p>In the <a href="#scope-connection-target-topic-filter"><code class="language-plaintext highlighter-rouge">fn-filter</code> of a connection target topic</a> only the 2-parameter
+forms <code class="language-plaintext highlighter-rouge">('&lt;rqlFunction&gt;', comparedValue)</code> are accepted, and the <code class="language-plaintext highlighter-rouge">fn:filter</code> must be the last stage of a pipeline
+which starts with a placeholder; the 3-parameter forms and <code class="language-plaintext highlighter-rouge">(filterValue, 'exists')</code> are rejected there.</p>
 
 <p>The <code class="language-plaintext highlighter-rouge">like</code> function can be used with different expressions:</p>
 <ul>
@@ -3337,7 +3408,7 @@ be placeholders again.</p>
                     </div>
                     <p class="notice">
                         &copy;2026 Eclipse Ditto™.
-                         Site last generated: Sep 1, 2026 <br />
+                         Site last generated: Oct 8, 2026 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

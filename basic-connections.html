@@ -1717,6 +1717,13 @@
               
               
               
+              <li><a href="release_notes_398.html">3.9.8</a></li>
+              
+              
+              
+              
+              
+              
               <li><a href="release_notes_397.html">3.9.7</a></li>
               
               
@@ -1767,6 +1774,13 @@
               
               
               <li><a href="release_notes_390.html">3.9.0</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="release_notes_3814.html">3.8.14</a></li>
               
               
               
@@ -2847,15 +2861,17 @@ special header mapping keys. See <a href="connectivity-response-diversion.html">
 <h3 id="target-topics-and-filtering">Target topics and filtering</h3>
 
 <p>You define which message types to publish via the <code class="language-plaintext highlighter-rouge">topics</code> array. You can filter by
-<a href="basic-changenotifications.html#filter-by-namespace">namespaces</a> and
-<a href="basic-changenotifications.html#filter-by-rql-expression">RQL expressions</a>:</p>
+<a href="basic-changenotifications.html#filter-by-namespace">namespaces</a>,
+<a href="basic-changenotifications.html#filter-by-rql-expression">RQL expressions</a> and
+<a href="#filtering-with-placeholder-functions">placeholder pipelines</a>:</p>
 
 <table>
   <thead>
     <tr>
       <th>Topic</th>
       <th style="text-align: center">Namespace filter</th>
-      <th style="text-align: center">RQL filter</th>
+      <th style="text-align: center">RQL <code class="language-plaintext highlighter-rouge">filter</code></th>
+      <th style="text-align: center"><code class="language-plaintext highlighter-rouge">fn-filter</code></th>
     </tr>
   </thead>
   <tbody>
@@ -2863,9 +2879,11 @@ special header mapping keys. See <a href="connectivity-response-diversion.html">
       <td><code class="language-plaintext highlighter-rouge">_/_/things/twin/events</code></td>
       <td style="text-align: center">✔</td>
       <td style="text-align: center">✔</td>
+      <td style="text-align: center">✔</td>
     </tr>
     <tr>
       <td><code class="language-plaintext highlighter-rouge">_/_/things/live/messages</code></td>
+      <td style="text-align: center">✔</td>
       <td style="text-align: center">✔</td>
       <td style="text-align: center">✔</td>
     </tr>
@@ -2873,9 +2891,11 @@ special header mapping keys. See <a href="connectivity-response-diversion.html">
       <td><code class="language-plaintext highlighter-rouge">_/_/things/live/commands</code></td>
       <td style="text-align: center">✔</td>
       <td style="text-align: center">❌</td>
+      <td style="text-align: center">✔</td>
     </tr>
     <tr>
       <td><code class="language-plaintext highlighter-rouge">_/_/things/live/events</code></td>
+      <td style="text-align: center">✔</td>
       <td style="text-align: center">✔</td>
       <td style="text-align: center">✔</td>
     </tr>
@@ -2883,28 +2903,309 @@ special header mapping keys. See <a href="connectivity-response-diversion.html">
       <td><code class="language-plaintext highlighter-rouge">_/_/policies/announcements</code></td>
       <td style="text-align: center">✔</td>
       <td style="text-align: center">❌</td>
+      <td style="text-align: center">❌</td>
     </tr>
     <tr>
       <td><code class="language-plaintext highlighter-rouge">_/_/connections/announcements</code></td>
+      <td style="text-align: center">❌</td>
       <td style="text-align: center">❌</td>
       <td style="text-align: center">❌</td>
     </tr>
   </tbody>
 </table>
 
-<p>Filter parameters use HTTP query parameter syntax (<code class="language-plaintext highlighter-rouge">?</code> for the first, <code class="language-plaintext highlighter-rouge">&amp;</code> for subsequent). URL-encode
-filter values before using them:</p>
+<p>Filter parameters use HTTP query parameter syntax (<code class="language-plaintext highlighter-rouge">?</code> for the first, <code class="language-plaintext highlighter-rouge">&amp;</code> for subsequent). A topic may carry
+one <code class="language-plaintext highlighter-rouge">filter</code> parameter holding an <a href="basic-rql.html">RQL expression</a> and any number of <code class="language-plaintext highlighter-rouge">fn-filter</code> parameters,
+each holding a placeholder pipeline expression (see
+<a href="#filtering-with-placeholder-functions">filtering with placeholder functions</a> below). The parameter <strong>name</strong>
+tells the two apart – <code class="language-plaintext highlighter-rouge">filter</code> is always RQL, <code class="language-plaintext highlighter-rouge">fn-filter</code> is always a placeholder pipeline. <strong>All</strong> given
+filters must match for a signal to be published (<strong>AND</strong> semantics).</p>
+
+<p>Write the filter expressions as shown in the examples: <code class="language-plaintext highlighter-rouge">|</code>, <code class="language-plaintext highlighter-rouge">'</code>, <code class="language-plaintext highlighter-rouge">"</code>, <code class="language-plaintext highlighter-rouge">,</code>, <code class="language-plaintext highlighter-rouge">(</code>, <code class="language-plaintext highlighter-rouge">)</code>, <code class="language-plaintext highlighter-rouge">:</code>, <code class="language-plaintext highlighter-rouge">*</code>, <code class="language-plaintext highlighter-rouge">?</code> and <code class="language-plaintext highlighter-rouge">=</code> need
+no URL-encoding. Parameter values are URL-decoded every time a topic string is parsed (e.g. <code class="language-plaintext highlighter-rouge">%7C</code> becomes a
+literal <code class="language-plaintext highlighter-rouge">|</code>), but they are <strong>not</strong> re-encoded when the connection is stored, so a stored topic is decoded once
+more whenever the connection is loaded again. Three characters can therefore not be used at all in the filter
+values of a connection target topic – neither in an RQL value or <code class="language-plaintext highlighter-rouge">like</code> pattern nor in the compared value of
+an <code class="language-plaintext highlighter-rouge">fn-filter</code>:</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">&amp;</code> – a raw <code class="language-plaintext highlighter-rouge">&amp;</code> ends the parameter. <code class="language-plaintext highlighter-rouge">%26</code> is decoded to <code class="language-plaintext highlighter-rouge">&amp;</code> on the first parse, so the connection is
+accepted, but that <code class="language-plaintext highlighter-rouge">&amp;</code> cuts the expression off when the stored topic is parsed again; an <code class="language-plaintext highlighter-rouge">fn-filter</code>
+truncated that way suppresses every signal. (For WebSocket and SSE filters, which are not stored, <code class="language-plaintext highlighter-rouge">%26</code>
+works.)</li>
+  <li><code class="language-plaintext highlighter-rouge">+</code> – is decoded to a space. <code class="language-plaintext highlighter-rouge">%2B</code> is decoded to <code class="language-plaintext highlighter-rouge">+</code> on the first parse and to a space on the next one.</li>
+  <li><code class="language-plaintext highlighter-rouge">%</code> – <code class="language-plaintext highlighter-rouge">%25</code> is decoded to <code class="language-plaintext highlighter-rouge">%</code> on the first parse. When the stored topic is parsed again, that <code class="language-plaintext highlighter-rouge">%</code> either
+fails to decode or is silently decoded together with the two characters following it.</li>
+</ul>
+
+<p>Example:</p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
   </span><span class="nl">"address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;target-address&gt;"</span><span class="p">,</span><span class="w">
   </span><span class="nl">"topics"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
     </span><span class="s2">"_/_/things/twin/events?namespaces=org.eclipse.ditto&amp;filter=gt(attributes/counter,42)"</span><span class="p">,</span><span class="w">
     </span><span class="s2">"_/_/things/twin/events?extraFields=attributes/placement&amp;filter=gt(attributes/placement,'Kitchen')"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"_/_/things/live/messages?namespaces=org.eclipse.ditto"</span><span class="w">
+    </span><span class="s2">"_/_/things/live/messages?namespaces=org.eclipse.ditto"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"_/_/things/live/commands?fn-filter=resource:path|fn:filter('like','/attributes/*')"</span><span class="w">
   </span><span class="p">],</span><span class="w">
   </span><span class="nl">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"ditto:outbound-auth-subject"</span><span class="p">]</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
+
+<p>If a target’s <code class="language-plaintext highlighter-rouge">topics</code> array lists several topic entries, they are evaluated independently and
+combined with <strong>OR</strong> semantics – a signal is published (once) as soon as it matches <em>any one</em> listed
+topic (each with its own <code class="language-plaintext highlighter-rouge">namespaces</code>, <code class="language-plaintext highlighter-rouge">filter</code> and <code class="language-plaintext highlighter-rouge">fn-filter</code> parameters).</p>
+
+<h3 id="filtering-with-placeholder-functions">Filtering with placeholder functions</h3>
+
+<p>Since Ditto 4.0.0, a target topic may carry <code class="language-plaintext highlighter-rouge">fn-filter</code> parameters in addition to (or instead of) the RQL
+<code class="language-plaintext highlighter-rouge">filter</code> parameter, each holding a placeholder pipeline: a placeholder, optionally passed through
+value-transforming functions of
+the <a href="basic-placeholders.html#function-library">function library</a>, whose value is finally tested by an
+<a href="basic-placeholders.html#function-library"><code class="language-plaintext highlighter-rouge">fn:filter()</code></a> stage. An <code class="language-plaintext highlighter-rouge">fn-filter</code> is a generic filter on <strong>any</strong>
+placeholder which is available for an outbound signal – <code class="language-plaintext highlighter-rouge">header:...</code>, <code class="language-plaintext highlighter-rouge">topic:...</code>, <code class="language-plaintext highlighter-rouge">thing:...</code>, <code class="language-plaintext highlighter-rouge">entity:...</code>,
+<code class="language-plaintext highlighter-rouge">feature:...</code>, <code class="language-plaintext highlighter-rouge">resource:...</code>, <code class="language-plaintext highlighter-rouge">request:...</code>, <code class="language-plaintext highlighter-rouge">time:...</code>, <code class="language-plaintext highlighter-rouge">connection:id</code> and, for thing events,
+<code class="language-plaintext highlighter-rouge">thing-json:...</code> – see
+<a href="basic-placeholders.html#scope-connection-target-topic-filter">connection target topic filter placeholders</a>
+for the full list.</p>
+
+<p>Such a pipeline is evaluated per outbound signal against what the signal itself carries – its headers, topic,
+entity ID, resource, time and, for thing events, the event’s own data – and never against enriched
+(<code class="language-plaintext highlighter-rouge">extraFields</code>) data. An RQL <code class="language-plaintext highlighter-rouge">filter</code> matches against thing data plus the <code class="language-plaintext highlighter-rouge">topic:</code>, <code class="language-plaintext highlighter-rouge">resource:</code> and <code class="language-plaintext highlighter-rouge">time:</code>
+placeholders; an <code class="language-plaintext highlighter-rouge">fn-filter</code> needs no thing data and therefore works the same for every signal type a target
+topic can carry – twin events, live events, live messages and live commands –, also for
+<code class="language-plaintext highlighter-rouge">_/_/things/live/commands</code>, for which an RQL filter is not supported (marked ❌ for “RQL <code class="language-plaintext highlighter-rouge">filter</code>” in the
+table above).</p>
+
+<h4 id="the-shape-of-an-fn-filter">The shape of an fn-filter</h4>
+
+<p>An <code class="language-plaintext highlighter-rouge">fn-filter</code> always has the same shape – the <strong>placeholder</strong> whose value is filtered, optional
+value-transforming <code class="language-plaintext highlighter-rouge">fn:</code> stages, and exactly one <strong><code class="language-plaintext highlighter-rouge">fn:filter</code></strong> as the last stage:</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;placeholder&gt;[|fn:&lt;value stage&gt;...]|fn:filter('&lt;rqlFunction&gt;',&lt;comparedValue&gt;)
+</code></pre></div></div>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>fn-filter=topic:action|fn:filter('ne','deleted')
+fn-filter=resource:path|fn:filter('like','/features/*')
+fn-filter=thing:name|fn:substring-before('-')|fn:filter('eq','sensor')
+fn-filter=header:content-type|fn:lower()|fn:filter('like','application/json*')
+fn-filter=header:ditto-originator|fn:filter('exists','true')
+</code></pre></div></div>
+
+<p>From top to bottom, these publish: everything but deletions; only signals whose resource path starts with
+<code class="language-plaintext highlighter-rouge">/features/</code>; only signals of things whose name starts with <code class="language-plaintext highlighter-rouge">sensor-</code>; only signals whose <code class="language-plaintext highlighter-rouge">content-type</code>
+header starts with <code class="language-plaintext highlighter-rouge">application/json</code>, in whatever case it is written; only signals which carry a
+<code class="language-plaintext highlighter-rouge">ditto-originator</code> header.</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">&lt;rqlFunction&gt;</code> is one of the <a href="basic-placeholders.html#rql-functions">RQL functions</a> <code class="language-plaintext highlighter-rouge">eq</code>, <code class="language-plaintext highlighter-rouge">ne</code>, <code class="language-plaintext highlighter-rouge">like</code> and
+<code class="language-plaintext highlighter-rouge">exists</code>, given as a quoted constant.</li>
+  <li><code class="language-plaintext highlighter-rouge">&lt;comparedValue&gt;</code> is a quoted constant or another placeholder (e.g. <code class="language-plaintext highlighter-rouge">fn:filter('eq',header:expected)</code>); for
+<code class="language-plaintext highlighter-rouge">exists</code> it must be the constant <code class="language-plaintext highlighter-rouge">'true'</code>.</li>
+  <li>A quoted constant may be given in single or double quotes and may contain <code class="language-plaintext highlighter-rouge">|</code> and <code class="language-plaintext highlighter-rouge">,</code>. To compare with a
+value containing a single quote, use double quotes (<code class="language-plaintext highlighter-rouge">header:x|fn:filter("ne","it's")</code>) and vice versa – a
+backslash-escaped quote is accepted, but the backslash stays part of the compared value.</li>
+  <li><code class="language-plaintext highlighter-rouge">fn:filter</code> always filters the value of the pipeline in front of it – the value to filter is never passed to
+<code class="language-plaintext highlighter-rouge">fn:filter</code> as a parameter.</li>
+</ul>
+
+<p>The publish decision of an <code class="language-plaintext highlighter-rouge">fn-filter</code> is binary:</p>
+<ul>
+  <li>the pipeline <strong>resolves</strong> to a value – the target topic is <strong>published</strong></li>
+  <li>the pipeline stays <strong>unresolved</strong> – the target topic is <strong>suppressed</strong></li>
+</ul>
+
+<p>Think of <code class="language-plaintext highlighter-rouge">fn:filter</code> as the stage that returns the boolean publish decision: it keeps the pipeline <em>resolved</em>
+(publish) when its condition holds and leaves it <em>unresolved</em> (suppress) otherwise.</p>
+
+<div class="alert alert-warning" role="alert" style=""><i class="fa fa-warning"></i> <b>Important:</b> An <code class="language-plaintext highlighter-rouge">fn-filter</code> must <strong>start with the placeholder</strong> to filter. The
+function-first form known from other placeholder scopes, e.g. <code class="language-plaintext highlighter-rouge">fn:filter(header:qos,'ne','0')</code> of the
+<a href="#source-acknowledgement-requests">source acknowledgement requests</a>, is rejected at connection creation/update
+time (write <code class="language-plaintext highlighter-rouge">header:qos|fn:filter('ne','0')</code>): a leading <code class="language-plaintext highlighter-rouge">fn:filter(...)</code> has no value to filter, so it would
+never resolve and the topic would never be published. Passing the value to filter as a <em>parameter</em>
+of an <code class="language-plaintext highlighter-rouge">fn:filter</code> stage behind a placeholder is rejected as well: a placeholder passed that way which does not
+resolve for a signal, e.g. an absent header, is filtered as the empty value, so <code class="language-plaintext highlighter-rouge">ne</code> would be satisfied and the
+topic would publish every signal lacking the header. With the placeholder in front, a placeholder which does
+not resolve always suppresses the topic (see
+<a href="#absent-header-behavior">absent header behavior</a>).</div>
+
+<p>Each topic of a target can filter on what is relevant for its signal type:</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;target-address&gt;"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"topics"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="s2">"_/_/things/twin/events?fn-filter=topic:action|fn:filter('ne','deleted')"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"_/_/things/live/messages?fn-filter=topic:subject|fn:filter('like','alarm.*')"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"_/_/things/live/commands?fn-filter=header:ditto-originator|fn:filter('ne','some:excluded-subject')"</span><span class="w">
+  </span><span class="p">],</span><span class="w">
+  </span><span class="nl">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"ditto:outbound-auth-subject"</span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<ul>
+  <li>The twin events are published unless they are deletions: <code class="language-plaintext highlighter-rouge">topic:action</code> resolves to <code class="language-plaintext highlighter-rouge">deleted</code> for e.g. a
+deleted thing or attribute.</li>
+  <li>Of the live messages only those are published whose subject starts with <code class="language-plaintext highlighter-rouge">alarm.</code>.</li>
+  <li>The live commands are published unless they were caused by <code class="language-plaintext highlighter-rouge">some:excluded-subject</code> – commands without a
+<code class="language-plaintext highlighter-rouge">ditto-originator</code> header are suppressed as well, see <a href="#absent-header-behavior">absent header behavior</a> for
+how to keep them.</li>
+</ul>
+
+<p>Two headers which Ditto sets itself tell what caused a signal:</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">header:ditto-originator</code> resolves to the first authorization subject of the request that caused
+the signal.</li>
+  <li><code class="language-plaintext highlighter-rouge">header:ditto-origin</code> resolves to the ID of the connection – or of the WebSocket session – through which
+the causing request entered Ditto. It is <strong>absent</strong> for signals caused via the HTTP API or by Ditto itself,
+so that a plain <code class="language-plaintext highlighter-rouge">ne</code> comparison would suppress all of those signals, too. To exclude only the signals caused
+via one connection, supply a value for the absent case:
+<code class="language-plaintext highlighter-rouge">fn-filter=header:ditto-origin|fn:default('none')|fn:filter('ne','some-other-connection-id')</code>.
+Ditto never publishes a signal to the connection which caused it, so no filter is needed for that;
+filtering on <code class="language-plaintext highlighter-rouge">ditto-origin</code> is only of use to exclude signals caused via <em>other</em> connections.</li>
+</ul>
+
+<h4 id="combining-conditions-with-and">Combining conditions with AND</h4>
+
+<p>An <code class="language-plaintext highlighter-rouge">fn-filter</code> tests one value with one <code class="language-plaintext highlighter-rouge">fn:filter</code>. To require several conditions, <strong>repeat the <code class="language-plaintext highlighter-rouge">fn-filter</code>
+parameter</strong> – every expression must match for the topic to be published:</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>fn-filter=topic:action|fn:filter('ne','deleted')&amp;fn-filter=header:ditto-originator|fn:filter('ne','some:subject')
+</code></pre></div></div>
+
+<p>Keep in mind that <em>each</em> expression suppresses the topic when its placeholder does not resolve for a signal
+(see <a href="#absent-header-behavior">absent header behavior</a>).</p>
+
+<p>An RQL <code class="language-plaintext highlighter-rouge">filter</code> can be combined with <code class="language-plaintext highlighter-rouge">fn-filter</code> parameters on one topic, again with <strong>AND</strong> semantics – the
+RQL expression and every pipeline must match:</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>filter=gt(attributes/counter,42)&amp;fn-filter=topic:action|fn:filter('ne','deleted')&amp;fn-filter=header:ditto-originator|fn:filter('ne','some:subject')
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">filter</code> may be given at most <strong>once</strong> per topic – combine several RQL conditions into a single expression
+with <code class="language-plaintext highlighter-rouge">and(...)</code>.</p>
+
+<h4 id="combining-conditions-with-or">Combining conditions with OR</h4>
+
+<p>To publish when <strong>one or another header is present</strong>, let <code class="language-plaintext highlighter-rouge">fn:default(&lt;placeholder&gt;)</code> fall back to the second
+header when the first is absent:</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>fn-filter=header:first|fn:default(header:second)|fn:filter('exists','true')
+</code></pre></div></div>
+
+<p>The same fallback works with any <code class="language-plaintext highlighter-rouge">rqlFunction</code>, but keep in mind that it is a <em>coalesce</em>: the <code class="language-plaintext highlighter-rouge">fn:filter</code> tests
+the <strong>first present</strong> value only – <code class="language-plaintext highlighter-rouge">header:second</code> is not looked at when <code class="language-plaintext highlighter-rouge">header:first</code> is present.</p>
+
+<p>For an OR of arbitrary conditions, list the topic <strong>several times</strong> in the target’s <code class="language-plaintext highlighter-rouge">topics</code> array, each entry
+with its own filters. A signal is published – <strong>once</strong> – as soon as it matches any one entry:</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;target-address&gt;"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"topics"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="s2">"_/_/things/twin/events?fn-filter=header:ditto-originator|fn:filter('eq','some:subject')"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"_/_/things/twin/events?fn-filter=resource:path|fn:filter('like','/features/*')"</span><span class="w">
+  </span><span class="p">],</span><span class="w">
+  </span><span class="nl">"authorizationContext"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"ditto:outbound-auth-subject"</span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>This target publishes the events which were caused by <code class="language-plaintext highlighter-rouge">some:subject</code> <strong>or</strong> whose resource path starts with
+<code class="language-plaintext highlighter-rouge">/features/</code>.</p>
+
+<p>If such entries define different <a href="#target-topics-and-enrichment"><code class="language-plaintext highlighter-rouge">extraFields</code></a> and several of them match, the
+signal is enriched with the <code class="language-plaintext highlighter-rouge">extraFields</code> of one matching entry only – use the same <code class="language-plaintext highlighter-rouge">extraFields</code> on all
+entries of an OR.</p>
+
+<h4 id="absent-header-behavior">Absent header behavior</h4>
+
+<p>Since the pipeline is evaluated per signal, its leading placeholder may not resolve for a given signal. An
+absent header is the common case – <code class="language-plaintext highlighter-rouge">ditto-originator</code> is absent for signals with no authenticated causing
+subject, <code class="language-plaintext highlighter-rouge">ditto-origin</code> for all signals which were not caused via a connection or a WebSocket session – but
+the same goes for any other placeholder: <code class="language-plaintext highlighter-rouge">topic:subject</code> only resolves for messages, <code class="language-plaintext highlighter-rouge">feature:id</code> only for
+signals related to a feature, and <code class="language-plaintext highlighter-rouge">thing-json:...</code> only for thing events.</p>
+
+<p>A placeholder which does not resolve always <strong>suppresses</strong> the topic, regardless of the <code class="language-plaintext highlighter-rouge">rqlFunction</code>: there
+is no value to filter, so the <code class="language-plaintext highlighter-rouge">fn:filter</code> never matches – also for <code class="language-plaintext highlighter-rouge">ne</code>. The same holds for a placeholder used
+as <code class="language-plaintext highlighter-rouge">&lt;comparedValue&gt;</code> which does not resolve.</p>
+
+<p>To publish in that case, opt in explicitly by supplying a value for it with an <code class="language-plaintext highlighter-rouge">fn:default(...)</code> stage before
+the <code class="language-plaintext highlighter-rouge">fn:filter</code>:</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>fn-filter=header:ditto-originator|fn:default('none')|fn:filter('ne','some:subject')
+fn-filter=header:ditto-originator|fn:default('none')|fn:filter('eq','none')
+</code></pre></div></div>
+
+<p>The first publishes signals which carry another originator <strong>or none at all</strong>, the second only signals
+without an originator (pick a default value which cannot occur as a real value).</p>
+
+<h4 id="restrictions">Restrictions</h4>
+
+<p>All of the following is checked at connection creation/update time and rejected with HTTP status <code class="language-plaintext highlighter-rouge">400</code>: an
+invalid <code class="language-plaintext highlighter-rouge">fn-filter</code>, or a placeholder pipeline placed in <code class="language-plaintext highlighter-rouge">filter</code>, with error
+<code class="language-plaintext highlighter-rouge">connectivity:connection.configuration.invalid</code>; a malformed RQL <code class="language-plaintext highlighter-rouge">filter</code> with error <code class="language-plaintext highlighter-rouge">rql.expression.invalid</code>;
+a repeated <code class="language-plaintext highlighter-rouge">filter</code>, <code class="language-plaintext highlighter-rouge">namespaces</code> or <code class="language-plaintext highlighter-rouge">extraFields</code> parameter with error <code class="language-plaintext highlighter-rouge">connectivity:topic.invalid</code>. The
+message names the offending expression or topic; for a malformed RQL <code class="language-plaintext highlighter-rouge">filter</code> it is the message of the RQL
+parser.</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">filter</code> only accepts an RQL expression – a placeholder pipeline is rejected with an error pointing to
+<code class="language-plaintext highlighter-rouge">fn-filter</code>.</li>
+  <li><code class="language-plaintext highlighter-rouge">fn-filter</code> must start with a placeholder (<code class="language-plaintext highlighter-rouge">header:...</code>, <code class="language-plaintext highlighter-rouge">topic:...</code>, <code class="language-plaintext highlighter-rouge">thing-json:...</code>, …) and every
+further stage must be an <code class="language-plaintext highlighter-rouge">fn:</code> function call. An expression starting with <code class="language-plaintext highlighter-rouge">fn:</code>, an RQL expression, or a
+leading placeholder without a name (e.g. <code class="language-plaintext highlighter-rouge">header:</code>) or with whitespace next to its colon (e.g. <code class="language-plaintext highlighter-rouge">header: x</code>)
+is rejected, as is everything else the placeholder grammar does not accept: an unknown placeholder or
+function, malformed function parameters, or an empty <code class="language-plaintext highlighter-rouge">fn-filter=</code>.</li>
+  <li>An <code class="language-plaintext highlighter-rouge">fn-filter</code> contains exactly one <code class="language-plaintext highlighter-rouge">fn:filter(...)</code> stage, as its last stage: a bare placeholder
+(<code class="language-plaintext highlighter-rouge">fn-filter=header:ditto-originator</code>; write <code class="language-plaintext highlighter-rouge">header:ditto-originator|fn:filter('exists','true')</code> instead), a
+pipeline ending with a value-producing stage (e.g. <code class="language-plaintext highlighter-rouge">fn:upper()</code>) or with an <code class="language-plaintext highlighter-rouge">fn:default(...)</code> (which would
+discard the filter’s decision), and a second <code class="language-plaintext highlighter-rouge">fn:filter</code> stage (<a href="#combining-conditions-with-and">repeat the <code class="language-plaintext highlighter-rouge">fn-filter</code>
+parameter</a> instead) are rejected. So is an <code class="language-plaintext highlighter-rouge">fn:delete()</code> stage at any
+position, because the topic would never publish.</li>
+  <li>The <code class="language-plaintext highlighter-rouge">fn:filter</code> stage must have the form <code class="language-plaintext highlighter-rouge">fn:filter('&lt;rqlFunction&gt;',&lt;comparedValue&gt;)</code>: the 3-parameter form
+and <code class="language-plaintext highlighter-rouge">fn:filter(&lt;value&gt;,'exists')</code>, which pass the value to filter as a parameter, are rejected, as is a
+placeholder used as <code class="language-plaintext highlighter-rouge">rqlFunction</code>. The <code class="language-plaintext highlighter-rouge">rqlFunction</code> name must be one of the case-sensitive
+<a href="basic-placeholders.html#rql-functions"><code class="language-plaintext highlighter-rouge">eq</code>, <code class="language-plaintext highlighter-rouge">ne</code>, <code class="language-plaintext highlighter-rouge">like</code>, <code class="language-plaintext highlighter-rouge">exists</code> RQL functions</a> (so <code class="language-plaintext highlighter-rouge">'NE'</code> or <code class="language-plaintext highlighter-rouge">'neq'</code> are
+rejected). The constant compared value <code class="language-plaintext highlighter-rouge">'exists'</code> cannot be used (<code class="language-plaintext highlighter-rouge">fn:filter</code> would take it for its
+<code class="language-plaintext highlighter-rouge">fn:filter(&lt;value&gt;,'exists')</code> form). With the <code class="language-plaintext highlighter-rouge">rqlFunction</code> <code class="language-plaintext highlighter-rouge">'exists'</code> the compared value must be the
+constant <code class="language-plaintext highlighter-rouge">'true'</code> (in upper or lower case): a placeholder and any other constant are rejected –
+<code class="language-plaintext highlighter-rouge">fn:filter('exists','false')</code> could only match an empty value, never an absent one, because the filtered
+value is always a resolved one; see
+<a href="#absent-header-behavior">absent header behavior</a> for how to publish on an absent value.</li>
+  <li>An <code class="language-plaintext highlighter-rouge">fn-filter</code> may contain at most <strong>10</strong> <code class="language-plaintext highlighter-rouge">fn:</code> stages, the final <code class="language-plaintext highlighter-rouge">fn:filter</code> included; the number of
+<code class="language-plaintext highlighter-rouge">fn-filter</code> parameters is not limited.</li>
+  <li><code class="language-plaintext highlighter-rouge">filter</code>, <code class="language-plaintext highlighter-rouge">namespaces</code> and <code class="language-plaintext highlighter-rouge">extraFields</code> may be given at most <strong>once</strong> per topic; repeating one of them is
+rejected as an invalid topic. Only <code class="language-plaintext highlighter-rouge">fn-filter</code> is repeatable.</li>
+  <li>The <a href="basic-placeholders.html#thing-json-placeholder"><code class="language-plaintext highlighter-rouge">thing-json</code> placeholder</a> can only be used as the
+leading placeholder (<code class="language-plaintext highlighter-rouge">thing-json:attributes/x|fn:filter('eq','y')</code>), not as <code class="language-plaintext highlighter-rouge">&lt;comparedValue&gt;</code> or inside
+<code class="language-plaintext highlighter-rouge">fn:default(...)</code>, because a function parameter’s placeholder prefix must not contain a dash.</li>
+</ul>
+
+<p>Further behavior to be aware of, which is not validated:</p>
+
+<ul>
+  <li>The placeholders of an <code class="language-plaintext highlighter-rouge">fn-filter</code> never see fields added via <a href="#target-topics-and-enrichment"><code class="language-plaintext highlighter-rouge">extraFields</code>
+enrichment</a> – they only ever see what the signal itself carries. Unlike
+RQL, an <code class="language-plaintext highlighter-rouge">fn-filter</code> cannot filter on enriched, unchanged data. The
+<a href="basic-placeholders.html#thing-json-placeholder"><code class="language-plaintext highlighter-rouge">thing-json</code> placeholder</a> sees only the data carried by
+the event itself; for live commands and messages it never resolves.</li>
+  <li>A placeholder used as <code class="language-plaintext highlighter-rouge">&lt;comparedValue&gt;</code> of <code class="language-plaintext highlighter-rouge">eq</code>, <code class="language-plaintext highlighter-rouge">ne</code> or <code class="language-plaintext highlighter-rouge">like</code> must never resolve to the string <code class="language-plaintext highlighter-rouge">exists</code>:
+<code class="language-plaintext highlighter-rouge">fn:filter</code> would take it for its <code class="language-plaintext highlighter-rouge">fn:filter(&lt;value&gt;,'exists')</code> form and match every value.</li>
+  <li>An <code class="language-plaintext highlighter-rouge">fn-filter</code> should only reference headers that are stable for the signal’s lifetime (such as
+<code class="language-plaintext highlighter-rouge">ditto-originator</code> or <code class="language-plaintext highlighter-rouge">ditto-origin</code>): internal bookkeeping headers such as <code class="language-plaintext highlighter-rouge">requested-acks</code> are
+mutated while the signal is processed and are not reliable filter inputs.</li>
+  <li>As with RQL, neither <code class="language-plaintext highlighter-rouge">filter</code> nor <code class="language-plaintext highlighter-rouge">fn-filter</code> can be set on <code class="language-plaintext highlighter-rouge">_/_/policies/announcements</code> or
+<code class="language-plaintext highlighter-rouge">_/_/connections/announcements</code> (see the table above); both are silently ignored if present.</li>
+  <li>A signal suppressed by a filter is not logged as suppressed, the same as with an RQL filter: the
+<a href="connectivity-manage-connections.html#connection-logs">connection logs</a> merely lack the <code class="language-plaintext highlighter-rouge">filtered</code> entry
+for that target. Only when evaluating an <code class="language-plaintext highlighter-rouge">fn-filter</code> <em>fails</em> (rather than simply not matching) is a failure
+entry recorded there; the signal is then treated as not matching that topic.</li>
+</ul>
+
+<div class="alert alert-danger" role="alert"><i class="fa fa-exclamation-circle"></i> <b>Warning:</b> Only start using <code class="language-plaintext highlighter-rouge">fn-filter</code> once <strong>all</strong> instances of your connectivity
+service run Ditto 4.0.0 or later. Older instances do not know the parameter and silently
+<strong>ignore</strong> it: such an instance publishes the topic without applying the <code class="language-plaintext highlighter-rouge">fn-filter</code> at all. (Placing the
+expression in <code class="language-plaintext highlighter-rouge">filter</code> instead is no fallback either – older instances reject a pipeline there as an
+invalid RQL expression.)</div>
 
 <h3 id="target-topics-and-enrichment">Target topics and enrichment</h3>
 
@@ -3118,7 +3419,7 @@ for setup instructions.</p>
                     </div>
                     <p class="notice">
                         &copy;2026 Eclipse Ditto™.
-                         Site last generated: Sep 1, 2026 <br />
+                         Site last generated: Oct 8, 2026 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">
