@@ -1717,6 +1717,13 @@
               
               
               
+              <li><a href="release_notes_399.html">3.9.9</a></li>
+              
+              
+              
+              
+              
+              
               <li><a href="release_notes_398.html">3.9.8</a></li>
               
               
@@ -2557,7 +2564,20 @@ $('#toc').on('click', 'a', function() {
 
 <h3 id="permissions-for-conditions">Permissions for conditions</h3>
 
-<p>You need READ permission on the resource referenced in the condition. Otherwise, the request fails.</p>
+<p>You need READ permission on the resource referenced in the condition. Otherwise, the request fails.
+This applies to all requests supporting a condition, including <a href="basic-messages.html">live messages</a> and live
+events.</p>
+
+<h3 id="unsupported-requests">Unsupported requests</h3>
+
+<p>Ditto rejects the <code class="language-plaintext highlighter-rouge">condition</code> header with status code <code class="language-plaintext highlighter-rouge">400</code> for:</p>
+
+<ul>
+  <li>Requests for a <a href="basic-wot-integration.html">WoT Thing Description</a> (<code class="language-plaintext highlighter-rouge">Accept: application/td+json</code>), which also
+applies to the <code class="language-plaintext highlighter-rouge">live-channel-condition</code> header.</li>
+  <li><a href="basic-messages.html#claim-messages">Claim messages</a>, as the sender of a claim message does not need any
+permission on the Thing.</li>
+</ul>
 
 <h2 id="examples">Examples</h2>
 
@@ -2627,7 +2647,8 @@ $('#toc').on('click', 'a', function() {
 
 <p>Ditto supports automatic switching between <a href="protocol-twinlive.html#twin-channel">twin</a> and <a href="protocol-twinlive.html#live-channel">live</a> channels based on a condition.</p>
 
-<p>Define the condition with RQL. If it matches, Ditto retrieves data from the device itself:</p>
+<p>Define the condition with RQL. If it matches, Ditto retrieves data from the device itself.
+As for the <code class="language-plaintext highlighter-rouge">condition</code> header, you need READ permission on the resources referenced in the condition:</p>
 
 <div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET .../things/{thingId}?live-channel-condition=eq(attributes/useLiveChannel,true)
 </code></pre></div></div>
@@ -2883,7 +2904,7 @@ entirely (no storage, no event emission, no new revision):</p>
                     </div>
                     <p class="notice">
                         &copy;2026 Eclipse Ditto™.
-                         Site last generated: Oct 8, 2026 <br />
+                         Site last generated: Nov 19, 2026 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

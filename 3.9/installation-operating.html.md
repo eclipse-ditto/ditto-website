@@ -131,6 +131,9 @@ the user and the subject contains e.g. the user-id or -name.
 
 This string must then be used in [policies](basic-policy.html#subjects) as "Subject ID".
 
+The gateway only reads the pre-authenticated subject from this HTTP header, a query parameter of the same name is
+ignored.
+
 Example for a nginx "proxy" configuration:
 ```text
 auth_basic                    "Authentication required";
@@ -497,6 +500,16 @@ There are however configuration options in place in order to enable throttling o
 basis.  
 Please consult the available `throttling` configuration sections in the 
 [Ditto service configuration files](#ditto-configuration).
+
+Each WebSocket or SSE session processes the events it receives one at a time. If a session cannot keep up, its
+messages queue up in gateway memory. Set `ditto.gateway.streaming.max-session-lag` (env
+`GATEWAY_STREAMING_MAX_SESSION_LAG`, Helm value `gateway.config.streaming.maxSessionLag`) to close any session whose
+messages wait longer than this, for example `30s`, before the backlog exhausts the gateway heap. The default `0s`
+disables the check; any other value must be at least `1s`.
+
+The measured delay also includes stop-the-world GC pauses and dispatcher saturation of the gateway. A pause longer
+than `max-session-lag` makes every session on that gateway late at the same moment, so all of them are closed and
+their clients reconnect at once. Set the value well above the gateway's observed GC pause times.
 
 
 ## Restricting entity creation
@@ -2049,7 +2062,7 @@ The search index should rarely become out-of-sync for a long time, and it can re
 of any inconsistencies detected at query time. Nevertheless, you can trigger search index update
 for a particular thing by a DevOps-command and bring the entry up-to-date immediately.
 
-`POST /devops/piggyback/search/<INSTANCE_INDEX>?timeout=0`
+`POST /devops/piggyback/search/<INSTANCE_INDEX>?timeout=0&response-required=false`
 
 ```json
 {
@@ -2086,7 +2099,7 @@ To do so safely, perform the following steps in sequence.
 Send a piggyback command to [Pekko's pub-sub-mediator][pubsubmediator] with type `namespaces.commands:blockNamespace`
 to block all messages sent to actors belonging to a namespace.
 
-`PUT /devops/piggyback?timeout=10s`
+`POST /devops/piggyback?timeout=10s`
 
 ```json
 {
@@ -2120,7 +2133,7 @@ Send a piggyback command to [Pekko's pub-sub-mediator][pubsubmediator] with type
 to request all actors in a namespace to shut down. The value of `piggybackCommand/reason/type` must be
 `purge-namespace`; otherwise, the namespace's actors will not stop themselves.
 
-`PUT /devops/piggyback?timeout=0`
+`POST /devops/piggyback?timeout=0&response-required=false`
 
 ```json
 {
@@ -2151,7 +2164,7 @@ all its actors so that no data is written in the namespace while erasing is ongo
 The erasure may take a long time if the namespace has a lot of data associated with it or if the persistent storage is
 slow. Set the timeout to a safe margin above the estimated erasure time in milliseconds.
 
-`PUT /devops/piggyback?timeout=10s`
+`POST /devops/piggyback?timeout=10s`
 
 ```json
 {
@@ -2203,7 +2216,7 @@ Note that to see responses from multiple resource types, the header `aggregate` 
 Send a piggyback command to [Pekko's pub-sub-mediator][pubsubmediator] with type `namespaces.commands:unblockNamespace`
 to stop blocking messages to a namespace.
 
-`PUT /devops/piggyback?timeout=10s`
+`POST /devops/piggyback?timeout=10s`
 
 ```json
 {

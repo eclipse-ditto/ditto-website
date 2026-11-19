@@ -1717,6 +1717,13 @@
               
               
               
+              <li><a href="release_notes_399.html">3.9.9</a></li>
+              
+              
+              
+              
+              
+              
               <li><a href="release_notes_398.html">3.9.8</a></li>
               
               
@@ -1774,6 +1781,13 @@
               
               
               <li><a href="release_notes_390.html">3.9.0</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="release_notes_3815.html">3.8.15</a></li>
               
               
               
@@ -2552,6 +2566,9 @@ $('#toc').on('click', 'a', function() {
 
 <p>For a detailed introduction to SSE, see the <a href="https://html.spec.whatwg.org/multipage/server-sent-events.html">HTML5 specification</a>.</p>
 
+<p>If the operator configured <code class="language-plaintext highlighter-rouge">ditto.gateway.streaming.max-session-lag</code>, Ditto closes an SSE connection that cannot keep
+up with its events. The browser <code class="language-plaintext highlighter-rouge">EventSource</code> reconnects automatically; other clients should reconnect as well.</p>
+
 <h2 id="sse-for-thing-change-notifications">SSE for Thing change notifications</h2>
 
 <h3 id="endpoint">Endpoint</h3>
@@ -2770,6 +2787,83 @@ data:{"thingId":"ditto:device7155"}
 id:ditto:device7155
 </code></pre></div></div>
 
+<h2 id="monitoring-sse-sessions">Monitoring SSE sessions</h2>
+
+<p>When an SSE session for change notifications or messages ends, the gateway logs one <code class="language-plaintext highlighter-rouge">INFO</code> summary of it, e.g.:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>SSE session on &lt;/api/2/things&gt; ended after &lt;834s&gt;: received &lt;120&gt;, targeted &lt;42&gt;, filtered out &lt;30&gt;, enrichment failed &lt;0&gt;, delivered &lt;12&gt; events.
+</code></pre></div></div>
+
+<p>The details are also added as MDC entries, so that log tooling with structured (e.g. JSON) logs can aggregate them,
+for example per client:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>MDC entry</th>
+      <th>Content</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">sse-path</code></td>
+      <td>path of the SSE request</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">sse-subjects</code></td>
+      <td>authorization subjects of the session</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">sse-azp</code></td>
+      <td><code class="language-plaintext highlighter-rouge">azp</code> (authorized party) claim of the JWT the session was opened with, if any</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">sse-origin</code></td>
+      <td><code class="language-plaintext highlighter-rouge">Origin</code> header of the SSE request, if any</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">sse-user-agent</code></td>
+      <td><code class="language-plaintext highlighter-rouge">User-Agent</code> header of the SSE request, if any</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">sse-extra-fields</code></td>
+      <td>whether <code class="language-plaintext highlighter-rouge">extraFields</code> were requested</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">sse-filter</code></td>
+      <td>whether an RQL <code class="language-plaintext highlighter-rouge">filter</code> was requested</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">sse-duration-seconds</code></td>
+      <td>duration of the session</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">sse-received</code></td>
+      <td>signals which reached the session’s stream (the subscriber may read them)</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">sse-targeted</code></td>
+      <td>received signals for the requested thing IDs and namespaces, which were post-processed</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">sse-filtered-out</code></td>
+      <td>targeted signals which did not match the RQL <code class="language-plaintext highlighter-rouge">filter</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">sse-enrichment-failed</code></td>
+      <td>targeted signals for which retrieving the <code class="language-plaintext highlighter-rouge">extraFields</code> failed</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">sse-delivered</code></td>
+      <td>events sent to the client, including errors sent instead of an event</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Note that the summary contains personal data like the subjects of the session.
+To turn it off, set the log level of the logger
+<code class="language-plaintext highlighter-rouge">org.eclipse.ditto.gateway.service.endpoints.routes.sse.SseSessionStatistics</code> to <code class="language-plaintext highlighter-rouge">WARN</code>.</p>
+
 <h2 id="further-reading">Further reading</h2>
 
 <ul>
@@ -2808,7 +2902,7 @@ id:ditto:device7155
                     </div>
                     <p class="notice">
                         &copy;2026 Eclipse Ditto™.
-                         Site last generated: Oct 8, 2026 <br />
+                         Site last generated: Nov 19, 2026 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

@@ -1717,6 +1717,13 @@
               
               
               
+              <li><a href="release_notes_399.html">3.9.9</a></li>
+              
+              
+              
+              
+              
+              
               <li><a href="release_notes_398.html">3.9.8</a></li>
               
               
@@ -1774,6 +1781,13 @@
               
               
               <li><a href="release_notes_390.html">3.9.0</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="release_notes_3815.html">3.8.15</a></li>
               
               
               
@@ -2922,21 +2936,10 @@ tells the two apart – <code class="language-plaintext highlighter-rouge">filte
 filters must match for a signal to be published (<strong>AND</strong> semantics).</p>
 
 <p>Write the filter expressions as shown in the examples: <code class="language-plaintext highlighter-rouge">|</code>, <code class="language-plaintext highlighter-rouge">'</code>, <code class="language-plaintext highlighter-rouge">"</code>, <code class="language-plaintext highlighter-rouge">,</code>, <code class="language-plaintext highlighter-rouge">(</code>, <code class="language-plaintext highlighter-rouge">)</code>, <code class="language-plaintext highlighter-rouge">:</code>, <code class="language-plaintext highlighter-rouge">*</code>, <code class="language-plaintext highlighter-rouge">?</code> and <code class="language-plaintext highlighter-rouge">=</code> need
-no URL-encoding. Parameter values are URL-decoded every time a topic string is parsed (e.g. <code class="language-plaintext highlighter-rouge">%7C</code> becomes a
-literal <code class="language-plaintext highlighter-rouge">|</code>), but they are <strong>not</strong> re-encoded when the connection is stored, so a stored topic is decoded once
-more whenever the connection is loaded again. Three characters can therefore not be used at all in the filter
-values of a connection target topic – neither in an RQL value or <code class="language-plaintext highlighter-rouge">like</code> pattern nor in the compared value of
-an <code class="language-plaintext highlighter-rouge">fn-filter</code>:</p>
-
-<ul>
-  <li><code class="language-plaintext highlighter-rouge">&amp;</code> – a raw <code class="language-plaintext highlighter-rouge">&amp;</code> ends the parameter. <code class="language-plaintext highlighter-rouge">%26</code> is decoded to <code class="language-plaintext highlighter-rouge">&amp;</code> on the first parse, so the connection is
-accepted, but that <code class="language-plaintext highlighter-rouge">&amp;</code> cuts the expression off when the stored topic is parsed again; an <code class="language-plaintext highlighter-rouge">fn-filter</code>
-truncated that way suppresses every signal. (For WebSocket and SSE filters, which are not stored, <code class="language-plaintext highlighter-rouge">%26</code>
-works.)</li>
-  <li><code class="language-plaintext highlighter-rouge">+</code> – is decoded to a space. <code class="language-plaintext highlighter-rouge">%2B</code> is decoded to <code class="language-plaintext highlighter-rouge">+</code> on the first parse and to a space on the next one.</li>
-  <li><code class="language-plaintext highlighter-rouge">%</code> – <code class="language-plaintext highlighter-rouge">%25</code> is decoded to <code class="language-plaintext highlighter-rouge">%</code> on the first parse. When the stored topic is parsed again, that <code class="language-plaintext highlighter-rouge">%</code> either
-fails to decode or is silently decoded together with the two characters following it.</li>
-</ul>
+no URL-encoding. Parameter values are URL-decoded when a topic string is parsed (e.g. <code class="language-plaintext highlighter-rouge">%7C</code> becomes a literal
+<code class="language-plaintext highlighter-rouge">|</code>). Three characters have to be encoded when they are part of a filter value: <code class="language-plaintext highlighter-rouge">&amp;</code> as <code class="language-plaintext highlighter-rouge">%26</code> (a raw <code class="language-plaintext highlighter-rouge">&amp;</code> ends the
+parameter), <code class="language-plaintext highlighter-rouge">+</code> as <code class="language-plaintext highlighter-rouge">%2B</code> (a raw <code class="language-plaintext highlighter-rouge">+</code> is decoded to a space) and <code class="language-plaintext highlighter-rouge">%</code> as <code class="language-plaintext highlighter-rouge">%25</code> (a raw <code class="language-plaintext highlighter-rouge">%</code> starts an escape sequence).
+They are stored in this encoded form, so the filter stays the same when the connection is loaded again.</p>
 
 <p>Example:</p>
 
@@ -3419,7 +3422,7 @@ for setup instructions.</p>
                     </div>
                     <p class="notice">
                         &copy;2026 Eclipse Ditto™.
-                         Site last generated: Oct 8, 2026 <br />
+                         Site last generated: Nov 19, 2026 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

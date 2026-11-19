@@ -1717,6 +1717,13 @@
               
               
               
+              <li><a href="release_notes_399.html">3.9.9</a></li>
+              
+              
+              
+              
+              
+              
               <li><a href="release_notes_398.html">3.9.8</a></li>
               
               
@@ -1774,6 +1781,13 @@
               
               
               <li><a href="release_notes_390.html">3.9.0</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="release_notes_3815.html">3.8.15</a></li>
               
               
               
@@ -2575,7 +2589,8 @@ for configuration details.</p>
 
 <h3 id="create-a-connection">Create a connection</h3>
 
-<p>Send an HTTP <code class="language-plaintext highlighter-rouge">POST</code> request:</p>
+<p>Send an HTTP <code class="language-plaintext highlighter-rouge">POST</code> request. Ditto generates the connection ID. Do not put an <code class="language-plaintext highlighter-rouge">id</code> in the body
+(that returns <code class="language-plaintext highlighter-rouge">connectivity:id.notsettable</code>).</p>
 
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>POST /api/2/connections
 </code></pre></div></div>
@@ -2590,6 +2605,15 @@ for configuration details.</p>
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
+<p>To pick the ID yourself, use <code class="language-plaintext highlighter-rouge">PUT</code> instead:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>PUT /api/2/connections/{connectionId}
+If-None-Match: *
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">If-None-Match: *</code> makes this create-only. Without that header, the same <code class="language-plaintext highlighter-rouge">PUT</code> updates the
+connection if it already exists.</p>
+
 <p>The connection configuration format is described in the <a href="basic-connections.html">Connections</a> section.
 For protocol-specific examples, see the relevant binding page:</p>
 <ul>
@@ -2599,6 +2623,7 @@ For protocol-specific examples, see the relevant binding page:</p>
   <li><a href="connectivity-protocol-bindings-mqtt5.html">MQTT 5</a></li>
   <li><a href="connectivity-protocol-bindings-http.html">HTTP 1.1</a></li>
   <li><a href="connectivity-protocol-bindings-kafka2.html">Kafka 2.x</a></li>
+  <li><a href="connectivity-protocol-bindings-hono.html">Eclipse Hono</a></li>
 </ul>
 
 <h4 id="dry-run">Dry run</h4>
@@ -2618,7 +2643,8 @@ The connection is closed afterward and not persisted.</p>
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>PUT /api/2/connections/{connectionId}
 </code></pre></div></div>
 
-<p>The connection must already exist before you can modify it.</p>
+<p>If the connection does not exist yet, Ditto creates it. Add <code class="language-plaintext highlighter-rouge">If-None-Match: *</code> when you want
+the request to fail instead of overwriting an existing connection.</p>
 
 <h3 id="retrieve-a-connection">Retrieve a connection</h3>
 
@@ -2997,7 +3023,7 @@ at path <code class="language-plaintext highlighter-rouge">ditto.connectivity.mo
                     </div>
                     <p class="notice">
                         &copy;2026 Eclipse Ditto™.
-                         Site last generated: Oct 8, 2026 <br />
+                         Site last generated: Nov 19, 2026 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

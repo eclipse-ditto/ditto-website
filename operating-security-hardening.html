@@ -1717,6 +1717,13 @@
               
               
               
+              <li><a href="release_notes_399.html">3.9.9</a></li>
+              
+              
+              
+              
+              
+              
               <li><a href="release_notes_398.html">3.9.8</a></li>
               
               
@@ -1774,6 +1781,13 @@
               
               
               <li><a href="release_notes_390.html">3.9.0</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="release_notes_3815.html">3.8.15</a></li>
               
               
               
@@ -2603,6 +2617,11 @@ means it trusts the value of the <code class="language-plaintext highlighter-rou
 client-supplied value</strong> of that header.</li>
 </ul>
 
+<p>The gateway reads the pre-authenticated subject <strong>only</strong> from the <code class="language-plaintext highlighter-rouge">x-ditto-pre-authenticated</code> HTTP header,
+never from a query parameter of the same name. A request the proxy forwards <em>without</em> the header (for
+example a request carrying <code class="language-plaintext highlighter-rouge">Authorization: Bearer &lt;JWT&gt;</code>) is therefore authenticated by the gateway itself,
+via the <a href="operating-authentication.html#openid-connect">OpenID Connect</a> configuration.</p>
+
 <p>If you expose the gateway directly <em>while pre-authentication is enabled</em>, any client can impersonate
 any subject by sending the header themselves. The code carries an explicit warning about this in
 <code class="language-plaintext highlighter-rouge">PreAuthenticatedAuthenticationProvider</code>. So with this model: publish only the reverse proxy port and
@@ -2645,9 +2664,23 @@ before forwarding to the gateway:</p>
   <li><strong>Authenticates</strong> every request to the API (<code class="language-plaintext highlighter-rouge">/api</code>, <code class="language-plaintext highlighter-rouge">/ws</code>, and any custom routes).</li>
   <li><strong>Overwrites</strong> <code class="language-plaintext highlighter-rouge">x-ditto-pre-authenticated</code> on every request so a client cannot inject its own
 value. Setting <code class="language-plaintext highlighter-rouge">proxy_set_header</code> as above replaces any incoming header — do not forward a
-client-supplied value.</li>
+client-supplied value. If a route intentionally skips proxy authentication (e.g. to pass through
+<code class="language-plaintext highlighter-rouge">Authorization: Bearer &lt;JWT&gt;</code> requests), make sure the header is not forwarded on that route, so the
+gateway has to validate the JWT.</li>
   <li>Terminates TLS (see <a href="#8-transport-security-tls">section 8</a>).</li>
 </ul>
+
+<h4 id="helm-chart-mixed-basic-auth-and-jwt-mode">Helm chart: mixed Basic auth and JWT mode</h4>
+
+<p>With the default <code class="language-plaintext highlighter-rouge">global.jwtOnly: false</code>, the nginx bundled with the Helm chart combines both models:
+requests without <code class="language-plaintext highlighter-rouge">Authorization: Bearer ...</code> header must pass nginx Basic auth and are forwarded with
+<code class="language-plaintext highlighter-rouge">x-ditto-pre-authenticated: nginx:&lt;user&gt;</code>, while requests with a Bearer token skip Basic auth and are
+forwarded <em>without</em> that header, so that the gateway validates the JWT. In this mode the chart
+<strong>implicitly enables pre-authentication</strong> in the gateway, regardless of
+<code class="language-plaintext highlighter-rouge">gateway.config.authentication.enablePreAuthentication</code>. Only use it if the gateway is reachable
+exclusively via that nginx. If you only use OpenID Connect, configure <code class="language-plaintext highlighter-rouge">global.jwtOnly: true</code>, which
+disables pre-authentication (as long as <code class="language-plaintext highlighter-rouge">gateway.config.authentication.enablePreAuthentication</code> stays
+<code class="language-plaintext highlighter-rouge">false</code>).</p>
 
 <h4 id="replace-the-sample-credentials">Replace the sample credentials</h4>
 
@@ -2792,6 +2825,11 @@ cap the message rate of an established stream (<code class="language-plaintext h
 second when enabled). These protect against a single noisy client, but are not a substitute for
 proxy-level rate limiting of authentication and connection attempts.</p>
 
+<p>Every open WebSocket or SSE session also costs gateway memory when it falls behind the events it receives.
+Set <code class="language-plaintext highlighter-rouge">ditto.gateway.streaming.max-session-lag</code> (disabled by default, well above the gateway’s GC pause times) so
+that a gateway closes lagging sessions instead of running out of heap, and consider limiting the number of concurrent streaming connections per client
+at the proxy.</p>
+
 <h3 id="10-outbound-http-requests-ssrf">10. Outbound HTTP requests (SSRF)</h3>
 
 <p>Two Ditto features cause a service to issue outbound HTTP requests to a host that is not fixed in the
@@ -2908,7 +2946,7 @@ a pre-production gate.</p>
                     </div>
                     <p class="notice">
                         &copy;2026 Eclipse Ditto™.
-                         Site last generated: Oct 8, 2026 <br />
+                         Site last generated: Nov 19, 2026 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

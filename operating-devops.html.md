@@ -455,7 +455,7 @@ Supported `COMMAND-TYPE` values: `common.commands:shutdown`, `common.commands:re
 
 **A single thing:**
 
-`POST /devops/piggyback/search/<INSTANCE_INDEX>?timeout=0`
+`POST /devops/piggyback/search/<INSTANCE_INDEX>?timeout=0&response-required=false`
 
 ```json
 {
@@ -477,7 +477,7 @@ You can erase all data within a namespace during live operations by following th
 
 ### Step 1: Block the namespace
 
-`PUT /devops/piggyback?timeout=10s`
+`POST /devops/piggyback?timeout=10s`
 
 ```json
 {
@@ -505,7 +505,7 @@ Response:
 
 ### Step 2: Shut down actors in the namespace
 
-`PUT /devops/piggyback?timeout=0`
+`POST /devops/piggyback?timeout=0&response-required=false`
 
 ```json
 {
@@ -524,7 +524,7 @@ This command has no response (always returns `408` timeout). You can send it mul
 
 ### Step 3: Purge data from persistence
 
-`PUT /devops/piggyback?timeout=10s`
+`POST /devops/piggyback?timeout=10s`
 
 ```json
 {
@@ -573,7 +573,7 @@ Note that to see responses from multiple resource types, the header `aggregate` 
 
 ### Step 4: Unblock the namespace
 
-`PUT /devops/piggyback?timeout=10s`
+`POST /devops/piggyback?timeout=10s`
 
 ```json
 {

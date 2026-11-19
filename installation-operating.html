@@ -1717,6 +1717,13 @@
               
               
               
+              <li><a href="release_notes_399.html">3.9.9</a></li>
+              
+              
+              
+              
+              
+              
               <li><a href="release_notes_398.html">3.9.8</a></li>
               
               
@@ -1774,6 +1781,13 @@
               
               
               <li><a href="release_notes_390.html">3.9.0</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="release_notes_3815.html">3.8.15</a></li>
               
               
               
@@ -2687,6 +2701,9 @@ the user and the subject contains e.g. the user-id or -name.</p>
 
 <p>This string must then be used in <a href="basic-policy.html#subjects">policies</a> as “Subject ID”.</p>
 
+<p>The gateway only reads the pre-authenticated subject from this HTTP header, a query parameter of the same name is
+ignored.</p>
+
 <p>Example for a nginx “proxy” configuration:</p>
 <div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>auth_basic                    "Authentication required";
 auth_basic_user_file          nginx.htpasswd;
@@ -3050,6 +3067,16 @@ There are however configuration options in place in order to enable throttling o
 basis.<br />
 Please consult the available <code class="language-plaintext highlighter-rouge">throttling</code> configuration sections in the 
 <a href="#ditto-configuration">Ditto service configuration files</a>.</p>
+
+<p>Each WebSocket or SSE session processes the events it receives one at a time. If a session cannot keep up, its
+messages queue up in gateway memory. Set <code class="language-plaintext highlighter-rouge">ditto.gateway.streaming.max-session-lag</code> (env
+<code class="language-plaintext highlighter-rouge">GATEWAY_STREAMING_MAX_SESSION_LAG</code>, Helm value <code class="language-plaintext highlighter-rouge">gateway.config.streaming.maxSessionLag</code>) to close any session whose
+messages wait longer than this, for example <code class="language-plaintext highlighter-rouge">30s</code>, before the backlog exhausts the gateway heap. The default <code class="language-plaintext highlighter-rouge">0s</code>
+disables the check; any other value must be at least <code class="language-plaintext highlighter-rouge">1s</code>.</p>
+
+<p>The measured delay also includes stop-the-world GC pauses and dispatcher saturation of the gateway. A pause longer
+than <code class="language-plaintext highlighter-rouge">max-session-lag</code> makes every session on that gateway late at the same moment, so all of them are closed and
+their clients reconnect at once. Set the value well above the gateway’s observed GC pause times.</p>
 
 <h2 id="restricting-entity-creation">Restricting entity creation</h2>
 
@@ -4664,7 +4691,7 @@ the background sync will continue its normal operation.</p>
 of any inconsistencies detected at query time. Nevertheless, you can trigger search index update
 for a particular thing by a DevOps-command and bring the entry up-to-date immediately.</p>
 
-<p><code class="language-plaintext highlighter-rouge">POST /devops/piggyback/search/&lt;INSTANCE_INDEX&gt;?timeout=0</code></p>
+<p><code class="language-plaintext highlighter-rouge">POST /devops/piggyback/search/&lt;INSTANCE_INDEX&gt;?timeout=0&amp;response-required=false</code></p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
   </span><span class="nl">"targetActorSelection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/user/thingsWildcardSearchRoot/searchUpdaterRoot/thingsUpdater"</span><span class="p">,</span><span class="w">
@@ -4702,7 +4729,7 @@ so that the old namespace could be reused at a later point in time.</li>
 <p>Send a piggyback command to <a href="https://pekko.apache.org/docs/pekko/current/distributed-pub-sub.html">Pekko’s pub-sub-mediator</a> with type <code class="language-plaintext highlighter-rouge">namespaces.commands:blockNamespace</code>
 to block all messages sent to actors belonging to a namespace.</p>
 
-<p><code class="language-plaintext highlighter-rouge">PUT /devops/piggyback?timeout=10s</code></p>
+<p><code class="language-plaintext highlighter-rouge">POST /devops/piggyback?timeout=10s</code></p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
   </span><span class="nl">"targetActorSelection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/system/distributedPubSubMediator"</span><span class="p">,</span><span class="w">
@@ -4734,7 +4761,7 @@ or until you proceed with <a href="#unblock-messages-to-a-namespace">step 4</a>,
 to request all actors in a namespace to shut down. The value of <code class="language-plaintext highlighter-rouge">piggybackCommand/reason/type</code> must be
 <code class="language-plaintext highlighter-rouge">purge-namespace</code>; otherwise, the namespace’s actors will not stop themselves.</p>
 
-<p><code class="language-plaintext highlighter-rouge">PUT /devops/piggyback?timeout=0</code></p>
+<p><code class="language-plaintext highlighter-rouge">POST /devops/piggyback?timeout=0&amp;response-required=false</code></p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
   </span><span class="nl">"targetActorSelection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/system/distributedPubSubMediator"</span><span class="p">,</span><span class="w">
@@ -4764,7 +4791,7 @@ all its actors so that no data is written in the namespace while erasing is ongo
 <p>The erasure may take a long time if the namespace has a lot of data associated with it or if the persistent storage is
 slow. Set the timeout to a safe margin above the estimated erasure time in milliseconds.</p>
 
-<p><code class="language-plaintext highlighter-rouge">PUT /devops/piggyback?timeout=10s</code></p>
+<p><code class="language-plaintext highlighter-rouge">POST /devops/piggyback?timeout=10s</code></p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
   </span><span class="nl">"targetActorSelection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/system/distributedPubSubMediator"</span><span class="p">,</span><span class="w">
@@ -4814,7 +4841,7 @@ Note that to see responses from multiple resource types, the header <code class=
 <p>Send a piggyback command to <a href="https://pekko.apache.org/docs/pekko/current/distributed-pub-sub.html">Pekko’s pub-sub-mediator</a> with type <code class="language-plaintext highlighter-rouge">namespaces.commands:unblockNamespace</code>
 to stop blocking messages to a namespace.</p>
 
-<p><code class="language-plaintext highlighter-rouge">PUT /devops/piggyback?timeout=10s</code></p>
+<p><code class="language-plaintext highlighter-rouge">POST /devops/piggyback?timeout=10s</code></p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
   </span><span class="nl">"targetActorSelection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/system/distributedPubSubMediator"</span><span class="p">,</span><span class="w">
@@ -4863,7 +4890,7 @@ to stop blocking messages to a namespace.</p>
                     </div>
                     <p class="notice">
                         &copy;2026 Eclipse Ditto™.
-                         Site last generated: Oct 8, 2026 <br />
+                         Site last generated: Nov 19, 2026 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

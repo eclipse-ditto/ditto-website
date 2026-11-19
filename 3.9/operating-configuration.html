@@ -1717,6 +1717,13 @@
               
               
               
+              <li><a href="release_notes_399.html">3.9.9</a></li>
+              
+              
+              
+              
+              
+              
               <li><a href="release_notes_398.html">3.9.8</a></li>
               
               
@@ -2852,6 +2859,16 @@ and a migration command.</p>
 
 <p>Since Ditto 2.4.0, <a href="basic-connections.html">connections</a> and <a href="httpapi-protocol-bindings-websocket.html">WebSockets</a> are not artificially throttled when consuming messages by default. You can enable per-connection or per-WebSocket throttling through the <code class="language-plaintext highlighter-rouge">throttling</code> sections in the service configuration files.</p>
 
+<p>Each WebSocket or SSE session processes the events it receives one at a time. If a session cannot keep up, its
+messages queue up in gateway memory. Set <code class="language-plaintext highlighter-rouge">ditto.gateway.streaming.max-session-lag</code> (env
+<code class="language-plaintext highlighter-rouge">GATEWAY_STREAMING_MAX_SESSION_LAG</code>, Helm value <code class="language-plaintext highlighter-rouge">gateway.config.streaming.maxSessionLag</code>) to close any session whose
+messages wait longer than this, for example <code class="language-plaintext highlighter-rouge">30s</code>, before the backlog exhausts the gateway heap. The default <code class="language-plaintext highlighter-rouge">0s</code>
+disables the check; any other value must be at least <code class="language-plaintext highlighter-rouge">1s</code>.</p>
+
+<p>The measured delay also includes stop-the-world GC pauses and dispatcher saturation of the gateway. A pause longer
+than <code class="language-plaintext highlighter-rouge">max-session-lag</code> makes every session on that gateway late at the same moment, so all of them are closed and
+their clients reconnect at once. Set the value well above the gateway’s observed GC pause times.</p>
+
 <h3 id="pre-defined-extra-fields">Pre-defined extra fields</h3>
 
 <p>Starting with Ditto 3.7.0, you can statically configure <a href="basic-enrichment.html">enrichment of <code class="language-plaintext highlighter-rouge">extraFields</code></a> in the “things” service configuration. This avoids an internal roundtrip from edge services to the things service for each event or message.</p>
@@ -3259,7 +3276,7 @@ of all affected things.</p>
                     </div>
                     <p class="notice">
                         &copy;2026 Eclipse Ditto™.
-                         Site last generated: Oct 8, 2026 <br />
+                         Site last generated: Nov 19, 2026 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

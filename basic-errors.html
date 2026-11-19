@@ -1717,6 +1717,13 @@
               
               
               
+              <li><a href="release_notes_399.html">3.9.9</a></li>
+              
+              
+              
+              
+              
+              
               <li><a href="release_notes_398.html">3.9.8</a></li>
               
               
@@ -1774,6 +1781,13 @@
               
               
               <li><a href="release_notes_390.html">3.9.0</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="release_notes_3815.html">3.8.15</a></li>
               
               
               
@@ -2613,6 +2627,19 @@ $('#toc').on('click', 'a', function() {
   </tbody>
 </table>
 
+<h3 id="errors-for-inaccessible-things-and-policies">Errors for inaccessible things and policies</h3>
+
+<p>Since Ditto 4.0.0, Ditto doesn’t reveal whether a thing or a policy exists to a requester without any permission on it.
+For every rejected request, such a requester gets the same error as for a nonexistent entity:
+status <code class="language-plaintext highlighter-rouge">404</code> with error code <code class="language-plaintext highlighter-rouge">things:thing.notfound</code> or <code class="language-plaintext highlighter-rouge">policies:policy.notfound</code>, even for a write request.</p>
+
+<p>A requester with at least one permission on the entity gets a more specific error instead, for example
+status <code class="language-plaintext highlighter-rouge">404</code> with error code <code class="language-plaintext highlighter-rouge">things:attributes.notfound</code>, or status <code class="language-plaintext highlighter-rouge">403</code> with error code <code class="language-plaintext highlighter-rouge">things:thing.notmodifiable</code>.</p>
+
+<p>Operators can restore the previous behavior, which returns the specific errors to every requester, by setting the
+environment variable <code class="language-plaintext highlighter-rouge">DITTO_DEVOPS_FEATURE_HIDE_INACCESSIBLE_ENTITY_EXISTENCE_ENABLED</code> of the things and policies
+services to <code class="language-plaintext highlighter-rouge">false</code>.</p>
+
 <h3 id="message">Message</h3>
 
 <p>The <code class="language-plaintext highlighter-rouge">message</code> field contains a short, human-readable description of the problem.</p>
@@ -2680,7 +2707,7 @@ $('#toc').on('click', 'a', function() {
                     </div>
                     <p class="notice">
                         &copy;2026 Eclipse Ditto™.
-                         Site last generated: Oct 8, 2026 <br />
+                         Site last generated: Nov 19, 2026 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

@@ -1717,6 +1717,13 @@
               
               
               
+              <li><a href="release_notes_399.html">3.9.9</a></li>
+              
+              
+              
+              
+              
+              
               <li><a href="release_notes_398.html">3.9.8</a></li>
               
               
@@ -1774,6 +1781,13 @@
               
               
               <li><a href="release_notes_390.html">3.9.0</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="release_notes_3815.html">3.8.15</a></li>
               
               
               
@@ -2998,13 +3012,26 @@ fields via Cartesian product.</p>
 <h3 id="scope-rql-expressions-when-filtering-for-ditto-protocol-messages">Scope: RQL expressions when filtering for Ditto Protocol messages</h3>
 
 <p>When using <a href="basic-rql.html">RQL expressions</a> in scope of either <a href="basic-changenotifications.html">change notifications</a>
-or subscriptions for live messages, the following placeholders are available in general:</p>
+or subscriptions for live messages - via WebSocket, SSE or the <code class="language-plaintext highlighter-rouge">filter</code> of a connection target - the following
+placeholders are available in general:</p>
 <ul>
+  <li><a href="#entity-placeholder">entity placeholder</a></li>
+  <li><a href="#thing-placeholder">thing placeholder</a></li>
+  <li><a href="#feature-placeholder">feature placeholder</a></li>
   <li><a href="#topic-placeholder">topic placeholder</a></li>
   <li><a href="#resource-placeholder">resource placeholder</a></li>
-  <li><a href="#time-placeholder">time placeholder</a>
-Note that in RQL expressions placeholders must not be surrounded by curly braces.</li>
+  <li><a href="#time-placeholder">time placeholder</a> - only as the value to compare with, e.g. <code class="language-plaintext highlighter-rouge">lt(_modified,time:now)</code></li>
 </ul>
+
+<p>Note that in RQL expressions placeholders must not be surrounded by curly braces.</p>
+
+<p>A placeholder may resolve to several values: <code class="language-plaintext highlighter-rouge">feature:id</code> resolves to the IDs of all features a signal touches,
+e.g. when a thing with several features is created or when several features are merged at once. An RQL expression
+on such a placeholder behaves like on an array of the thing: <code class="language-plaintext highlighter-rouge">eq</code>, <code class="language-plaintext highlighter-rouge">in</code>, <code class="language-plaintext highlighter-rouge">like</code> etc. match if any of the values
+matches, and <code class="language-plaintext highlighter-rouge">ne</code> only matches if none of the values is equal - <code class="language-plaintext highlighter-rouge">ne(feature:id,"lamp")</code> matches all signals which do
+not touch the feature <code class="language-plaintext highlighter-rouge">lamp</code>.</p>
+
+<p>The <code class="language-plaintext highlighter-rouge">filter</code> of a subscription for <a href="basic-history.html">historical events</a> does not support placeholders.</p>
 
 <h3 id="scope-websocket-signal-enrichment">Scope: Websocket Signal Enrichment</h3>
 <p>When <a href="basic-enrichment.html">declaring extra fields</a> which should be enriched to a published signal for a Websocket connection, the following placeholders are available in general:</p>
@@ -3408,7 +3435,7 @@ which starts with a placeholder; the 3-parameter forms and <code class="language
                     </div>
                     <p class="notice">
                         &copy;2026 Eclipse Ditto™.
-                         Site last generated: Oct 8, 2026 <br />
+                         Site last generated: Nov 19, 2026 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

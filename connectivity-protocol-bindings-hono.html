@@ -1717,6 +1717,13 @@
               
               
               
+              <li><a href="release_notes_399.html">3.9.9</a></li>
+              
+              
+              
+              
+              
+              
               <li><a href="release_notes_398.html">3.9.8</a></li>
               
               
@@ -1774,6 +1781,13 @@
               
               
               <li><a href="release_notes_390.html">3.9.0</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="release_notes_3815.html">3.8.15</a></li>
               
               
               
@@ -2557,6 +2571,19 @@ with the exceptions described below.</p>
 <div class="alert alert-info" role="alert"><i class="fa fa-info-circle"></i> <b>Note:</b> A Hono connection is associated with <em>one</em> Hono tenant. Create a separate connection for
             each tenant. The tenant ID is configured via <code class="language-plaintext highlighter-rouge">specificConfig.honoTenantId</code>.</div>
 
+<h2 id="creating-a-hono-connection">Creating a Hono connection</h2>
+
+<p><code class="language-plaintext highlighter-rouge">POST /api/2/connections</code> generates a random ID and rejects an <code class="language-plaintext highlighter-rouge">id</code> in the JSON body.
+Create a Hono connection with <code class="language-plaintext highlighter-rouge">PUT</code> so the connection ID can be the tenant ID
+(that ID is used when <code class="language-plaintext highlighter-rouge">honoTenantId</code> is omitted):</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>PUT /api/2/connections/{honoTenantId}
+If-None-Match: *
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">If-None-Match: *</code> fails if that connection already exists, so the request cannot
+turn into an update. See <a href="connectivity-manage-connections.html">Managing Connections</a>.</p>
+
 <h2 id="connection-uri-format">Connection URI format</h2>
 
 <p>You do <strong>not</strong> specify the <code class="language-plaintext highlighter-rouge">uri</code> in a Hono connection – it is generated automatically from the
@@ -2828,7 +2855,7 @@ directly to create a new connection.</p>
                     </div>
                     <p class="notice">
                         &copy;2026 Eclipse Ditto™.
-                         Site last generated: Oct 8, 2026 <br />
+                         Site last generated: Nov 19, 2026 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

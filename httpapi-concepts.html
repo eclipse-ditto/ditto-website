@@ -1717,6 +1717,13 @@
               
               
               
+              <li><a href="release_notes_399.html">3.9.9</a></li>
+              
+              
+              
+              
+              
+              
               <li><a href="release_notes_398.html">3.9.8</a></li>
               
               
@@ -1774,6 +1781,13 @@
               
               
               <li><a href="release_notes_390.html">3.9.0</a></li>
+              
+              
+              
+              
+              
+              
+              <li><a href="release_notes_3815.html">3.8.15</a></li>
               
               
               
@@ -2877,6 +2891,13 @@ interpreted as delete in contrast to <code class="language-plaintext highlighter
 
 <p>You need <code class="language-plaintext highlighter-rouge">WRITE</code> permission on <strong>all</strong> resources affected by the merge patch. If permission is missing for any affected resource, the entire patch is rejected.</p>
 
+<p>Deleting is writing:</p>
+<ul>
+  <li>A field with a <code class="language-plaintext highlighter-rouge">null</code> value requires unrestricted <code class="language-plaintext highlighter-rouge">WRITE</code> permission on that field, including everything below it.</li>
+  <li>A regex-based removal (<code class="language-plaintext highlighter-rouge">{{ ~&lt;regex&gt;~ }}</code>) requires unrestricted <code class="language-plaintext highlighter-rouge">WRITE</code> permission on the JSON object containing it, as it can remove any of its keys.</li>
+  <li>A field with an empty object value (<code class="language-plaintext highlighter-rouge">{}</code>) replaces an existing non-object value or creates the field, so it also requires unrestricted <code class="language-plaintext highlighter-rouge">WRITE</code> permission on that field.</li>
+</ul>
+
 <h3 id="merge-update-example">Merge update example</h3>
 
 <p>Given an existing Thing with this JSON:</p>
@@ -3115,7 +3136,7 @@ If-Match: "rev:2"
                     </div>
                     <p class="notice">
                         &copy;2026 Eclipse Ditto™.
-                         Site last generated: Oct 8, 2026 <br />
+                         Site last generated: Nov 19, 2026 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">
