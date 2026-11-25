@@ -1717,6 +1717,13 @@
               
               
               
+              <li><a href="release_notes_3910.html">3.9.10</a></li>
+              
+              
+              
+              
+              
+              
               <li><a href="release_notes_399.html">3.9.9</a></li>
               
               
@@ -2681,7 +2688,11 @@ the user and the subject contains e.g. the user-id or -name.</p>
 <p>This string must then be used in <a href="basic-policy.html#subjects">policies</a> as “Subject ID”.</p>
 
 <p>The gateway only reads the pre-authenticated subject from this HTTP header, a query parameter of the same name is
-ignored.</p>
+ignored.
+The reverse proxy must never forward a client-supplied <code class="language-plaintext highlighter-rouge">x-ditto-pre-authenticated</code> header: it has to set the header
+from a verified identity or clear it (<code class="language-plaintext highlighter-rouge">proxy_set_header x-ditto-pre-authenticated "";</code>) in <strong>every</strong> location which
+forwards requests to the gateway, also in locations without proxy authentication, such as <code class="language-plaintext highlighter-rouge">/api/2/connections</code> or
+<code class="language-plaintext highlighter-rouge">/devops</code>.</p>
 
 <p>Example for a nginx “proxy” configuration:</p>
 <div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>auth_basic                    "Authentication required";
@@ -4869,7 +4880,7 @@ to stop blocking messages to a namespace.</p>
                     </div>
                     <p class="notice">
                         &copy;2026 Eclipse Ditto™.
-                         Site last generated: Nov 19, 2026 <br />
+                         Site last generated: Nov 25, 2026 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">

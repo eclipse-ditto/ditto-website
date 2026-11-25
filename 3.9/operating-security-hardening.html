@@ -1717,6 +1717,13 @@
               
               
               
+              <li><a href="release_notes_3910.html">3.9.10</a></li>
+              
+              
+              
+              
+              
+              
               <li><a href="release_notes_399.html">3.9.9</a></li>
               
               
@@ -2646,6 +2653,14 @@ value. Setting <code class="language-plaintext highlighter-rouge">proxy_set_head
 client-supplied value. If a route intentionally skips proxy authentication (e.g. to pass through
 <code class="language-plaintext highlighter-rouge">Authorization: Bearer &lt;JWT&gt;</code> requests), make sure the header is not forwarded on that route, so the
 gateway has to validate the JWT.</li>
+  <li><strong>Clears</strong> <code class="language-plaintext highlighter-rouge">x-ditto-pre-authenticated</code> (<code class="language-plaintext highlighter-rouge">proxy_set_header x-ditto-pre-authenticated "";</code>) in every
+location that forwards to the gateway without setting the header itself, e.g. the <code class="language-plaintext highlighter-rouge">/api/2/connections</code>,
+<code class="language-plaintext highlighter-rouge">/devops</code>, <code class="language-plaintext highlighter-rouge">/health</code>, <code class="language-plaintext highlighter-rouge">/status</code> and <code class="language-plaintext highlighter-rouge">/stats</code> locations, which are authenticated by the gateway. A
+location with its own <code class="language-plaintext highlighter-rouge">proxy_set_header</code> directives does not inherit those of the <code class="language-plaintext highlighter-rouge">server</code> block. Do not
+rely on location matching alone: a proxy which matches locations on the normalized path but forwards the
+raw path (nginx <code class="language-plaintext highlighter-rouge">proxy_pass</code> without a URI part) can be tricked into routing an API request through such
+a location, e.g. via <code class="language-plaintext highlighter-rouge">%2f</code> and <code class="language-plaintext highlighter-rouge">..</code> in the path. The gateway rejects paths with dot segments, but the
+header must be cleared nevertheless.</li>
   <li>Terminates TLS (see <a href="#8-transport-security-tls">section 8</a>).</li>
 </ul>
 
@@ -2660,6 +2675,16 @@ forwarded <em>without</em> that header, so that the gateway validates the JWT. I
 exclusively via that nginx. If you only use OpenID Connect, configure <code class="language-plaintext highlighter-rouge">global.jwtOnly: true</code>, which
 disables pre-authentication (as long as <code class="language-plaintext highlighter-rouge">gateway.config.authentication.enablePreAuthentication</code> stays
 <code class="language-plaintext highlighter-rouge">false</code>).</p>
+
+<h4 id="helm-chart-ingress">Helm chart: Ingress</h4>
+
+<p>With <code class="language-plaintext highlighter-rouge">ingress.enabled: true</code>, the Helm chart creates Ingress resources which route <code class="language-plaintext highlighter-rouge">/api</code>, <code class="language-plaintext highlighter-rouge">/ws</code>, <code class="language-plaintext highlighter-rouge">/devops</code> and
+the other gateway paths <strong>directly to the gateway</strong>, bypassing the bundled nginx. The chart cannot configure the
+handling of the <code class="language-plaintext highlighter-rouge">x-ditto-pre-authenticated</code> header for arbitrary ingress controllers, so with pre-authentication
+enabled any client could send the header itself. Rendering the chart therefore fails if an Ingress routing to the
+gateway is enabled while pre-authentication is enabled. Configure <code class="language-plaintext highlighter-rouge">global.jwtOnly: true</code> when using the Ingress
+(recommended), or make the ingress controller set the header from a verified identity or remove it on every path
+and confirm that by setting <code class="language-plaintext highlighter-rouge">ingress.preAuthenticationHeaderSanitized: true</code>.</p>
 
 <h4 id="replace-the-sample-credentials">Replace the sample credentials</h4>
 
@@ -2925,7 +2950,7 @@ a pre-production gate.</p>
                     </div>
                     <p class="notice">
                         &copy;2026 Eclipse Ditto™.
-                         Site last generated: Nov 19, 2026 <br />
+                         Site last generated: Nov 25, 2026 <br />
                     </p>
                     <div class="quickLinks">
                         <a href="https://www.eclipse.org/legal/privacy.php" target="_blank">
